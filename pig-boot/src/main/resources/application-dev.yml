@@ -15,7 +15,7 @@ spring:
 file:
   local:
     enable: true
-    base-path: /Users/lengleng/Downloads/img
+    base-path: /Users/qinlei/Downloads/img
 
 ## 登录配置
 security:
