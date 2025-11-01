@@ -1,7 +1,7 @@
 services:
   pig-mysql:
     build:
-      context: ./db
+      context: docs/db
     environment:
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: root
