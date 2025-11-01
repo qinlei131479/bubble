@@ -87,13 +87,3 @@ cnpm install && cnpm run build:docker && cd docker && docker-compose up -d
 ```
 
 
-
-## 开源共建
-
-### 开源协议
-
-pig 开源软件遵循 [Apache 2.0 协议](https://www.apache.org/licenses/LICENSE-2.0.html)。
-允许商业使用，但务必保留类作者、Copyright 信息。
-
-![](https://minio.pigx.top/oss/1655474288.jpg)
-
