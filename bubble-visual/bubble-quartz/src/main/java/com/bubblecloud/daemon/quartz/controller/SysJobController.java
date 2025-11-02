@@ -13,7 +13,7 @@ import com.bubblecloud.daemon.quartz.service.SysJobService;
 import com.bubblecloud.daemon.quartz.util.TaskUtil;
 import com.pig4cloud.pig.common.core.util.R;
 import com.pig4cloud.pig.common.log.annotation.SysLog;
-import com.pig4cloud.pig.common.security.util.SecurityUtils;
+import com.bubblecloud.common.security.util.SecurityUtils;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

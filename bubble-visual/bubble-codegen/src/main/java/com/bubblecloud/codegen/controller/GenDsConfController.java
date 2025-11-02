@@ -12,7 +12,7 @@ import com.bubblecloud.codegen.entity.GenDatasourceConf;
 import com.bubblecloud.codegen.service.GenDatasourceConfService;
 import com.pig4cloud.pig.common.core.util.R;
 import com.pig4cloud.pig.common.core.util.SpringContextHolder;
-import com.pig4cloud.pig.common.security.annotation.Inner;
+import com.bubblecloud.common.security.annotation.Inner;
 import com.pig4cloud.pig.common.xss.core.XssCleanIgnore;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

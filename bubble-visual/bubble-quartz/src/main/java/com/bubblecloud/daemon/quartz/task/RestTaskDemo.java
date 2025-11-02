@@ -1,7 +1,7 @@
 package com.bubblecloud.daemon.quartz.task;
 
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.security.annotation.Inner;
+import com.bubblecloud.common.security.annotation.Inner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

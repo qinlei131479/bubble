@@ -9,7 +9,7 @@ import com.bubblecloud.backed.api.entity.SysFile;
 import com.bubblecloud.backed.service.SysFileService;
 import com.pig4cloud.pig.common.core.util.R;
 import com.pig4cloud.pig.common.log.annotation.SysLog;
-import com.pig4cloud.pig.common.security.annotation.Inner;
+import com.bubblecloud.common.security.annotation.Inner;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

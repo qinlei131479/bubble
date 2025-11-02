@@ -22,7 +22,7 @@ import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.exception.ErrorCodes;
 import com.pig4cloud.pig.common.core.util.MsgUtils;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.security.util.SecurityUtils;
+import com.bubblecloud.common.security.util.SecurityUtils;
 import com.pig4cloud.plugin.excel.vo.ErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

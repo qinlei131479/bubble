@@ -2,7 +2,7 @@ package com.bubblecloud.backed.controller;
 
 import com.bubblecloud.backed.service.SysMobileService;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.security.annotation.Inner;
+import com.bubblecloud.common.security.annotation.Inner;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;

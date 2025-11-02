@@ -1,7 +1,7 @@
 package com.bubblecloud.auth.support.password;
 
 import com.bubblecloud.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationConverter;
-import com.pig4cloud.pig.common.security.util.OAuth2EndpointUtils;
+import com.bubblecloud.common.security.util.OAuth2EndpointUtils;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
