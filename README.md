@@ -17,7 +17,7 @@
 ### 分支说明
 
 - JDK8_master: java8 + springboot 2.7 + springcloud 2021
-- JDK17_master: java17 + springboot 3.1 + springcloud 2022
+- JDK17_master: java17 + springboot 3.5 + springcloud 2025
 
 ### 核心依赖
 
@@ -33,7 +33,7 @@
 ### 模块说明
 
 ```lua
-pig-ui  -- https://gitee.com/log4j/pig-ui
+bubble-back  -- https://github.com/qinlei131479/bubble-back.git
 
 pig
 ├── pig-auth -- 授权服务提供[3000]
@@ -64,7 +64,7 @@ pig
 
 ### 本地开发 运行
 
-pig 提供了详细的[部署文档 wiki.pig4cloud.com](https://www.yuque.com/pig4cloud/pig/vsdox9)，包括开发环境安装、服务端代码运行、前端代码运行等。
+pig 提供了详细的，包括开发环境安装、服务端代码运行、前端代码运行等。
 
 请务必**完全按照**文档部署运行章节 进行操作，减少踩坑弯路！！
 
@@ -73,14 +73,14 @@ pig 提供了详细的[部署文档 wiki.pig4cloud.com](https://www.yuque.com/pi
 
 ```
 # 下载并运行服务端代码
-git clone https://gitee.com/log4j/pig.git
+git clone https://github.com/qinlei131479/bubble.git
 
-cd pig && mvn clean install && docker-compose up -d
+cd bubble && mvn clean install && docker-compose up -d
 
 # 下载并运行前端UI
-git clone https://gitee.com/log4j/pig-ui.git
+git clone https://github.com/qinlei131479/bubble-back.git
 
-cd pig-ui && npm install -g cnpm --registry=https://registry.npm.taobao.org
+cd bubble-back && npm install -g cnpm --registry=https://registry.npm.taobao.org
 
 
 cnpm install && cnpm run build:docker && cd docker && docker-compose up -d
