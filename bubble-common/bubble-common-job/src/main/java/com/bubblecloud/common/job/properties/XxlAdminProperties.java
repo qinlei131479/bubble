@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.job.properties;
+package com.bubblecloud.common.job.properties;
 
 import lombok.Data;
 
