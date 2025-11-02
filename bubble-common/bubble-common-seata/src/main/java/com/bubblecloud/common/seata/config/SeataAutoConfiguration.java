@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.seata.config;
+package com.bubblecloud.common.seata.config;
 
 import com.pig4cloud.pig.common.core.factory.YamlPropertySourceFactory;
 import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
