@@ -1,6 +1,6 @@
-package com.pig4cloud.pig.common.swagger.config;
+package com.bubblecloud.common.swagger.config;
 
-import com.pig4cloud.pig.common.swagger.support.SwaggerProperties;
+import com.bubblecloud.common.swagger.support.SwaggerProperties;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.OAuthFlow;

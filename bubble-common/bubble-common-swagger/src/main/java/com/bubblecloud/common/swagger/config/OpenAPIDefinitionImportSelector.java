@@ -1,6 +1,6 @@
-package com.pig4cloud.pig.common.swagger.config;
+package com.bubblecloud.common.swagger.config;
 
-import com.pig4cloud.pig.common.swagger.annotation.EnablePigDoc;
+import com.bubblecloud.common.swagger.annotation.EnablePigDoc;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;

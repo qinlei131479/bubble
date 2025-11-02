@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.swagger.config;
+package com.bubblecloud.common.swagger.config;
 
 import lombok.Setter;
 import org.springframework.beans.BeansException;
