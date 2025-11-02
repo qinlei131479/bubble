@@ -1,9 +1,9 @@
-package  com.pig4cloud.pig.common.datasource.config;
+package com.bubblecloud.common.datasource.config;
 
 import com.baomidou.dynamic.datasource.creator.DataSourceProperty;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.provider.AbstractJdbcDataSourceProvider;
-import com.pig4cloud.pig.common.datasource.support.DataSourceConstants;
+import com.bubblecloud.common.datasource.support.DataSourceConstants;
 import org.jasypt.encryption.StringEncryptor;
 
 import java.sql.ResultSet;

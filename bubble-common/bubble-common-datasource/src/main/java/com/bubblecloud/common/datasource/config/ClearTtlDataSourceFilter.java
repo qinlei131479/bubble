@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.datasource.config;
+package com.bubblecloud.common.datasource.config;
 
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import org.springframework.core.Ordered;

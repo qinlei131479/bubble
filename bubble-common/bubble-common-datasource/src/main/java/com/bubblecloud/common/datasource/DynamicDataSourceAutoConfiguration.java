@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.datasource;
+package com.bubblecloud.common.datasource;
 
 import com.baomidou.dynamic.datasource.creator.DataSourceCreator;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
@@ -8,10 +8,10 @@ import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSessionProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSpelExpressionProcessor;
 import com.baomidou.dynamic.datasource.provider.DynamicDataSourceProvider;
-import com.pig4cloud.pig.common.datasource.config.ClearTtlDataSourceFilter;
-import com.pig4cloud.pig.common.datasource.config.DataSourceProperties;
-import com.pig4cloud.pig.common.datasource.config.JdbcDynamicDataSourceProvider;
-import com.pig4cloud.pig.common.datasource.config.LastParamDsProcessor;
+import com.bubblecloud.common.datasource.config.ClearTtlDataSourceFilter;
+import com.bubblecloud.common.datasource.config.DataSourceProperties;
+import com.bubblecloud.common.datasource.config.JdbcDynamicDataSourceProvider;
+import com.bubblecloud.common.datasource.config.LastParamDsProcessor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

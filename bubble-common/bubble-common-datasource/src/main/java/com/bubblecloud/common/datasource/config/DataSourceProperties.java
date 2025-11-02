@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.datasource.config;
+package com.bubblecloud.common.datasource.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

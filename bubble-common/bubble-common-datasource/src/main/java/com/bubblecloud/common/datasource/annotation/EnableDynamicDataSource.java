@@ -1,6 +1,6 @@
-package  com.pig4cloud.pig.common.datasource.annotation;
+package com.bubblecloud.common.datasource.annotation;
 
-import com.pig4cloud.pig.common.datasource.DynamicDataSourceAutoConfiguration;
+import com.bubblecloud.common.datasource.DynamicDataSourceAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

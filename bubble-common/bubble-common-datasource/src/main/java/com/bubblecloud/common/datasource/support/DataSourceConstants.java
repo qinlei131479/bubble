@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.datasource.support;
+package com.bubblecloud.common.datasource.support;
 
 /**
  * @author lengleng
