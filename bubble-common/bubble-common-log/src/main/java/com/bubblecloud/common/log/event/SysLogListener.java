@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.bubblecloud.backed.api.entity.SysLog;
 import com.bubblecloud.backed.api.feign.RemoteLogService;
-import com.pig4cloud.pig.common.core.jackson.PigJavaTimeModule;
+import com.bubblecloud.common.core.jackson.PigJavaTimeModule;
 import com.bubblecloud.common.log.config.PigLogProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

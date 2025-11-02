@@ -11,7 +11,7 @@ import com.bubblecloud.backed.api.entity.SysDept;
 import com.bubblecloud.backed.api.vo.DeptExcelVo;
 import com.bubblecloud.backed.mapper.SysDeptMapper;
 import com.bubblecloud.backed.service.SysDeptService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.pig4cloud.plugin.excel.vo.ErrorMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;

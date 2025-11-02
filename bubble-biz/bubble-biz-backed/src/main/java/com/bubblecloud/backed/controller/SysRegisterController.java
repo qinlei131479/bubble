@@ -2,7 +2,7 @@ package com.bubblecloud.backed.controller;
 
 import com.bubblecloud.backed.api.dto.UserDTO;
 import com.bubblecloud.backed.service.SysUserService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.annotation.Inner;
 import lombok.RequiredArgsConstructor;

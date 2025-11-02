@@ -3,7 +3,7 @@ package com.bubblecloud.backed.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backed.api.entity.SysPost;
 import com.bubblecloud.backed.api.vo.PostExcelVO;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;

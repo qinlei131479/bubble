@@ -1,7 +1,7 @@
 package com.bubblecloud.common.security.component;
 
 import cn.hutool.core.util.StrUtil;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.security.annotation.Inner;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

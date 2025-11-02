@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.bubblecloud.backed.api.feign.RemoteDictService;
 import com.bubblecloud.backed.api.entity.SysDictItem;
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.core.util.SpringContextHolder;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;

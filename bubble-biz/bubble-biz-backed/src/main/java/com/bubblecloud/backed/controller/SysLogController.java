@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.backed.api.dto.SysLogDTO;
 import com.bubblecloud.backed.api.entity.SysLog;
 import com.bubblecloud.backed.service.SysLogService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.security.annotation.Inner;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

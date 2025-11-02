@@ -12,7 +12,7 @@ import com.bubblecloud.auth.support.password.OAuth2ResourceOwnerPasswordAuthenti
 import com.bubblecloud.auth.support.password.OAuth2ResourceOwnerPasswordAuthenticationProvider;
 import com.bubblecloud.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationConverter;
 import com.bubblecloud.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationProvider;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

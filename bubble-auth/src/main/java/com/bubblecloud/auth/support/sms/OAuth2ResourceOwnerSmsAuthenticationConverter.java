@@ -1,7 +1,7 @@
 package com.bubblecloud.auth.support.sms;
 
 import com.bubblecloud.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationConverter;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.security.util.OAuth2EndpointUtils;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;

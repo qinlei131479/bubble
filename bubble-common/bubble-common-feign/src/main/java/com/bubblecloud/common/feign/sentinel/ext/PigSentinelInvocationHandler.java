@@ -9,7 +9,7 @@ import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.bubblecloud.common.feign.annotation.FeignRetry;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import feign.Feign;
 import feign.InvocationHandlerFactory;
 import feign.MethodMetadata;

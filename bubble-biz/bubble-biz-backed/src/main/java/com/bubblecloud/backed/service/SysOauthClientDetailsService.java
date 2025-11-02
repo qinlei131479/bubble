@@ -3,7 +3,7 @@ package com.bubblecloud.backed.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backed.api.entity.SysOauthClientDetails;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * <p>

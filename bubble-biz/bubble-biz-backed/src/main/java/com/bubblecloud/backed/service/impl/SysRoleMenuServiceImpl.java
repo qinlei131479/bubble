@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bubblecloud.backed.api.entity.SysRoleMenu;
 import com.bubblecloud.backed.mapper.SysRoleMenuMapper;
 import com.bubblecloud.backed.service.SysRoleMenuService;
-import com.pig4cloud.pig.common.core.constant.CacheConstants;
+import com.bubblecloud.common.core.constant.CacheConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;

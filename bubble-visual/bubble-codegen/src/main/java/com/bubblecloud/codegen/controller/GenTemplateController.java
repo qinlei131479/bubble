@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.codegen.entity.GenTemplateEntity;
 import com.bubblecloud.codegen.service.GenTemplateService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.pig.common.xss.core.XssCleanIgnore;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;

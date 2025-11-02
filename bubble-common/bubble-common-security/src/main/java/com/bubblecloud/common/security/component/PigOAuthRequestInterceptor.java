@@ -2,8 +2,8 @@ package com.bubblecloud.common.security.component;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
-import com.pig4cloud.pig.common.core.util.WebUtils;
+import com.bubblecloud.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.util.WebUtils;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;

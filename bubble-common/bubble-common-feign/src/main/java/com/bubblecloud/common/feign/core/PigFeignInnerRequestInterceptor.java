@@ -1,6 +1,6 @@
 package com.bubblecloud.common.feign.core;
 
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.feign.annotation.NoToken;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

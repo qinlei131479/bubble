@@ -2,7 +2,7 @@ package com.bubblecloud.auth.support.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.pig4cloud.pig.common.core.util.WebUtils;
+import com.bubblecloud.common.core.util.WebUtils;
 import com.bubblecloud.common.security.service.PigUserDetailsService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;

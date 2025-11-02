@@ -6,7 +6,7 @@ import com.bubblecloud.codegen.entity.GenTable;
 import com.bubblecloud.codegen.entity.GenTableColumnEntity;
 import com.bubblecloud.codegen.service.GenTableColumnService;
 import com.bubblecloud.codegen.service.GenTableService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import io.swagger.v3.oas.annotations.Operation;

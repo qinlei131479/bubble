@@ -9,11 +9,11 @@ import com.bubblecloud.auth.support.handler.PigAuthenticationFailureEventHandler
 import com.bubblecloud.backed.api.entity.SysOauthClientDetails;
 import com.bubblecloud.backed.api.feign.RemoteClientDetailsService;
 import com.bubblecloud.backed.api.vo.TokenVo;
-import com.pig4cloud.pig.common.core.constant.CacheConstants;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
-import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.core.util.RetOps;
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.core.constant.CacheConstants;
+import com.bubblecloud.common.core.constant.CommonConstants;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.core.util.RetOps;
+import com.bubblecloud.common.core.util.SpringContextHolder;
 import com.bubblecloud.common.security.annotation.Inner;
 import com.bubblecloud.common.security.util.OAuth2EndpointUtils;
 import com.bubblecloud.common.security.util.OAuth2ErrorCodesExpand;

@@ -1,8 +1,8 @@
 package com.bubblecloud.auth.support.handler;
 
 import com.bubblecloud.backed.api.entity.SysLog;
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
-import com.pig4cloud.pig.common.core.util.WebUtils;
+import com.bubblecloud.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.core.util.WebUtils;
 import com.bubblecloud.common.log.event.SysLogEvent;
 import com.bubblecloud.common.log.util.SysLogUtils;
 import lombok.extern.slf4j.Slf4j;

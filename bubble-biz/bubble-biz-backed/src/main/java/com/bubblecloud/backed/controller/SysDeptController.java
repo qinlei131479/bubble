@@ -3,7 +3,7 @@ package com.bubblecloud.backed.controller;
 import com.bubblecloud.backed.api.entity.SysDept;
 import com.bubblecloud.backed.api.vo.DeptExcelVo;
 import com.bubblecloud.backed.service.SysDeptService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.RequestExcel;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;

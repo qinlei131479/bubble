@@ -1,8 +1,8 @@
 package com.bubblecloud.auth.endpoint;
 
 import cn.hutool.core.lang.Validator;
-import com.pig4cloud.pig.common.core.constant.CacheConstants;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.CacheConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import io.springboot.captcha.ArithmeticCaptcha;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

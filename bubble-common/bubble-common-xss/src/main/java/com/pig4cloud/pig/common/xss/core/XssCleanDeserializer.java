@@ -1,6 +1,6 @@
 package com.pig4cloud.pig.common.xss.core;
 
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.core.util.SpringContextHolder;
 import com.pig4cloud.pig.common.xss.config.PigXssProperties;
 import com.pig4cloud.pig.common.xss.utils.XssUtil;
 import lombok.extern.slf4j.Slf4j;

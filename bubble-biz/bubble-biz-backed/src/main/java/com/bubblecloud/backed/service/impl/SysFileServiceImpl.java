@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bubblecloud.backed.api.entity.SysFile;
 import com.bubblecloud.backed.mapper.SysFileMapper;
 import com.bubblecloud.backed.service.SysFileService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.file.core.FileProperties;
 import com.bubblecloud.common.file.core.FileTemplate;
 import javax.servlet.http.HttpServletResponse;

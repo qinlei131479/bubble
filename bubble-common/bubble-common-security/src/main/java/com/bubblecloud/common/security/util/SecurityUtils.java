@@ -1,7 +1,7 @@
 package com.bubblecloud.common.security.util;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.security.service.PigUser;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.Authentication;

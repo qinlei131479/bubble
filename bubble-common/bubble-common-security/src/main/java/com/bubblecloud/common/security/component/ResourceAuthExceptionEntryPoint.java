@@ -1,8 +1,8 @@
 package com.bubblecloud.common.security.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.constant.CommonConstants;
+import com.bubblecloud.common.core.util.R;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.MessageSource;

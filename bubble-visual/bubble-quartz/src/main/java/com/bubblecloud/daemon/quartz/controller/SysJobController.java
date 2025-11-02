@@ -11,7 +11,7 @@ import com.bubblecloud.daemon.quartz.entity.SysJobLog;
 import com.bubblecloud.daemon.quartz.service.SysJobLogService;
 import com.bubblecloud.daemon.quartz.service.SysJobService;
 import com.bubblecloud.daemon.quartz.util.TaskUtil;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.util.SecurityUtils;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bubblecloud.codegen.entity.GenDatasourceConf;
 import com.bubblecloud.codegen.mapper.GenDatasourceConfMapper;
 import com.bubblecloud.codegen.service.GenDatasourceConfService;
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.core.util.SpringContextHolder;
 import com.bubblecloud.common.datasource.enums.DsConfTypeEnum;
 import com.bubblecloud.common.datasource.enums.DsJdbcUrlEnum;
 import lombok.RequiredArgsConstructor;

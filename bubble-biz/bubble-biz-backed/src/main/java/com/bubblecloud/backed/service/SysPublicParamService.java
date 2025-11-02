@@ -2,7 +2,7 @@ package com.bubblecloud.backed.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backed.api.entity.SysPublicParam;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * 公共参数配置

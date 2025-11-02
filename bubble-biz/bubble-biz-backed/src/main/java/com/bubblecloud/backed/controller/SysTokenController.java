@@ -1,7 +1,7 @@
 package com.bubblecloud.backed.controller;
 
 import com.bubblecloud.backed.api.feign.RemoteTokenService;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,6 +1,6 @@
 package com.bubblecloud.backed.service;
 
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * @author lengleng

@@ -1,7 +1,7 @@
 package com.bubblecloud.common.feign.sentinel.handle;
 
 import com.alibaba.csp.sentinel.Tracer;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.annotation.Order;

@@ -1,8 +1,8 @@
 package com.bubblecloud.backed.api.feign;
 
 import com.bubblecloud.backed.api.entity.SysOauthClientDetails;
-import com.pig4cloud.pig.common.core.constant.ServiceNameConstants;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.constant.ServiceNameConstants;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.feign.annotation.NoToken;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

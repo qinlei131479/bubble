@@ -8,7 +8,7 @@ import com.bubblecloud.backed.api.dto.UserInfo;
 import com.bubblecloud.backed.api.entity.SysUser;
 import com.bubblecloud.backed.api.vo.UserExcelVO;
 import com.bubblecloud.backed.api.vo.UserVO;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;

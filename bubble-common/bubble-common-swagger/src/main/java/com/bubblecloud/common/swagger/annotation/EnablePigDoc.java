@@ -1,7 +1,7 @@
 package com.bubblecloud.common.swagger.annotation;
 
 import com.bubblecloud.common.swagger.support.SwaggerProperties;
-import com.pig4cloud.pig.common.core.factory.YamlPropertySourceFactory;
+import com.bubblecloud.common.core.factory.YamlPropertySourceFactory;
 import com.bubblecloud.common.swagger.config.OpenAPIDefinitionImportSelector;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
