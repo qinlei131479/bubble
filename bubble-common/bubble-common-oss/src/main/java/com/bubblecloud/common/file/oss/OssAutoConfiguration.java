@@ -1,9 +1,9 @@
-package com.pig4cloud.pig.common.file.oss;
+package com.bubblecloud.common.file.oss;
 
-import com.pig4cloud.pig.common.file.core.FileProperties;
-import com.pig4cloud.pig.common.file.core.FileTemplate;
-import com.pig4cloud.pig.common.file.oss.http.OssEndpoint;
-import com.pig4cloud.pig.common.file.oss.service.OssTemplate;
+import com.bubblecloud.common.file.oss.http.OssEndpoint;
+import com.bubblecloud.common.file.oss.service.OssTemplate;
+import com.bubblecloud.common.file.core.FileProperties;
+import com.bubblecloud.common.file.core.FileTemplate;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

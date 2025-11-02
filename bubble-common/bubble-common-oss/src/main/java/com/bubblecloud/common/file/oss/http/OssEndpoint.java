@@ -1,9 +1,9 @@
-package com.pig4cloud.pig.common.file.oss.http;
+package com.bubblecloud.common.file.oss.http;
 
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.pig4cloud.pig.common.file.oss.service.OssTemplate;
+import com.bubblecloud.common.file.oss.service.OssTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.SneakyThrows;

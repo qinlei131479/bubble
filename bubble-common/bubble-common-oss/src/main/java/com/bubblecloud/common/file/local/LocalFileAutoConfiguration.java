@@ -1,7 +1,7 @@
-package com.pig4cloud.pig.common.file.local;
+package com.bubblecloud.common.file.local;
 
-import com.pig4cloud.pig.common.file.core.FileProperties;
-import com.pig4cloud.pig.common.file.core.FileTemplate;
+import com.bubblecloud.common.file.core.FileProperties;
+import com.bubblecloud.common.file.core.FileTemplate;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

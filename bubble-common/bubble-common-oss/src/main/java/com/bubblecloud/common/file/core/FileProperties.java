@@ -1,7 +1,7 @@
-package com.pig4cloud.pig.common.file.core;
+package com.bubblecloud.common.file.core;
 
-import com.pig4cloud.pig.common.file.local.LocalFileProperties;
-import com.pig4cloud.pig.common.file.oss.OssProperties;
+import com.bubblecloud.common.file.local.LocalFileProperties;
+import com.bubblecloud.common.file.oss.OssProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

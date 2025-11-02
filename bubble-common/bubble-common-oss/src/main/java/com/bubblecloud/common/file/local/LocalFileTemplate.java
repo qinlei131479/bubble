@@ -1,11 +1,11 @@
-package com.pig4cloud.pig.common.file.local;
+package com.bubblecloud.common.file.local;
 
 import cn.hutool.core.io.FileUtil;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.pig4cloud.pig.common.file.core.FileProperties;
-import com.pig4cloud.pig.common.file.core.FileTemplate;
+import com.bubblecloud.common.file.core.FileProperties;
+import com.bubblecloud.common.file.core.FileTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 

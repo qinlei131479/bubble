@@ -1,8 +1,8 @@
-package com.pig4cloud.pig.common.file;
+package com.bubblecloud.common.file;
 
-import com.pig4cloud.pig.common.file.core.FileProperties;
-import com.pig4cloud.pig.common.file.local.LocalFileAutoConfiguration;
-import com.pig4cloud.pig.common.file.oss.OssAutoConfiguration;
+import com.bubblecloud.common.file.core.FileProperties;
+import com.bubblecloud.common.file.local.LocalFileAutoConfiguration;
+import com.bubblecloud.common.file.oss.OssAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 

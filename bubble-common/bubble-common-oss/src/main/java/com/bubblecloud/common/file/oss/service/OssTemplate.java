@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.file.oss.service;
+package com.bubblecloud.common.file.oss.service;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
@@ -10,8 +10,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
-import com.pig4cloud.pig.common.file.core.FileProperties;
-import com.pig4cloud.pig.common.file.core.FileTemplate;
+import com.bubblecloud.common.file.core.FileProperties;
+import com.bubblecloud.common.file.core.FileTemplate;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
