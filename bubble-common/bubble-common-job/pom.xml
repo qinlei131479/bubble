@@ -12,7 +12,7 @@
 	<artifactId>bubble-common-job</artifactId>
 	<packaging>jar</packaging>
 
-	<description>pig 定时任务,基于xxl-job 支持自动发现</description>
+	<description>定时任务,基于xxl-job 支持自动发现</description>
 
 
 	<dependencies>

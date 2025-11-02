@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
 
     <name>bubble-common-bom</name>
-    <url>pig cloud parent</url>
-    <description>pig cloud parent</description>
+    <url>bubble cloud parent</url>
+    <description>bubble cloud parent</description>
 
     <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

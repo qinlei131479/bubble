@@ -11,7 +11,7 @@
     <artifactId>bubble-common</artifactId>
     <packaging>pom</packaging>
 
-    <description>pig 公共聚合模块</description>
+    <description>公共聚合模块</description>
 
     <modules>
         <module>bubble-common-bom</module>

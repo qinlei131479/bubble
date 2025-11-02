@@ -11,7 +11,7 @@
     <artifactId>bubble-biz-backed-api</artifactId>
     <packaging>jar</packaging>
 
-    <description>pig 通用用户权限管理系统公共api模块</description>
+    <description>通用用户权限管理系统公共api模块</description>
 
 
     <dependencies>
