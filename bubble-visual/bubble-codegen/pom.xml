@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.pig4cloud</groupId>
+        <groupId>com.bubblecloud</groupId>
         <artifactId>bubble-visual</artifactId>
         <version>${revision}</version>
     </parent>
@@ -33,12 +33,12 @@
         </dependency>
         <!--数据操作-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-mybatis</artifactId>
         </dependency>
         <!--动态数据源 数据操作-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-datasource</artifactId>
         </dependency>
         <!--mybatis-->
@@ -63,7 +63,7 @@
         </dependency>
         <!--common-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-core</artifactId>
         </dependency>
         <dependency>
@@ -77,20 +77,20 @@
         </dependency>
         <!--swagger-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-swagger</artifactId>
         </dependency>
         <!--安全模块-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-xss</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-log</artifactId>
         </dependency>
         <!--代码生成模板引擎-->

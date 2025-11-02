@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.pig4cloud</groupId>
+        <groupId>com.bubblecloud</groupId>
         <artifactId>bubble</artifactId>
         <version>${revision}</version>
     </parent>
@@ -26,16 +26,16 @@
         </dependency>
         <!--断路器依赖-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-feign</artifactId>
         </dependency>
         <!--upms api、model 模块-->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-biz-backed-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-security</artifactId>
         </dependency>
         <dependency>
@@ -54,7 +54,7 @@
         </dependency>
         <!-- log -->
         <dependency>
-            <groupId>com.pig4cloud</groupId>
+            <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-log</artifactId>
         </dependency>
         <!-- 调用验证码核心模块 -->

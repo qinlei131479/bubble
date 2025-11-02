@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.pig4cloud</groupId>
+    <groupId>com.bubblecloud</groupId>
     <artifactId>bubble-common-bom</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -48,62 +48,62 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-core</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-datasource</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-job</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-log</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-mybatis</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-security</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-feign</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-swagger</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-seata</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-xss</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-common-oss</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.pig4cloud</groupId>
+                <groupId>com.bubblecloud</groupId>
                 <artifactId>bubble-biz-backed-api</artifactId>
                 <version>${revision}</version>
             </dependency>
