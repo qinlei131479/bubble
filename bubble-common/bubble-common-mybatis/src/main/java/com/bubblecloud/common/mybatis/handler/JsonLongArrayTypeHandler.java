@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.handler;
+package com.bubblecloud.common.mybatis.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;

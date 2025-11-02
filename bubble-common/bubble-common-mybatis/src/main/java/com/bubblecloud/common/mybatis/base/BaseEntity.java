@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.base;
+package com.bubblecloud.common.mybatis.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.plugins;
+package com.bubblecloud.common.mybatis.plugins;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.metadata.IPage;

@@ -1,10 +1,10 @@
-package  com.pig4cloud.pig.common.mybatis;
+package com.bubblecloud.common.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.pig4cloud.pig.common.mybatis.config.MybatisPlusMetaObjectHandler;
-import com.pig4cloud.pig.common.mybatis.plugins.PigPaginationInnerInterceptor;
-import com.pig4cloud.pig.common.mybatis.resolver.SqlFilterArgumentResolver;
+import com.bubblecloud.common.mybatis.config.MybatisPlusMetaObjectHandler;
+import com.bubblecloud.common.mybatis.plugins.PigPaginationInnerInterceptor;
+import com.bubblecloud.common.mybatis.resolver.SqlFilterArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
