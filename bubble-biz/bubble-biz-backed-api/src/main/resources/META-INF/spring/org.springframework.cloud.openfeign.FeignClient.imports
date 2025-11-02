@@ -1,6 +1,6 @@
-com.pig4cloud.pig.admin.api.feign.RemoteClientDetailsService
-com.pig4cloud.pig.admin.api.feign.RemoteDictService
-com.pig4cloud.pig.admin.api.feign.RemoteLogService
-com.pig4cloud.pig.admin.api.feign.RemoteParamService
-com.pig4cloud.pig.admin.api.feign.RemoteTokenService
-com.pig4cloud.pig.admin.api.feign.RemoteUserService
+com.bubblecloud.backed.api.feign.RemoteClientDetailsService
+com.bubblecloud.backed.api.feign.RemoteDictService
+com.bubblecloud.backed.api.feign.RemoteLogService
+com.bubblecloud.backed.api.feign.RemoteParamService
+com.bubblecloud.backed.api.feign.RemoteTokenService
+com.bubblecloud.backed.api.feign.RemoteUserService

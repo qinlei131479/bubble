@@ -1,6 +1,6 @@
 package  com.pig4cloud.pig.common.log.event;
 
-import com.pig4cloud.pig.admin.api.entity.SysLog;
+import com.bubblecloud.backed.api.entity.SysLog;
 import org.springframework.context.ApplicationEvent;
 
 /**

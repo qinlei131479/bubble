@@ -2,8 +2,8 @@ package com.pig4cloud.pig.common.security.service;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.pig4cloud.pig.admin.api.entity.SysOauthClientDetails;
-import com.pig4cloud.pig.admin.api.feign.RemoteClientDetailsService;
+import com.bubblecloud.backed.api.entity.SysOauthClientDetails;
+import com.bubblecloud.backed.api.feign.RemoteClientDetailsService;
 import com.pig4cloud.pig.common.core.constant.CacheConstants;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.util.RetOps;

@@ -1,8 +1,8 @@
 package  com.pig4cloud.pig.common.security.service;
 
-import com.pig4cloud.pig.admin.api.dto.UserDTO;
-import com.pig4cloud.pig.admin.api.dto.UserInfo;
-import com.pig4cloud.pig.admin.api.feign.RemoteUserService;
+import com.bubblecloud.backed.api.dto.UserDTO;
+import com.bubblecloud.backed.api.dto.UserInfo;
+import com.bubblecloud.backed.api.feign.RemoteUserService;
 import com.pig4cloud.pig.common.core.constant.CacheConstants;
 import com.pig4cloud.pig.common.core.util.R;
 import lombok.RequiredArgsConstructor;
