@@ -1,6 +1,6 @@
 package org.springframework.cloud.openfeign;
 
-import com.pig4cloud.pig.common.feign.PigFeignAutoConfiguration;
+import com.bubblecloud.common.feign.PigFeignAutoConfiguration;
 import lombok.Getter;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;

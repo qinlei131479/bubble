@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.feign.annotation;
+package com.bubblecloud.common.feign.annotation;
 
 import java.lang.annotation.*;
 

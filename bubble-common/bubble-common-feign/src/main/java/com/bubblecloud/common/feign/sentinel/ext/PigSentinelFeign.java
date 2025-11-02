@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.feign.sentinel.ext;
+package com.bubblecloud.common.feign.sentinel.ext;
 
 import com.alibaba.cloud.sentinel.feign.SentinelContractHolder;
 import feign.Contract;

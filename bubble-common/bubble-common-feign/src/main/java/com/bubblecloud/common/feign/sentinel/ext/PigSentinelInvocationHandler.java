@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.feign.sentinel.ext;
+package com.bubblecloud.common.feign.sentinel.ext;
 
 import com.alibaba.cloud.sentinel.feign.SentinelContractHolder;
 import com.alibaba.cloud.sentinel.feign.SentinelInvocationHandler;
@@ -8,8 +8,8 @@ import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.bubblecloud.common.feign.annotation.FeignRetry;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.feign.annotation.FeignRetry;
 import feign.Feign;
 import feign.InvocationHandlerFactory;
 import feign.MethodMetadata;

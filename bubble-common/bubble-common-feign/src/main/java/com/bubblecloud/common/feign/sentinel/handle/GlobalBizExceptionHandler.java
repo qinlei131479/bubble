@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.feign.sentinel.handle;
+package com.bubblecloud.common.feign.sentinel.handle;
 
 import com.alibaba.csp.sentinel.Tracer;
 import com.pig4cloud.pig.common.core.util.R;

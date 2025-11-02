@@ -1,6 +1,6 @@
-package com.pig4cloud.pig.common.feign.retry;
+package com.bubblecloud.common.feign.retry;
 
-import com.pig4cloud.pig.common.feign.annotation.FeignRetry;
+import com.bubblecloud.common.feign.annotation.FeignRetry;
 import feign.RetryableException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

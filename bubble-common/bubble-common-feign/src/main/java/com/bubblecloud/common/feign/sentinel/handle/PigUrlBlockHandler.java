@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.feign.sentinel.handle;
+package com.bubblecloud.common.feign.sentinel.handle;
 
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.BlockException;

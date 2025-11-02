@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.feign.core;
+package com.bubblecloud.common.feign.core;
 
 import feign.RequestInterceptor;
 import org.springframework.http.HttpHeaders;

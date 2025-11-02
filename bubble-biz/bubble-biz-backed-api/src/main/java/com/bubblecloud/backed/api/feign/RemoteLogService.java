@@ -3,7 +3,7 @@ package com.bubblecloud.backed.api.feign;
 import com.bubblecloud.backed.api.entity.SysLog;
 import com.pig4cloud.pig.common.core.constant.ServiceNameConstants;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.feign.annotation.NoToken;
+import com.bubblecloud.common.feign.annotation.NoToken;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

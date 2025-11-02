@@ -1,7 +1,7 @@
-package com.pig4cloud.pig.common.feign.core;
+package com.bubblecloud.common.feign.core;
 
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
-import com.pig4cloud.pig.common.feign.annotation.NoToken;
+import com.bubblecloud.common.feign.annotation.NoToken;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.springframework.core.Ordered;

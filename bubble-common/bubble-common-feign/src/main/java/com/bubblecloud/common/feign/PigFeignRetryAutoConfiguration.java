@@ -1,6 +1,6 @@
-package  com.pig4cloud.pig.common.feign;
+package com.bubblecloud.common.feign;
 
-import com.pig4cloud.pig.common.feign.retry.FeignRetryAspect;
+import com.bubblecloud.common.feign.retry.FeignRetryAspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
