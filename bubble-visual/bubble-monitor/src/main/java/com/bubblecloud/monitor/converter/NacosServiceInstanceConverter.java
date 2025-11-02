@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.monitor.converter;
+package com.bubblecloud.monitor.converter;
 
 import de.codecentric.boot.admin.server.cloud.discovery.DefaultServiceInstanceConverter;
 import org.springframework.cloud.client.ServiceInstance;
@@ -12,8 +12,8 @@ import static java.util.Collections.emptyMap;
 /**
  * 针对 nacos 2.x 服务注册处理
  *
- * @author lengleng
- * @date 2021/12/20
+ * @author qinlei
+ * @date 2023/12/20
  */
 @Configuration(proxyBeanMethods = false)
 public class NacosServiceInstanceConverter extends DefaultServiceInstanceConverter {

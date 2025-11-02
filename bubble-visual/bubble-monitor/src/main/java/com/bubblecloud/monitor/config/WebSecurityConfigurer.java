@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.monitor.config;
+package com.bubblecloud.monitor.config;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +10,8 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 /**
  * WebSecurityConfigurer
  *
- * @author lishangbu
- * @date 2019/2/1
+ * @author qinlei
+ * @date 2023/12/20
  */
 @EnableWebSecurity
 public class WebSecurityConfigurer {
