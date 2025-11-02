@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.gateway.handler;
+package com.bubblecloud.gateway.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

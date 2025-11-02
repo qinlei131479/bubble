@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.gateway;
+package com.bubblecloud.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

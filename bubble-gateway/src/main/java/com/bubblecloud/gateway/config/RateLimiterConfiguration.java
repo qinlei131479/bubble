@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.gateway.config;
+package com.bubblecloud.gateway.config;
 
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;

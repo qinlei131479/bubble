@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.gateway.config;
+package com.bubblecloud.gateway.config;
 
 import com.alibaba.nacos.client.naming.event.InstancesChangeEvent;
 import com.alibaba.nacos.common.notify.Event;

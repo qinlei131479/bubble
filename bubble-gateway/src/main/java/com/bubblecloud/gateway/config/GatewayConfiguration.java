@@ -1,8 +1,8 @@
-package com.pig4cloud.pig.gateway.config;
+package com.bubblecloud.gateway.config;
 
+import com.bubblecloud.gateway.handler.GlobalExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pig4cloud.pig.gateway.filter.PigRequestGlobalFilter;
-import com.pig4cloud.pig.gateway.handler.GlobalExceptionHandler;
+import com.bubblecloud.gateway.filter.PigRequestGlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
