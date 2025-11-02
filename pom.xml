@@ -4,23 +4,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pig4cloud</groupId>
-    <artifactId>pig</artifactId>
+    <artifactId>bubble</artifactId>
     <name>${project.artifactId}</name>
     <version>${revision}</version>
     <packaging>pom</packaging>
     <description>企业级OA系统</description>
 
     <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
         <!-- 项目版本号 -->
-        <revision>3.8.1-JDK8</revision>
+        <revision>4.0.0-JDK8</revision>
         <spring-boot.version>2.7.18</spring-boot.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.6.1</spring-cloud-alibaba.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot-admin.version>2.7.15</spring-boot-admin.version>
         <spring.authorization.version>0.4.5</spring.authorization.version>
+
         <captcha.version>2.2.3</captcha.version>
         <screw.version>0.0.1</screw.version>
         <lombok.version>1.18.30</lombok.version>
@@ -31,7 +33,8 @@
         <knife4j.version>3.0.5</knife4j.version>
         <springdoc.version>1.6.9</springdoc.version>
         <xxl-job.version>2.4.0</xxl-job.version>
-        <docker.plugin.version>0.32.0</docker.plugin.version>
+        <!--docker远程库配置 -->
+		<docker.plugin.version>0.32.0</docker.plugin.version>
         <docker.host>http://192.168.0.100:2375</docker.host>
         <docker.registry>192.168.0.100</docker.registry>
         <docker.namespace>pig4cloud</docker.namespace>
@@ -83,12 +86,12 @@
     </dependencies>
 
     <modules>
-        <module>pig-register</module>
-        <module>pig-gateway</module>
-        <module>pig-auth</module>
-        <module>pig-upms</module>
-        <module>pig-common</module>
-        <module>pig-visual</module>
+        <module>bubble-register</module>
+        <module>bubble-gateway</module>
+        <module>bubble-auth</module>
+        <module>bubble-biz</module>
+        <module>bubble-common</module>
+        <module>bubble-visual</module>
     </modules>
 
     <dependencyManagement>
@@ -96,7 +99,7 @@
             <!--pig 公共版本定义-->
             <dependency>
                 <groupId>com.pig4cloud</groupId>
-                <artifactId>pig-common-bom</artifactId>
+                <artifactId>bubble-common-bom</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>

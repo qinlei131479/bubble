@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.pig4cloud</groupId>
+        <artifactId>bubble</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>bubble-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>pig 公共聚合模块</description>
+
+    <modules>
+        <module>bubble-common-bom</module>
+        <module>bubble-common-core</module>
+        <module>bubble-common-datasource</module>
+        <module>bubble-common-job</module>
+        <module>bubble-common-log</module>
+        <module>bubble-common-mybatis</module>
+        <module>bubble-common-oss</module>
+        <module>bubble-common-seata</module>
+        <module>bubble-common-security</module>
+        <module>bubble-common-feign</module>
+        <module>bubble-common-swagger</module>
+        <module>bubble-common-xss</module>
+    </modules>
+</project>
