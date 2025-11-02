@@ -6,6 +6,6 @@ ENV TZ=Asia/Shanghai
 
 RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY paopao_oa.sql /docker-entrypoint-initdb.d
+COPY bubble.sql /docker-entrypoint-initdb.d
 
-COPY paopao_oa_config.sql /docker-entrypoint-initdb.d
+COPY bubble_config.sql /docker-entrypoint-initdb.d
