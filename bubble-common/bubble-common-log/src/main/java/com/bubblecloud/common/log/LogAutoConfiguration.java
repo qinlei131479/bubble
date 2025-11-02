@@ -1,9 +1,9 @@
-package  com.pig4cloud.pig.common.log;
+package com.bubblecloud.common.log;
 
 import com.bubblecloud.backed.api.feign.RemoteLogService;
-import com.pig4cloud.pig.common.log.aspect.SysLogAspect;
-import com.pig4cloud.pig.common.log.config.PigLogProperties;
-import com.pig4cloud.pig.common.log.event.SysLogListener;
+import com.bubblecloud.common.log.aspect.SysLogAspect;
+import com.bubblecloud.common.log.config.PigLogProperties;
+import com.bubblecloud.common.log.event.SysLogListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

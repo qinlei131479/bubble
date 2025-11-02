@@ -4,7 +4,7 @@ import com.bubblecloud.backed.api.entity.SysDept;
 import com.bubblecloud.backed.api.vo.DeptExcelVo;
 import com.bubblecloud.backed.service.SysDeptService;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.log.annotation.SysLog;
+import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.RequestExcel;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

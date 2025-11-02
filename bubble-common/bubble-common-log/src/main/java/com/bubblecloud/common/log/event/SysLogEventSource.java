@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.log.event;
+package com.bubblecloud.common.log.event;
 
 import com.bubblecloud.backed.api.entity.SysLog;
 import lombok.Data;

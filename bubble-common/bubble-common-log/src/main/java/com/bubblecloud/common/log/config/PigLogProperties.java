@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.log.config;
+package com.bubblecloud.common.log.config;
 
 import lombok.Getter;
 import lombok.Setter;

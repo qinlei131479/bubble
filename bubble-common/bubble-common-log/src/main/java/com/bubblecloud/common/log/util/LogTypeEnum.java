@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.log.util;
+package com.bubblecloud.common.log.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

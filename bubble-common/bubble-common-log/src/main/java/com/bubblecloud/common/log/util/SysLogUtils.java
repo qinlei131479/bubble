@@ -1,15 +1,14 @@
-package  com.pig4cloud.pig.common.log.util;
+package com.bubblecloud.common.log.util;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
+import com.bubblecloud.common.log.config.PigLogProperties;
+import com.bubblecloud.common.log.event.SysLogEventSource;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.util.SpringContextHolder;
-import com.pig4cloud.pig.common.log.config.PigLogProperties;
-import com.pig4cloud.pig.common.log.event.SysLogEventSource;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;

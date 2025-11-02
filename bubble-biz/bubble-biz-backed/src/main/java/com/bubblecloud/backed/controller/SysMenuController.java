@@ -3,7 +3,7 @@ package com.bubblecloud.backed.controller;
 import com.bubblecloud.backed.api.entity.SysMenu;
 import com.bubblecloud.backed.service.SysMenuService;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.log.annotation.SysLog;
+import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.util.SecurityUtils;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

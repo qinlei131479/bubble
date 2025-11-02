@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.log.event;
+package com.bubblecloud.common.log.event;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.bubblecloud.backed.api.entity.SysLog;
 import com.bubblecloud.backed.api.feign.RemoteLogService;
 import com.pig4cloud.pig.common.core.jackson.PigJavaTimeModule;
-import com.pig4cloud.pig.common.log.config.PigLogProperties;
+import com.bubblecloud.common.log.config.PigLogProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

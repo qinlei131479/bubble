@@ -9,7 +9,7 @@ import com.bubblecloud.codegen.service.GenGroupService;
 import com.bubblecloud.codegen.util.vo.GroupVO;
 import com.bubblecloud.codegen.util.vo.TemplateGroupDTO;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.log.annotation.SysLog;
+import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

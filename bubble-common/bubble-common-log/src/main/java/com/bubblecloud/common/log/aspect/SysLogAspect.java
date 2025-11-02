@@ -1,11 +1,12 @@
-package  com.pig4cloud.pig.common.log.aspect;
+package com.bubblecloud.common.log.aspect;
 
 import cn.hutool.core.util.StrUtil;
+import com.bubblecloud.common.log.annotation.SysLog;
+import com.bubblecloud.common.log.event.SysLogEvent;
+import com.bubblecloud.common.log.event.SysLogEventSource;
+import com.bubblecloud.common.log.util.LogTypeEnum;
 import com.pig4cloud.pig.common.core.util.SpringContextHolder;
-import com.pig4cloud.pig.common.log.event.SysLogEvent;
-import com.pig4cloud.pig.common.log.event.SysLogEventSource;
-import com.pig4cloud.pig.common.log.util.LogTypeEnum;
-import com.pig4cloud.pig.common.log.util.SysLogUtils;
+import com.bubblecloud.common.log.util.SysLogUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class SysLogAspect {
 
 	@Around("@annotation(sysLog)")
 	@SneakyThrows
-	public Object around(ProceedingJoinPoint point, com.pig4cloud.pig.common.log.annotation.SysLog sysLog) {
+	public Object around(ProceedingJoinPoint point, SysLog sysLog) {
 		String strClassName = point.getTarget().getClass().getName();
 		String strMethodName = point.getSignature().getName();
 		log.debug("[类名]:{},[方法]:{}", strClassName, strMethodName);

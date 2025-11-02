@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.log.init;
+package com.bubblecloud.common.log.init;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;

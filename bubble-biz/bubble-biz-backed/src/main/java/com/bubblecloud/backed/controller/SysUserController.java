@@ -11,7 +11,7 @@ import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.exception.ErrorCodes;
 import com.pig4cloud.pig.common.core.util.MsgUtils;
 import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.log.annotation.SysLog;
+import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.annotation.Inner;
 import com.bubblecloud.common.security.util.SecurityUtils;
 import com.pig4cloud.plugin.excel.annotation.RequestExcel;

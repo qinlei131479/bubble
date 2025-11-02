@@ -1,4 +1,4 @@
-package  com.pig4cloud.pig.common.log.annotation;
+package com.bubblecloud.common.log.annotation;
 
 import java.lang.annotation.*;
 
