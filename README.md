@@ -36,35 +36,34 @@
 bubble-back  -- https://github.com/qinlei131479/bubble-back.git
 
 pig
-├── pig-auth -- 授权服务提供[3000]
-├── pig-boot -- 单体模式启动[9999]
-└── pig-common -- 系统公共模块
-     ├── pig-common-bom -- 全局依赖管理控制
-     ├── pig-common-core -- 公共工具类核心包
-     ├── pig-common-datasource -- 动态数据源包
-     ├── pig-common-job -- xxl-job 封装
-     ├── pig-common-log -- 日志服务
-     ├── pig-common-oss -- 文件上传工具类
-     ├── pig-common-mybatis -- mybatis 扩展封装
-     ├── pig-common-seata -- 分布式事务
-     ├── pig-common-security -- 安全工具类
-     ├── pig-common-swagger -- 接口文档
-     ├── pig-common-feign -- feign 扩展封装
-     └── pig-common-xss -- xss 安全封装
-├── pig-register -- Nacos Server[8848]
-├── pig-gateway -- Spring Cloud Gateway网关[9999]
-└── pig-upms -- 通用用户权限管理模块
-     └── pig-upms-api -- 通用用户权限管理系统公共api模块
-     └── pig-upms-biz -- 通用用户权限管理系统业务处理模块[4000]
-└── pig-visual
-     └── pig-monitor -- 服务监控 [5001]
-     ├── pig-codegen -- 图形化代码生成 [5002]
-     └── pig-quartz -- 定时任务管理台 [5007]
+├── bubble-auth -- 授权服务提供[8766]
+└── bubble-common -- 系统公共模块
+     ├── bubble-common-bom -- 全局依赖管理控制
+     ├── bubble-common-core -- 公共工具类核心包
+     ├── bubble-common-datasource -- 动态数据源包
+     ├── bubble-common-job -- xxl-job 封装
+     ├── bubble-common-log -- 日志服务
+     ├── bubble-common-oss -- 文件上传工具类
+     ├── bubble-common-mybatis -- mybatis 扩展封装
+     ├── bubble-common-seata -- 分布式事务
+     ├── bubble-common-security -- 安全工具类
+     ├── bubble-common-swagger -- 接口文档
+     ├── bubble-common-feign -- feign 扩展封装
+     └── bubble-common-xss -- xss 安全封装
+├── bubble-register -- Nacos Server[8848]
+├── bubble-gateway -- Spring Cloud Gateway网关[8666]
+└── bubble-biz -- 通用用户权限管理模块
+     └── bubble-biz-backed-api -- 通用用户权限管理系统公共api模块
+     └── bubble-biz-backed -- 通用用户权限管理系统业务处理模块[8801]
+└── bubble-visual
+     └── bubble-monitor -- 服务监控 [8902]
+     ├── bubble-codegen -- 图形化代码生成 [8901]
+     └── bubble-quartz -- 定时任务管理台 [8903]
 ```
 
 ### 本地开发 运行
 
-pig 提供了详细的，包括开发环境安装、服务端代码运行、前端代码运行等。
+bubble 提供了详细的，包括开发环境安装、服务端代码运行、前端代码运行等。
 
 请务必**完全按照**文档部署运行章节 进行操作，减少踩坑弯路！！
 
