@@ -3,7 +3,7 @@ package com.bubblecloud.backed.service;
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backed.api.entity.SysDept;
-import com.bubblecloud.backed.api.vo.DeptExcelVo;
+import com.bubblecloud.backed.api.vo.DeptExcelVO;
 import com.bubblecloud.common.core.util.R;
 import org.springframework.validation.BindingResult;
 
@@ -33,9 +33,9 @@ public interface SysDeptService extends IService<SysDept> {
 	 */
 	Boolean removeDeptById(Long id);
 
-	List<DeptExcelVo> listExcelVo();
+	List<DeptExcelVO> listExcelVo();
 
-	R importDept(List<DeptExcelVo> excelVOList, BindingResult bindingResult);
+	R importDept(List<DeptExcelVO> excelVOList, BindingResult bindingResult);
 
 	/**
 	 * 获取部门的所有后代部门列表

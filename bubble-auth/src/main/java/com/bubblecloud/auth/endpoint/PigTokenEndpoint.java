@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.auth.support.handler.PigAuthenticationFailureEventHandler;
 import com.bubblecloud.backed.api.entity.SysOauthClientDetails;
 import com.bubblecloud.backed.api.feign.RemoteClientDetailsService;
-import com.bubblecloud.backed.api.vo.TokenVo;
+import com.bubblecloud.backed.api.vo.TokenVO;
 import com.bubblecloud.common.core.constant.CacheConstants;
 import com.bubblecloud.common.core.constant.CommonConstants;
 import com.bubblecloud.common.core.util.R;
@@ -191,9 +191,9 @@ public class PigTokenEndpoint {
 		List<String> pages = keys.stream().skip((current - 1) * size).limit(size).collect(Collectors.toList());
 		Page result = new Page(current, size);
 
-		List<TokenVo> tokenVoList = redisTemplate.opsForValue().multiGet(pages).stream().map(obj -> {
+		List<TokenVO> tokenVoList = redisTemplate.opsForValue().multiGet(pages).stream().map(obj -> {
 			OAuth2Authorization authorization = (OAuth2Authorization) obj;
-			TokenVo tokenVo = new TokenVo();
+			TokenVO tokenVo = new TokenVO();
 			tokenVo.setClientId(authorization.getRegisteredClientId());
 			tokenVo.setId(authorization.getId());
 			tokenVo.setUsername(authorization.getPrincipalName());

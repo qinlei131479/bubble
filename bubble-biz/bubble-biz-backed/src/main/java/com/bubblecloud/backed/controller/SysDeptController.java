@@ -1,7 +1,7 @@
 package com.bubblecloud.backed.controller;
 
 import com.bubblecloud.backed.api.entity.SysDept;
-import com.bubblecloud.backed.api.vo.DeptExcelVo;
+import com.bubblecloud.backed.api.vo.DeptExcelVO;
 import com.bubblecloud.backed.service.SysDeptService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
@@ -116,7 +116,7 @@ public class SysDeptController {
 	 */
 	@ResponseExcel
 	@GetMapping("/export")
-	public List<DeptExcelVo> export() {
+	public List<DeptExcelVO> export() {
 		return sysDeptService.listExcelVo();
 	}
 
@@ -127,7 +127,7 @@ public class SysDeptController {
 	 * @return
 	 */
 	@PostMapping("import")
-	public R importDept(@RequestExcel List<DeptExcelVo> excelVOList, BindingResult bindingResult) {
+	public R importDept(@RequestExcel List<DeptExcelVO> excelVOList, BindingResult bindingResult) {
 
 		return sysDeptService.importDept(excelVOList, bindingResult);
 	}
