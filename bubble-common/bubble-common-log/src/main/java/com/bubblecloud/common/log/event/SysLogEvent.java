@@ -1,6 +1,6 @@
 package com.bubblecloud.common.log.event;
 
-import com.bubblecloud.backed.api.entity.SysLog;
+import com.bubblecloud.api.backend.entity.SysLog;
 import org.springframework.context.ApplicationEvent;
 
 /**

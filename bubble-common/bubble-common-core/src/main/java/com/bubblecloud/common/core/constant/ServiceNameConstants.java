@@ -14,6 +14,6 @@ public interface ServiceNameConstants {
 	/**
 	 * 管理后台模块
 	 */
-	String UMPS_SERVICE = "bubble-biz-backed";
+	String BACKEND_SERVICE = "bubble-biz-backend";
 
 }

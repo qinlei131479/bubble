@@ -32,7 +32,7 @@
         <!--upms api、model 模块-->
         <dependency>
             <groupId>com.bubblecloud</groupId>
-            <artifactId>bubble-biz-backed-api</artifactId>
+            <artifactId>bubble-api-backend</artifactId>
         </dependency>
         <dependency>
             <groupId>com.bubblecloud</groupId>

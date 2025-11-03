@@ -2,7 +2,7 @@ package com.bubblecloud.auth.support.handler;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import com.bubblecloud.backed.api.entity.SysLog;
+import com.bubblecloud.api.backend.entity.SysLog;
 import com.bubblecloud.common.core.constant.CommonConstants;
 import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.core.util.SpringContextHolder;

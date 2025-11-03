@@ -2,8 +2,8 @@ package com.bubblecloud.common.security.service;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import com.bubblecloud.backed.api.dto.UserInfo;
-import com.bubblecloud.backed.api.entity.SysUser;
+import com.bubblecloud.api.backend.dto.UserInfo;
+import com.bubblecloud.api.backend.entity.SysUser;
 import com.bubblecloud.common.core.constant.CommonConstants;
 import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.core.util.R;

@@ -104,7 +104,7 @@
             </dependency>
             <dependency>
                 <groupId>com.bubblecloud</groupId>
-                <artifactId>bubble-biz-backed-api</artifactId>
+                <artifactId>bubble-api-backend</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

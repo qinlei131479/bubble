@@ -1,8 +1,8 @@
 package com.bubblecloud.common.security.service;
 
-import com.bubblecloud.backed.api.dto.UserDTO;
-import com.bubblecloud.backed.api.dto.UserInfo;
-import com.bubblecloud.backed.api.feign.RemoteUserService;
+import com.bubblecloud.api.backend.dto.UserDTO;
+import com.bubblecloud.api.backend.dto.UserInfo;
+import com.bubblecloud.api.backend.feign.RemoteUserService;
 import com.bubblecloud.common.core.constant.CacheConstants;
 import com.bubblecloud.common.core.util.R;
 import lombok.RequiredArgsConstructor;

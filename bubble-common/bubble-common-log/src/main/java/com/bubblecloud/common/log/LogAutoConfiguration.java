@@ -1,6 +1,6 @@
 package com.bubblecloud.common.log;
 
-import com.bubblecloud.backed.api.feign.RemoteLogService;
+import com.bubblecloud.api.backend.feign.RemoteLogService;
 import com.bubblecloud.common.log.aspect.SysLogAspect;
 import com.bubblecloud.common.log.config.PigLogProperties;
 import com.bubblecloud.common.log.event.SysLogListener;

@@ -2,8 +2,8 @@ package com.bubblecloud.common.security.service;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.bubblecloud.backed.api.entity.SysOauthClientDetails;
-import com.bubblecloud.backed.api.feign.RemoteClientDetailsService;
+import com.bubblecloud.api.backend.entity.SysOauthClientDetails;
+import com.bubblecloud.api.backend.feign.RemoteClientDetailsService;
 import com.bubblecloud.common.core.constant.CacheConstants;
 import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.core.util.RetOps;

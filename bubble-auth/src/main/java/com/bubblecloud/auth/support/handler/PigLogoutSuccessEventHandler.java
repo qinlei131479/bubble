@@ -1,6 +1,6 @@
 package com.bubblecloud.auth.support.handler;
 
-import com.bubblecloud.backed.api.entity.SysLog;
+import com.bubblecloud.api.backend.entity.SysLog;
 import com.bubblecloud.common.core.util.SpringContextHolder;
 import com.bubblecloud.common.core.util.WebUtils;
 import com.bubblecloud.common.log.event.SysLogEvent;
