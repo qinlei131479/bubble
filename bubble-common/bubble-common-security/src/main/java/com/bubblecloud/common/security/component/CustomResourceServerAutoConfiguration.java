@@ -33,7 +33,7 @@ public class CustomResourceServerAutoConfiguration {
 	 * @return BearerTokenExtractor
 	 */
 	@Bean
-	public CustomBearerTokenExtractor pigBearerTokenExtractor(PermitAllUrlProperties urlProperties) {
+	public CustomBearerTokenExtractor customBearerTokenExtractor(PermitAllUrlProperties urlProperties) {
 		return new CustomBearerTokenExtractor(urlProperties);
 	}
 
