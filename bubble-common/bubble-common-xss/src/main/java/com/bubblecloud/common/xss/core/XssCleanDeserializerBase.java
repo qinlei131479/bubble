@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;

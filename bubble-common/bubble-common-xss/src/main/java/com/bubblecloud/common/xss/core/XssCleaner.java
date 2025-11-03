@@ -1,6 +1,6 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
-import com.pig4cloud.pig.common.xss.utils.XssUtil;
+import com.bubblecloud.common.xss.utils.XssUtil;
 import org.jsoup.Jsoup;
 
 /**

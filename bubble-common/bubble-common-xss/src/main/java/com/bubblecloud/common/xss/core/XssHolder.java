@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
 /**
  * 利用 ThreadLocal 缓存线程间的数据

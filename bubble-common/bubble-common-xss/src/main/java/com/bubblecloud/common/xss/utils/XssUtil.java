@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.xss.utils;
+package com.bubblecloud.common.xss.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;

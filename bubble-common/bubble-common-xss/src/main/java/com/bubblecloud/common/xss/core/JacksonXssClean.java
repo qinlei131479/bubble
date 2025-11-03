@@ -1,10 +1,10 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
 import cn.hutool.core.util.ArrayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
-import com.pig4cloud.pig.common.xss.utils.XssUtil;
+import com.bubblecloud.common.xss.config.CustomXssProperties;
+import com.bubblecloud.common.xss.utils.XssUtil;
 
 import java.io.IOException;
 import java.util.Objects;

@@ -1,8 +1,8 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
 import cn.hutool.core.util.CharsetUtil;
-import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
-import com.pig4cloud.pig.common.xss.utils.XssUtil;
+import com.bubblecloud.common.xss.config.CustomXssProperties;
+import com.bubblecloud.common.xss.utils.XssUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;

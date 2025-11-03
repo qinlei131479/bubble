@@ -9,7 +9,7 @@ import com.bubblecloud.codegen.entity.GenTemplateEntity;
 import com.bubblecloud.codegen.service.GenTemplateService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
-import com.pig4cloud.pig.common.xss.core.XssCleanIgnore;
+import com.bubblecloud.common.xss.core.XssCleanIgnore;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

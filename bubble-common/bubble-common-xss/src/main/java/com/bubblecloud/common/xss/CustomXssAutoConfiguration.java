@@ -1,11 +1,12 @@
-package com.pig4cloud.pig.common.xss;
+package com.bubblecloud.common.xss;
 
-import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
+import com.bubblecloud.common.xss.core.DefaultXssCleaner;
+import com.bubblecloud.common.xss.core.FormXssClean;
+import com.bubblecloud.common.xss.core.XssCleanInterceptor;
+import com.bubblecloud.common.xss.config.CustomXssProperties;
 import lombok.RequiredArgsConstructor;
-import com.pig4cloud.pig.common.xss.core.DefaultXssCleaner;
-import com.pig4cloud.pig.common.xss.core.FormXssClean;
-import com.pig4cloud.pig.common.xss.core.JacksonXssClean;
-import com.pig4cloud.pig.common.xss.core.XssCleaner;
+import com.bubblecloud.common.xss.core.JacksonXssClean;
+import com.bubblecloud.common.xss.core.XssCleaner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -58,7 +59,7 @@ public class CustomXssAutoConfiguration implements WebMvcConfigurer {
 		if (patterns.isEmpty()) {
 			patterns.add("/**");
 		}
-		com.pig4cloud.pig.common.xss.core.XssCleanInterceptor interceptor = new com.pig4cloud.pig.common.xss.core.XssCleanInterceptor(
+		XssCleanInterceptor interceptor = new XssCleanInterceptor(
 				xssProperties);
 		registry.addInterceptor(interceptor)
 			.addPathPatterns(patterns)

@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
 /**
  * xss 数据处理类型

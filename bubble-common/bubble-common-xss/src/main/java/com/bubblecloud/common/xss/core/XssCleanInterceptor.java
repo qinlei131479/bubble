@@ -1,7 +1,7 @@
-package com.pig4cloud.pig.common.xss.core;
+package com.bubblecloud.common.xss.core;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
+import com.bubblecloud.common.xss.config.CustomXssProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;

@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.xss.config;
+package com.bubblecloud.common.xss.config;
 
 import lombok.Getter;
 import lombok.Setter;
