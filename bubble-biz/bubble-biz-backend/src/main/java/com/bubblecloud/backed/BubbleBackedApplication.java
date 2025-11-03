@@ -1,7 +1,7 @@
 package com.bubblecloud.backed;
 
-import com.bubblecloud.common.security.annotation.EnablePigResourceServer;
-import com.bubblecloud.common.swagger.annotation.EnablePigDoc;
+import com.bubblecloud.common.security.annotation.EnableCustomResourceServer;
+import com.bubblecloud.common.swagger.annotation.EnableCustomDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -12,8 +12,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * <p>
  * 用户统一管理系统
  */
-@EnablePigDoc("admin")
-@EnablePigResourceServer
+@EnableCustomDoc("admin")
+@EnableCustomResourceServer
 @EnableDiscoveryClient
 @SpringBootApplication
 public class BubbleBackedApplication {

@@ -1,7 +1,7 @@
 package com.bubblecloud.daemon.quartz;
 
-import com.bubblecloud.common.security.annotation.EnablePigResourceServer;
-import com.bubblecloud.common.swagger.annotation.EnablePigDoc;
+import com.bubblecloud.common.security.annotation.EnableCustomResourceServer;
+import com.bubblecloud.common.swagger.annotation.EnableCustomDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -10,8 +10,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author frwcloud
  * @date 2023-07-05
  */
-@EnablePigDoc(value = "job")
-@EnablePigResourceServer
+@EnableCustomDoc(value = "job")
+@EnableCustomResourceServer
 @EnableDiscoveryClient
 @SpringBootApplication
 public class BubbleQuartzApplication {

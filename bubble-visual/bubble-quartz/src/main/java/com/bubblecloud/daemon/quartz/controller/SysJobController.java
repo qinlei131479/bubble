@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.bubblecloud.daemon.quartz.constants.PigQuartzEnum;
+import com.bubblecloud.daemon.quartz.constants.CustomQuartzEnum;
 import com.bubblecloud.daemon.quartz.entity.SysJob;
 import com.bubblecloud.daemon.quartz.entity.SysJobLog;
 import com.bubblecloud.daemon.quartz.service.SysJobLogService;
@@ -86,7 +86,7 @@ public class SysJobController {
 	@PreAuthorize("@pms.hasPermission('job_sys_job_add')")
 	@Operation(description = "新增定时任务")
 	public R save(@RequestBody SysJob sysJob) {
-		sysJob.setJobStatus(PigQuartzEnum.JOB_STATUS_RELEASE.getType());
+		sysJob.setJobStatus(CustomQuartzEnum.JOB_STATUS_RELEASE.getType());
 		sysJob.setCreateBy(SecurityUtils.getUser().getUsername());
 		sysJobService.save(sysJob);
 		// 初始化任务
@@ -106,11 +106,11 @@ public class SysJobController {
 	public R updateById(@RequestBody SysJob sysJob) {
 		sysJob.setUpdateBy(SecurityUtils.getUser().getUsername());
 		SysJob querySysJob = this.sysJobService.getById(sysJob.getJobId());
-		if (PigQuartzEnum.JOB_STATUS_NOT_RUNNING.getType().equals(querySysJob.getJobStatus())) {
+		if (CustomQuartzEnum.JOB_STATUS_NOT_RUNNING.getType().equals(querySysJob.getJobStatus())) {
 			this.taskUtil.addOrUpateJob(sysJob, scheduler);
 			sysJobService.updateById(sysJob);
 		}
-		else if (PigQuartzEnum.JOB_STATUS_RELEASE.getType().equals(querySysJob.getJobStatus())) {
+		else if (CustomQuartzEnum.JOB_STATUS_RELEASE.getType().equals(querySysJob.getJobStatus())) {
 			sysJobService.updateById(sysJob);
 		}
 		return R.ok();
@@ -127,11 +127,11 @@ public class SysJobController {
 	@Operation(description = "唯一标识查询定时任务，暂停任务才能删除")
 	public R removeById(@PathVariable Long id) {
 		SysJob querySysJob = this.sysJobService.getById(id);
-		if (PigQuartzEnum.JOB_STATUS_NOT_RUNNING.getType().equals(querySysJob.getJobStatus())) {
+		if (CustomQuartzEnum.JOB_STATUS_NOT_RUNNING.getType().equals(querySysJob.getJobStatus())) {
 			this.taskUtil.removeJob(querySysJob, scheduler);
 			this.sysJobService.removeById(id);
 		}
-		else if (PigQuartzEnum.JOB_STATUS_RELEASE.getType().equals(querySysJob.getJobStatus())) {
+		else if (CustomQuartzEnum.JOB_STATUS_RELEASE.getType().equals(querySysJob.getJobStatus())) {
 			this.sysJobService.removeById(id);
 		}
 		return R.ok();
@@ -148,16 +148,16 @@ public class SysJobController {
 	public R shutdownJobs() {
 		taskUtil.pauseJobs(scheduler);
 		long count = this.sysJobService.count(
-				new LambdaQueryWrapper<SysJob>().eq(SysJob::getJobStatus, PigQuartzEnum.JOB_STATUS_RUNNING.getType()));
+				new LambdaQueryWrapper<SysJob>().eq(SysJob::getJobStatus, CustomQuartzEnum.JOB_STATUS_RUNNING.getType()));
 		if (count <= 0) {
 			return R.ok("无正在运行定时任务");
 		}
 		else {
 			// 更新定时任务状态条件，运行状态2更新为暂停状态2
 			this.sysJobService.update(
-					SysJob.builder().jobStatus(PigQuartzEnum.JOB_STATUS_NOT_RUNNING.getType()).build(),
+					SysJob.builder().jobStatus(CustomQuartzEnum.JOB_STATUS_NOT_RUNNING.getType()).build(),
 					new UpdateWrapper<SysJob>().lambda()
-						.eq(SysJob::getJobStatus, PigQuartzEnum.JOB_STATUS_RUNNING.getType()));
+						.eq(SysJob::getJobStatus, CustomQuartzEnum.JOB_STATUS_RUNNING.getType()));
 			return R.ok("暂停成功");
 		}
 	}
@@ -172,9 +172,9 @@ public class SysJobController {
 	@Operation(description = "启动全部定时任务")
 	public R startJobs() {
 		// 更新定时任务状态条件，暂停状态3更新为运行状态2
-		this.sysJobService.update(SysJob.builder().jobStatus(PigQuartzEnum.JOB_STATUS_RUNNING.getType()).build(),
+		this.sysJobService.update(SysJob.builder().jobStatus(CustomQuartzEnum.JOB_STATUS_RUNNING.getType()).build(),
 				new UpdateWrapper<SysJob>().lambda()
-					.eq(SysJob::getJobStatus, PigQuartzEnum.JOB_STATUS_NOT_RUNNING.getType()));
+					.eq(SysJob::getJobStatus, CustomQuartzEnum.JOB_STATUS_NOT_RUNNING.getType()));
 		taskUtil.startJobs(scheduler);
 		return R.ok();
 	}
@@ -189,12 +189,12 @@ public class SysJobController {
 	@Operation(description = "刷新全部定时任务")
 	public R refreshJobs() {
 		sysJobService.list().forEach((sysjob) -> {
-			if (PigQuartzEnum.JOB_STATUS_RELEASE.getType().equals(sysjob.getJobStatus())
-					|| PigQuartzEnum.JOB_STATUS_DEL.getType().equals(sysjob.getJobStatus())) {
+			if (CustomQuartzEnum.JOB_STATUS_RELEASE.getType().equals(sysjob.getJobStatus())
+					|| CustomQuartzEnum.JOB_STATUS_DEL.getType().equals(sysjob.getJobStatus())) {
 				taskUtil.removeJob(sysjob, scheduler);
 			}
-			else if (PigQuartzEnum.JOB_STATUS_RUNNING.getType().equals(sysjob.getJobStatus())
-					|| PigQuartzEnum.JOB_STATUS_NOT_RUNNING.getType().equals(sysjob.getJobStatus())) {
+			else if (CustomQuartzEnum.JOB_STATUS_RUNNING.getType().equals(sysjob.getJobStatus())
+					|| CustomQuartzEnum.JOB_STATUS_NOT_RUNNING.getType().equals(sysjob.getJobStatus())) {
 				taskUtil.addOrUpateJob(sysjob, scheduler);
 			}
 			else {
@@ -215,7 +215,7 @@ public class SysJobController {
 	@Operation(description = "启动定时任务")
 	public R startJob(@PathVariable("id") Long jobId) {
 		SysJob querySysJob = this.sysJobService.getById(jobId);
-		if (querySysJob != null && PigQuartzEnum.JOB_LOG_STATUS_FAIL.getType().equals(querySysJob.getJobStatus())) {
+		if (querySysJob != null && CustomQuartzEnum.JOB_LOG_STATUS_FAIL.getType().equals(querySysJob.getJobStatus())) {
 			taskUtil.addOrUpateJob(querySysJob, scheduler);
 		}
 		else {
@@ -223,7 +223,7 @@ public class SysJobController {
 		}
 		// 更新定时任务状态条件，暂停状态3更新为运行状态2
 		this.sysJobService
-			.updateById(SysJob.builder().jobId(jobId).jobStatus(PigQuartzEnum.JOB_STATUS_RUNNING.getType()).build());
+			.updateById(SysJob.builder().jobId(jobId).jobStatus(CustomQuartzEnum.JOB_STATUS_RUNNING.getType()).build());
 		return R.ok();
 	}
 
@@ -254,7 +254,7 @@ public class SysJobController {
 		// 更新定时任务状态条件，运行状态2更新为暂停状态3
 		this.sysJobService.updateById(SysJob.builder()
 			.jobId(querySysJob.getJobId())
-			.jobStatus(PigQuartzEnum.JOB_STATUS_NOT_RUNNING.getType())
+			.jobStatus(CustomQuartzEnum.JOB_STATUS_NOT_RUNNING.getType())
 			.build());
 		taskUtil.pauseJob(querySysJob, scheduler);
 		return R.ok();

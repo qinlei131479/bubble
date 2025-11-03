@@ -1,7 +1,7 @@
 package com.pig4cloud.pig.common.xss.core;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.pig4cloud.pig.common.xss.config.PigXssProperties;
+import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class XssCleanInterceptor implements AsyncHandlerInterceptor {
 
-	private final PigXssProperties xssProperties;
+	private final CustomXssProperties xssProperties;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

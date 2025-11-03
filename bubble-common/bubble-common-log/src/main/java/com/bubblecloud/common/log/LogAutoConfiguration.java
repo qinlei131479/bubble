@@ -2,7 +2,7 @@ package com.bubblecloud.common.log;
 
 import com.bubblecloud.api.backend.feign.RemoteLogService;
 import com.bubblecloud.common.log.aspect.SysLogAspect;
-import com.bubblecloud.common.log.config.PigLogProperties;
+import com.bubblecloud.common.log.config.CustomLogProperties;
 import com.bubblecloud.common.log.event.SysLogListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -16,12 +16,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @EnableAsync
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(PigLogProperties.class)
+@EnableConfigurationProperties(CustomLogProperties.class)
 @ConditionalOnProperty(value = "security.log.enabled", matchIfMissing = true)
 public class LogAutoConfiguration {
 
 	@Bean
-	public SysLogListener sysLogListener(PigLogProperties logProperties, RemoteLogService remoteLogService) {
+	public SysLogListener sysLogListener(CustomLogProperties logProperties, RemoteLogService remoteLogService) {
 		return new SysLogListener(remoteLogService, logProperties);
 	}
 

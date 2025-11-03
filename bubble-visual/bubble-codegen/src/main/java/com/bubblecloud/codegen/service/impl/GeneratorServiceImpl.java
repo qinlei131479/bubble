@@ -7,7 +7,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.bubblecloud.codegen.config.PigCodeGenDefaultProperties;
+import com.bubblecloud.codegen.config.CustomCodeGenDefaultProperties;
 import com.bubblecloud.codegen.entity.GenTable;
 import com.bubblecloud.codegen.entity.GenTableColumnEntity;
 import com.bubblecloud.codegen.entity.GenTemplateEntity;
@@ -39,7 +39,7 @@ import java.util.zip.ZipOutputStream;
 @RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
 
-	private final PigCodeGenDefaultProperties configurationProperties;
+	private final CustomCodeGenDefaultProperties configurationProperties;
 
 	private final GenTableColumnService columnService;
 

@@ -1,8 +1,8 @@
 FROM registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/java:1.8-full
 
-WORKDIR /bubble-biz-backed
+WORKDIR /bubble-biz-backend
 
-ARG JAR_FILE=target/bubble-biz-backed.jar
+ARG JAR_FILE=target/bubble-biz-backend.jar
 
 COPY ${JAR_FILE} app.jar
 

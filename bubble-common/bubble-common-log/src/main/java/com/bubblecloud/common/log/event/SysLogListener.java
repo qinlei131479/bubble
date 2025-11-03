@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.bubblecloud.api.backend.entity.SysLog;
 import com.bubblecloud.api.backend.feign.RemoteLogService;
-import com.bubblecloud.common.core.jackson.PigJavaTimeModule;
-import com.bubblecloud.common.log.config.PigLogProperties;
+import com.bubblecloud.common.core.jackson.CustomJavaTimeModule;
+import com.bubblecloud.common.log.config.CustomLogProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class SysLogListener implements InitializingBean {
 
     private final RemoteLogService remoteLogService;
 
-    private final PigLogProperties logProperties;
+    private final CustomLogProperties logProperties;
 
     @SneakyThrows
     @Async
@@ -61,7 +61,7 @@ public class SysLogListener implements InitializingBean {
         FilterProvider filters = new SimpleFilterProvider().addFilter("filter properties by name",
                 SimpleBeanPropertyFilter.serializeAllExcept(ignorableFieldNames));
         objectMapper.setFilterProvider(filters);
-        objectMapper.registerModule(new PigJavaTimeModule());
+        objectMapper.registerModule(new CustomJavaTimeModule());
     }
 
     @JsonFilter("filter properties by name")

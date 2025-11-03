@@ -3,7 +3,7 @@ package com.bubblecloud.common.mybatis;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.bubblecloud.common.mybatis.config.MybatisPlusMetaObjectHandler;
-import com.bubblecloud.common.mybatis.plugins.PigPaginationInnerInterceptor;
+import com.bubblecloud.common.mybatis.plugins.CustomPaginationInnerInterceptor;
 import com.bubblecloud.common.mybatis.resolver.SqlFilterArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +36,7 @@ public class MybatisAutoConfiguration implements WebMvcConfigurer {
 	@Bean
 	public MybatisPlusInterceptor mybatisPlusInterceptor() {
 		MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-		interceptor.addInnerInterceptor(new PigPaginationInnerInterceptor());
+		interceptor.addInnerInterceptor(new CustomPaginationInnerInterceptor());
 		return interceptor;
 	}
 

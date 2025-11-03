@@ -1,7 +1,7 @@
 package com.pig4cloud.pig.common.xss.core;
 
 import cn.hutool.core.util.CharsetUtil;
-import com.pig4cloud.pig.common.xss.config.PigXssProperties;
+import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
 import com.pig4cloud.pig.common.xss.utils.XssUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.internal.StringUtil;
@@ -16,13 +16,13 @@ import org.springframework.web.util.HtmlUtils;
  */
 public class DefaultXssCleaner implements XssCleaner {
 
-	private final PigXssProperties properties;
+	private final CustomXssProperties properties;
 
-	public DefaultXssCleaner(PigXssProperties properties) {
+	public DefaultXssCleaner(CustomXssProperties properties) {
 		this.properties = properties;
 	}
 
-	private static Document.OutputSettings getOutputSettings(PigXssProperties properties) {
+	private static Document.OutputSettings getOutputSettings(CustomXssProperties properties) {
 		return new Document.OutputSettings()
 			// 2. 转义，没找到关闭的方法，目前这个规则最少
 			.escapeMode(Entities.EscapeMode.xhtml)
@@ -36,12 +36,12 @@ public class DefaultXssCleaner implements XssCleaner {
 		if (StringUtil.isBlank(bodyHtml)) {
 			return bodyHtml;
 		}
-		PigXssProperties.Mode mode = properties.getMode();
-		if (PigXssProperties.Mode.escape == mode) {
+		CustomXssProperties.Mode mode = properties.getMode();
+		if (CustomXssProperties.Mode.escape == mode) {
 			// html 转义
 			return HtmlUtils.htmlEscape(bodyHtml, CharsetUtil.UTF_8);
 		}
-		else if (PigXssProperties.Mode.validate == mode) {
+		else if (CustomXssProperties.Mode.validate == mode) {
 			// 校验
 			if (Jsoup.isValid(bodyHtml, XssUtil.WHITE_LIST)) {
 				return bodyHtml;

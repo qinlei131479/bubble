@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.bubblecloud.codegen.config.PigCodeGenDefaultProperties;
+import com.bubblecloud.codegen.config.CustomCodeGenDefaultProperties;
 import com.bubblecloud.codegen.entity.GenGroupEntity;
 import com.bubblecloud.codegen.entity.GenTable;
 import com.bubblecloud.codegen.entity.GenTableColumnEntity;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> implements GenTableService {
 
-	private final PigCodeGenDefaultProperties configurationProperties;
+	private final CustomCodeGenDefaultProperties configurationProperties;
 
 	private final GenTableColumnService columnService;
 

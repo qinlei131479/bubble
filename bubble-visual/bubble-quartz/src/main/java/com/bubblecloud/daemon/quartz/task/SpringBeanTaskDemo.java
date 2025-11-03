@@ -1,6 +1,6 @@
 package com.bubblecloud.daemon.quartz.task;
 
-import com.bubblecloud.daemon.quartz.constants.PigQuartzEnum;
+import com.bubblecloud.daemon.quartz.constants.CustomQuartzEnum;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class SpringBeanTaskDemo {
 	@SneakyThrows
 	public String demoMethod(String para) {
 		log.info("测试于:{}，输入参数{}", LocalDateTime.now(), para);
-		return PigQuartzEnum.JOB_LOG_STATUS_SUCCESS.getType();
+		return CustomQuartzEnum.JOB_LOG_STATUS_SUCCESS.getType();
 	}
 
 }

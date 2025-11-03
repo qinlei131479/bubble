@@ -1,1 +1,1 @@
-com.pig4cloud.pig.common.xss.PigXssAutoConfiguration
+com.pig4cloud.pig.common.xss.CustomXssAutoConfiguration

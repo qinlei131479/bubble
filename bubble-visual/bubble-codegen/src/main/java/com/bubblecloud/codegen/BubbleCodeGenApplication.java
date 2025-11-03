@@ -1,8 +1,8 @@
 package com.bubblecloud.codegen;
 
 import com.bubblecloud.common.datasource.annotation.EnableDynamicDataSource;
-import com.bubblecloud.common.security.annotation.EnablePigResourceServer;
-import com.bubblecloud.common.swagger.annotation.EnablePigDoc;
+import com.bubblecloud.common.security.annotation.EnableCustomResourceServer;
+import com.bubblecloud.common.swagger.annotation.EnableCustomDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -12,9 +12,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @date 2018/07/29 代码生成模块
  */
 @EnableDynamicDataSource
-@EnablePigDoc("gen")
+@EnableCustomDoc("gen")
 @EnableDiscoveryClient
-@EnablePigResourceServer
+@EnableCustomResourceServer
 @SpringBootApplication
 public class BubbleCodeGenApplication {
 

@@ -1,7 +1,7 @@
 package com.bubblecloud.common.core.config;
 
 import cn.hutool.core.date.DatePattern;
-import com.bubblecloud.common.core.jackson.PigJavaTimeModule;
+import com.bubblecloud.common.core.jackson.CustomJavaTimeModule;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.MessageSource;
@@ -24,7 +24,7 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	/**
-	 * 增加GET请求参数中时间类型转换 {@link PigJavaTimeModule}
+	 * 增加GET请求参数中时间类型转换 {@link CustomJavaTimeModule}
 	 * <ul>
 	 * <li>HH:mm:ss -> LocalTime</li>
 	 * <li>yyyy-MM-dd -> LocalDate</li>

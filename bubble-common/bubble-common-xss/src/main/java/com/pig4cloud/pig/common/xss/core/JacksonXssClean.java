@@ -3,7 +3,7 @@ package com.pig4cloud.pig.common.xss.core;
 import cn.hutool.core.util.ArrayUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.pig4cloud.pig.common.xss.config.PigXssProperties;
+import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
 import com.pig4cloud.pig.common.xss.utils.XssUtil;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JacksonXssClean extends XssCleanDeserializerBase {
 
-	private final PigXssProperties properties;
+	private final CustomXssProperties properties;
 
 	private final XssCleaner xssCleaner;
 

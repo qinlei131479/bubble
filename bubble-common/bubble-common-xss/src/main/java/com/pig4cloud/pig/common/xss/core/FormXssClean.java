@@ -1,7 +1,7 @@
 package com.pig4cloud.pig.common.xss.core;
 
 import cn.hutool.core.util.StrUtil;
-import com.pig4cloud.pig.common.xss.config.PigXssProperties;
+import com.pig4cloud.pig.common.xss.config.CustomXssProperties;
 import com.pig4cloud.pig.common.xss.utils.XssUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import java.beans.PropertyEditorSupport;
 
 @ControllerAdvice
-@ConditionalOnProperty(prefix = PigXssProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = CustomXssProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 public class FormXssClean {
 
-	private final PigXssProperties properties;
+	private final CustomXssProperties properties;
 
 	private final XssCleaner xssCleaner;
 
@@ -33,7 +33,7 @@ public class FormXssClean {
 
 		private final XssCleaner xssCleaner;
 
-		private final PigXssProperties properties;
+		private final CustomXssProperties properties;
 
 		@Override
 		public String getAsText() {

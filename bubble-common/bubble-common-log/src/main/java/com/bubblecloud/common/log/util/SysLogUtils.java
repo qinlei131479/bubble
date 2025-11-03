@@ -5,7 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
-import com.bubblecloud.common.log.config.PigLogProperties;
+import com.bubblecloud.common.log.config.CustomLogProperties;
 import com.bubblecloud.common.log.event.SysLogEventSource;
 import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.core.util.SpringContextHolder;
@@ -48,7 +48,7 @@ public class SysLogUtils {
 		sysLog.setServiceId(getClientId());
 
 		// get 参数脱敏
-		PigLogProperties logProperties = SpringContextHolder.getBean(PigLogProperties.class);
+		CustomLogProperties logProperties = SpringContextHolder.getBean(CustomLogProperties.class);
 		Map<String, String[]> paramsMap = MapUtil.removeAny(request.getParameterMap(),
 				ArrayUtil.toArray(logProperties.getExcludeFields(), String.class));
 		sysLog.setParams(HttpUtil.toParams(paramsMap));
