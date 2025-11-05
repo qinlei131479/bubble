@@ -35,8 +35,11 @@
 ```lua
 bubble-back  -- https://github.com/qinlei131479/bubble-back.git
 
-pig
+bubble
 ├── bubble-auth -- 授权服务提供[8766]
+└── bubble-biz -- 通用用户权限管理模块
+     ├── bubble-biz-backend -- 通用用户权限管理系统业务处理模块[8801]
+     └── bubble-biz-api -- 通用用户权限管理系统公共api模块
 └── bubble-common -- 系统公共模块
      ├── bubble-common-bom -- 全局依赖管理控制
      ├── bubble-common-core -- 公共工具类核心包
@@ -50,11 +53,8 @@ pig
      ├── bubble-common-swagger -- 接口文档
      ├── bubble-common-feign -- feign 扩展封装
      └── bubble-common-xss -- xss 安全封装
-├── bubble-register -- Nacos Server[8848]
 ├── bubble-gateway -- Spring Cloud Gateway网关[8666]
-└── bubble-biz -- 通用用户权限管理模块
-     ├── bubble-biz-backend -- 通用用户权限管理系统业务处理模块[8801]
-     └── bubble-biz-api -- 通用用户权限管理系统公共api模块
+├── bubble-register -- Nacos Server[8848]
 └── bubble-visual
      └── bubble-codegen -- 图形化代码生成 [8901]
      ├── bubble-monitor -- 服务监控 [8902]
