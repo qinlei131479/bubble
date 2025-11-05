@@ -37,10 +37,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnablePigResourceServer
 @EnableDiscoveryClient
 @SpringBootApplication
-public class PigAdminApplication {
+public class BubbleBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PigAdminApplication.class, args);
+		SpringApplication.run(BubbleBackendApplication.class, args);
 	}
 
 }

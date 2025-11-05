@@ -37,7 +37,7 @@ import com.alibaba.nacos.sys.env.EnvUtil;
  * <p>
  * nacos console 源码运行，方便开发 生产从官网下载zip最新版集群配置运行
  */
-public class PigNacosApplication {
+public class BubbleNacosApplication {
 
 	/**
 	 * 独立模式系统属性名称

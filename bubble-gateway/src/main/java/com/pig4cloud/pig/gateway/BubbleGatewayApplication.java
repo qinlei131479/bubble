@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package com.pig4cloud.pig.auth;
+package com.pig4cloud.pig.gateway;
 
-import com.pig4cloud.pig.common.feign.annotation.EnablePigFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
- * 认证授权中心应用启动类
+ * 网关应用
  *
  * @author lengleng
  * @date 2025/05/30
  */
-@EnablePigFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-public class PigAuthApplication {
+public class BubbleGatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PigAuthApplication.class, args);
+		SpringApplication.run(BubbleGatewayApplication.class, args);
 	}
 
 }
