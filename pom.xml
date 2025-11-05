@@ -19,11 +19,12 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.pig4cloud</groupId>
-	<artifactId>pig</artifactId>
+	<artifactId>bubble</artifactId>
 	<name>${project.artifactId}</name>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<url>https://www.pig4cloud.com</url>
+	<description>基于Spring Cloud 2025、Spring Boot 3、的微服务架构开发平台</description>
+
 	<properties>
 		<!-- 项目版本号 -->
 		<revision>3.9.2</revision>
@@ -93,12 +94,12 @@
 	</dependencies>
 
 	<modules>
-		<module>pig-register</module>
-		<module>pig-gateway</module>
-		<module>pig-auth</module>
-		<module>pig-upms</module>
-		<module>pig-common</module>
-		<module>pig-visual</module>
+		<module>bubble-register</module>
+		<module>bubble-gateway</module>
+		<module>bubble-auth</module>
+		<module>bubble-biz</module>
+		<module>bubble-common</module>
+		<module>bubble-visual</module>
 	</modules>
 
 	<dependencyManagement>
@@ -106,7 +107,7 @@
 			<!--pig 公共版本定义-->
 			<dependency>
 				<groupId>com.pig4cloud</groupId>
-				<artifactId>pig-common-bom</artifactId>
+				<artifactId>bubble-common-bom</artifactId>
 				<version>${project.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
