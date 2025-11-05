@@ -1,20 +1,3 @@
-/*
- *    Copyright (c) 2018-2025, lengleng All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * Neither the name of the pig4cloud.com developer nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * Author: lengleng (wangiegie@gmail.com)
- */
-
 package com.pig4cloud.pig.common.file.oss;
 
 import lombok.Data;
@@ -26,7 +9,7 @@ import lombok.Data;
  * @author 858695266 配置文件添加： oss: enable: true endpoint: http://127.0.0.1:9000 #
  * pathStyleAccess 采用nginx反向代理或者AWS S3 配置成true，支持第三方云存储配置成false pathStyleAccess: false
  * access-key: lengleng secret-key: lengleng bucket-name: lengleng region: custom-domain:
- * https://oss.xxx.com/lengleng
+ * https://oss.xxx.com/qinlei
  * <p>
  * bucket 设置公共读权限
  */
