@@ -12,7 +12,7 @@
     <artifactId>bubble-common-core</artifactId>
     <packaging>jar</packaging>
 
-    <description>pig 公共工具类核心包</description>
+    <description>公共工具类核心包</description>
 
 
     <dependencies>

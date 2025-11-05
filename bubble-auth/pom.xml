@@ -12,7 +12,7 @@
     <artifactId>bubble-auth</artifactId>
     <packaging>jar</packaging>
 
-    <description>pig 认证授权中心，基于 spring security oAuth2</description>
+    <description>bubble 认证授权中心，基于 spring security oAuth2</description>
 
     <dependencies>
         <!--注册中心客户端-->

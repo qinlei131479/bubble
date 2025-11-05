@@ -18,7 +18,7 @@
 		<spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
 		<jasypt.version>3.0.5</jasypt.version>
 		<git.commit.plugin>9.0.1</git.commit.plugin>
-		<docker.namespace>pig4cloud</docker.namespace>
+		<docker.namespace>bubblecloud</docker.namespace>
 		<maven.compiler.target>17</maven.compiler.target>
 		<docker.host>http://192.168.0.100:2375</docker.host>
 		<commons-lang3.version>3.19.0</commons-lang3.version>
@@ -88,7 +88,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!--pig 公共版本定义-->
+			<!--公共版本定义-->
 			<dependency>
 				<groupId>com.bubblecloud</groupId>
 				<artifactId>bubble-common-bom</artifactId>

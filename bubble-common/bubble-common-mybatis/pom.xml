@@ -12,7 +12,7 @@
     <artifactId>bubble-common-mybatis</artifactId>
     <packaging>jar</packaging>
 
-    <description>pig mybatis 封装</description>
+    <description>mybatis 封装</description>
 
 
     <dependencies>

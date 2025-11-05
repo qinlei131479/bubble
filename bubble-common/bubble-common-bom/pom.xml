@@ -10,8 +10,8 @@
 	<packaging>pom</packaging>
 
 	<name>bubble-common-bom</name>
-	<url>pig cloud parent</url>
-	<description>pig cloud parent</description>
+	<url>cloud parent</url>
+	<description>cloud parent</description>
 
 	<properties>
 		<!-- 项目版本号 -->

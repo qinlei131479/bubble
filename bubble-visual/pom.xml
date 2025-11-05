@@ -11,7 +11,7 @@
 
     <artifactId>bubble-visual</artifactId>
 
-    <description>pig 图形化相关功能</description>
+    <description>图形化相关功能</description>
     <packaging>pom</packaging>
 
     <modules>

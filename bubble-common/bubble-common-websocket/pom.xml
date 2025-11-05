@@ -12,7 +12,7 @@
     <artifactId>bubble-common-websocket</artifactId>
     <packaging>jar</packaging>
 
-    <description>pig websocket 链接模块</description>
+    <description>websocket 链接模块</description>
 
     <dependencies>
         <dependency>
