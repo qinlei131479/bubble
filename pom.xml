@@ -261,6 +261,7 @@
                 <profiles.active>dev</profiles.active>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+				<nacos.namespace>bubble</nacos.namespace>
             </properties>
             <activation>
                 <!-- 默认环境 -->
@@ -273,6 +274,7 @@
 				<profiles.active>test</profiles.active>
 				<nacos.username>nacos</nacos.username>
 				<nacos.password>nacos</nacos.password>
+				<nacos.namespace>bubble</nacos.namespace>
 			</properties>
 		</profile>
 		<profile>
@@ -281,6 +283,7 @@
 				<profiles.active>prod</profiles.active>
 				<nacos.username>nacos</nacos.username>
 				<nacos.password>nacos</nacos.password>
+				<nacos.namespace>bubble</nacos.namespace>
 			</properties>
 		</profile>
     </profiles>
