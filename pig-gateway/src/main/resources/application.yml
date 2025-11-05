@@ -13,8 +13,10 @@ spring:
         watch:
           enabled: true
         watch-delay: 1000
+        namespace: @nacos.namespace@
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: @nacos.namespace@
   config:
     import:
       - optional:nacos:application-@profiles.active@.yml
