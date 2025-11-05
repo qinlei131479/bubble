@@ -13,18 +13,14 @@
 
 ## 快速开始
 
-#### Docker 快速体验
+分支说明
+- JDK17_master: java17 + springboot 3.5 + springcloud 2025
+- JDK8_master: java8 + springboot 2.7 + springcloud 2021
 
-```shell
-# 可用内存大于4G
-curl -o docker-compose.yaml https://try.pig4cloud.com
-# 等待5分钟
-docker compose up
-```
 
 ### 核心依赖
 
-| 依赖                         | 版本     |
+| 依赖                          | 版本     |
 |-----------------------------|--------|
 | Spring Boot                 | 3.5.7  |
 | Spring Cloud                | 2025   |
@@ -56,9 +52,9 @@ pig
      └── bubble-common-xss -- xss 安全封装
 ├── bubble-register -- Nacos Server[8848]
 ├── bubble-gateway -- Spring Cloud Gateway网关[9999]
-└── bubble-upms -- 通用用户权限管理模块
-     └── bubble-upms-api -- 通用用户权限管理系统公共api模块
-     └── bubble-upms-biz -- 通用用户权限管理系统业务处理模块[4000]
+└── bubble-biz -- 通用用户权限管理模块
+     ├── bubble-biz-backend -- 通用用户权限管理系统业务处理模块[4000]
+     └── bubble-biz-api -- 通用用户权限管理系统公共api模块
 └── bubble-visual
      └── bubble-monitor -- 服务监控 [5001]
      ├── bubble-codegen -- 图形化代码生成 [5002]
