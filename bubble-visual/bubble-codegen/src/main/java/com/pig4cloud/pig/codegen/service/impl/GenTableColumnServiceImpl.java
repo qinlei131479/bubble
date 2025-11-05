@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * 表字段信息管理服务实现类
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 @Service

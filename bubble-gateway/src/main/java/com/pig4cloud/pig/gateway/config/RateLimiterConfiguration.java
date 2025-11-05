@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * 路由限流配置类
  *
- * @author lengleng
+ * @author qinlei
  * @date 2019/2/1
  */
 @Configuration(proxyBeanMethods = false)

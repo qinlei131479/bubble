@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * 安全配置类：用于配置Spring Security相关设置
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 @Configuration(proxyBeanMethods = false)

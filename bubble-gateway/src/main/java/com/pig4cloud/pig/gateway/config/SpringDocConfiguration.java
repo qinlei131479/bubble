@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * SpringDoc配置类，实现InitializingBean接口，用于Swagger 3.0文档展示
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class SpringDocConfiguration implements InitializingBean {
 /**
  * Swagger文档注册器，用于处理服务实例变更事件并更新Swagger UI配置
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 @RequiredArgsConstructor

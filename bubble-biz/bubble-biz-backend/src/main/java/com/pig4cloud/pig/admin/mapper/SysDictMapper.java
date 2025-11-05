@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 字典表 Mapper 接口
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/06/27
  */
 @Mapper

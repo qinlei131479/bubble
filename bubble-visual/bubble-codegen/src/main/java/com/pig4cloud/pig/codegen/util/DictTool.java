@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 字典工具类：提供字典相关操作的工具方法
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 public class DictTool {

@@ -12,7 +12,7 @@ import static java.util.Collections.emptyMap;
 /**
  * Nacos 2.x 服务注册转换器，用于处理服务实例元数据转换
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 @Configuration(proxyBeanMethods = false)

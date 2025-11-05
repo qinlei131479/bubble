@@ -5,7 +5,7 @@ import cn.hutool.core.text.NamingCase;
 /**
  * 命名规则处理工具类，提供驼峰、下划线等命名格式转换功能
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 public class NamingCaseTool {

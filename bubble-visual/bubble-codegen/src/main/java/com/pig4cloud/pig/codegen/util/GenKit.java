@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 /**
  * 代码生成工具类
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 @UtilityClass

@@ -16,7 +16,7 @@ import java.util.List;
  * 用户表 Mapper 接口
  * </p>
  *
- * @author lengleng
+ * @author qinlei
  * @since 2017-10-29
  */
 @Mapper

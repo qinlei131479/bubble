@@ -22,7 +22,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.a
  * <p>
  * 1. 清洗请求头中的from参数 2. 重写StripPrefix = 1，支持全局路由
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 public class PigRequestGlobalFilter implements GlobalFilter, Ordered {

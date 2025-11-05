@@ -3,7 +3,7 @@ package com.pig4cloud.pig.codegen.util.vo;
 import lombok.Data;
 
 /**
- * @author lengleng
+ * @author qinlei
  * @date 2022/5/2
  */
 @Data

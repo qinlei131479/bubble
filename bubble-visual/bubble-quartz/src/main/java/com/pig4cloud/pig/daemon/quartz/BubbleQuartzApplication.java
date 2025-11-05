@@ -12,7 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * <p>
  * 集成定时任务、Feign客户端、资源服务及服务发现功能
  *
- * @author lengleng
+ * @author qinlei
  * @author frwcloud
  * @date 2025/05/31
  */

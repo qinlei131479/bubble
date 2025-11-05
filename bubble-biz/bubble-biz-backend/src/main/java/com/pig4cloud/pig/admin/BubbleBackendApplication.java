@@ -10,7 +10,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * 用户统一管理系统
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 @EnablePigDoc(value = "admin")

@@ -15,7 +15,7 @@ import java.util.Properties;
 /**
  * Velocity模板引擎工具类，提供模板渲染和字符串渲染功能
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 @Service

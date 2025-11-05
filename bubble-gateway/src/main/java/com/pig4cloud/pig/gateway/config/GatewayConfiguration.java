@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 网关配置类
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 @Configuration(proxyBeanMethods = false)

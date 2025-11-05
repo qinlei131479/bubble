@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * 网关应用
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 @EnableDiscoveryClient

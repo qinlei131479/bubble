@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 部门管理 Mapper 接口
  *
- * @author lengleng
+ * @author qinlei
  * @since 2018-01-20
  */
 @Mapper

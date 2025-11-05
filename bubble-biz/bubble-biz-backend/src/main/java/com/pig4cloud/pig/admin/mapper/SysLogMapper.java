@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 系统日志表 Mapper 接口
  *
- * @author lengleng
+ * @author qinlei
  */
 @Mapper
 public interface SysLogMapper extends BaseMapper<SysLog> {

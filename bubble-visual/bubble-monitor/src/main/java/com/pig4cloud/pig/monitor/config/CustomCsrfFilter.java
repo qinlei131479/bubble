@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * 自定义CSRF过滤器，用于处理CSRF令牌相关逻辑
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 public class CustomCsrfFilter extends OncePerRequestFilter {

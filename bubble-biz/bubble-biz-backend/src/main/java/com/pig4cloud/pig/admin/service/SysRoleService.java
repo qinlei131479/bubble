@@ -15,7 +15,7 @@ import java.util.List;
  * 提供角色相关的业务功能，包括角色查询、删除、更新菜单及导入导出等操作
  * </p>
  *
- * @author lengleng
+ * @author qinlei
  * @since 2017-10-29
  */
 public interface SysRoleService extends IService<SysRole> {

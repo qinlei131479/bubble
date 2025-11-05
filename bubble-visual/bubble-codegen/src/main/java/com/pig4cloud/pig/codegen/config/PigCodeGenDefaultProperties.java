@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 代码生成默认配置类
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/31
  */
 @Data

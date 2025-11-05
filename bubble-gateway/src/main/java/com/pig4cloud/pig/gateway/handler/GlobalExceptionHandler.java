@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 /**
  * 网关异常通用处理器，作用于WebFlux环境，优先级低于ResponseStatusExceptionHandler
  *
- * @author lengleng
+ * @author qinlei
  * @date 2025/05/30
  */
 @Slf4j
