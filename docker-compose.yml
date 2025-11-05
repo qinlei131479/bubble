@@ -1,125 +1,125 @@
 services:
-  pig-mysql:
+  bubble-mysql:
     build:
-      context: ./db
+      context: docs/db
     environment:
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: root
     restart: always
-    container_name: pig-mysql
-    image: pig-mysql
+    container_name: bubble-mysql
+    image: bubble-mysql
     ports:
       - 33306:3306
     networks:
       - spring_cloud_default
 
-  pig-redis:
+  bubble-redis:
     image: registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/redis
     ports:
       - 36379:6379
     restart: always
-    container_name: pig-redis
-    hostname: pig-redis
+    container_name: bubble-redis
+    hostname: bubble-redis
     networks:
       - spring_cloud_default
 
-  pig-register:
+  bubble-register:
     build:
-      context: ./pig-register
+      context: ./bubble-register
     restart: always
     ports:
       - 8848:8848
       - 9848:9848
       - 8080:8080
     environment:
-      MYSQL_HOST: pig-mysql
-      REDIS_HOST: pig-redis
-    container_name: pig-register
-    hostname: pig-register
-    image: pig-register
+      MYSQL_HOST: bubble-mysql
+      REDIS_HOST: bubble-redis
+    container_name: bubble-register
+    hostname: bubble-register
+    image: bubble-register
     networks:
       - spring_cloud_default
 
-  pig-gateway:
+  bubble-gateway:
     build:
-      context: ./pig-gateway
+      context: ./bubble-gateway
     restart: always
     ports:
       - 9999:9999
-    container_name: pig-gateway
-    hostname: pig-gateway
-    image: pig-gateway
+    container_name: bubble-gateway
+    hostname: bubble-gateway
+    image: bubble-gateway
     environment:
-      REDIS_HOST: pig-redis
-      NACOS_HOST: pig-register
+      REDIS_HOST: bubble-redis
+      NACOS_HOST: bubble-register
     networks:
       - spring_cloud_default
 
-  pig-auth:
+  bubble-auth:
     build:
-      context: ./pig-auth
+      context: ./bubble-auth
     restart: always
-    container_name: pig-auth
-    hostname: pig-auth
-    image: pig-auth
+    container_name: bubble-auth
+    hostname: bubble-auth
+    image: bubble-auth
     environment:
-      REDIS_HOST: pig-redis
-      NACOS_HOST: pig-register
+      REDIS_HOST: bubble-redis
+      NACOS_HOST: bubble-register
     networks:
       - spring_cloud_default
 
-  pig-upms:
+  bubble-biz-backend:
     build:
-      context: ./pig-upms/pig-upms-biz
+      context: ./bubble-biz/bubble-biz-backend
     restart: always
-    container_name: pig-upms
-    hostname: pig-upms
-    image: pig-upms
+    container_name: bubble-biz-backend
+    hostname: bubble-biz-backend
+    image: bubble-biz-backend
     environment:
-      MYSQL_HOST: pig-mysql
-      REDIS_HOST: pig-redis
-      NACOS_HOST: pig-register
+      MYSQL_HOST: bubble-mysql
+      REDIS_HOST: bubble-redis
+      NACOS_HOST: bubble-register
     networks:
       - spring_cloud_default
 
-  pig-monitor:
+  bubble-monitor:
     build:
-      context: ./pig-visual/pig-monitor
+      context: ./bubble-visual/bubble-monitor
     restart: always
     ports:
       - 5001:5001
-    container_name: pig-monitor
-    hostname: pig-monitor
-    image: pig-monitor
+    container_name: bubble-monitor
+    hostname: bubble-monitor
+    image: bubble-monitor
     environment:
-      NACOS_HOST: pig-register
+      NACOS_HOST: bubble-register
     networks:
       - spring_cloud_default
 
-  pig-codegen:
+  bubble-codegen:
     build:
-      context: ./pig-visual/pig-codegen
+      context: ./bubble-visual/bubble-codegen
     restart: always
-    container_name: pig-codegen
-    hostname: pig-codegen
-    image: pig-codegen
+    container_name: bubble-codegen
+    hostname: bubble-codegen
+    image: bubble-codegen
     environment:
-      MYSQL_HOST: pig-mysql
-      REDIS_HOST: pig-redis
-      NACOS_HOST: pig-register
+      MYSQL_HOST: bubble-mysql
+      REDIS_HOST: bubble-redis
+      NACOS_HOST: bubble-register
     networks:
       - spring_cloud_default
 
-  pig-quartz:
+  bubble-quartz:
     build:
-      context: ./pig-visual/pig-quartz
+      context: ./bubble-visual/bubble-quartz
     restart: always
-    image: pig-quartz
-    container_name: pig-quartz
+    image: bubble-quartz
+    container_name: bubble-quartz
     environment:
-      MYSQL_HOST: pig-mysql
-      REDIS_HOST: pig-redis
-      NACOS_HOST: pig-register
+      MYSQL_HOST: bubble-mysql
+      REDIS_HOST: bubble-redis
+      NACOS_HOST: bubble-register
     networks:
       - spring_cloud_default
 

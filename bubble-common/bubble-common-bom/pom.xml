@@ -9,7 +9,7 @@
 	<version>${revision}</version>
 	<packaging>pom</packaging>
 
-	<name>pig-common-bom</name>
+	<name>bubble-common-bom</name>
 	<url>pig cloud parent</url>
 	<description>pig cloud parent</description>
 

@@ -25,11 +25,11 @@ public interface ServiceNameConstants {
 	/**
 	 * 认证服务的SERVICEID
 	 */
-	String AUTH_SERVICE = "pig-auth";
+	String AUTH_SERVICE = "bubble-auth";
 
 	/**
 	 * UPMS模块
 	 */
-	String UPMS_SERVICE = "pig-upms-biz";
+	String BACKEND_SERVICE = "bubble-biz-backend";
 
 }

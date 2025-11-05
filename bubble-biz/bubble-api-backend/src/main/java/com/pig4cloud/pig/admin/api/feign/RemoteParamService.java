@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @date 2025/05/30
  * @see FeignClient
  */
-@FeignClient(contextId = "remoteParamService", value = ServiceNameConstants.UPMS_SERVICE)
+@FeignClient(contextId = "remoteParamService", value = ServiceNameConstants.BACKEND_SERVICE)
 public interface RemoteParamService {
 
 	/**

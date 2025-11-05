@@ -1,8 +1,8 @@
 FROM registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/java:21-anolis
 
-WORKDIR /pig-monitor
+WORKDIR /bubble-monitor
 
-ARG JAR_FILE=target/pig-monitor.jar
+ARG JAR_FILE=target/bubble-monitor.jar
 
 COPY ${JAR_FILE} app.jar
 
