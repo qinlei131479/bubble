@@ -3,7 +3,7 @@ package com.bubblecloud.common.core.config;
 import cn.hutool.core.date.DatePattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.bubblecloud.common.core.jackson.PigJavaTimeModule;
+import com.bubblecloud.common.core.jackson.CustomJavaTimeModule;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -42,7 +42,7 @@ public class JacksonConfiguration {
 			builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
 			builder.simpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
 			builder.serializerByType(Long.class, ToStringSerializer.instance);
-			builder.modules(new PigJavaTimeModule());
+			builder.modules(new CustomJavaTimeModule());
 		};
 	}
 

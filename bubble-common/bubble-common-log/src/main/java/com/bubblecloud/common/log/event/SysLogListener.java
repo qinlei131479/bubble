@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.bubblecloud.backend.api.entity.SysLog;
 import com.bubblecloud.backend.api.feign.RemoteLogService;
-import com.bubblecloud.common.core.jackson.PigJavaTimeModule;
+import com.bubblecloud.common.core.jackson.CustomJavaTimeModule;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +68,7 @@ public class SysLogListener implements InitializingBean {
 		FilterProvider filters = new SimpleFilterProvider().addFilter("filter properties by name",
 				SimpleBeanPropertyFilter.serializeAllExcept(ignorableFieldNames));
 		objectMapper.setFilterProvider(filters);
-		objectMapper.registerModule(new PigJavaTimeModule());
+		objectMapper.registerModule(new CustomJavaTimeModule());
 	}
 
 	/**

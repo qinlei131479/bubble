@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
  * @date 2025/05/30
  */
 
-public class PigJavaTimeModule extends SimpleModule {
+public class CustomJavaTimeModule extends SimpleModule {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class PigJavaTimeModule extends SimpleModule {
 	/**
 	 * PigJavaTimeModule构造函数，用于初始化时间序列化和反序列化规则
 	 */
-	public PigJavaTimeModule() {
+	public CustomJavaTimeModule() {
 		super(PackageVersion.VERSION);
 
 		// ======================= 时间序列化规则 ===============================
