@@ -9,9 +9,9 @@ import cn.hutool.json.JSONUtil;
 import cn.smallbun.screw.core.constant.DefaultConstants;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bubblecloud.codegen.config.CodeGenDefaultProperties;
 import com.bubblecloud.codegen.service.GenTemplateService;
 import com.bubblecloud.codegen.util.vo.GenTemplateFileVO;
-import com.bubblecloud.codegen.config.PigCodeGenDefaultProperties;
 import com.bubblecloud.codegen.entity.GenGroupEntity;
 import com.bubblecloud.codegen.entity.GenTemplateEntity;
 import com.bubblecloud.codegen.entity.GenTemplateGroupEntity;
@@ -46,7 +46,7 @@ public class GenTemplateServiceImpl extends ServiceImpl<GenTemplateMapper, GenTe
 
 	private final GenGroupMapper genGroupMapper;
 
-	private final PigCodeGenDefaultProperties defaultProperties;
+	private final CodeGenDefaultProperties defaultProperties;
 
 	/**
 	 * 在线更新模板组

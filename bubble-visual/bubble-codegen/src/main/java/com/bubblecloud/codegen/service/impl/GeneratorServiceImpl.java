@@ -11,7 +11,7 @@ import java.util.zip.ZipOutputStream;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.stereotype.Service;
 
-import com.bubblecloud.codegen.config.PigCodeGenDefaultProperties;
+import com.bubblecloud.codegen.config.CodeGenDefaultProperties;
 import com.bubblecloud.codegen.entity.GenTable;
 import com.bubblecloud.codegen.entity.GenTableColumnEntity;
 import com.bubblecloud.codegen.entity.GenTemplateEntity;
@@ -43,7 +43,7 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
 
-	private final PigCodeGenDefaultProperties configurationProperties;
+	private final CodeGenDefaultProperties configurationProperties;
 
 	private final GenTableColumnService columnService;
 
