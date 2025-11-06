@@ -2,7 +2,6 @@ package com.bubblecloud.common.xss;
 
 import com.bubblecloud.common.xss.config.PigXssProperties;
 import com.bubblecloud.common.xss.core.*;
-import com.pig4cloud.pig.common.xss.core.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
