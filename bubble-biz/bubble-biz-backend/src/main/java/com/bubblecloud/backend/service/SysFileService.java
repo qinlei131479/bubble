@@ -2,7 +2,7 @@ package com.bubblecloud.backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backend.api.entity.SysFile;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -2,7 +2,7 @@ package com.bubblecloud.common.mybatis.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
+import com.bubblecloud.common.core.constant.CommonConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

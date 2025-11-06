@@ -3,7 +3,7 @@ package com.bubblecloud.backend.service;
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backend.api.entity.SysMenu;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 import java.util.List;
 import java.util.Set;

@@ -1,6 +1,6 @@
 package com.bubblecloud.auth;
 
-import com.pig4cloud.pig.common.feign.annotation.EnablePigFeignClients;
+import com.bubblecloud.common.feign.annotation.EnablePigFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

@@ -2,8 +2,8 @@ package com.bubblecloud.auth.support.core;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.pig4cloud.pig.common.core.util.WebUtils;
-import com.pig4cloud.pig.common.security.service.PigUserDetailsService;
+import com.bubblecloud.common.core.util.WebUtils;
+import com.bubblecloud.common.security.service.PigUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import org.springframework.core.Ordered;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.pig4cloud.pig.common.core.constant.SecurityConstants.PASSWORD;
+import static com.bubblecloud.common.core.constant.SecurityConstants.PASSWORD;
 
 /**
  * 基于DAO的认证提供者实现，用于处理用户名密码认证

@@ -1,6 +1,6 @@
 package com.bubblecloud.daemon.quartz.config;
 
-import com.pig4cloud.pig.common.core.factory.YamlPropertySourceFactory;
+import com.bubblecloud.common.core.factory.YamlPropertySourceFactory;
 import org.quartz.Calendar;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;

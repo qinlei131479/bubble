@@ -13,9 +13,9 @@ import com.bubblecloud.backend.api.entity.SysPost;
 import com.bubblecloud.backend.api.vo.PostExcelVO;
 import com.bubblecloud.backend.mapper.SysPostMapper;
 import com.bubblecloud.backend.service.SysPostService;
-import com.pig4cloud.pig.common.core.exception.ErrorCodes;
-import com.pig4cloud.pig.common.core.util.MsgUtils;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.exception.ErrorCodes;
+import com.bubblecloud.common.core.util.MsgUtils;
+import com.bubblecloud.common.core.util.R;
 import com.pig4cloud.plugin.excel.vo.ErrorMessage;
 
 import cn.hutool.core.bean.BeanUtil;

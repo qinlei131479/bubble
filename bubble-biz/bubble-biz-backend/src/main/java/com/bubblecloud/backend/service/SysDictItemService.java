@@ -2,7 +2,7 @@ package com.bubblecloud.backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backend.api.entity.SysDictItem;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * 字典项服务接口

@@ -1,7 +1,7 @@
 package com.bubblecloud.gateway.filter;
 
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.constant.CommonConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;

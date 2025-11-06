@@ -9,8 +9,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
-import com.pig4cloud.pig.common.core.servlet.RepeatBodyRequestWrapper;
+import com.bubblecloud.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.servlet.RepeatBodyRequestWrapper;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;

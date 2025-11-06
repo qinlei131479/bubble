@@ -1,6 +1,6 @@
 package com.bubblecloud.backend.service;
 
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * 系统手机服务接口：提供手机验证码发送功能

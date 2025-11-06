@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 
 import java.util.Map;
 
-import static com.pig4cloud.pig.common.core.constant.SecurityConstants.PASSWORD;
+import static com.bubblecloud.common.core.constant.SecurityConstants.PASSWORD;
 
 /**
  * OAuth2 资源所有者密码认证提供者

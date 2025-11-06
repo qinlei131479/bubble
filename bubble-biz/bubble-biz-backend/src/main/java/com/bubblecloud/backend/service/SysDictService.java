@@ -2,7 +2,7 @@ package com.bubblecloud.backend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.backend.api.entity.SysDict;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * 字典表服务接口 提供字典数据的增删改查及缓存同步功能

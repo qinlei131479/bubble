@@ -3,7 +3,7 @@ package com.bubblecloud.backend.api.util;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.bubblecloud.backend.api.feign.RemoteParamService;
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.core.util.SpringContextHolder;
 import lombok.experimental.UtilityClass;
 
 /**

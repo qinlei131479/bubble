@@ -2,7 +2,7 @@ package com.bubblecloud.auth.support.handler;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpUtil;
-import com.pig4cloud.pig.common.core.util.WebUtils;
+import com.bubblecloud.common.core.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;

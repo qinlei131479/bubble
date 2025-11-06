@@ -1,7 +1,7 @@
-com.pig4cloud.pig.common.security.service.PigUserDetailsServiceImpl
-com.pig4cloud.pig.common.security.service.PigAppUserDetailsServiceImpl
-com.pig4cloud.pig.common.security.service.PigRedisOAuth2AuthorizationService
-com.pig4cloud.pig.common.security.service.PigRedisOAuth2AuthorizationConsentService
-com.pig4cloud.pig.common.security.component.PigSecurityInnerAspect
-com.pig4cloud.pig.common.security.component.PigSecurityMessageSourceConfiguration
-com.pig4cloud.pig.common.security.service.PigRemoteRegisteredClientRepository
+com.bubblecloud.common.security.service.PigUserDetailsServiceImpl
+com.bubblecloud.common.security.service.PigAppUserDetailsServiceImpl
+com.bubblecloud.common.security.service.PigRedisOAuth2AuthorizationService
+com.bubblecloud.common.security.service.PigRedisOAuth2AuthorizationConsentService
+com.bubblecloud.common.security.component.PigSecurityInnerAspect
+com.bubblecloud.common.security.component.PigSecurityMessageSourceConfiguration
+com.bubblecloud.common.security.service.PigRemoteRegisteredClientRepository

@@ -1,7 +1,7 @@
 package com.bubblecloud.backend.controller;
 
-import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.core.util.RedisUtils;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.core.util.RedisUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

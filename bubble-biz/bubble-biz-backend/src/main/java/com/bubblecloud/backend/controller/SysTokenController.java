@@ -1,9 +1,9 @@
 package com.bubblecloud.backend.controller;
 
 import com.bubblecloud.backend.api.feign.RemoteTokenService;
-import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.log.annotation.SysLog;
-import com.pig4cloud.pig.common.security.annotation.HasPermission;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.log.annotation.SysLog;
+import com.bubblecloud.common.security.annotation.HasPermission;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

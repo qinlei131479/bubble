@@ -2,7 +2,7 @@ package com.bubblecloud.codegen.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bubblecloud.codegen.entity.GenTemplateEntity;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.util.R;
 
 /**
  * 代码生成模板服务接口

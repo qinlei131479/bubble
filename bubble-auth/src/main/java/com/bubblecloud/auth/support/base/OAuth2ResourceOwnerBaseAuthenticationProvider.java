@@ -1,8 +1,8 @@
 package com.bubblecloud.auth.support.base;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.pig4cloud.pig.common.security.util.OAuth2ErrorCodesExpand;
-import com.pig4cloud.pig.common.security.util.ScopeException;
+import com.bubblecloud.common.security.util.OAuth2ErrorCodesExpand;
+import com.bubblecloud.common.security.util.ScopeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.support.MessageSourceAccessor;

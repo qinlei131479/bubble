@@ -2,9 +2,9 @@ package com.bubblecloud.backend.controller;
 
 import com.bubblecloud.backend.api.dto.RegisterUserDTO;
 import com.bubblecloud.backend.service.SysUserService;
-import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.log.annotation.SysLog;
-import com.pig4cloud.pig.common.security.annotation.Inner;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.log.annotation.SysLog;
+import com.bubblecloud.common.security.annotation.Inner;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

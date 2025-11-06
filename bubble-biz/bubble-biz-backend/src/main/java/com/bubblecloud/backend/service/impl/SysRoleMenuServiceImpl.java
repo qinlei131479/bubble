@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bubblecloud.backend.api.entity.SysRoleMenu;
 import com.bubblecloud.backend.mapper.SysRoleMenuMapper;
-import com.pig4cloud.pig.common.core.constant.CacheConstants;
+import com.bubblecloud.common.core.constant.CacheConstants;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;

@@ -8,11 +8,11 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.pig4cloud.pig.common.core.constant.CacheConstants;
-import com.pig4cloud.pig.common.core.constant.SecurityConstants;
-import com.pig4cloud.pig.common.core.exception.ValidateCodeException;
-import com.pig4cloud.pig.common.core.util.RedisUtils;
-import com.pig4cloud.pig.common.core.util.WebUtils;
+import com.bubblecloud.common.core.constant.CacheConstants;
+import com.bubblecloud.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.core.exception.ValidateCodeException;
+import com.bubblecloud.common.core.util.RedisUtils;
+import com.bubblecloud.common.core.util.WebUtils;
 
 /**
  * 登录前处理器

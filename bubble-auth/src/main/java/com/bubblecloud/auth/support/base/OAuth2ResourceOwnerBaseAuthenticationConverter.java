@@ -1,6 +1,6 @@
 package com.bubblecloud.auth.support.base;
 
-import com.pig4cloud.pig.common.security.util.OAuth2EndpointUtils;
+import com.bubblecloud.common.security.util.OAuth2EndpointUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

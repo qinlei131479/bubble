@@ -1,7 +1,7 @@
 package com.bubblecloud.auth.support.password;
 
 import com.bubblecloud.auth.support.base.OAuth2ResourceOwnerBaseAuthenticationConverter;
-import com.pig4cloud.pig.common.security.util.OAuth2EndpointUtils;
+import com.bubblecloud.common.security.util.OAuth2EndpointUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import java.util.Map;
 import java.util.Set;
 
-import static com.pig4cloud.pig.common.core.constant.SecurityConstants.PASSWORD;
+import static com.bubblecloud.common.core.constant.SecurityConstants.PASSWORD;
 
 /**
  * OAuth2 资源所有者密码认证转换器

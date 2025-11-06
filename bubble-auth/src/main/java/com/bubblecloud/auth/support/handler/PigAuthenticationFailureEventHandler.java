@@ -2,12 +2,12 @@ package com.bubblecloud.auth.support.handler;
 
 import cn.hutool.core.util.StrUtil;
 import com.bubblecloud.backend.api.entity.SysLog;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
-import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.core.util.SpringContextHolder;
-import com.pig4cloud.pig.common.log.event.SysLogEvent;
-import com.pig4cloud.pig.common.log.util.LogTypeEnum;
-import com.pig4cloud.pig.common.log.util.SysLogUtils;
+import com.bubblecloud.common.core.constant.CommonConstants;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.core.util.SpringContextHolder;
+import com.bubblecloud.common.log.event.SysLogEvent;
+import com.bubblecloud.common.log.util.LogTypeEnum;
+import com.bubblecloud.common.log.util.SysLogUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;

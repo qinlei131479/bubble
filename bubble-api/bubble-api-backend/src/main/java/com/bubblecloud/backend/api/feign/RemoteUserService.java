@@ -2,9 +2,9 @@ package com.bubblecloud.backend.api.feign;
 
 import com.bubblecloud.backend.api.dto.UserDTO;
 import com.bubblecloud.backend.api.dto.UserInfo;
-import com.pig4cloud.pig.common.core.constant.ServiceNameConstants;
-import com.pig4cloud.pig.common.core.util.R;
-import com.pig4cloud.pig.common.feign.annotation.NoToken;
+import com.bubblecloud.common.core.constant.ServiceNameConstants;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.feign.annotation.NoToken;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;

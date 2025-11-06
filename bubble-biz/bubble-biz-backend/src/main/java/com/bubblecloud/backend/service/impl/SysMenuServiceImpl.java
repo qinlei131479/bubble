@@ -20,12 +20,12 @@ import com.bubblecloud.backend.api.entity.SysRoleMenu;
 import com.bubblecloud.backend.mapper.SysMenuMapper;
 import com.bubblecloud.backend.mapper.SysRoleMenuMapper;
 import com.bubblecloud.backend.service.SysMenuService;
-import com.pig4cloud.pig.common.core.constant.CacheConstants;
-import com.pig4cloud.pig.common.core.constant.CommonConstants;
-import com.pig4cloud.pig.common.core.constant.enums.MenuTypeEnum;
-import com.pig4cloud.pig.common.core.exception.ErrorCodes;
-import com.pig4cloud.pig.common.core.util.MsgUtils;
-import com.pig4cloud.pig.common.core.util.R;
+import com.bubblecloud.common.core.constant.CacheConstants;
+import com.bubblecloud.common.core.constant.CommonConstants;
+import com.bubblecloud.common.core.constant.enums.MenuTypeEnum;
+import com.bubblecloud.common.core.exception.ErrorCodes;
+import com.bubblecloud.common.core.util.MsgUtils;
+import com.bubblecloud.common.core.util.R;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.tree.Tree;
