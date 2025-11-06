@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class PigPaginationInnerInterceptor extends PaginationInnerInterceptor {
+public class CustomPaginationInnerInterceptor extends PaginationInnerInterceptor {
 
 	/**
 	 * 数据库类型
@@ -44,11 +44,11 @@ public class PigPaginationInnerInterceptor extends PaginationInnerInterceptor {
 	 */
 	private IDialect dialect;
 
-	public PigPaginationInnerInterceptor(DbType dbType) {
+	public CustomPaginationInnerInterceptor(DbType dbType) {
 		this.dbType = dbType;
 	}
 
-	public PigPaginationInnerInterceptor(IDialect dialect) {
+	public CustomPaginationInnerInterceptor(IDialect dialect) {
 		this.dialect = dialect;
 	}
 
