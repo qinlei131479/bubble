@@ -78,7 +78,6 @@
 	</dependencies>
 
 	<modules>
-		<module>bubble-register</module>
 		<module>bubble-gateway</module>
 		<module>bubble-auth</module>
 		<module>bubble-biz</module>
