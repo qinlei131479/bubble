@@ -1,7 +1,7 @@
 package com.bubblecloud.common.xss.core;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.bubblecloud.common.xss.config.PigXssProperties;
+import com.bubblecloud.common.xss.config.XssProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class XssCleanInterceptor implements AsyncHandlerInterceptor {
 	/**
 	 * XSS防护配置属性
 	 */
-	private final PigXssProperties xssProperties;
+	private final XssProperties xssProperties;
 
 	/**
 	 * 预处理XSS过滤

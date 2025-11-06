@@ -1,7 +1,7 @@
 package com.bubblecloud.common.xss.core;
 
 import com.bubblecloud.common.core.util.SpringContextHolder;
-import com.bubblecloud.common.xss.config.PigXssProperties;
+import com.bubblecloud.common.xss.config.XssProperties;
 import com.bubblecloud.common.xss.utils.XssUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +26,7 @@ public class XssCleanDeserializer extends XssCleanDeserializerBase {
 	@Override
 	public String clean(String name, String text) throws IOException {
 		// 读取 xss 配置
-		PigXssProperties properties = SpringContextHolder.getBean(PigXssProperties.class);
+		XssProperties properties = SpringContextHolder.getBean(XssProperties.class);
 		// 读取 XssCleaner bean
 		XssCleaner xssCleaner = SpringContextHolder.getBean(XssCleaner.class);
 		if (xssCleaner != null) {

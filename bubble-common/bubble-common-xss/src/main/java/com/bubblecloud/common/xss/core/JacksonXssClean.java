@@ -1,7 +1,7 @@
 package com.bubblecloud.common.xss.core;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.bubblecloud.common.xss.config.PigXssProperties;
+import com.bubblecloud.common.xss.config.XssProperties;
 import com.bubblecloud.common.xss.utils.XssUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JacksonXssClean extends XssCleanDeserializerBase {
 
-	private final PigXssProperties properties;
+	private final XssProperties properties;
 
 	private final XssCleaner xssCleaner;
 

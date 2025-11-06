@@ -1,7 +1,7 @@
 package com.bubblecloud.common.xss.core;
 
 import cn.hutool.core.util.StrUtil;
-import com.bubblecloud.common.xss.config.PigXssProperties;
+import com.bubblecloud.common.xss.config.XssProperties;
 import com.bubblecloud.common.xss.utils.XssUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +21,11 @@ import java.beans.PropertyEditorSupport;
  * @date 2025/05/31
  */
 @ControllerAdvice
-@ConditionalOnProperty(prefix = PigXssProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = XssProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 public class FormXssClean {
 
-	private final PigXssProperties properties;
+	private final XssProperties properties;
 
 	private final XssCleaner xssCleaner;
 
@@ -51,7 +51,7 @@ public class FormXssClean {
 
 		private final XssCleaner xssCleaner;
 
-		private final PigXssProperties properties;
+		private final XssProperties properties;
 
 		/**
 		 * 获取属性值的文本表示

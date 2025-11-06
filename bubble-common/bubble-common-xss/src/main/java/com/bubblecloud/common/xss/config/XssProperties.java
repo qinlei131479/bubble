@@ -17,8 +17,8 @@ import java.util.List;
 @Getter
 @Setter
 @RefreshScope
-@ConfigurationProperties(PigXssProperties.PREFIX)
-public class PigXssProperties {
+@ConfigurationProperties(XssProperties.PREFIX)
+public class XssProperties {
 
 	public static final String PREFIX = "security.xss";
 

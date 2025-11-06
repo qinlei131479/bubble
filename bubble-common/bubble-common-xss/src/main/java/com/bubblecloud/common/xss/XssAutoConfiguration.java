@@ -1,6 +1,6 @@
 package com.bubblecloud.common.xss;
 
-import com.bubblecloud.common.xss.config.PigXssProperties;
+import com.bubblecloud.common.xss.config.XssProperties;
 import com.bubblecloud.common.xss.core.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -24,12 +24,12 @@ import java.util.List;
  */
 @AutoConfiguration
 @RequiredArgsConstructor
-@EnableConfigurationProperties(PigXssProperties.class)
-@ConditionalOnProperty(prefix = PigXssProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(XssProperties.class)
+@ConditionalOnProperty(prefix = XssProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class PigXssAutoConfiguration implements WebMvcConfigurer {
+public class XssAutoConfiguration implements WebMvcConfigurer {
 
-	private final PigXssProperties xssProperties;
+	private final XssProperties xssProperties;
 
 	/**
 	 * 创建XSS清理器Bean
@@ -39,7 +39,7 @@ public class PigXssAutoConfiguration implements WebMvcConfigurer {
 	 */
 	@Bean
 	@ConditionalOnMissingBean
-	public XssCleaner xssCleaner(PigXssProperties properties) {
+	public XssCleaner xssCleaner(XssProperties properties) {
 		return new DefaultXssCleaner(properties);
 	}
 
@@ -50,7 +50,7 @@ public class PigXssAutoConfiguration implements WebMvcConfigurer {
 	 * @return FormXssClean实例
 	 */
 	@Bean
-	public FormXssClean formXssClean(PigXssProperties properties, XssCleaner xssCleaner) {
+	public FormXssClean formXssClean(XssProperties properties, XssCleaner xssCleaner) {
 		return new FormXssClean(properties, xssCleaner);
 	}
 
@@ -61,8 +61,8 @@ public class PigXssAutoConfiguration implements WebMvcConfigurer {
 	 * @return 自定义的Jackson2ObjectMapperBuilder
 	 */
 	@Bean
-	public Jackson2ObjectMapperBuilderCustomizer xssJacksonCustomizer(PigXssProperties properties,
-			XssCleaner xssCleaner) {
+	public Jackson2ObjectMapperBuilderCustomizer xssJacksonCustomizer(XssProperties properties,
+																	  XssCleaner xssCleaner) {
 		return builder -> builder.deserializerByType(String.class, new JacksonXssClean(properties, xssCleaner));
 	}
 
