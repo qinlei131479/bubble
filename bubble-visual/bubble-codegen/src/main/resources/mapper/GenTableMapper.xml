@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.pig4cloud.pig.codegen.mapper.GenTableMapper">
+<mapper namespace="com.bubblecloud.codegen.mapper.GenTableMapper">
 
-    <resultMap id="tableMap" type="com.pig4cloud.pig.codegen.entity.GenTable">
+    <resultMap id="tableMap" type="com.bubblecloud.codegen.entity.GenTable">
         <id property="id" column="id"/>
         <result property="tableName" column="table_name"/>
         <result property="className" column="class_name"/>
