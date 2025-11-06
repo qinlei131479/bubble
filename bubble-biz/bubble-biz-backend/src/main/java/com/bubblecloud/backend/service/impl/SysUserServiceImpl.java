@@ -17,7 +17,6 @@ import com.bubblecloud.backend.mapper.SysUserMapper;
 import com.bubblecloud.backend.mapper.SysUserPostMapper;
 import com.bubblecloud.backend.mapper.SysUserRoleMapper;
 import com.bubblecloud.backend.service.*;
-import com.pig4cloud.pig.admin.service.*;
 import com.pig4cloud.pig.common.core.constant.CacheConstants;
 import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.exception.ErrorCodes;
