@@ -1,6 +1,6 @@
 package com.bubblecloud.backend;
 
-import com.bubblecloud.common.feign.annotation.EnablePigFeignClients;
+import com.bubblecloud.common.feign.annotation.EnableCustomFeignClients;
 import com.bubblecloud.common.security.annotation.EnablePigResourceServer;
 import com.bubblecloud.common.swagger.annotation.EnableDoc;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +14,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @date 2025/05/30
  */
 @EnableDoc(value = "admin")
-@EnablePigFeignClients
+@EnableCustomFeignClients
 @EnablePigResourceServer
 @EnableDiscoveryClient
 @SpringBootApplication

@@ -1,6 +1,6 @@
 package com.bubblecloud.auth;
 
-import com.bubblecloud.common.feign.annotation.EnablePigFeignClients;
+import com.bubblecloud.common.feign.annotation.EnableCustomFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -11,7 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author lengleng
  * @date 2025/05/30
  */
-@EnablePigFeignClients
+@EnableCustomFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
 public class BubbleAuthApplication {

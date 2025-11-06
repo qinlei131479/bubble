@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EnableFeignClients
-public @interface EnablePigFeignClients {
+public @interface EnableCustomFeignClients {
 
 	/**
 	 * {@link #basePackages()}属性的别名。允许更简洁的注解声明
