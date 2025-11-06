@@ -21,7 +21,7 @@ import java.util.Map;
  * @author lengleng
  * @date 2025/05/31
  */
-public class PigCustomOAuth2AccessTokenResponseHttpMessageConverter
+public class CustomOAuth2AccessTokenResponseHttpMessageConverter
 		extends OAuth2AccessTokenResponseHttpMessageConverter {
 
 	/**

@@ -16,7 +16,7 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
  * @return 配置好的ReloadableResourceBundleMessageSource实例
  */
 @ConditionalOnWebApplication(type = SERVLET)
-public class PigSecurityMessageSourceConfiguration implements WebMvcConfigurer {
+public class CustomSecurityMessageSourceConfiguration implements WebMvcConfigurer {
 
 	/**
 	 * 创建并配置安全相关的消息源

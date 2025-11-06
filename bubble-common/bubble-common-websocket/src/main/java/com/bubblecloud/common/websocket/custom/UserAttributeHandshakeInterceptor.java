@@ -1,6 +1,6 @@
 package com.bubblecloud.common.websocket.custom;
 
-import com.bubblecloud.common.security.service.PigUser;
+import com.bubblecloud.common.security.service.CustomUser;
 import com.bubblecloud.common.security.util.SecurityUtils;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -37,7 +37,7 @@ public class UserAttributeHandshakeInterceptor implements HandshakeInterceptor {
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 			Map<String, Object> attributes) throws Exception {
 		// 由于 WebSocket 握手是由 http 升级的，携带 token 已经被 Security 拦截验证了，所以可以直接获取到用户
-		PigUser user = SecurityUtils.getUser();
+		CustomUser user = SecurityUtils.getUser();
 		attributes.put("USER_KEY_ATTR_NAME", user);
 		return true;
 	}

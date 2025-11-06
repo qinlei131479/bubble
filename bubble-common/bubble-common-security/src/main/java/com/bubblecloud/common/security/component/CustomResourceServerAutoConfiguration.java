@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @EnableConfigurationProperties(PermitAllUrlProperties.class)
-public class PigResourceServerAutoConfiguration {
+public class CustomResourceServerAutoConfiguration {
 
 	/**
 	 * 鉴权具体的实现逻辑
@@ -36,8 +36,8 @@ public class PigResourceServerAutoConfiguration {
 	 * @return BearerTokenExtractor
 	 */
 	@Bean
-	public PigBearerTokenExtractor pigBearerTokenExtractor(PermitAllUrlProperties urlProperties) {
-		return new PigBearerTokenExtractor(urlProperties);
+	public CustomBearerTokenExtractor pigBearerTokenExtractor(PermitAllUrlProperties urlProperties) {
+		return new CustomBearerTokenExtractor(urlProperties);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class PigResourceServerAutoConfiguration {
 	 */
 	@Bean
 	public OpaqueTokenIntrospector opaqueTokenIntrospector(OAuth2AuthorizationService authorizationService) {
-		return new PigCustomOpaqueTokenIntrospector(authorizationService);
+		return new CustomOpaqueTokenIntrospector(authorizationService);
 	}
 
 	/**

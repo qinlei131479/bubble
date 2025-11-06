@@ -1,6 +1,6 @@
 package com.bubblecloud.common.websocket.custom;
 
-import com.bubblecloud.common.security.service.PigUser;
+import com.bubblecloud.common.security.service.CustomUser;
 import com.bubblecloud.common.websocket.holder.SessionKeyGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class CustomSessionKeyGenerator implements SessionKeyGenerator {
 	/**
 	 * 根据 WebSocket 会话中的用户信息生成会话的唯一标识。
 	 * <p>
-	 * 此实现从会话属性中获取 {@link PigUser} 对象，并使用其 ID 作为唯一标识。
+	 * 此实现从会话属性中获取 {@link CustomUser} 对象，并使用其 ID 作为唯一标识。
 	 * </p>
 	 * @param webSocketSession 当前的 WebSocket 会话。
 	 * @return 返回会话的唯一标识，如果无法确定用户，则返回 {@code null}。
@@ -32,7 +32,7 @@ public class CustomSessionKeyGenerator implements SessionKeyGenerator {
 
 		Object obj = webSocketSession.getAttributes().get("USER_KEY_ATTR_NAME");
 
-		if (obj instanceof PigUser user) {
+		if (obj instanceof CustomUser user) {
 			// userId 作为唯一区分
 			return String.valueOf(user.getId());
 		}

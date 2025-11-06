@@ -2,8 +2,8 @@ package com.bubblecloud.common.security.component;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.bubblecloud.common.core.constant.SecurityConstants;
-import com.bubblecloud.common.security.service.PigUser;
-import com.bubblecloud.common.security.service.PigUserDetailsService;
+import com.bubblecloud.common.security.service.CustomUser;
+import com.bubblecloud.common.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class PigCustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
+public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 
 	/**
 	 * OAuth2授权服务
@@ -62,10 +62,10 @@ public class PigCustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector
 					AuthorityUtils.NO_AUTHORITIES);
 		}
 
-		Map<String, PigUserDetailsService> userDetailsServiceMap = SpringUtil
-			.getBeansOfType(PigUserDetailsService.class);
+		Map<String, CustomUserDetailsService> userDetailsServiceMap = SpringUtil
+			.getBeansOfType(CustomUserDetailsService.class);
 
-		Optional<PigUserDetailsService> optional = userDetailsServiceMap.values()
+		Optional<CustomUserDetailsService> optional = userDetailsServiceMap.values()
 			.stream()
 			.filter(service -> service.support(Objects.requireNonNull(oldAuthorization).getRegisteredClientId(),
 					oldAuthorization.getAuthorizationGrantType().getValue()))
@@ -76,7 +76,7 @@ public class PigCustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector
 			Object principal = Objects.requireNonNull(oldAuthorization).getAttributes().get(Principal.class.getName());
 			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
 			Object tokenPrincipal = usernamePasswordAuthenticationToken.getPrincipal();
-			userDetails = optional.get().loadUserByUser((PigUser) tokenPrincipal);
+			userDetails = optional.get().loadUserByUser((CustomUser) tokenPrincipal);
 		}
 		catch (UsernameNotFoundException notFoundException) {
 			log.warn("用户不不存在 {}", notFoundException.getLocalizedMessage());
@@ -87,11 +87,11 @@ public class PigCustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector
 		}
 
 		// 注入客户端信息，方便上下文中获取
-		PigUser pigUser = (PigUser) userDetails;
-		Objects.requireNonNull(pigUser)
+		CustomUser customUser = (CustomUser) userDetails;
+		Objects.requireNonNull(customUser)
 			.getAttributes()
 			.put(SecurityConstants.CLIENT_ID, oldAuthorization.getRegisteredClientId());
-		return pigUser;
+		return customUser;
 	}
 
 }

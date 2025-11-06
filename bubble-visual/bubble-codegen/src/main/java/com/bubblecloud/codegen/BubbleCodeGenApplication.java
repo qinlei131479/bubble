@@ -2,7 +2,7 @@ package com.bubblecloud.codegen;
 
 import com.bubblecloud.common.datasource.annotation.EnableDynamicDataSource;
 import com.bubblecloud.common.feign.annotation.EnableCustomFeignClients;
-import com.bubblecloud.common.security.annotation.EnablePigResourceServer;
+import com.bubblecloud.common.security.annotation.EnableCustomResourceServer;
 import com.bubblecloud.common.swagger.annotation.EnableDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,7 +18,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableCustomFeignClients
 @EnableDoc("gen")
 @EnableDiscoveryClient
-@EnablePigResourceServer
+@EnableCustomResourceServer
 @SpringBootApplication
 public class BubbleCodeGenApplication {
 

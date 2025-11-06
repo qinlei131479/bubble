@@ -23,7 +23,7 @@ import lombok.SneakyThrows;
  */
 @Primary
 @RequiredArgsConstructor
-public class PigUserDetailsServiceImpl implements PigUserDetailsService {
+public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
 	private final RemoteUserService remoteUserService;
 
@@ -40,7 +40,7 @@ public class PigUserDetailsServiceImpl implements PigUserDetailsService {
 	public UserDetails loadUserByUsername(String username) {
 		Cache cache = cacheManager.getCache(CacheConstants.USER_DETAILS);
 		if (cache != null && cache.get(username) != null) {
-			return (PigUser) cache.get(username).get();
+			return (CustomUser) cache.get(username).get();
 		}
 
 		UserDTO userDTO = new UserDTO();

@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
  * @author lengleng
  * @date 2025/05/31
  */
-public class PigFeignClientConfiguration {
+public class CustomFeignClientConfiguration {
 
 	/**
 	 * 注入 oauth2 feign token 增强
@@ -19,7 +19,7 @@ public class PigFeignClientConfiguration {
 	 */
 	@Bean
 	public RequestInterceptor oauthRequestInterceptor(BearerTokenResolver tokenResolver) {
-		return new PigOAuthRequestInterceptor(tokenResolver);
+		return new CustomOAuthRequestInterceptor(tokenResolver);
 	}
 
 }

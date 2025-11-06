@@ -14,7 +14,7 @@ import java.util.Map;
  * @date 2025/05/31
  */
 @RequiredArgsConstructor
-public class PigClientCredentialsOAuth2AuthenticatedPrincipal implements OAuth2AuthenticatedPrincipal {
+public class CustomClientCredentialsOAuth2AuthenticatedPrincipal implements OAuth2AuthenticatedPrincipal {
 
 	private final Map<String, Object> attributes;
 

@@ -23,7 +23,7 @@ import org.springframework.security.access.AccessDeniedException;
 @Slf4j
 @Aspect
 @RequiredArgsConstructor
-public class PigSecurityInnerAspect implements Ordered {
+public class CustomSecurityInnerAspect implements Ordered {
 
 	private final HttpServletRequest request;
 

@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
  * @date 2022/5/29
  */
 @RequiredArgsConstructor
-public class PigOAuthRequestInterceptor implements RequestInterceptor {
+public class CustomOAuthRequestInterceptor implements RequestInterceptor {
 
 	/**
 	 * 用于解析Bearer令牌的解析器

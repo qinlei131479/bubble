@@ -8,8 +8,8 @@ import com.bubblecloud.common.core.constant.SecurityConstants;
 import com.bubblecloud.common.core.util.SpringContextHolder;
 import com.bubblecloud.common.log.event.SysLogEvent;
 import com.bubblecloud.common.log.util.SysLogUtils;
-import com.bubblecloud.common.security.component.PigCustomOAuth2AccessTokenResponseHttpMessageConverter;
-import com.bubblecloud.common.security.service.PigUser;
+import com.bubblecloud.common.security.component.CustomOAuth2AccessTokenResponseHttpMessageConverter;
+import com.bubblecloud.common.security.service.CustomUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -38,7 +38,7 @@ import java.util.Map;
 @Slf4j
 public class CustomAuthenticationSuccessEventHandler implements AuthenticationSuccessHandler {
 
-	private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter = new PigCustomOAuth2AccessTokenResponseHttpMessageConverter();
+	private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter = new CustomOAuth2AccessTokenResponseHttpMessageConverter();
 
 	/**
 	 * 用户认证成功时调用
@@ -54,7 +54,7 @@ public class CustomAuthenticationSuccessEventHandler implements AuthenticationSu
 		Map<String, Object> map = accessTokenAuthentication.getAdditionalParameters();
 		if (MapUtil.isNotEmpty(map)) {
 			// 发送异步日志事件
-			PigUser userInfo = (PigUser) map.get(SecurityConstants.DETAILS_USER);
+			CustomUser userInfo = (CustomUser) map.get(SecurityConstants.DETAILS_USER);
 			log.info("用户：{} 登录成功", userInfo.getName());
 			SecurityContextHolder.getContext().setAuthentication(accessTokenAuthentication);
 			SysLog logVo = SysLogUtils.getSysLog();

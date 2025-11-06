@@ -3,7 +3,7 @@ package com.bubblecloud.auth.support.core;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.bubblecloud.common.core.util.WebUtils;
-import com.bubblecloud.common.security.service.PigUserDetailsService;
+import com.bubblecloud.common.security.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import org.springframework.core.Ordered;
@@ -119,11 +119,11 @@ public class CustomDaoAuthenticationProvider extends AbstractUserDetailsAuthenti
 				.orElse(null);
 		}
 
-		Map<String, PigUserDetailsService> userDetailsServiceMap = SpringUtil
-			.getBeansOfType(PigUserDetailsService.class);
+		Map<String, CustomUserDetailsService> userDetailsServiceMap = SpringUtil
+			.getBeansOfType(CustomUserDetailsService.class);
 
 		String finalClientId = clientId;
-		Optional<PigUserDetailsService> optional = userDetailsServiceMap.values()
+		Optional<CustomUserDetailsService> optional = userDetailsServiceMap.values()
 			.stream()
 			.filter(service -> service.support(finalClientId, grantType))
 			.max(Comparator.comparingInt(Ordered::getOrder));

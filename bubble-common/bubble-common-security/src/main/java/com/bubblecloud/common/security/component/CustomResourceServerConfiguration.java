@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class PigResourceServerConfiguration {
+public class CustomResourceServerConfiguration {
 
 	/**
 	 * 资源认证异常处理入口点
@@ -36,7 +36,7 @@ public class PigResourceServerConfiguration {
 	/**
 	 * PigBearerToken提取器
 	 */
-	private final PigBearerTokenExtractor pigBearerTokenExtractor;
+	private final CustomBearerTokenExtractor customBearerTokenExtractor;
 
 	/**
 	 * 自定义不透明令牌解析器
@@ -69,7 +69,7 @@ public class PigResourceServerConfiguration {
 			.oauth2ResourceServer(
 					oauth2 -> oauth2.opaqueToken(token -> token.introspector(customOpaqueTokenIntrospector))
 						.authenticationEntryPoint(resourceAuthExceptionEntryPoint)
-						.bearerTokenResolver(pigBearerTokenExtractor))
+						.bearerTokenResolver(customBearerTokenExtractor))
 			.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 			.csrf(AbstractHttpConfigurer::disable);
 

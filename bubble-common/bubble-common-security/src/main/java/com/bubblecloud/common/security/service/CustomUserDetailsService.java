@@ -23,7 +23,7 @@ import java.util.Set;
  * @author lengleng
  * @date 2025/05/31
  */
-public interface PigUserDetailsService extends UserDetailsService, Ordered {
+public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 
 	/**
 	 * 是否支持此客户端校验
@@ -61,18 +61,18 @@ public interface PigUserDetailsService extends UserDetailsService, Ordered {
 			.createAuthorityList(dbAuthsSet.toArray(new String[0]));
 
 		// 构造security用户
-		return new PigUser(info.getUserId(), info.getDept().getDeptId(), info.getUsername(),
+		return new CustomUser(info.getUserId(), info.getDept().getDeptId(), info.getUsername(),
 				SecurityConstants.BCRYPT + info.getPassword(), info.getPhone(), true, true, true,
 				StrUtil.equals(info.getLockFlag(), CommonConstants.STATUS_NORMAL), authorities);
 	}
 
 	/**
 	 * 通过用户实体查询用户详情
-	 * @param pigUser 用户实体对象
+	 * @param customUser 用户实体对象
 	 * @return 用户详情信息
 	 */
-	default UserDetails loadUserByUser(PigUser pigUser) {
-		return this.loadUserByUsername(pigUser.getUsername());
+	default UserDetails loadUserByUser(CustomUser customUser) {
+		return this.loadUserByUsername(customUser.getUsername());
 	}
 
 }

@@ -1,7 +1,7 @@
 package com.bubblecloud.auth.support.core;
 
 import com.bubblecloud.common.core.constant.SecurityConstants;
-import com.bubblecloud.common.security.service.PigUser;
+import com.bubblecloud.common.security.service.CustomUser;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsSet;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
@@ -29,10 +29,10 @@ public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth
 			return;
 		}
 
-		PigUser pigUser = (PigUser) context.getPrincipal().getPrincipal();
-		claims.claim(SecurityConstants.DETAILS_USER, pigUser);
-		claims.claim(SecurityConstants.DETAILS_USER_ID, pigUser.getId());
-		claims.claim(SecurityConstants.USERNAME, pigUser.getUsername());
+		CustomUser customUser = (CustomUser) context.getPrincipal().getPrincipal();
+		claims.claim(SecurityConstants.DETAILS_USER, customUser);
+		claims.claim(SecurityConstants.DETAILS_USER_ID, customUser.getId());
+		claims.claim(SecurityConstants.USERNAME, customUser.getUsername());
 	}
 
 }
