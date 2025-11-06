@@ -1,6 +1,6 @@
 package com.bubblecloud.common.websocket.config;
 
-import com.bubblecloud.common.websocket.custom.PigxSessionKeyGenerator;
+import com.bubblecloud.common.websocket.custom.CustomSessionKeyGenerator;
 import com.bubblecloud.common.websocket.custom.UserAttributeHandshakeInterceptor;
 import com.bubblecloud.common.websocket.handler.CustomPlanTextMessageHandler;
 import com.bubblecloud.common.websocket.handler.CustomWebSocketHandler;
@@ -41,7 +41,7 @@ public class WebSocketHandlerConfig {
 	@Bean
 	@ConditionalOnMissingBean(SessionKeyGenerator.class)
 	public SessionKeyGenerator sessionKeyGenerator() {
-		return new PigxSessionKeyGenerator();
+		return new CustomSessionKeyGenerator();
 	}
 
 	/**
