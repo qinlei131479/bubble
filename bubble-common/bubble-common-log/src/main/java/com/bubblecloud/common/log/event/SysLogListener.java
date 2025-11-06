@@ -2,7 +2,7 @@ package com.bubblecloud.common.log.event;
 
 import java.util.Objects;
 
-import com.bubblecloud.common.log.config.PigLogProperties;
+import com.bubblecloud.common.log.config.LogProperties;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.event.EventListener;
@@ -36,7 +36,7 @@ public class SysLogListener implements InitializingBean {
 
 	private final RemoteLogService remoteLogService;
 
-	private final PigLogProperties logProperties;
+	private final LogProperties logProperties;
 
 	/**
 	 * 异步保存系统日志

@@ -15,8 +15,8 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ConfigurationProperties(PigLogProperties.PREFIX)
-public class PigLogProperties {
+@ConfigurationProperties(LogProperties.PREFIX)
+public class LogProperties {
 
 	public static final String PREFIX = "security.log";
 
