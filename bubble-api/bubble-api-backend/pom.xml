@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.bubblecloud</groupId>
-        <artifactId>bubble-biz</artifactId>
+        <artifactId>bubble-api</artifactId>
         <version>${revision}</version>
     </parent>
 
@@ -13,7 +13,6 @@
     <packaging>jar</packaging>
 
     <description>bubble 通用用户权限管理系统公共api模块</description>
-
 
     <dependencies>
         <!--core 工具类-->

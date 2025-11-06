@@ -84,6 +84,7 @@
 		<module>bubble-biz</module>
 		<module>bubble-common</module>
 		<module>bubble-visual</module>
+		<module>bubble-api</module>
 	</modules>
 
 	<dependencyManagement>

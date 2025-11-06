@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -9,12 +7,12 @@
 		<version>${revision}</version>
 	</parent>
 
-	<artifactId>bubble-biz</artifactId>
-
-	<description>通用用户权限管理聚合模块</description>
+	<artifactId>bubble-api</artifactId>
 	<packaging>pom</packaging>
 
+	<description>通用api聚合模块</description>
+
 	<modules>
-		<module>bubble-biz-backend</module>
+		<module>bubble-api-backend</module>
 	</modules>
 </project>
