@@ -4,9 +4,9 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.pig4cloud.pig.admin.api.dto.UserDTO;
-import com.pig4cloud.pig.admin.api.dto.UserInfo;
-import com.pig4cloud.pig.admin.api.feign.RemoteUserService;
+import com.bubblecloud.backend.api.dto.UserDTO;
+import com.bubblecloud.backend.api.dto.UserInfo;
+import com.bubblecloud.backend.api.feign.RemoteUserService;
 import com.pig4cloud.pig.common.core.constant.CacheConstants;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.util.R;

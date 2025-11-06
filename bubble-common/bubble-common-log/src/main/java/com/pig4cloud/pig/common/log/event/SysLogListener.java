@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.pig4cloud.pig.admin.api.entity.SysLog;
-import com.pig4cloud.pig.admin.api.feign.RemoteLogService;
+import com.bubblecloud.backend.api.entity.SysLog;
+import com.bubblecloud.backend.api.feign.RemoteLogService;
 import com.pig4cloud.pig.common.core.jackson.PigJavaTimeModule;
 import com.pig4cloud.pig.common.log.config.PigLogProperties;
 

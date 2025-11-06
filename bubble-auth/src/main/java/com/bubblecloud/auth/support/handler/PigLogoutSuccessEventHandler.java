@@ -1,7 +1,7 @@
 package com.bubblecloud.auth.support.handler;
 
 import cn.hutool.core.util.StrUtil;
-import com.pig4cloud.pig.admin.api.entity.SysLog;
+import com.bubblecloud.backend.api.entity.SysLog;
 import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.util.SpringContextHolder;
 import com.pig4cloud.pig.common.core.util.WebUtils;

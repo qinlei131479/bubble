@@ -1,6 +1,6 @@
 package com.pig4cloud.pig.common.log;
 
-import com.pig4cloud.pig.admin.api.feign.RemoteLogService;
+import com.bubblecloud.backend.api.feign.RemoteLogService;
 import com.pig4cloud.pig.common.log.aspect.SysLogAspect;
 import com.pig4cloud.pig.common.log.config.PigLogProperties;
 import com.pig4cloud.pig.common.log.event.SysLogListener;

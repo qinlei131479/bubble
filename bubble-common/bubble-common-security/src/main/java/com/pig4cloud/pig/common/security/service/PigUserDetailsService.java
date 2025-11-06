@@ -1,7 +1,7 @@
 package com.pig4cloud.pig.common.security.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.pig4cloud.pig.admin.api.dto.UserInfo;
+import com.bubblecloud.backend.api.dto.UserInfo;
 import com.pig4cloud.pig.common.core.constant.CommonConstants;
 import com.pig4cloud.pig.common.core.constant.SecurityConstants;
 import com.pig4cloud.pig.common.core.util.R;

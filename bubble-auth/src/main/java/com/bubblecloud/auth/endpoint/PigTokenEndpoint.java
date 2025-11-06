@@ -38,9 +38,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.pig4cloud.pig.admin.api.entity.SysOauthClientDetails;
-import com.pig4cloud.pig.admin.api.feign.RemoteClientDetailsService;
-import com.pig4cloud.pig.admin.api.vo.TokenVo;
+import com.bubblecloud.backend.api.entity.SysOauthClientDetails;
+import com.bubblecloud.backend.api.feign.RemoteClientDetailsService;
+import com.bubblecloud.backend.api.vo.TokenVo;
 import com.bubblecloud.auth.support.handler.PigAuthenticationFailureEventHandler;
 import com.pig4cloud.pig.common.core.constant.CacheConstants;
 import com.pig4cloud.pig.common.core.constant.CommonConstants;

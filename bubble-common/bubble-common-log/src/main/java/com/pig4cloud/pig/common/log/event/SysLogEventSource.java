@@ -2,7 +2,7 @@ package com.pig4cloud.pig.common.log.event;
 
 import java.io.Serial;
 
-import com.pig4cloud.pig.admin.api.entity.SysLog;
+import com.bubblecloud.backend.api.entity.SysLog;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
