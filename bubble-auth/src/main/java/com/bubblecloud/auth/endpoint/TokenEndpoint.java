@@ -41,7 +41,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.backend.api.entity.SysOauthClientDetails;
 import com.bubblecloud.backend.api.feign.RemoteClientDetailsService;
 import com.bubblecloud.backend.api.vo.TokenVo;
-import com.bubblecloud.auth.support.handler.PigAuthenticationFailureEventHandler;
+import com.bubblecloud.auth.support.handler.CustomAuthenticationFailureEventHandler;
 import com.bubblecloud.common.core.constant.CacheConstants;
 import com.bubblecloud.common.core.constant.CommonConstants;
 import com.bubblecloud.common.core.constant.SecurityConstants;
@@ -73,11 +73,11 @@ import lombok.SneakyThrows;
 @RequestMapping
 @RequiredArgsConstructor
 @Tag(description = "oauth", name = "OAuth2 令牌端点控制器管理模块")
-public class PigTokenEndpoint {
+public class TokenEndpoint {
 
 	private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
 
-	private final AuthenticationFailureHandler authenticationFailureHandler = new PigAuthenticationFailureEventHandler();
+	private final AuthenticationFailureHandler authenticationFailureHandler = new CustomAuthenticationFailureEventHandler();
 
 	private final OAuth2AuthorizationService authorizationService;
 

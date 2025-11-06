@@ -1,13 +1,13 @@
 package com.bubblecloud.auth.config;
 
 import com.bubblecloud.auth.support.CustomeOAuth2AccessTokenGenerator;
+import com.bubblecloud.auth.support.core.CustomDaoAuthenticationProvider;
 import com.bubblecloud.auth.support.core.CustomeOAuth2TokenCustomizer;
 import com.bubblecloud.auth.support.core.FormIdentityLoginConfigurer;
-import com.bubblecloud.auth.support.core.PigDaoAuthenticationProvider;
 import com.bubblecloud.auth.support.filter.PasswordDecoderFilter;
 import com.bubblecloud.auth.support.filter.ValidateCodeFilter;
-import com.bubblecloud.auth.support.handler.PigAuthenticationFailureEventHandler;
-import com.bubblecloud.auth.support.handler.PigAuthenticationSuccessEventHandler;
+import com.bubblecloud.auth.support.handler.CustomAuthenticationFailureEventHandler;
+import com.bubblecloud.auth.support.handler.CustomAuthenticationSuccessEventHandler;
 import com.bubblecloud.auth.support.password.OAuth2ResourceOwnerPasswordAuthenticationConverter;
 import com.bubblecloud.auth.support.password.OAuth2ResourceOwnerPasswordAuthenticationProvider;
 import com.bubblecloud.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationConverter;
@@ -75,10 +75,10 @@ public class AuthorizationServerConfiguration {
 
 		http.with(authorizationServerConfigurer.tokenEndpoint((tokenEndpoint) -> {// 个性化认证授权端点
 			tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter()) // 注入自定义的授权认证Converter
-				.accessTokenResponseHandler(new PigAuthenticationSuccessEventHandler()) // 登录成功处理器
-				.errorResponseHandler(new PigAuthenticationFailureEventHandler());// 登录失败处理器
+				.accessTokenResponseHandler(new CustomAuthenticationSuccessEventHandler()) // 登录成功处理器
+				.errorResponseHandler(new CustomAuthenticationFailureEventHandler());// 登录失败处理器
 		}).clientAuthentication(oAuth2ClientAuthenticationConfigurer -> // 个性化客户端认证
-		oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new PigAuthenticationFailureEventHandler()))// 处理客户端认证异常
+		oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new CustomAuthenticationFailureEventHandler()))// 处理客户端认证异常
 			.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint// 授权码端点个性化confirm页面
 				.consentPage(SecurityConstants.CUSTOM_CONSENT_PAGE_URI)), Customizer.withDefaults())
 			.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated());
@@ -143,7 +143,7 @@ public class AuthorizationServerConfiguration {
 				authenticationManager, authorizationService, oAuth2TokenGenerator());
 
 		// 处理 UsernamePasswordAuthenticationToken
-		http.authenticationProvider(new PigDaoAuthenticationProvider());
+		http.authenticationProvider(new CustomDaoAuthenticationProvider());
 		// 处理 OAuth2ResourceOwnerPasswordAuthenticationToken
 		http.authenticationProvider(resourceOwnerPasswordAuthenticationProvider);
 		// 处理 OAuth2ResourceOwnerSmsAuthenticationToken

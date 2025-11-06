@@ -36,7 +36,7 @@ import static com.bubblecloud.common.core.constant.SecurityConstants.PASSWORD;
  * @author lengleng
  * @date 2025/05/30
  */
-public class PigDaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+public class CustomDaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
 	/**
 	 * 用户未找到时用于PasswordEncoder#matches(CharSequence, String)的明文密码，避免SEC-2056问题
@@ -59,7 +59,7 @@ public class PigDaoAuthenticationProvider extends AbstractUserDetailsAuthenticat
 
 	private UserDetailsPasswordService userDetailsPasswordService;
 
-	public PigDaoAuthenticationProvider() {
+	public CustomDaoAuthenticationProvider() {
 		setMessageSource(SpringUtil.getBean("securityMessageSource"));
 		setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
 	}

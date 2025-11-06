@@ -36,7 +36,7 @@ import java.util.Map;
  * @date 2025/05/30
  */
 @Slf4j
-public class PigAuthenticationSuccessEventHandler implements AuthenticationSuccessHandler {
+public class CustomAuthenticationSuccessEventHandler implements AuthenticationSuccessHandler {
 
 	private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter = new PigCustomOAuth2AccessTokenResponseHttpMessageConverter();
 

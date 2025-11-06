@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class PigLogoutSuccessEventHandler implements ApplicationListener<LogoutSuccessEvent> {
+public class CustomLogoutSuccessEventHandler implements ApplicationListener<LogoutSuccessEvent> {
 
 	/**
 	 * 处理登出成功事件

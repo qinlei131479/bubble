@@ -30,7 +30,7 @@ import java.io.IOException;
  * @date 2025/05/30
  */
 @Slf4j
-public class PigAuthenticationFailureEventHandler implements AuthenticationFailureHandler {
+public class CustomAuthenticationFailureEventHandler implements AuthenticationFailureHandler {
 
 	private final MappingJackson2HttpMessageConverter errorHttpResponseConverter = new MappingJackson2HttpMessageConverter();
 
