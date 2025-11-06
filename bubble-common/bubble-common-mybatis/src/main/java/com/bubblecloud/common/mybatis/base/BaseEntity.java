@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.base;
+package com.bubblecloud.common.mybatis.base;
 
 import java.io.Serial;
 import java.io.Serializable;

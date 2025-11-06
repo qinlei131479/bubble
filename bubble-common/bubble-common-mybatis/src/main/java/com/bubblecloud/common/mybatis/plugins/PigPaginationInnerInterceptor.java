@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.plugins;
+package com.bubblecloud.common.mybatis.plugins;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;

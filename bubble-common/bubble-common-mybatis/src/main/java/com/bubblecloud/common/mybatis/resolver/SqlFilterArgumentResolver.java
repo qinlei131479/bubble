@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.resolver;
+package com.bubblecloud.common.mybatis.resolver;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;

@@ -1,4 +1,4 @@
-package com.pig4cloud.pig.common.mybatis.config;
+package com.bubblecloud.common.mybatis.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
