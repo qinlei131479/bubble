@@ -34,7 +34,7 @@ import java.util.Properties;
 @PropertySource(value = "classpath:quartz-config.yml", factory = YamlPropertySourceFactory.class)
 @ConditionalOnClass({ Scheduler.class, SchedulerFactoryBean.class })
 @EnableConfigurationProperties({ QuartzProperties.class })
-public class PigQuartzConfig {
+public class QuartzConfig {
 
 	private final QuartzProperties properties;
 
@@ -57,10 +57,10 @@ public class PigQuartzConfig {
 	 * @param triggers 触发器数组
 	 * @param applicationContext Spring应用上下文
 	 */
-	public PigQuartzConfig(QuartzProperties properties,
-			ObjectProvider<List<SchedulerFactoryBeanCustomizer>> customizers, ObjectProvider<JobDetail[]> jobDetails,
-			ObjectProvider<Map<String, Calendar>> calendars, ObjectProvider<Trigger[]> triggers,
-			ApplicationContext applicationContext) {
+	public QuartzConfig(QuartzProperties properties,
+						ObjectProvider<List<SchedulerFactoryBeanCustomizer>> customizers, ObjectProvider<JobDetail[]> jobDetails,
+						ObjectProvider<Map<String, Calendar>> calendars, ObjectProvider<Trigger[]> triggers,
+						ApplicationContext applicationContext) {
 		this.properties = properties;
 		this.customizers = customizers.getIfAvailable();
 		this.jobDetails = jobDetails.getIfAvailable();

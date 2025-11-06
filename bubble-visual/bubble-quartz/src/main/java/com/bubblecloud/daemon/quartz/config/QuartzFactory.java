@@ -6,7 +6,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bubblecloud.daemon.quartz.constants.PigQuartzEnum;
+import com.bubblecloud.daemon.quartz.constants.QuartzEnum;
 
 import lombok.SneakyThrows;
 
@@ -18,13 +18,13 @@ import lombok.SneakyThrows;
  * @date 2025/05/31
  */
 @DisallowConcurrentExecution
-public class PigQuartzFactory implements Job {
+public class QuartzFactory implements Job {
 
 	/**
 	 * 定时任务调用工厂
 	 */
 	@Autowired
-	private PigQuartzInvokeFactory pigxQuartzInvokeFactory;
+	private QuartzInvokeFactory pigxQuartzInvokeFactory;
 
 	/**
 	 * 执行定时任务
@@ -35,7 +35,7 @@ public class PigQuartzFactory implements Job {
 	@SneakyThrows
 	public void execute(JobExecutionContext jobExecutionContext) {
 		SysJob sysJob = (SysJob) jobExecutionContext.getMergedJobDataMap()
-			.get(PigQuartzEnum.SCHEDULE_JOB_KEY.getType());
+			.get(QuartzEnum.SCHEDULE_JOB_KEY.getType());
 		pigxQuartzInvokeFactory.init(sysJob, jobExecutionContext.getTrigger());
 	}
 

@@ -3,7 +3,7 @@ package com.bubblecloud.daemon.quartz.util;
 import cn.hutool.core.util.StrUtil;
 import com.bubblecloud.daemon.quartz.entity.SysJob;
 import com.bubblecloud.common.core.util.SpringContextHolder;
-import com.bubblecloud.daemon.quartz.constants.PigQuartzEnum;
+import com.bubblecloud.daemon.quartz.constants.QuartzEnum;
 import com.bubblecloud.daemon.quartz.exception.TaskException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,7 +46,7 @@ public class SpringBeanTaskInvok implements ITaskInvok {
 				returnValue = method.invoke(target);
 			}
 			if (StrUtil.isEmpty(returnValue.toString())
-					|| PigQuartzEnum.JOB_LOG_STATUS_FAIL.getType().equals(returnValue.toString())) {
+					|| QuartzEnum.JOB_LOG_STATUS_FAIL.getType().equals(returnValue.toString())) {
 				log.error("定时任务springBeanTaskInvok异常,执行任务：{}", sysJob.getClassName());
 				throw new TaskException("定时任务springBeanTaskInvok业务执行失败,任务：" + sysJob.getClassName());
 			}

@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum PigQuartzEnum {
+public enum QuartzEnum {
 
 	/**
 	 * 错失执行策略默认

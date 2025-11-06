@@ -19,7 +19,7 @@ import lombok.SneakyThrows;
 @Aspect
 @Service
 @AllArgsConstructor
-public class PigQuartzInvokeFactory {
+public class QuartzInvokeFactory {
 
 	private final ApplicationEventPublisher publisher;
 

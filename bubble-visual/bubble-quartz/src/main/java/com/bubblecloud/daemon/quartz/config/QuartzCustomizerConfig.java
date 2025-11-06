@@ -12,7 +12,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
  * @date 2025/05/31
  */
 @Configuration
-public class PigQuartzCustomizerConfig implements SchedulerFactoryBeanCustomizer {
+public class QuartzCustomizerConfig implements SchedulerFactoryBeanCustomizer {
 
 	/**
 	 * 自定义SchedulerFactoryBean配置
