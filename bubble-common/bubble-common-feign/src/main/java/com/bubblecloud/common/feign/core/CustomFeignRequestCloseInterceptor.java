@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
  * @author lengleng
  * @date 2025/05/31
  */
-public class PigFeignRequestCloseInterceptor implements RequestInterceptor {
+public class CustomFeignRequestCloseInterceptor implements RequestInterceptor {
 
 	/**
 	 * 设置连接关闭

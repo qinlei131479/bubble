@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  * @author lengleng
  * @date 2025/05/31
  */
-public class PigFeignInnerRequestInterceptor implements RequestInterceptor, Ordered {
+public class CustomFeignInnerRequestInterceptor implements RequestInterceptor, Ordered {
 
 	/**
 	 * 为每个请求调用，使用提供的{@link RequestTemplate}方法添加数据

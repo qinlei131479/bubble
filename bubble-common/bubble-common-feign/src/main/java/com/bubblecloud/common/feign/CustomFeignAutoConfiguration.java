@@ -1,14 +1,14 @@
 package com.bubblecloud.common.feign;
 
 import com.alibaba.cloud.sentinel.feign.SentinelFeignAutoConfiguration;
-import com.bubblecloud.common.feign.core.PigFeignInnerRequestInterceptor;
-import com.bubblecloud.common.feign.core.PigFeignRequestCloseInterceptor;
-import com.bubblecloud.common.feign.sentinel.ext.PigSentinelFeign;
+import com.bubblecloud.common.feign.core.CustomFeignInnerRequestInterceptor;
+import com.bubblecloud.common.feign.core.CustomFeignRequestCloseInterceptor;
+import com.bubblecloud.common.feign.sentinel.ext.CustomSentinelFeign;
 import feign.Feign;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.openfeign.PigFeignClientsRegistrar;
+import org.springframework.cloud.openfeign.CustomFeignClientsRegistrar;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,9 +21,9 @@ import org.springframework.context.annotation.Scope;
  * @date 2025/05/31
  */
 @Configuration(proxyBeanMethods = false)
-@Import(PigFeignClientsRegistrar.class)
+@Import(CustomFeignClientsRegistrar.class)
 @AutoConfigureBefore(SentinelFeignAutoConfiguration.class)
-public class PigFeignAutoConfiguration {
+public class CustomFeignAutoConfiguration {
 
 	/**
 	 * 创建Feign.Builder实例，支持Sentinel功能
@@ -37,7 +37,7 @@ public class PigFeignAutoConfiguration {
 	@ConditionalOnMissingBean
 	@ConditionalOnProperty(name = "feign.sentinel.enabled")
 	public Feign.Builder feignSentinelBuilder() {
-		return PigSentinelFeign.builder();
+		return CustomSentinelFeign.builder();
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class PigFeignAutoConfiguration {
 	 * @return PigFeignRequestCloseInterceptor实例
 	 */
 	@Bean
-	public PigFeignRequestCloseInterceptor pigFeignRequestCloseInterceptor() {
-		return new PigFeignRequestCloseInterceptor();
+	public CustomFeignRequestCloseInterceptor pigFeignRequestCloseInterceptor() {
+		return new CustomFeignRequestCloseInterceptor();
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class PigFeignAutoConfiguration {
 	 * @return PigFeignInnerRequestInterceptor 内部请求拦截器实例
 	 */
 	@Bean
-	public PigFeignInnerRequestInterceptor pigFeignInnerRequestInterceptor() {
-		return new PigFeignInnerRequestInterceptor();
+	public CustomFeignInnerRequestInterceptor pigFeignInnerRequestInterceptor() {
+		return new CustomFeignInnerRequestInterceptor();
 	}
 
 }

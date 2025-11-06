@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author lengleng
  * @date 2025/05/31
  */
-public class PigHeaderRequestOriginParser implements RequestOriginParser {
+public class CustomHeaderRequestOriginParser implements RequestOriginParser {
 
 	/**
 	 * 请求头获取allow

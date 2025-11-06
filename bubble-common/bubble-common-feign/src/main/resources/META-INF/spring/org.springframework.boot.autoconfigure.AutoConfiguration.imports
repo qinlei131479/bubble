@@ -1,3 +1,3 @@
-com.bubblecloud.common.feign.PigFeignAutoConfiguration
+com.bubblecloud.common.feign.CustomFeignAutoConfiguration
 com.bubblecloud.common.feign.sentinel.SentinelAutoConfiguration
 com.bubblecloud.common.feign.sentinel.handle.GlobalBizExceptionHandler

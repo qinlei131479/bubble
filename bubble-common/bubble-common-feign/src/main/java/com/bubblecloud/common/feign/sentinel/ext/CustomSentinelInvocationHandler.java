@@ -32,7 +32,7 @@ import static feign.Util.checkNotNull;
  * @date 2025/05/31
  */
 @Slf4j
-public class PigSentinelInvocationHandler implements InvocationHandler {
+public class CustomSentinelInvocationHandler implements InvocationHandler {
 
 	public static final String EQUALS = "equals";
 
@@ -48,15 +48,15 @@ public class PigSentinelInvocationHandler implements InvocationHandler {
 
 	private Map<Method, Method> fallbackMethodMap;
 
-	PigSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch,
-			FallbackFactory<?> fallbackFactory) {
+	CustomSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch,
+									FallbackFactory<?> fallbackFactory) {
 		this.target = checkNotNull(target, "target");
 		this.dispatch = checkNotNull(dispatch, "dispatch");
 		this.fallbackFactory = fallbackFactory;
 		this.fallbackMethodMap = toFallbackMethod(dispatch);
 	}
 
-	PigSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch) {
+	CustomSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch) {
 		this.target = checkNotNull(target, "target");
 		this.dispatch = checkNotNull(dispatch, "dispatch");
 	}
@@ -147,7 +147,7 @@ public class PigSentinelInvocationHandler implements InvocationHandler {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof SentinelInvocationHandler) {
-			PigSentinelInvocationHandler other = (PigSentinelInvocationHandler) obj;
+			CustomSentinelInvocationHandler other = (CustomSentinelInvocationHandler) obj;
 			return target.equals(other.target);
 		}
 		return false;
