@@ -37,7 +37,7 @@ public class SysPublicParam extends Model<SysPublicParam> {
 	/**
 	 * 公共参数地址值,英文大写+下划线
 	 */
-	@Schema(description = "键[英文大写+下划线]", required = true, example = "PIGX_PUBLIC_KEY")
+	@Schema(description = "键[英文大写+下划线]", required = true, example = "PUBLIC_KEY")
 	private String publicKey;
 
 	/**
@@ -55,7 +55,7 @@ public class SysPublicParam extends Model<SysPublicParam> {
 	/**
 	 * 公共参数编码
 	 */
-	@Schema(description = "编码", example = "^(PIG|PIGX)$")
+	@Schema(description = "编码", example = "^(CODE|CODEX)$")
 	private String validateCode;
 
 	/**

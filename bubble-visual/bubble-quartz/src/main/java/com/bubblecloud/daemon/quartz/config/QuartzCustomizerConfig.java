@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 /**
- * PigQuartz 自定义配置类，用于配置 SchedulerFactoryBean
+ * Quartz 自定义配置类，用于配置 SchedulerFactoryBean
  *
  * @author qinlei
  * @author 郑健楠

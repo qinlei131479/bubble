@@ -25,7 +25,7 @@ public class CustomJavaTimeModule extends SimpleModule {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * PigJavaTimeModule构造函数，用于初始化时间序列化和反序列化规则
+	 * JavaTimeModule构造函数，用于初始化时间序列化和反序列化规则
 	 */
 	public CustomJavaTimeModule() {
 		super(PackageVersion.VERSION);

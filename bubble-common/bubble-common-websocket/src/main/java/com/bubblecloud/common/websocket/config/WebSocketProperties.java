@@ -18,7 +18,7 @@ public class WebSocketProperties {
 	/**
 	 * WebSocket 配置属性的前缀。
 	 */
-	public static final String PREFIX = "pigx.websocket";
+	public static final String PREFIX = "bubble.websocket";
 
 	/**
 	 * WebSocket 连接路径。

@@ -24,7 +24,7 @@ public class QuartzFactory implements Job {
 	 * 定时任务调用工厂
 	 */
 	@Autowired
-	private QuartzInvokeFactory pigxQuartzInvokeFactory;
+	private QuartzInvokeFactory quartzInvokeFactory;
 
 	/**
 	 * 执行定时任务
@@ -36,7 +36,7 @@ public class QuartzFactory implements Job {
 	public void execute(JobExecutionContext jobExecutionContext) {
 		SysJob sysJob = (SysJob) jobExecutionContext.getMergedJobDataMap()
 			.get(QuartzEnum.SCHEDULE_JOB_KEY.getType());
-		pigxQuartzInvokeFactory.init(sysJob, jobExecutionContext.getTrigger());
+		quartzInvokeFactory.init(sysJob, jobExecutionContext.getTrigger());
 	}
 
 }

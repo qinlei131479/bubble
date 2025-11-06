@@ -45,7 +45,7 @@ public class XssAutoConfiguration implements WebMvcConfigurer {
 
 	/**
 	 * 创建FormXssClean实例
-	 * @param properties PigXss配置属性
+	 * @param properties Xss配置属性
 	 * @param xssCleaner XSS清理器
 	 * @return FormXssClean实例
 	 */

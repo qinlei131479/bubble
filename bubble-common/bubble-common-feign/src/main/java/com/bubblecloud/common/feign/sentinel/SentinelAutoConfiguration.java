@@ -43,7 +43,7 @@ public class SentinelAutoConfiguration {
 	/**
 	 * 创建默认的BlockExceptionHandler bean
 	 * @param objectMapper 对象映射器
-	 * @return PigUrlBlockHandler实例
+	 * @return CustomUrlBlockHandler实例
 	 * @ConditionalOnMissingBean 当容器中不存在该类型bean时创建
 	 */
 	@Bean
@@ -54,7 +54,7 @@ public class SentinelAutoConfiguration {
 
 	/**
 	 * 创建并返回一个RequestOriginParser bean，当容器中不存在该类型的bean时生效
-	 * @return 默认的PigHeaderRequestOriginParser实例
+	 * @return 默认的CustomHeaderRequestOriginParser实例
 	 */
 	@Bean
 	@ConditionalOnMissingBean

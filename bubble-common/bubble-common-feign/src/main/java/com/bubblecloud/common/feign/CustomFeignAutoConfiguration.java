@@ -41,20 +41,20 @@ public class CustomFeignAutoConfiguration {
 	}
 
 	/**
-	 * 创建并返回PigFeignRequestCloseInterceptor实例
-	 * @return PigFeignRequestCloseInterceptor实例
+	 * 创建并返回CustomFeignRequestCloseInterceptor实例
+	 * @return CustomFeignRequestCloseInterceptor实例
 	 */
 	@Bean
-	public CustomFeignRequestCloseInterceptor pigFeignRequestCloseInterceptor() {
+	public CustomFeignRequestCloseInterceptor customFeignRequestCloseInterceptor() {
 		return new CustomFeignRequestCloseInterceptor();
 	}
 
 	/**
-	 * 创建并返回PigFeignInnerRequestInterceptor实例
-	 * @return PigFeignInnerRequestInterceptor 内部请求拦截器实例
+	 * 创建并返回CustomFeignInnerRequestInterceptor实例
+	 * @return CustomFeignInnerRequestInterceptor 内部请求拦截器实例
 	 */
 	@Bean
-	public CustomFeignInnerRequestInterceptor pigFeignInnerRequestInterceptor() {
+	public CustomFeignInnerRequestInterceptor customFeignInnerRequestInterceptor() {
 		return new CustomFeignInnerRequestInterceptor();
 	}
 

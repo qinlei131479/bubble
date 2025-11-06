@@ -9,7 +9,7 @@ import org.springframework.core.Ordered;
 import java.lang.reflect.Method;
 
 /**
- * PigFeign 内部请求拦截器，用于处理 Feign 请求的 Token 校验
+ * Feign 内部请求拦截器，用于处理 Feign 请求的 Token 校验
  *
  * @author lengleng
  * @date 2025/05/31

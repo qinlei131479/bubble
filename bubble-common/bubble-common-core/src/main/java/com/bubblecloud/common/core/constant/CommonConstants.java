@@ -42,16 +42,6 @@ public interface CommonConstants {
 	String CONTENT_TYPE = "application/json; charset=utf-8";
 
 	/**
-	 * 前端工程名
-	 */
-	String FRONT_END_PROJECT = "pig-ui";
-
-	/**
-	 * 后端工程名
-	 */
-	String BACK_END_PROJECT = "pig";
-
-	/**
 	 * 成功标记
 	 */
 	Integer SUCCESS = 0;

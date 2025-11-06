@@ -98,7 +98,7 @@ When creating custom task classes:
 ### Safe Task Example
 
 ```java
-package com.pig4cloud.pig.daemon.tasks;
+package com.bubblecloud.daemon.tasks;
 
 public class DataCleanupTask {
     
@@ -123,7 +123,7 @@ public class DataCleanupTask {
 ### Configuration in Quartz Management
 
 **Safe Configuration:**
-- **Class Name**: `com.pig4cloud.pig.daemon.tasks.DataCleanupTask`
+- **Class Name**: `com.bubblecloud.daemon.tasks.DataCleanupTask`
 - **Method Name**: `execute` or `executeWithParams`
 - **Parameters**: Simple string parameters only
 
@@ -144,6 +144,6 @@ public class DataCleanupTask {
 ### References
 
 - CVE: Pending assignment
-- Affected Versions: pig <= 3.8.2
+- Affected Versions: bubble <= 3.8.2
 - Fixed in Version: 3.9.2+
 - Severity: Critical

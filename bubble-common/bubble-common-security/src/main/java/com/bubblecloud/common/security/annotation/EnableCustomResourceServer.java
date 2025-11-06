@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * 启用Pig资源服务器注解
+ * 启用bubble资源服务器注解
  * <p>
- * 通过导入相关配置类启用Pig资源服务器功能
+ * 通过导入相关配置类启用 资源服务器功能
  *
  * @author lengleng
  * @date 2025/05/31

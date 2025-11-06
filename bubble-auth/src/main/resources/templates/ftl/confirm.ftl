@@ -7,7 +7,7 @@
                     <#if principalName=="anonymousUser">
 						<span class="text-gray-500 dark:text-gray-400">未登录用户</span>
                     <#else>
-						<a href="https://pig4cloud.com" class="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium transition-colors">
+						<a href="https://www.baidu.com" class="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium transition-colors">
                             ${principalName}
 						</a>
                     </#if>

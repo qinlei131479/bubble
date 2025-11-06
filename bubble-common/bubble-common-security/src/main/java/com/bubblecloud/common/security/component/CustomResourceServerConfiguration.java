@@ -34,7 +34,7 @@ public class CustomResourceServerConfiguration {
 	private final PermitAllUrlProperties permitAllUrl;
 
 	/**
-	 * PigBearerToken提取器
+	 * BearerToken提取器
 	 */
 	private final CustomBearerTokenExtractor customBearerTokenExtractor;
 

@@ -49,7 +49,7 @@ public class QuartzConfig {
 	private final ApplicationContext applicationContext;
 
 	/**
-	 * 构造函数，初始化PigQuartzConfig配置
+	 * 构造函数，初始化QuartzConfig配置
 	 * @param properties Quartz配置属性
 	 * @param customizers SchedulerFactoryBean自定义器列表
 	 * @param jobDetails JobDetail数组

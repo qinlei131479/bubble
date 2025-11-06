@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><#if title??>${title}<#else>Pig 统一身份认证</#if></title>
+    <title><#if title??>${title}<#else>统一身份认证</#if></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -69,7 +69,7 @@
             <div class="mt-8 pt-6 text-center text-gray-400 dark:text-gray-500 text-sm border-t border-gray-100 dark:border-gray-800">
                 <span>
                     Copyright © 2021-2025
-                    <a href="#" class="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors">PIGCLOUD</a>
+                    <a href="#" class="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors">BUBBLE CLOUD</a>
                 </span>
             </div>
         </div>

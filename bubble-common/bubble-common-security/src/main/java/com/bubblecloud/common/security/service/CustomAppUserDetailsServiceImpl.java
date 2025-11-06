@@ -54,12 +54,12 @@ public class CustomAppUserDetailsServiceImpl implements CustomUserDetailsService
 
 	/**
 	 * 根据用户信息加载用户详情
-	 * @param pigUser 用户信息对象
+	 * @param customUser 用户信息对象
 	 * @return 用户详情
 	 */
 	@Override
-	public UserDetails loadUserByUser(CustomUser pigUser) {
-		return this.loadUserByUsername(pigUser.getPhone());
+	public UserDetails loadUserByUser(CustomUser customUser) {
+		return this.loadUserByUsername(customUser.getPhone());
 	}
 
 	/**

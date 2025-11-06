@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import java.lang.annotation.*;
 
 /**
- * 启用Pig框架的Spring文档支持
+ * 启用框架的Spring文档支持
  *
  * @author lengleng
  * @date 2025/05/31

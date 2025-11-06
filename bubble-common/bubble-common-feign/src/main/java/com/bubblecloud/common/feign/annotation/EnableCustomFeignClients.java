@@ -6,7 +6,7 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * 启用Pig Feign客户端注解
+ * 启用 Feign客户端注解
  *
  * @author lengleng
  * @date 2025/05/31
@@ -32,6 +32,6 @@ public @interface EnableCustomFeignClients {
 	 * @return 基础包路径数组
 	 */
 	@AliasFor(annotation = EnableFeignClients.class, attribute = "basePackages")
-	String[] basePackages() default { "com.pig4cloud.pig" };
+	String[] basePackages() default { "com.bubblecloud" };
 
 }

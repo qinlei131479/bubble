@@ -32,7 +32,7 @@ public class SecurityUtils {
 	/**
 	 * 获取当前认证用户
 	 * @param authentication 认证信息
-	 * @return 用户对象，如果认证主体不是PigUser类型则返回null
+	 * @return 用户对象，如果认证主体不是CustomUser类型则返回null
 	 */
 	public CustomUser getUser(Authentication authentication) {
 		Object principal = authentication.getPrincipal();

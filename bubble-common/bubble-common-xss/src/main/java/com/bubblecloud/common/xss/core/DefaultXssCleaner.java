@@ -25,7 +25,7 @@ public class DefaultXssCleaner implements XssCleaner {
 
 	/**
 	 * 获取文档输出设置
-	 * @param properties PigXss配置属性
+	 * @param properties Xss配置属性
 	 * @return 文档输出设置对象
 	 */
 	private static Document.OutputSettings getOutputSettings(XssProperties properties) {
