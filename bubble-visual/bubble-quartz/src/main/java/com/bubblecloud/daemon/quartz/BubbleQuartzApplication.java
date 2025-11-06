@@ -2,7 +2,7 @@ package com.bubblecloud.daemon.quartz;
 
 import com.bubblecloud.common.feign.annotation.EnablePigFeignClients;
 import com.bubblecloud.common.security.annotation.EnablePigResourceServer;
-import com.bubblecloud.common.swagger.annotation.EnablePigDoc;
+import com.bubblecloud.common.swagger.annotation.EnableDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -16,7 +16,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author frwcloud
  * @date 2025/05/31
  */
-@EnablePigDoc("job")
+@EnableDoc("job")
 @EnablePigFeignClients
 @EnablePigResourceServer
 @EnableDiscoveryClient

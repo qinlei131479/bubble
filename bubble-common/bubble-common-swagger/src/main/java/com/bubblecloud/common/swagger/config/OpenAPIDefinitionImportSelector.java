@@ -1,6 +1,6 @@
 package com.bubblecloud.common.swagger.config;
 
-import com.bubblecloud.common.swagger.annotation.EnablePigDoc;
+import com.bubblecloud.common.swagger.annotation.EnableDoc;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -25,7 +25,7 @@ public class OpenAPIDefinitionImportSelector implements ImportBeanDefinitionRegi
 	@Override
 	public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
 
-		Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(EnablePigDoc.class.getName(), true);
+		Map<String, Object> annotationAttributes = metadata.getAnnotationAttributes(EnableDoc.class.getName(), true);
 		Object value = annotationAttributes.get("value");
 		if (Objects.isNull(value)) {
 			return;

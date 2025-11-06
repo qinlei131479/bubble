@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 @EnableConfigurationProperties(SwaggerProperties.class)
 @Import(OpenAPIDefinitionImportSelector.class)
 @PropertySource(value = "classpath:openapi-config.yaml", factory = YamlPropertySourceFactory.class)
-public @interface EnablePigDoc {
+public @interface EnableDoc {
 
 	/**
 	 * 网关路由前缀
