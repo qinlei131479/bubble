@@ -1,6 +1,6 @@
 package com.bubblecloud.gateway.config;
 
-import com.bubblecloud.gateway.filter.PigRequestGlobalFilter;
+import com.bubblecloud.gateway.filter.RequestGlobalFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bubblecloud.gateway.handler.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +20,8 @@ public class GatewayConfiguration {
 	 * @return PigRequest全局过滤器
 	 */
 	@Bean
-	public PigRequestGlobalFilter pigRequestGlobalFilter() {
-		return new PigRequestGlobalFilter();
+	public RequestGlobalFilter requestGlobalFilter() {
+		return new RequestGlobalFilter();
 	}
 
 	/**

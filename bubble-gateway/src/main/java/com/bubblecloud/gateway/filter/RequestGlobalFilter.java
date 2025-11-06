@@ -25,7 +25,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.a
  * @author qinlei
  * @date 2025/05/30
  */
-public class PigRequestGlobalFilter implements GlobalFilter, Ordered {
+public class RequestGlobalFilter implements GlobalFilter, Ordered {
 
 	/**
 	 * 处理Web请求并（可选地）通过给定的网关过滤器链委托给下一个过滤器
