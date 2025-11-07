@@ -11,7 +11,7 @@ public interface CacheConstants {
 	/**
 	 * 每个项目定义一个顶级目录
 	 */
-	String TOP = "bubble::";
+	String TOP = "bubble-cloud::";
 	/**
 	 * oauth 缓存前缀
 	 */

@@ -1,5 +1,6 @@
 package com.bubblecloud.common.security.service;
 
+import com.bubblecloud.common.core.constant.CacheConstants;
 import com.bubblecloud.common.core.util.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -29,7 +30,7 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 
 	private final static Long TIMEOUT = 10L;
 
-	private static final String AUTHORIZATION = "token";
+	private static final String AUTHORIZATION = CacheConstants.TOP+ "token";
 
 	/**
 	 * 保存OAuth2授权信息到Redis
