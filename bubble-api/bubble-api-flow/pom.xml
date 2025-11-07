@@ -4,18 +4,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.bubblecloud</groupId>
-		<artifactId>bubble</artifactId>
+		<artifactId>bubble-api</artifactId>
 		<version>${revision}</version>
 	</parent>
 
-	<artifactId>bubble-biz</artifactId>
+	<groupId>com.bubblecloud.api.flow</groupId>
+	<artifactId>bubble-api-flow</artifactId>
+	<packaging>jar</packaging>
+	<description>流程业务公共API模块</description>
 
-	<description>通用用户权限管理聚合模块</description>
-	<packaging>pom</packaging>
-
-	<modules>
-		<module>bubble-biz-backend</module>
-        <module>bubble-biz-oa</module>
-		<module>bubble-biz-flow</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
