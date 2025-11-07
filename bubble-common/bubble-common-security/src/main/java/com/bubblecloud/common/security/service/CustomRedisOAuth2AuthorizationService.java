@@ -1,5 +1,6 @@
 package com.bubblecloud.common.security.service;
 
+import com.bubblecloud.common.core.constant.CacheConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -28,7 +29,7 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 
 	private final static Long TIMEOUT = 10L;
 
-	private static final String AUTHORIZATION = "token";
+	private static final String AUTHORIZATION = CacheConstants.TOP + "token";
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -40,19 +41,19 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 			String token = authorization.getAttribute(OAuth2ParameterNames.STATE);
 			redisTemplate.setValueSerializer(RedisSerializer.java());
 			redisTemplate.opsForValue()
-				.set(buildKey(OAuth2ParameterNames.STATE, token), authorization, TIMEOUT, TimeUnit.MINUTES);
+					.set(buildKey(OAuth2ParameterNames.STATE, token), authorization, TIMEOUT, TimeUnit.MINUTES);
 		}
 
 		if (isCode(authorization)) {
 			OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization
-				.getToken(OAuth2AuthorizationCode.class);
+					.getToken(OAuth2AuthorizationCode.class);
 			OAuth2AuthorizationCode authorizationCodeToken = authorizationCode.getToken();
 			long between = ChronoUnit.MINUTES.between(authorizationCodeToken.getIssuedAt(),
 					authorizationCodeToken.getExpiresAt());
 			redisTemplate.setValueSerializer(RedisSerializer.java());
 			redisTemplate.opsForValue()
-				.set(buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue()), authorization,
-						between, TimeUnit.MINUTES);
+					.set(buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue()), authorization,
+							between, TimeUnit.MINUTES);
 		}
 
 		if (isRefreshToken(authorization)) {
@@ -60,8 +61,8 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 			long between = ChronoUnit.SECONDS.between(refreshToken.getIssuedAt(), refreshToken.getExpiresAt());
 			redisTemplate.setValueSerializer(RedisSerializer.java());
 			redisTemplate.opsForValue()
-				.set(buildKey(OAuth2ParameterNames.REFRESH_TOKEN, refreshToken.getTokenValue()), authorization, between,
-						TimeUnit.SECONDS);
+					.set(buildKey(OAuth2ParameterNames.REFRESH_TOKEN, refreshToken.getTokenValue()), authorization, between,
+							TimeUnit.SECONDS);
 		}
 
 		if (isAccessToken(authorization)) {
@@ -69,8 +70,8 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 			long between = ChronoUnit.SECONDS.between(accessToken.getIssuedAt(), accessToken.getExpiresAt());
 			redisTemplate.setValueSerializer(RedisSerializer.java());
 			redisTemplate.opsForValue()
-				.set(buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue()), authorization, between,
-						TimeUnit.SECONDS);
+					.set(buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue()), authorization, between,
+							TimeUnit.SECONDS);
 		}
 	}
 
@@ -86,7 +87,7 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 
 		if (isCode(authorization)) {
 			OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization
-				.getToken(OAuth2AuthorizationCode.class);
+					.getToken(OAuth2AuthorizationCode.class);
 			OAuth2AuthorizationCode authorizationCodeToken = authorizationCode.getToken();
 			keys.add(buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue()));
 		}
@@ -128,7 +129,7 @@ public class CustomRedisOAuth2AuthorizationService implements OAuth2Authorizatio
 
 	private static boolean isCode(OAuth2Authorization authorization) {
 		OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization
-			.getToken(OAuth2AuthorizationCode.class);
+				.getToken(OAuth2AuthorizationCode.class);
 		return Objects.nonNull(authorizationCode);
 	}
 
