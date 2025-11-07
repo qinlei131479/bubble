@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import java.lang.annotation.*;
 
 /**
- * 开启 pig spring doc
+ * 开启 spring doc
  *
  * @author lengleng
  * @date 2022-03-26

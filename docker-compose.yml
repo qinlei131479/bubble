@@ -1,5 +1,5 @@
 services:
-  pig-mysql:
+  bubble-mysql:
     build:
       context: docs/db
     environment:

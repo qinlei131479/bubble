@@ -35,7 +35,7 @@
 ```lua
 bubble-back  -- https://github.com/qinlei131479/bubble-back.git
 
-pig
+bubble
 └── bubble-api -- 通用用户权限管理模块
      └── bubble-api-backend- -- 通用用户权限管理系统公共api模块
 ├── bubble-auth -- 授权服务提供[8766]

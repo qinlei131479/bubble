@@ -31,7 +31,7 @@ public class CustomCodeGenDefaultProperties {
 	/**
 	 * 生成代码的包名
 	 */
-	private String packageName = "com.pig4cloud.pig";
+	private String packageName = "com.bubblecloud";
 
 	/**
 	 * 生成代码的版本
@@ -46,22 +46,22 @@ public class CustomCodeGenDefaultProperties {
 	/**
 	 * 生成代码的后端路径
 	 */
-	private String backendPath = "pig";
+	private String backendPath = "bubble";
 
 	/**
 	 * 生成代码的前端路径
 	 */
-	private String frontendPath = "pig-ui";
+	private String frontendPath = "bubble-back";
 
 	/**
 	 * 生成代码的作者
 	 */
-	private String author = "pig";
+	private String author = "bubble";
 
 	/**
 	 * 生成代码的邮箱
 	 */
-	private String email = "sw@pigx.vip";
+	private String email = "";
 
 	/**
 	 * 表单布局（一列、两列）

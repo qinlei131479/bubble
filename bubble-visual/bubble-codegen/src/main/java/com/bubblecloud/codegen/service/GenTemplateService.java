@@ -7,7 +7,7 @@ import com.bubblecloud.common.core.util.R;
 /**
  * 模板
  *
- * @author PIG
+ * @author qinlei
  * @date 2023-02-21 17:15:44
  */
 public interface GenTemplateService extends IService<GenTemplateEntity> {

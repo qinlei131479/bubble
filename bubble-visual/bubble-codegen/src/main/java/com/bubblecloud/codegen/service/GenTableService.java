@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 列属性
  *
- * @author pigx code generator
+ * @author qinlei
  * @date 2023-02-06 20:34:55
  */
 public interface GenTableService extends IService<GenTable> {

@@ -26,7 +26,7 @@ public class CustomResourceServerConfiguration {
 
 	private final PermitAllUrlProperties permitAllUrl;
 
-	private final CustomBearerTokenExtractor pigBearerTokenExtractor;
+	private final CustomBearerTokenExtractor customBearerTokenExtractor;
 
 	private final OpaqueTokenIntrospector customOpaqueTokenIntrospector;
 
@@ -42,7 +42,7 @@ public class CustomResourceServerConfiguration {
 			.oauth2ResourceServer(
 					oauth2 -> oauth2.opaqueToken(token -> token.introspector(customOpaqueTokenIntrospector))
 						.authenticationEntryPoint(resourceAuthExceptionEntryPoint)
-						.bearerTokenResolver(pigBearerTokenExtractor))
+						.bearerTokenResolver(customBearerTokenExtractor))
 			.headers()
 			.frameOptions()
 			.disable()

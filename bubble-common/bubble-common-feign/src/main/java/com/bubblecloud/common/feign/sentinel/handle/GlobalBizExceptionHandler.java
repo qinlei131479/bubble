@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * <p>
- * 全局异常处理器结合sentinel 全局异常处理器不能作用在 oauth server https://gitee.com/log4j/pig/issues/I1M2TJ
+ * 全局异常处理器结合sentinel 全局异常处理器不能作用在 oauth server
  * </p>
  *
  * @author lengleng

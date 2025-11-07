@@ -6,7 +6,7 @@ import com.bubblecloud.codegen.entity.GenTemplateGroupEntity;
 /**
  * 模板分组关联表
  *
- * @author PIG
+ * @author qinlei
  * @date 2023-02-22 09:25:15
  */
 public interface GenTemplateGroupService extends IService<GenTemplateGroupEntity> {

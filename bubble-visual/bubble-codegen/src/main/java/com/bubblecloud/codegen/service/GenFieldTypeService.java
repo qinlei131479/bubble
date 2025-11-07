@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * 列属性
  *
- * @author pigx code generator
+ * @author qinlei
  * @date 2023-02-06 20:16:01
  */
 public interface GenFieldTypeService extends IService<GenFieldType> {

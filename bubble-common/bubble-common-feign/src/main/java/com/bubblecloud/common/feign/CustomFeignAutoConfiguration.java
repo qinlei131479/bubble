@@ -57,17 +57,17 @@ public class CustomFeignAutoConfiguration {
      * @return RequestInterceptor
      */
     @Bean
-    public RequestInterceptor pigFeignRequestCloseInterceptor() {
+    public RequestInterceptor customFeignRequestCloseInterceptor() {
         return new CustomFeignRequestCloseInterceptor();
     }
 
     /**
-     * pig feign 内部请求拦截器
+     * feign 内部请求拦截器
      *
      * @return {@link RequestInterceptor }
      */
     @Bean
-    public RequestInterceptor pigFeignInnerRequestInterceptor() {
+    public RequestInterceptor customFeignInnerRequestInterceptor() {
         return new CustomFeignInnerRequestInterceptor();
     }
 }

@@ -15,11 +15,11 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayConfiguration {
 
 	/**
-	 * 创建PigRequest全局过滤器
-	 * @return PigRequest全局过滤器
+	 * 创建Request全局过滤器
+	 * @return Request全局过滤器
 	 */
 	@Bean
-	public CustomRequestGlobalFilter pigRequestGlobalFilter() {
+	public CustomRequestGlobalFilter customRequestGlobalFilter() {
 		return new CustomRequestGlobalFilter();
 	}
 

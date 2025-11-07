@@ -73,11 +73,11 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 
 	/**
 	 * 通过用户实体查询
-	 * @param pigUser user
+	 * @param customUser
 	 * @return
 	 */
-	default UserDetails loadUserByUser(CustomUser pigUser) {
-		return this.loadUserByUsername(pigUser.getUsername());
+	default UserDetails loadUserByUser(CustomUser customUser) {
+		return this.loadUserByUsername(customUser.getUsername());
 	}
 
 }

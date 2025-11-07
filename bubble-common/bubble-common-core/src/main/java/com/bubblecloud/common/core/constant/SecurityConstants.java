@@ -12,14 +12,9 @@ public interface SecurityConstants {
 	String ROLE = "ROLE_";
 
 	/**
-	 * 前缀
-	 */
-	String PROJECT_PREFIX = "pig";
-
-	/**
 	 * 项目的license
 	 */
-	String PROJECT_LICENSE = "https://pig4cloud.com";
+	String PROJECT_LICENSE = "https://bubble.cloud.com";
 
 	/**
 	 * 内部

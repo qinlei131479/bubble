@@ -20,14 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CustomQuartzFactory implements Job {
 
 	@Autowired
-	private CustomQuartzInvokeFactory pigxQuartzInvokeFactory;
+	private CustomQuartzInvokeFactory quartzInvokeFactory;
 
 	@Override
 	@SneakyThrows
 	public void execute(JobExecutionContext jobExecutionContext) {
 		SysJob sysJob = (SysJob) jobExecutionContext.getMergedJobDataMap()
 			.get(CustomQuartzEnum.SCHEDULE_JOB_KEY.getType());
-		pigxQuartzInvokeFactory.init(sysJob, jobExecutionContext.getTrigger());
+		quartzInvokeFactory.init(sysJob, jobExecutionContext.getTrigger());
 	}
 
 }

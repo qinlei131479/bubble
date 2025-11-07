@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * 列属性
  *
- * @author pigx code generator
+ * @author qinlei
  * @date 2023-02-06 20:34:55
  */
 @Service

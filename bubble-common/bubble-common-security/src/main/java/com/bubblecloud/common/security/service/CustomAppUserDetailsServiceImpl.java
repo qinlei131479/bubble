@@ -52,12 +52,12 @@ public class CustomAppUserDetailsServiceImpl implements CustomUserDetailsService
 
 	/**
 	 * check-token 使用
-	 * @param pigUser user
+	 * @param customUser
 	 * @return
 	 */
 	@Override
-	public UserDetails loadUserByUser(CustomUser pigUser) {
-		return this.loadUserByUsername(pigUser.getPhone());
+	public UserDetails loadUserByUser(CustomUser customUser) {
+		return this.loadUserByUsername(customUser.getPhone());
 	}
 
 	/**

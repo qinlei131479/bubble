@@ -59,7 +59,7 @@ public class XxlJobAutoConfiguration {
 		xxlJobSpringExecutor.setLogPath(executor.getLogPath());
 		xxlJobSpringExecutor.setLogRetentionDays(executor.getLogRetentionDays());
 
-		// 如果配置为空则获取注册中心的服务列表 "http://pig-xxl:9080/xxl-job-admin"
+		// 如果配置为空则获取注册中心的服务列表 "http://bubble-xxl:9080/xxl-job-admin"
 		if (!StringUtils.hasText(xxlJobProperties.getAdmin().getAddresses())) {
 			String serverList = discoveryClient.getServices()
 				.stream()
