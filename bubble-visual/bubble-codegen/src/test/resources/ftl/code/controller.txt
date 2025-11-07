@@ -1,0 +1,75 @@
+package ${package}.controller;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+
+import lombok.RequiredArgsConstructor;
+import ${package_core}.entity.Req;
+import ${package_core}.entity.Res;
+import ${package_core}.entity.Pg;
+import ${package_entity}.entity.${className};
+import ${package}.service.${className}Service;
+
+/**
+ * 控制器：${tableComment}
+ *
+ * @author ${author}
+ * @date   ${.now?string("yyyy/MM/dd HH:mm")}
+ */
+@io.swagger.annotations.Api(value = "${className?uncap_first}", tags = "${tableComment}模块")
+@RestController
+@RequiredArgsConstructor
+public class ${className}Controller {
+
+	private final  ${className}Service ${className?uncap_first}Service;
+
+	/**
+	 * 分页查询
+	 */
+	@GetMapping("/${className?uncap_first}/list")
+	public Res list(Pg pg, ${className} req) {
+		pg.addOrderDefault(OrderItem.desc("t.id"));
+		return Res.succ(${className?uncap_first}Service.findPg(pg,req));
+	}
+
+	/**
+	 * 添加
+	 */
+	@PostMapping("/${className?uncap_first}/create")
+	public Res create(Pg pg, @RequestBody @Validated({ Req.Create.class }) ${className} req, BindingResult result) {
+		if (pg.checkActionStatusInit()) {
+			return Res.succ((req.getId() == null) ? req : ${className?uncap_first}Service.getById(req.getId()));
+		}
+		return ${className?uncap_first}Service.create(req);
+	}
+
+	/**
+	 * 修改
+	 */
+	@PostMapping("/${className?uncap_first}/update")
+	public Res update(Pg pg, @RequestBody @Validated({ Req.Update.class }) ${className} req, BindingResult result) {
+		if (pg.checkActionStatusInit()) {
+			${className} resObj = this.${className?uncap_first}Service.getById(req.getId());
+			return Res.succ(resObj);
+		}
+		return ${className?uncap_first}Service.update(req);
+	}
+
+	/**
+	 * 删除
+	 */
+	@PostMapping("/${className?uncap_first}/delete")
+	public Res delete(Pg pg, @RequestBody @Validated({ Req.Delete.class }) ${className} req, BindingResult result) {
+		if (pg.checkActionStatusInit()) {
+			${className} resObj = this.${className?uncap_first}Service.getById(req.getId());
+			return Res.succ(resObj);
+		}
+		return ${className?uncap_first}Service.delete(req);
+	}
+}
