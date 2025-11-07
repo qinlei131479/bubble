@@ -8,7 +8,7 @@
 		<version>${revision}</version>
 	</parent>
 
-	<groupId>com.bubblecloud.api.flow</groupId>
+	<groupId>com.bubblecloud</groupId>
 	<artifactId>bubble-api-flow</artifactId>
 	<packaging>jar</packaging>
 	<description>流程业务公共API模块</description>

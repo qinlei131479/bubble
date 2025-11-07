@@ -8,7 +8,7 @@
 		<version>${revision}</version>
 	</parent>
 
-	<groupId>com.bubblecloud.api.oa</groupId>
+	<groupId>com.bubblecloud</groupId>
 	<artifactId>bubble-api-oa</artifactId>
 	<packaging>jar</packaging>
 	<description>OA业务公共API模块</description>
