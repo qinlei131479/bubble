@@ -6,7 +6,7 @@ import com.bubblecloud.codegen.BubbleCodeGenApplication;
 import com.bubblecloud.codegen.dto.TableFieldDTO;
 import com.bubblecloud.codegen.mapper.TableFieldMapper;
 import com.bubblecloud.codegen.util.FreemarkerUtil;
-import com.bubblecloud.codegen.util.HuToolUtil;
+import com.bubblecloud.common.core.util.HuToolUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +71,6 @@ public class GenerateCode {
 		TableFieldDTO dto = new TableFieldDTO();
 		dto.setTableName(tableName);
 		dto.setDbName(dbName);
-		dto.setClassName(className);
 		if (tableFieldMapper != null) {
 			List<TableFieldDTO> ret = tableFieldMapper.findTableFieldListByTableName(dto);
 			dataMap.put("tableFields", ret);

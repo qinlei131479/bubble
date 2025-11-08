@@ -18,16 +18,21 @@ public class TableFieldDTO extends Model<TableFieldDTO> {
 
 	@TableId(type = IdType.INPUT)
 	private Long id;
-
+	/**
+	 * 字段名称
+	 */
 	private String field;
-
+	/**
+	 * 字段类型
+	 */
 	private String type;
 
 	private String dbName;
 
 	private String tableName;
 
-	private String className;
-
-	private String tableNameLike;
+	/**
+	 * 字段注释
+	 */
+	private String comment;
 }

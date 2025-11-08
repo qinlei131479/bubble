@@ -2,7 +2,7 @@ package ${package}.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.nng.common.mybatis.plus.service.impl.UpServiceImpl;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import ${package_entity}.entity.${className};
 import ${package}.mapper.${className}Mapper;
 import ${package}.service.${className}Service;

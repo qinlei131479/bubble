@@ -1,6 +1,6 @@
 package ${package}.service;
 
-import com.nng.common.mybatis.plus.service.UpService;
+import com.bubblecloud.common.mybatis.service.UpService;
 import ${package_entity}.entity.${className};
 
 /**

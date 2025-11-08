@@ -2,18 +2,16 @@ package ${package_entity}.entity;
 
 <#list tableFields as field>
     <#if field.type?lower_case?index_of('datetime')==0 || field.type?lower_case?index_of('timestamp')==0>
-import java.util.Date;
+import java.time.LocalDateTime;
         <#break>
     </#if>
 </#list>
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
+import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ${package_core}.entity.Req;
 
 /**
  * 实体类：${tableComment}
@@ -23,10 +21,12 @@ import ${package_core}.entity.Req;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Schema(description = "${tableComment}")
 @TableName("${tableName}")
-public class ${className} extends Req<${className}> {
+public class ${className} extends Model<${className}> {
 
-<#assign map={"enum":"String","bigint":"Long","tinyint":"Integer","int":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"Date","date":"Date","double":"Double","timestamp":"Date"}/>
+    private static final long serialVersionUID = 1L;
+<#assign map={"enum":"String","bigint":"Long","tinyint":"Integer","int":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"LocalDateTime","date":"LocalDateTime","double":"Double","timestamp":"LocalDateTime"}/>
 <#list tableFields as field>
     <#assign type= field.type?replace('\\(.*','','r')/>
     <#-- 使用更可靠的方法进行驼峰转换 -->
@@ -40,7 +40,14 @@ public class ${className} extends Req<${className}> {
                 </#if>
             </#list>
         </#if>
+    /**
+     * ${field.comment!''}
+     */
+    <#if field.field=='del_flag'>@TableLogic</#if>
+    <#if field.field=='create_by' || field.field=='create_time'>@TableField(fill = FieldFill.INSERT)</#if>
+    <#if field.field=='update_by' || field.field=='update_time'>@TableField(fill = FieldFill.UPDATE)</#if>
     <#if field.field=='id'>@TableId(type = IdType.INPUT)</#if>
+    @Schema(description = "${field.comment!''}")
 	private ${(map[type])!field.type} ${fieldName};
 </#list>
 }

@@ -1,18 +1,12 @@
-package com.bubblecloud.codegen.util;
+package com.bubblecloud.common.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.*;
-import lombok.SneakyThrows;
-import ognl.Ognl;
-import ognl.OgnlContext;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,39 +26,6 @@ public class HuToolUtil {
 	private static final String ENUM_CODE = "code";
 	private static final String ENUM_NAME = "name";
 	private static final String BASE_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	/**
-	 * 获得枚举名对应指定字段值的Map，键为code，值为name
-	 *
-	 * @param clazz 枚举类
-	 * @return 枚举名对应指定字段值的Map
-	 */
-//	public static Map<String, Object> buildEnumMapOfCodeName(Class<?> clazz) {
-//		return buildEnumMap(clazz, ENUM_CODE, ENUM_NAME);
-//	}
-
-	/**
-	 * 获得枚举名对应指定字段值的Map，键为字段值，值为字段值
-	 *
-	 * @param clazz      枚举类
-	 * @param nameField  字段名，最终调用getXXX方法
-	 * @param valueField 字段名，最终调用getXXX方法
-	 * @return 枚举名对应指定字段值的Map
-	 */
-//	@SneakyThrows
-//	public static Map<String, Object> buildEnumMap(Class<?> clazz, String nameField, String valueField) {
-//		// 得到enum的所有实例
-//		final Object[] enums = clazz.getEnumConstants();
-//		if (null == enums) {
-//			return null;
-//		}
-//		final Map<String, Object> map = MapUtil.newHashMap(enums.length, true);
-//		for (Object e : enums) {
-//			String value = buildName((String) ReflectUtil.getFieldValue(e, valueField));
-//			map.put(ReflectUtil.getFieldValue(e, nameField) + "", value);
-//		}
-//		return map;
-//	}
 
 	/**
 	 * 有效邮件正则表达式
@@ -109,28 +70,6 @@ public class HuToolUtil {
 			return false;
 		}
 	}
-
-	/**
-	 * 通过ongl表达式获取对象的属性值
-	 *
-	 * @param obj
-	 * @param express
-	 * @return
-	 */
-//	public static Object getFieldValueByOgnl(Object obj, String express) {
-//		OgnlContext context = new OgnlContext();
-//		context.put("obj", obj);
-//		// 设置唯一的根对象
-//		context.setRoot(obj);
-//		try {
-//			// 解析字符串，若没有#，则到根对象找。#是明确告诉OGNL从哪个对象中找。调用getName()方法
-//			Object expressObj = Ognl.parseExpression(express);
-//			return Ognl.getValue(expressObj, context, context.getRoot());
-//		} catch (Exception e) {
-//			// e.printStackTrace();
-//		}
-//		return null;
-//	}
 
 	/**
 	 * 设置字段值
@@ -296,66 +235,6 @@ public class HuToolUtil {
 					e.printStackTrace();
 				}
 			}
-		}
-	}
-
-
-	/**
-	 * 随机生成密码
-	 *
-	 * @param pwdLen
-	 * @return
-	 */
-	public static String genRandomStr(int pwdLen) {
-		return RandomUtil.randomString(RandomUtil.BASE_CHAR_NUMBER + BASE_STR, pwdLen);
-	}
-
-	/**
-	 * 检查密码是否正确，BCrypt
-	 *
-	 * @param plaintext
-	 * @param hashed
-	 * @return
-	 */
-	public static boolean checkpw(String plaintext, String hashed) {
-		try {
-			return BCrypt.checkpw(plaintext, hashed);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	/**
-	 * 加密密码，BCrypt
-	 *
-	 * @param plaintext
-	 * @return
-	 */
-	public static String hashpw(String plaintext) {
-		return BCrypt.hashpw(plaintext, BCrypt.gensalt());
-	}
-
-	/**
-	 * 字符串转换为Long
-	 *
-	 * @param str 对象
-	 */
-	public static Long parseLong(Object str) {
-		try {
-			if (str != null && StrUtil.isNotBlank(str.toString())) {
-				return NumberUtil.parseLong(str.toString());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	public static void main(String[] args) {
-		for (int i = 0; i < 10; i++) {
-			System.out.println(genRandomStr(10));
 		}
 	}
 }
