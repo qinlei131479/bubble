@@ -23,13 +23,24 @@ import ${package_core}.entity.Req;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("${tableName_pre}${className}")
+@TableName("${tableName}")
 public class ${className} extends Req<${className}> {
 
 <#assign map={"enum":"String","bigint":"Long","tinyint":"Integer","int":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"Date","date":"Date","double":"Double","timestamp":"Date"}/>
 <#list tableFields as field>
     <#assign type= field.type?replace('\\(.*','','r')/>
+    <#-- 使用更可靠的方法进行驼峰转换 -->
+        <#assign fieldName=field.field?uncap_first>
+        <#if fieldName?contains('_')>
+            <#assign parts=fieldName?split('_')>
+            <#assign fieldName=parts[0]>
+            <#list parts as part>
+                <#if part_index != 0>
+                    <#assign fieldName=fieldName + part?cap_first>
+                </#if>
+            </#list>
+        </#if>
     <#if field.field=='id'>@TableId(type = IdType.INPUT)</#if>
-	private ${(map[type])!field.type} ${field.field?uncap_first};
+	private ${(map[type])!field.type} ${fieldName};
 </#list>
 }

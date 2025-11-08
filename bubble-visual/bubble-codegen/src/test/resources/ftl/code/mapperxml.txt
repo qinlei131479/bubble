@@ -5,7 +5,7 @@
   <select id="findPg" resultType="${package_entity}.entity.${className}">
     SELECT
     t.*
-    FROM ${tableName_pre}${className} t
+    FROM ${tableName} t
   </select>
 
 </mapper>

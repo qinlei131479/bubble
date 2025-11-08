@@ -3,7 +3,7 @@ package com.bubblecloud.codegen.tests;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.bubblecloud.codegen.BubbleCodeGenApplication;
-import com.bubblecloud.codegen.entity.TableField;
+import com.bubblecloud.codegen.dto.TableFieldDTO;
 import com.bubblecloud.codegen.mapper.TableFieldMapper;
 import com.bubblecloud.codegen.util.FreemarkerUtil;
 import com.bubblecloud.codegen.util.HuToolUtil;
@@ -21,41 +21,41 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  基础代码生成工具类
+ * 基础代码生成工具类
+ *
  * @author ：Rampart Qin
  * @date ：Created in 2022/4/16 3:06 下午
  */
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BubbleCodeGenApplication.class)
-public class CodeTestForWindows {
+public class GenerateCode {
 	// model配置back，front
-	public static String className = "Test";
-	public static String projectName = "cpeco-app/cpeco-app-front";
-	public static String projectName_entity = "cpeco-app/cpeco-app-api";
-	public static String packageName = "com.nng.app.front";
-	public static String packageName_entity = "com.nng.app.api";
-	public static String packageName_core = "com.nng.common.core";
-	public static String dbName = "cpeco";
-	public static String tableName_pre = "tb_";
-	public static String author = "Clarence";
+	public static String className = "";
+	public static String projectName = "bubble-biz/bubble-biz-backend";
+	public static String projectName_entity = "bubble-api/bubble-api-backend";
+	public static String packageName = "com.bubblecloud.backend";
+	public static String packageName_entity = "com.bubblecloud.api.backend";
+	public static String packageName_core = "com.bubblecloud.common.core";
+	public static String dbName = "bubble";
+	public static String tableName = "sys_dept_test";
+	public static String author = "Rampart Qin";
 
 	// 全局配置
 	public static String ftlPath = "classpath:/ftl/code/";
-	// windows系统使用\\
-	public static String basePath = new File("").getAbsolutePath().replace("cpeco-visual\\cpeco-codegen", projectName);
-	public static String basePath_entity = new File("").getAbsolutePath().replace("cpeco-visual\\cpeco-codegen",
+	public static String basePath = new File("").getAbsolutePath().replace("bubble-visual/bubble-codegen", projectName);
+	public static String basePath_entity = new File("").getAbsolutePath().replace("bubble-visual/bubble-codegen",
 			projectName_entity);
-	// windows系统使用//
-	public static String javaFilePath_entity = "/src/main/java/" + packageName_entity.replaceAll("\\.", "//");
-	public static String javaFilePath = "/src/main/java/" + packageName.replaceAll("\\.", "//");
+	public static String javaFilePath_entity = "/src/main/java/" + packageName_entity.replaceAll("\\.", "/");
+	public static String javaFilePath = "/src/main/java/" + packageName.replaceAll("\\.", "/");
 	public static String resourcesFilePath = "/src/main/resources/";
 	public static boolean createServiceFlag = true;
 	public static boolean createControllerFlag = true;
 	public static Map<String, Object> dataMap = new HashMap<String, Object>();
 
 	static {
-		dataMap.put("tableName_pre", tableName_pre);
+		className = StrUtil.upperFirst(StrUtil.toCamelCase(tableName));
+		dataMap.put("tableName", tableName);
 		dataMap.put("className", className);
 		dataMap.put("package", packageName);
 		dataMap.put("package_entity", packageName_entity);
@@ -68,12 +68,12 @@ public class CodeTestForWindows {
 
 	@Before
 	public void before() throws Exception {
-		TableField dto = new TableField();
-		dto.setTableName_pre(tableName_pre);
+		TableFieldDTO dto = new TableFieldDTO();
+		dto.setTableName(tableName);
 		dto.setDbName(dbName);
 		dto.setClassName(className);
 		if (tableFieldMapper != null) {
-			List<TableField> ret = tableFieldMapper.findTableFieldListByTableName(dto);
+			List<TableFieldDTO> ret = tableFieldMapper.findTableFieldListByTableName(dto);
 			dataMap.put("tableFields", ret);
 			String tableComment = tableFieldMapper.findTableComment(dto);
 			dataMap.put("tableComment", tableComment);

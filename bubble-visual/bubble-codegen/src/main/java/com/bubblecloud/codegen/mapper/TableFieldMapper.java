@@ -1,7 +1,7 @@
 package com.bubblecloud.codegen.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.bubblecloud.codegen.entity.TableField;
+import com.bubblecloud.codegen.dto.TableFieldDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,14 +13,14 @@ import java.util.List;
  * @date 2020/3/26 下午2:57
  */
 @Mapper
-public interface TableFieldMapper extends BaseMapper<TableField> {
+public interface TableFieldMapper extends BaseMapper<TableFieldDTO> {
 	/**
 	 * 查表的字段列表
 	 *
 	 * @param req
 	 * @return
 	 */
-	List<TableField> findTableFieldListByTableName(TableField req);
+	List<TableFieldDTO> findTableFieldListByTableName(TableFieldDTO req);
 
 	/**
 	 * 查表的注释
@@ -28,5 +28,5 @@ public interface TableFieldMapper extends BaseMapper<TableField> {
 	 * @param req
 	 * @return
 	 */
-	String findTableComment(TableField req);
+	String findTableComment(TableFieldDTO req);
 }

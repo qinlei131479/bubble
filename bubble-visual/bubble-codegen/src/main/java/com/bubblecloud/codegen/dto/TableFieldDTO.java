@@ -1,4 +1,4 @@
-package com.bubblecloud.codegen.entity;
+package com.bubblecloud.codegen.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -14,13 +14,20 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class TableField extends Model<TableField> {
+public class TableFieldDTO extends Model<TableFieldDTO> {
+
 	@TableId(type = IdType.INPUT)
 	private Long id;
+
 	private String field;
+
 	private String type;
+
 	private String dbName;
-	private String tableName_pre;
+
+	private String tableName;
+
 	private String className;
+
 	private String tableNameLike;
 }
