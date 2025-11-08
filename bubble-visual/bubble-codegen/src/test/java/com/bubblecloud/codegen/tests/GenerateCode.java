@@ -36,7 +36,7 @@ public class GenerateCode {
 	public static String projectName_entity = "bubble-api/bubble-api-backend";
 	public static String packageName = "com.bubblecloud.backend";
 	public static String packageName_entity = "com.bubblecloud.api.backend";
-	public static String packageName_core = "com.bubblecloud.common.core";
+	public static String packageName_core = "com.bubblecloud.common";
 	public static String dbName = "bubble";
 	public static String tableName = "sys_dept_test";
 	public static String author = "Rampart Qin";
@@ -59,7 +59,7 @@ public class GenerateCode {
 		dataMap.put("className", className);
 		dataMap.put("package", packageName);
 		dataMap.put("package_entity", packageName_entity);
-		dataMap.put("package_core", packageName_core);
+		dataMap.put("packageName_core", packageName_core);
 		dataMap.put("author", author);
 	}
 

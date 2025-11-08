@@ -2,23 +2,20 @@ package ${package}.controller;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 
 import lombok.RequiredArgsConstructor;
-import ${package_core}.entity.Req;
-import com.bubblecloud.common.core.util.R;
-import ${package_core}.entity.Pg;
+import ${packageName_core}.core.util.R;
+import ${packageName_core}.mybatis.base.Req;
+import ${packageName_core}.mybatis.base.Pg;
 import ${package_entity}.entity.${className};
 import ${package}.service.${className}Service;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-<#assign clazzName=${className?uncap_first}>
+<#assign clazzName=className?uncap_first>
 /**
  * 控制器：${tableComment}
  *
@@ -32,7 +29,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequiredArgsConstructor
 public class ${className}Controller {
 
-	private final  ${className}Service ${clazzName}Service;
+	private final ${className}Service ${clazzName}Service;
 
 	/**
 	 * 分页查询
@@ -40,7 +37,7 @@ public class ${className}Controller {
 	@GetMapping("/page")
 	public R list(Pg pg, ${className} req) {
 		pg.addOrderDefault(OrderItem.desc("t.id"));
-		return Res.succ(${clazzName}Service.findPg(pg,req));
+		return R.ok(${clazzName}Service.findPg(pg,req));
 	}
 
 	/**

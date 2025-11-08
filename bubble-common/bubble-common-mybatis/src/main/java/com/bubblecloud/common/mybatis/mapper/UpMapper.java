@@ -2,7 +2,7 @@ package com.bubblecloud.common.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.bubblecloud.common.core.entity.Req;
+import com.bubblecloud.common.mybatis.base.Req;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

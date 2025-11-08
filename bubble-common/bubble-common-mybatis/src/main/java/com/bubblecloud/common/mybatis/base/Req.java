@@ -1,5 +1,6 @@
-package com.bubblecloud.common.core.entity;
+package com.bubblecloud.common.mybatis.base;
 
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import javax.validation.GroupSequence;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * @date 2020/3/26 下午2:57
  */
 @Data
-public class Req<T> implements Serializable {
+public class Req<T> extends Model<Req<T>> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

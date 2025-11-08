@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 </#list>
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.bubblecloud.common.mybatis.base.Req;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "${tableComment}")
 @TableName("${tableName}")
-public class ${className} extends Model<${className}> {
+public class ${className} extends Req<${className}> {
 
     private static final long serialVersionUID = 1L;
 <#assign map={"enum":"String","bigint":"Long","tinyint":"Integer","int":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"LocalDateTime","date":"LocalDateTime","double":"Double","timestamp":"LocalDateTime"}/>

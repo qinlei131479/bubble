@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.bubblecloud.common.core.entity.Req;
+import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.HuToolUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.mapper.UpMapper;

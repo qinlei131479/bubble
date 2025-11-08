@@ -2,7 +2,7 @@ package com.bubblecloud.common.mybatis.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.bubblecloud.common.core.entity.Req;
+import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.mapper.UpMapper;
 
