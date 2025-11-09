@@ -3,6 +3,7 @@ package com.bubblecloud.codegen.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bubblecloud.codegen.dto.TableFieldDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,18 +16,20 @@ import java.util.List;
 @Mapper
 public interface TableFieldMapper extends BaseMapper<TableFieldDTO> {
 	/**
-	 * 查表的字段列表
+	 * 根据表名查询字段列表
 	 *
-	 * @param req
+	 * @param dbName
+	 * @param tableName
 	 * @return
 	 */
-	List<TableFieldDTO> findTableFieldListByTableName(TableFieldDTO req);
+	List<TableFieldDTO> findTableFieldListByTableName(@Param("dbName") String dbName, @Param("tableName") String tableName);
 
 	/**
 	 * 查表的注释
 	 *
-	 * @param req
+	 * @param dbName
+	 * @param tableName
 	 * @return
 	 */
-	String findTableComment(TableFieldDTO req);
+	String findTableComment(@Param("dbName") String dbName, @Param("tableName") String tableName);
 }

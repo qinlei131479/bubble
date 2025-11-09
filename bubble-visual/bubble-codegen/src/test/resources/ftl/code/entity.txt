@@ -43,11 +43,11 @@ public class ${className} extends Req<${className}> {
     /**
      * ${field.comment!''}
      */
-    <#if field.field=='del_flag'>@TableLogic</#if>
-    <#if field.field=='create_by' || field.field=='create_time'>@TableField(fill = FieldFill.INSERT)</#if>
-    <#if field.field=='update_by' || field.field=='update_time'>@TableField(fill = FieldFill.UPDATE)</#if>
-    <#if field.field=='id'>@TableId(type = IdType.INPUT)</#if>
-    @Schema(description = "${field.comment!''}")
+    <#if field.field=='del_flag'>@TableLogic
+    <#elseif field.field=='create_by' || field.field=='create_time'>@TableField(fill = FieldFill.INSERT)
+    <#elseif field.field=='update_by' || field.field=='update_time'>@TableField(fill = FieldFill.UPDATE)
+    <#elseif field.field=='id'>@TableId(type = IdType.INPUT)
+    </#if>@Schema(description = "${field.comment!''}")
 	private ${(map[type])!field.type} ${fieldName};
 </#list>
 }

@@ -8,7 +8,6 @@ import com.bubblecloud.codegen.mapper.TableFieldMapper;
 import com.bubblecloud.codegen.util.FreemarkerUtil;
 import com.bubblecloud.common.core.util.HuToolUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,16 +30,22 @@ import java.util.Map;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BubbleCodeGenApplication.class)
 public class GenerateCode {
-	// model配置back，front
-	public static String className = "";
+	/**
+	 * 生成代码模块配置
+	 */
 	public static String projectName = "bubble-biz/bubble-biz-backend";
 	public static String projectName_entity = "bubble-api/bubble-api-backend";
+
 	public static String packageName = "com.bubblecloud.backend";
 	public static String packageName_entity = "com.bubblecloud.api.backend";
-	public static String packageName_core = "com.bubblecloud.common";
+	public static String packageName_common = "com.bubblecloud.common";
+
 	public static String dbName = "bubble";
-	public static String tableName = "sys_dept_test";
 	public static String author = "Rampart Qin";
+	/**
+	 * 填写要生成的表名
+	 */
+	public static List<String> tableNames = Arrays.asList("sys_dept_test","sys_file_test");
 
 	// 全局配置
 	public static String ftlPath = "classpath:/ftl/code/";
@@ -49,37 +55,19 @@ public class GenerateCode {
 	public static String javaFilePath_entity = "/src/main/java/" + packageName_entity.replaceAll("\\.", "/");
 	public static String javaFilePath = "/src/main/java/" + packageName.replaceAll("\\.", "/");
 	public static String resourcesFilePath = "/src/main/resources/";
-	public static boolean createServiceFlag = true;
-	public static boolean createControllerFlag = true;
 	public static Map<String, Object> dataMap = new HashMap<String, Object>();
 
 	static {
-		className = StrUtil.upperFirst(StrUtil.toCamelCase(tableName));
-		dataMap.put("tableName", tableName);
-		dataMap.put("className", className);
 		dataMap.put("package", packageName);
 		dataMap.put("package_entity", packageName_entity);
-		dataMap.put("packageName_core", packageName_core);
+		dataMap.put("packageName_core", packageName_common);
 		dataMap.put("author", author);
 	}
 
 	@Resource
 	private TableFieldMapper tableFieldMapper;
 
-	@Before
-	public void before() throws Exception {
-		TableFieldDTO dto = new TableFieldDTO();
-		dto.setTableName(tableName);
-		dto.setDbName(dbName);
-		if (tableFieldMapper != null) {
-			List<TableFieldDTO> ret = tableFieldMapper.findTableFieldListByTableName(dto);
-			dataMap.put("tableFields", ret);
-			String tableComment = tableFieldMapper.findTableComment(dto);
-			dataMap.put("tableComment", tableComment);
-		}
-	}
-
-	private void writeJavaContent(String basePath, String packagePath, String subPath, String ftlName, String fileName)
+	private void generateJavaFile(String basePath, String packagePath, String subPath, String ftlName, String fileName)
 			throws Exception {
 		String ftlNameNew = StrUtil.isBlank(ftlName) ? subPath : ftlName;
 		String content = FreemarkerUtil.getTextWithTemplate(ftlPath, ftlNameNew + ".txt", "UTF-8", dataMap);
@@ -87,45 +75,29 @@ public class GenerateCode {
 	}
 
 	@Test
-	public void testCreateModel() throws Exception {
-		writeJavaContent(basePath_entity, javaFilePath_entity, "entity", null, className + ".java");
-	}
-
-	@Test
-	public void testCreateMapper() throws Exception {
-		writeJavaContent(basePath, javaFilePath, "mapper", null, className + "Mapper.java");
-	}
-
-	@Test
-	public void testCreateMapperXml() throws Exception {
-		writeJavaContent(basePath, resourcesFilePath, "mapper", "mapperxml", className + "Mapper.xml");
-	}
-
-	@Test
-	public void testCreateService() throws Exception {
-		writeJavaContent(basePath, javaFilePath, "service", null, className + "Service.java");
-		writeJavaContent(basePath, javaFilePath, "service/impl", "serviceimpl", className + "ServiceImpl.java");
-	}
-
-	@Test
-	public void testCreateController() throws Exception {
-		writeJavaContent(basePath, javaFilePath, "controller", null, className + "Controller.java");
-	}
-
-	@Test
 	public void testCreateAll() throws Exception {
-		try {
-			testCreateModel();
-			testCreateMapper();
-			testCreateMapperXml();
-			if (createServiceFlag) {
-				testCreateService();
+		tableNames.forEach(tableName -> {
+			String className = StrUtil.upperFirst(StrUtil.toCamelCase(tableName));
+			dataMap.put("tableName", tableName);
+			dataMap.put("className", className);
+			List<TableFieldDTO> ret = tableFieldMapper.findTableFieldListByTableName(dbName, tableName);
+			dataMap.put("tableFields", ret);
+			String tableComment = tableFieldMapper.findTableComment(dbName, tableName);
+			dataMap.put("tableComment", tableComment);
+			try {
+				generateJavaFile(basePath_entity, javaFilePath_entity, "entity", null, className + ".java");
+				generateJavaFile(basePath, javaFilePath, "mapper", null, className + "Mapper.java");
+				generateJavaFile(basePath, resourcesFilePath, "mapper", "mapperxml", className + "Mapper.xml");
+
+				generateJavaFile(basePath, javaFilePath, "service", null, className + "Service.java");
+				generateJavaFile(basePath, javaFilePath, "service/impl", "serviceimpl", className + "ServiceImpl.java");
+
+				generateJavaFile(basePath, javaFilePath, "controller", null, className + "Controller.java");
+
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (createControllerFlag) {
-				testCreateController();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		});
 	}
+
 }
