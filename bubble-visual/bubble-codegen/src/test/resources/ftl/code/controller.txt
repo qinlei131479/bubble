@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import ${packageName_core}.core.util.R;
 import ${packageName_core}.mybatis.base.Req;
 import ${packageName_core}.mybatis.base.Pg;
+import ${packageName_core}.log.annotation.SysLog;
 import ${package_entity}.entity.${className};
 import ${package}.service.${className}Service;
 
@@ -60,7 +61,8 @@ public class ${className}Controller {
 	/**
 	 * 添加
 	 */
-	@Operation(summary = "添加")
+	@Operation(summary = "添加", description = "")
+	@SysLog("编辑${tableComment}")
 	@PostMapping("/create")
 	public R create(@RequestBody @Validated({ Req.Create.class }) ${className} req) {
 		return ${clazzName}Service.create(req);
@@ -69,7 +71,8 @@ public class ${className}Controller {
 	/**
 	 * 修改
 	 */
-	@Operation(summary = "修改")
+	@Operation(summary = "编辑", description = "")
+	@SysLog("编辑${tableComment}")
 	@PostMapping("/update")
 	public R update(@RequestBody @Validated({ Req.Update.class }) ${className} req) {
 		return ${clazzName}Service.update(req);
@@ -78,7 +81,7 @@ public class ${className}Controller {
 	/**
 	 * 删除
 	 */
-	@Operation(summary = "删除")
+	@Operation(summary = "删除", description = "")
 	@DeleteMapping("/delete")
 	public R delete(@RequestBody @Validated({ Req.Delete.class }) ${className} req) {
 		return ${clazzName}Service.delete(req);
