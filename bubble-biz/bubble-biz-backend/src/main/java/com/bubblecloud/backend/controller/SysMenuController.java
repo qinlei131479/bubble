@@ -1,19 +1,24 @@
 package com.bubblecloud.backend.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.bubblecloud.api.backend.entity.SysMenu;
 import com.bubblecloud.backend.service.SysMenuService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.util.SecurityUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import javax.validation.Valid;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,12 +37,14 @@ public class SysMenuController {
 
 	/**
 	 * 返回当前用户的树形菜单集合
-	 * @param type 类型
+	 *
+	 * @param type     类型
 	 * @param parentId 父节点ID
 	 * @return 当前用户的树形菜单
 	 */
+	@Operation(summary = "返回当前用户的树形菜单集合", description = "")
 	@GetMapping
-	public R getUserMenu(String type, Long parentId) {
+	public R<List<Tree<Long>>> getUserMenu(String type, Long parentId) {
 		// 获取符合条件的菜单
 		Set<SysMenu> all = new HashSet<>();
 		SecurityUtils.getRoles().forEach(roleId -> all.addAll(sysMenuService.findMenuByRoleId(roleId)));
@@ -46,41 +53,48 @@ public class SysMenuController {
 
 	/**
 	 * 返回树形菜单集合
+	 *
 	 * @param parentId 父节点ID
 	 * @param menuName 菜单名称
 	 * @return 树形菜单
 	 */
+	@Operation(summary = "返回树形菜单集合", description = "")
 	@GetMapping(value = "/tree")
-	public R getTree(Long parentId, String menuName, String type) {
+	public R<List<Tree<Long>>> getTree(Long parentId, String menuName, String type) {
 		return R.ok(sysMenuService.treeMenu(parentId, menuName, type));
 	}
 
 	/**
 	 * 返回角色的菜单集合
+	 *
 	 * @param roleId 角色ID
 	 * @return 属性集合
 	 */
+	@Operation(summary = "返回角色的菜单集合", description = "")
 	@GetMapping("/tree/{roleId}")
-	public R getRoleTree(@PathVariable Long roleId) {
-		return R
-			.ok(sysMenuService.findMenuByRoleId(roleId).stream().map(SysMenu::getMenuId).collect(Collectors.toList()));
+	public R<List<Long>> getRoleTree(@PathVariable Long roleId) {
+		return R.ok(sysMenuService.findMenuByRoleId(roleId).stream().map(SysMenu::getMenuId).collect(Collectors.toList()));
 	}
 
 	/**
 	 * 通过ID查询菜单的详细信息
+	 *
 	 * @param id 菜单ID
 	 * @return 菜单详细信息
 	 */
+	@Operation(summary = "通过ID查询菜单的详细信息", description = "")
 	@GetMapping("/{id}")
-	public R getById(@PathVariable Long id) {
+	public R<SysMenu> getById(@PathVariable Long id) {
 		return R.ok(sysMenuService.getById(id));
 	}
 
 	/**
 	 * 新增菜单
+	 *
 	 * @param sysMenu 菜单信息
 	 * @return success/false
 	 */
+	@Operation(summary = "新增菜单", description = "")
 	@SysLog("新增菜单")
 	@PostMapping
 	@PreAuthorize("@pms.hasPermission('sys_menu_add')")
@@ -91,9 +105,11 @@ public class SysMenuController {
 
 	/**
 	 * 删除菜单
+	 *
 	 * @param id 菜单ID
 	 * @return success/false
 	 */
+	@Operation(summary = "删除菜单", description = "")
 	@SysLog("删除菜单")
 	@DeleteMapping("/{id}")
 	@PreAuthorize("@pms.hasPermission('sys_menu_del')")
@@ -103,9 +119,11 @@ public class SysMenuController {
 
 	/**
 	 * 更新菜单
+	 *
 	 * @param sysMenu
 	 * @return
 	 */
+	@Operation(summary = "更新菜单", description = "")
 	@SysLog("更新菜单")
 	@PutMapping
 	@PreAuthorize("@pms.hasPermission('sys_menu_edit')")

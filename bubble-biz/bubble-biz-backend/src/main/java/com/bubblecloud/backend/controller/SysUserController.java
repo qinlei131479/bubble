@@ -1,11 +1,14 @@
 package com.bubblecloud.backend.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.api.backend.dto.UserDTO;
+import com.bubblecloud.api.backend.dto.UserInfo;
 import com.bubblecloud.api.backend.entity.SysUser;
 import com.bubblecloud.api.backend.vo.UserExcelVO;
+import com.bubblecloud.api.backend.vo.UserVO;
 import com.bubblecloud.backend.service.SysUserService;
 import com.bubblecloud.common.core.constant.CommonConstants;
 import com.bubblecloud.common.core.exception.ErrorCodes;
@@ -46,9 +49,10 @@ public class SysUserController {
 	 * 获取指定用户全部信息
 	 * @return 用户信息
 	 */
+	@Operation(summary = "获取指定用户全部信息", description = "获取指定用户全部信息")
 	@Inner
 	@GetMapping(value = { "/info/query" })
-	public R info(@RequestParam(required = false) String username, @RequestParam(required = false) String phone) {
+	public R<UserInfo> info(@RequestParam(required = false) String username, @RequestParam(required = false) String phone) {
 		SysUser user = userService.getOne(Wrappers.<SysUser>query()
 			.lambda()
 			.eq(StrUtil.isNotBlank(username), SysUser::getUsername, username)
@@ -63,8 +67,9 @@ public class SysUserController {
 	 * 获取当前用户全部信息
 	 * @return 用户信息
 	 */
+	@Operation(summary = "获取当前用户全部信息", description = "获取当前用户全部信息")
 	@GetMapping(value = { "/info" })
-	public R info() {
+	public R<UserInfo> info() {
 		String username = SecurityUtils.getUser().getUsername();
 		SysUser user = userService.getOne(Wrappers.<SysUser>query().lambda().eq(SysUser::getUsername, username));
 		if (user == null) {
@@ -78,8 +83,9 @@ public class SysUserController {
 	 * @param id ID
 	 * @return 用户信息
 	 */
+	@Operation(summary = "通过ID查询用户信息", description = "通过ID查询用户信息")
 	@GetMapping("/details/{id}")
-	public R user(@PathVariable Long id) {
+	public R<UserVO> user(@PathVariable Long id) {
 		return R.ok(userService.selectUserVoById(id));
 	}
 
@@ -88,6 +94,7 @@ public class SysUserController {
 	 * @param query 查询条件
 	 * @return 不为空返回用户名
 	 */
+	@Operation(summary = "查询用户信息", description = "查询用户信息")
 	@Inner(value = false)
 	@GetMapping("/details")
 	public R getDetails(@ParameterObject SysUser query) {
@@ -100,10 +107,10 @@ public class SysUserController {
 	 * @param ids ID
 	 * @return R
 	 */
+	@Operation(summary = "删除用户", description = "根据ID删除用户")
 	@SysLog("删除用户信息")
 	@DeleteMapping
 	@PreAuthorize("@pms.hasPermission('sys_user_del')")
-	@Operation(summary = "删除用户", description = "根据ID删除用户")
 	public R userDel(@RequestBody Long[] ids) {
 		return R.ok(userService.deleteUserByIds(ids));
 	}
@@ -113,6 +120,7 @@ public class SysUserController {
 	 * @param userDto 用户信息
 	 * @return success/false
 	 */
+	@Operation(summary = "添加用户", description = "添加用户")
 	@SysLog("添加用户")
 	@PostMapping
 	@PreAuthorize("@pms.hasPermission('sys_user_add')")
@@ -125,6 +133,7 @@ public class SysUserController {
 	 * @param userDto 用户信息
 	 * @return R
 	 */
+	@Operation(summary = "更新用户信息", description = "更新用户信息")
 	@SysLog("更新用户信息")
 	@PutMapping
 	@PreAuthorize("@pms.hasPermission('sys_user_edit')")
@@ -138,8 +147,9 @@ public class SysUserController {
 	 * @param userDTO 查询参数列表
 	 * @return 用户集合
 	 */
+	@Operation(summary = "分页查询用户", description = "分页查询用户")
 	@GetMapping("/page")
-	public R getUserPage(@ParameterObject Page page, @ParameterObject UserDTO userDTO) {
+	public R<IPage<UserVO>> getUserPage(@ParameterObject Page page, @ParameterObject UserDTO userDTO) {
 		return R.ok(userService.getUsersWithRolePage(page, userDTO));
 	}
 
@@ -148,6 +158,7 @@ public class SysUserController {
 	 * @param userDto userDto
 	 * @return success/false
 	 */
+	@Operation(summary = "修改个人信息", description = "修改个人信息")
 	@SysLog("修改个人信息")
 	@PutMapping("/edit")
 	public R updateUserInfo(@Valid @RequestBody UserDTO userDto) {
@@ -159,6 +170,7 @@ public class SysUserController {
 	 * @param userDTO 查询条件
 	 * @return
 	 */
+	@Operation(summary = "导出用户", description = "导出用户")
 	@ResponseExcel
 	@GetMapping("/export")
 	@PreAuthorize("@pms.hasPermission('sys_user_export')")
@@ -172,6 +184,7 @@ public class SysUserController {
 	 * @param bindingResult 错误信息列表
 	 * @return R
 	 */
+	@Operation(summary = "导入用户", description = "导入用户")
 	@PostMapping("/import")
 	@PreAuthorize("@pms.hasPermission('sys_user_export')")
 	public R importUser(@RequestExcel List<UserExcelVO> excelVOList, BindingResult bindingResult) {
@@ -183,11 +196,13 @@ public class SysUserController {
 	 * @param username 用户名
 	 * @return R
 	 */
+	@Operation(summary = "锁定指定用户", description = "锁定指定用户")
 	@PutMapping("/lock/{username}")
 	public R lockUser(@PathVariable String username) {
 		return userService.lockUser(username);
 	}
 
+	@Operation(summary = "更改用户密码", description = "更改用户密码")
 	@PutMapping("/password")
 	public R password(@RequestBody UserDTO userDto) {
 		String username = SecurityUtils.getUser().getUsername();
@@ -195,6 +210,7 @@ public class SysUserController {
 		return userService.changePassword(userDto);
 	}
 
+	@Operation(summary = "检查密码", description = "检查密码")
 	@PostMapping("/check")
 	public R check(String password) {
 		return userService.checkPassword(password);

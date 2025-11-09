@@ -1,8 +1,11 @@
 package com.bubblecloud.backend.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.api.backend.feign.RemoteTokenService;
+import com.bubblecloud.api.backend.vo.TokenVO;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -33,8 +36,9 @@ public class SysTokenController {
 	 * @param params 参数集
 	 * @return token集合
 	 */
+	@Operation(summary = "分页查询", description = "分页查询")
 	@RequestMapping("/page")
-	public R getTokenPage(@RequestBody Map<String, Object> params) {
+	public R<Page<TokenVO>> getTokenPage(@RequestBody Map<String, Object> params) {
 		return remoteTokenService.getTokenPage(params);
 	}
 
@@ -43,6 +47,7 @@ public class SysTokenController {
 	 * @param tokens tokens
 	 * @return success/false
 	 */
+	@Operation(summary = "删除用户token", description = "删除用户token")
 	@SysLog("删除用户token")
 	@DeleteMapping("/delete")
 	@PreAuthorize("@pms.hasPermission('sys_token_del')")

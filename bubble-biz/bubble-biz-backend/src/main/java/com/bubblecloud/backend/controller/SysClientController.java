@@ -11,6 +11,7 @@ import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.annotation.Inner;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -33,7 +34,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/client")
-@Tag(description = "client", name = "客户端管理模块")
+@Tag(description = "client终端说明", name = "客户端管理模块")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class SysClientController {
 
@@ -44,8 +45,9 @@ public class SysClientController {
 	 * @param clientId clientId
 	 * @return SysOauthClientDetails
 	 */
+	@Operation(summary = "按clientId查询", description = "按clientID查询说明")
 	@GetMapping("/{clientId}")
-	public R getByClientId(@PathVariable String clientId) {
+	public R<SysOauthClientDetails> getByClientId(@PathVariable String clientId) {
 		SysOauthClientDetails details = clientDetailsService
 			.getOne(Wrappers.<SysOauthClientDetails>lambdaQuery().eq(SysOauthClientDetails::getClientId, clientId));
 		return R.ok(details);
@@ -57,8 +59,9 @@ public class SysClientController {
 	 * @param sysOauthClientDetails 系统终端
 	 * @return
 	 */
+	@Operation(summary = "分页查询", description = "分页查询说明")
 	@GetMapping("/page")
-	public R getOauthClientDetailsPage(@ParameterObject Page page,
+	public R<Page<SysOauthClientDetails>> getOauthClientDetailsPage(@ParameterObject Page page,
 			@ParameterObject SysOauthClientDetails sysOauthClientDetails) {
 		LambdaQueryWrapper<SysOauthClientDetails> wrapper = Wrappers.<SysOauthClientDetails>lambdaQuery()
 			.like(StrUtil.isNotBlank(sysOauthClientDetails.getClientId()), SysOauthClientDetails::getClientId,
@@ -73,6 +76,7 @@ public class SysClientController {
 	 * @param clientDetails 实体
 	 * @return success/false
 	 */
+	@Operation(summary = "添加终端", description = "添加终端说明")
 	@SysLog("添加终端")
 	@PostMapping
 	@PreAuthorize("@pms.hasPermission('sys_client_add')")
@@ -85,6 +89,7 @@ public class SysClientController {
 	 * @param ids ID 列表
 	 * @return success/false
 	 */
+	@Operation(summary = "删除终端", description = "删除终端说明")
 	@SysLog("删除终端")
 	@DeleteMapping
 	@PreAuthorize("@pms.hasPermission('sys_client_del')")
@@ -98,6 +103,7 @@ public class SysClientController {
 	 * @param clientDetails 实体
 	 * @return success/false
 	 */
+	@Operation(summary = "编辑终端", description = "编辑终端说明")
 	@SysLog("编辑终端")
 	@PutMapping
 	@PreAuthorize("@pms.hasPermission('sys_client_edit')")
@@ -105,9 +111,10 @@ public class SysClientController {
 		return R.ok(clientDetailsService.updateClientById(clientDetails));
 	}
 
+	@Operation(summary = "按clientId查询", description = "按clientId查询说明",hidden = true)
 	@Inner
 	@GetMapping("/getClientDetailsById/{clientId}")
-	public R getClientDetailsById(@PathVariable String clientId) {
+	public R<SysOauthClientDetails> getClientDetailsById(@PathVariable String clientId) {
 		return R.ok(clientDetailsService.getOne(
 				Wrappers.<SysOauthClientDetails>lambdaQuery().eq(SysOauthClientDetails::getClientId, clientId), false));
 	}
@@ -117,6 +124,7 @@ public class SysClientController {
 	 * 同步缓存字典
 	 * @return R
 	 */
+	@Operation(summary = "同步终端", description = "同步终端说明")
 	@SysLog("同步终端")
 	@PutMapping("/sync")
 	public R sync() {
@@ -127,6 +135,7 @@ public class SysClientController {
 	 * 导出所有客户端
 	 * @return excel
 	 */
+	@Operation(summary = "导出excel", description = "导出excel说明")
 	@ResponseExcel
 	@SysLog("导出excel")
 	@GetMapping("/export")

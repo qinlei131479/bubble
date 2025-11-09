@@ -1,6 +1,7 @@
 package com.bubblecloud.backend.controller;
 
 import com.bubblecloud.common.core.util.R;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,9 @@ public class SysSystemInfoController {
 	 * 缓存监控
 	 * @return R<Object>
 	 */
+	@Operation(summary = "redis缓存监控", description = "redis缓存监控")
 	@GetMapping("/cache")
-	public R cache() {
+	public R<Map<String, Object>> cache() {
 		Properties info = (Properties) redisTemplate.execute((RedisCallback<Object>) RedisServerCommands::info);
 		Properties commandStats = (Properties) redisTemplate
 			.execute((RedisCallback<Object>) connection -> connection.info("commandstats"));

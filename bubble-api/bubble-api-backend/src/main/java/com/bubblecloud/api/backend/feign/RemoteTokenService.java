@@ -1,6 +1,7 @@
 package com.bubblecloud.api.backend.feign;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.api.backend.vo.TokenVO;
 import com.bubblecloud.common.core.constant.ServiceNameConstants;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.feign.annotation.NoToken;
@@ -24,7 +25,7 @@ public interface RemoteTokenService {
      */
     @NoToken
     @PostMapping("/token/page")
-    R<Page> getTokenPage(@RequestBody Map<String, Object> params);
+    R<Page<TokenVO>> getTokenPage(@RequestBody Map<String, Object> params);
 
     /**
      * 删除token

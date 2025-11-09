@@ -44,7 +44,7 @@ public class SysPublicParamController {
 	@Inner(value = false)
 	@Operation(description = "查询公共参数值", summary = "根据key查询公共参数值")
 	@GetMapping("/publicValue/{publicKey}")
-	public R publicKey(@PathVariable("publicKey") String publicKey) {
+	public R<String> publicKey(@PathVariable("publicKey") String publicKey) {
 		return R.ok(sysPublicParamService.getSysPublicParamKeyToValue(publicKey));
 	}
 
@@ -56,7 +56,7 @@ public class SysPublicParamController {
 	 */
 	@Operation(description = "分页查询", summary = "分页查询")
 	@GetMapping("/page")
-	public R getSysPublicParamPage(@ParameterObject Page page, @ParameterObject SysPublicParam sysPublicParam) {
+	public R<Page<SysPublicParam>> getSysPublicParamPage(@ParameterObject Page page, @ParameterObject SysPublicParam sysPublicParam) {
 		LambdaUpdateWrapper<SysPublicParam> wrapper = Wrappers.<SysPublicParam>lambdaUpdate()
 			.like(StrUtil.isNotBlank(sysPublicParam.getPublicName()), SysPublicParam::getPublicName,
 					sysPublicParam.getPublicName())
@@ -75,12 +75,13 @@ public class SysPublicParamController {
 	 */
 	@Operation(description = "通过id查询公共参数", summary = "通过id查询公共参数")
 	@GetMapping("/details/{publicId}")
-	public R getById(@PathVariable("publicId") Long publicId) {
+	public R<SysPublicParam> getById(@PathVariable("publicId") Long publicId) {
 		return R.ok(sysPublicParamService.getById(publicId));
 	}
 
+	@Operation(description = "通过参数查询公共参数", summary = "通过参数查询公共参数")
 	@GetMapping("/details")
-	public R getDetail(@ParameterObject SysPublicParam param) {
+	public R<SysPublicParam> getDetail(@ParameterObject SysPublicParam param) {
 		return R.ok(sysPublicParamService.getOne(Wrappers.query(param), false));
 	}
 
@@ -127,6 +128,7 @@ public class SysPublicParamController {
 	 * 导出excel 表格
 	 * @return
 	 */
+	@Operation(description = "导出公共参数", summary = "导出公共参数")
 	@ResponseExcel
 	@GetMapping("/export")
 	@PreAuthorize("@pms.hasPermission('sys_syspublicparam_edit')")
@@ -138,6 +140,7 @@ public class SysPublicParamController {
 	 * 同步参数
 	 * @return R
 	 */
+	@Operation(description = "同步参数", summary = "导出公共参数")
 	@SysLog("同步参数")
 	@PutMapping("/sync")
 	@PreAuthorize("@pms.hasPermission('sys_syspublicparam_edit')")

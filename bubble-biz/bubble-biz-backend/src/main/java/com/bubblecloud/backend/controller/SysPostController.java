@@ -32,7 +32,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
-@Tag(description = "post", name = "岗位信息表管理")
+@Tag(description = "post", name = "岗位信息管理")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class SysPostController {
 
@@ -42,6 +42,7 @@ public class SysPostController {
 	 * 获取岗位列表
 	 * @return 岗位列表
 	 */
+	@Operation(description = "岗位查询", summary = "岗位查询")
 	@GetMapping("/list")
 	public R<List<SysPost>> listPosts() {
 		return R.ok(sysPostService.list(Wrappers.emptyWrapper()));
@@ -56,7 +57,7 @@ public class SysPostController {
 	@Operation(description = "分页查询", summary = "分页查询")
 	@GetMapping("/page")
 	@PreAuthorize("@pms.hasPermission('sys_post_view')")
-	public R getSysPostPage(@ParameterObject Page page, @ParameterObject SysPost sysPost) {
+	public R<Page<SysPost>> getSysPostPage(@ParameterObject Page page, @ParameterObject SysPost sysPost) {
 		return R.ok(sysPostService.page(page, Wrappers.<SysPost>lambdaQuery()
 			.like(StrUtil.isNotBlank(sysPost.getPostName()), SysPost::getPostName, sysPost.getPostName())));
 	}
@@ -69,7 +70,7 @@ public class SysPostController {
 	@Operation(description = "通过id查询", summary = "通过id查询")
 	@GetMapping("/details/{postId}")
 	@PreAuthorize("@pms.hasPermission('sys_post_view')")
-	public R getById(@PathVariable("postId") Long postId) {
+	public R<SysPost> getById(@PathVariable("postId") Long postId) {
 		return R.ok(sysPostService.getById(postId));
 	}
 
@@ -81,7 +82,7 @@ public class SysPostController {
 	@Operation(description = "查询角色信息", summary = "查询角色信息")
 	@GetMapping("/details")
 	@PreAuthorize("@pms.hasPermission('sys_post_view')")
-	public R getDetails(SysPost query) {
+	public R<SysPost> getDetails(SysPost query) {
 		return R.ok(sysPostService.getOne(Wrappers.query(query), false));
 	}
 
@@ -116,7 +117,7 @@ public class SysPostController {
 	 * @param ids id 列表
 	 * @return R
 	 */
-	@Operation(description = "通过id删除岗位信息表", summary = "通过id删除岗位信息表")
+	@Operation(description = "通过id删除岗位", summary = "通过id删除岗位")
 	@SysLog("通过id删除岗位信息表")
 	@DeleteMapping
 	@PreAuthorize("@pms.hasPermission('sys_post_del')")
@@ -128,6 +129,7 @@ public class SysPostController {
 	 * 导出excel 表格
 	 * @return excel 文件流
 	 */
+	@Operation(description = "导出岗位", summary = "导出岗位")
 	@ResponseExcel
 	@GetMapping("/export")
 	@PreAuthorize("@pms.hasPermission('sys_post_export')")
@@ -141,6 +143,7 @@ public class SysPostController {
 	 * @param bindingResult 错误信息列表
 	 * @return ok fail
 	 */
+	@Operation(description = "导入岗位", summary = "导入岗位")
 	@PostMapping("/import")
 	@PreAuthorize("@pms.hasPermission('sys_post_export')")
 	public R importRole(@RequestExcel List<PostExcelVO> excelVOList, BindingResult bindingResult) {

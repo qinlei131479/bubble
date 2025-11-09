@@ -182,7 +182,7 @@ public class CustomTokenEndpoint {
 	 */
 	@Inner
 	@PostMapping("/page")
-	public R<Page> tokenList(@RequestBody Map<String, Object> params) {
+	public R<Page<TokenVO>> tokenList(@RequestBody Map<String, Object> params) {
 		// 根据分页参数获取对应数据
 		String key = String.format("%s::*", CacheConstants.PROJECT_OAUTH_ACCESS);
 		int current = MapUtil.getInt(params, CommonConstants.CURRENT);

@@ -13,7 +13,9 @@ import com.bubblecloud.common.security.annotation.Inner;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springdoc.api.annotations.ParameterObject;
@@ -40,24 +42,26 @@ public class SysFileController {
 
 	/**
 	 * 分页查询
-	 * @param page 分页对象
+	 *
+	 * @param page    分页对象
 	 * @param sysFile 文件管理
 	 * @return
 	 */
 	@Operation(summary = "分页查询", description = "分页查询")
 	@GetMapping("/page")
-	public R getSysFilePage(@ParameterObject Page page, @ParameterObject SysFile sysFile) {
+	public R<Page<SysFile>> getSysFilePage(@ParameterObject Page page, @ParameterObject SysFile sysFile) {
 		LambdaQueryWrapper<SysFile> wrapper = Wrappers.<SysFile>lambdaQuery()
-			.like(StrUtil.isNotBlank(sysFile.getOriginal()), SysFile::getOriginal, sysFile.getOriginal());
+				.like(StrUtil.isNotBlank(sysFile.getOriginal()), SysFile::getOriginal, sysFile.getOriginal());
 		return R.ok(sysFileService.page(page, wrapper));
 	}
 
 	/**
 	 * 通过id删除文件管理
+	 *
 	 * @param ids id 列表
 	 * @return R
 	 */
-	@Operation(summary = "通过id删除文件管理", description = "通过id删除文件管理")
+	@Operation(summary = "通过id删除文件", description = "通过id删除文件")
 	@SysLog("删除文件管理")
 	@DeleteMapping
 	@PreAuthorize("@pms.hasPermission('sys_file_del')")
@@ -70,9 +74,11 @@ public class SysFileController {
 
 	/**
 	 * 上传文件 文件名采用uuid,避免原始文件名中带"-"符号导致下载的时候解析出现异常
+	 *
 	 * @param file 资源
 	 * @return R(/ admin / bucketName / filename)
 	 */
+	@Operation(summary = "上传文件", description = "文件名采用uuid,避免原始文件名中带\"-\"符号导致下载的时候解析出现异常")
 	@PostMapping(value = "/upload")
 	public R upload(@RequestPart("file") MultipartFile file) {
 		return sysFileService.uploadFile(file);
@@ -80,12 +86,14 @@ public class SysFileController {
 
 	/**
 	 * 获取文件
-	 * @param bucket 桶名称
+	 *
+	 * @param bucket   桶名称
 	 * @param fileName 文件空间/名称
 	 * @param response
 	 * @return
 	 */
 	@Inner(false)
+	@Operation(summary = "获取文件", description = "获取文件件", hidden = true)
 	@GetMapping("/{bucket}/{fileName}")
 	public void file(@PathVariable String bucket, @PathVariable String fileName, HttpServletResponse response) {
 		sysFileService.getFile(bucket, fileName, response);
@@ -93,10 +101,12 @@ public class SysFileController {
 
 	/**
 	 * 获取本地（resources）文件
+	 *
 	 * @param fileName 文件名称
 	 * @param response 本地文件
 	 */
 	@SneakyThrows
+	@Operation(summary = "获取本地（resources）文件", description = "获取本地（resources）文件")
 	@GetMapping("/local/file/{fileName}")
 	public void localFile(@PathVariable String fileName, HttpServletResponse response) {
 		ClassPathResource resource = new ClassPathResource("file/" + fileName);

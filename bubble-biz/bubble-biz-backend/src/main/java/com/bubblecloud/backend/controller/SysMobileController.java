@@ -3,6 +3,7 @@ package com.bubblecloud.backend.controller;
 import com.bubblecloud.backend.service.SysMobileService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.security.annotation.Inner;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class SysMobileController {
 	private final SysMobileService mobileService;
 
 	@Inner(value = false)
+	@Operation(summary = "手机发送验证码", description = "手机发送验证码")
 	@GetMapping("/{mobile}")
 	public R sendSmsCode(@PathVariable String mobile) {
 		return mobileService.sendSmsCode(mobile);

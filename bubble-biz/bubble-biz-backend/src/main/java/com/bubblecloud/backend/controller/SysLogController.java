@@ -8,6 +8,7 @@ import com.bubblecloud.backend.service.SysLogService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.security.annotation.Inner;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -38,20 +39,24 @@ public class SysLogController {
 
 	/**
 	 * 简单分页查询
-	 * @param page 分页对象
+	 *
+	 * @param page   分页对象
 	 * @param sysLog 系统日志
 	 * @return
 	 */
+	@Operation(summary = "分页查询", description = "分页查询")
 	@GetMapping("/page")
-	public R getLogPage(@ParameterObject Page page, @ParameterObject SysLogDTO sysLog) {
+	public R<Page<SysLog>> getLogPage(@ParameterObject Page page, @ParameterObject SysLogDTO sysLog) {
 		return R.ok(sysLogService.getLogByPage(page, sysLog));
 	}
 
 	/**
 	 * 批量删除日志
+	 *
 	 * @param ids ID
 	 * @return success/false
 	 */
+	@Operation(summary = "批量删除日志", description = "批量删除日志")
 	@DeleteMapping
 	@PreAuthorize("@pms.hasPermission('sys_log_del')")
 	public R removeByIds(@RequestBody Long[] ids) {
@@ -60,10 +65,12 @@ public class SysLogController {
 
 	/**
 	 * 插入日志
+	 *
 	 * @param sysLog 日志实体
 	 * @return success/false
 	 */
 	@Inner
+	@Operation(summary = "插入日志", description = "插入日志", hidden = true)
 	@PostMapping("/save")
 	public R save(@Valid @RequestBody SysLog sysLog) {
 		return R.ok(sysLogService.saveLog(sysLog));
@@ -71,9 +78,11 @@ public class SysLogController {
 
 	/**
 	 * 导出excel 表格
+	 *
 	 * @param sysLog 查询条件
 	 * @return
 	 */
+	@Operation(summary = "导出excel表格", description = "导出excel表格")
 	@ResponseExcel
 	@GetMapping("/export")
 	@PreAuthorize("@pms.hasPermission('sys_log_export')")

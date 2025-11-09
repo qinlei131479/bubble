@@ -13,6 +13,7 @@ import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.security.annotation.Inner;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -50,8 +51,9 @@ public class SysDictController {
 	 * @param id ID
 	 * @return 字典信息
 	 */
+	@Operation(summary = "通过ID查询字典信息", description = "通过ID查询字典信息")
 	@GetMapping("/details/{id}")
-	public R getById(@PathVariable Long id) {
+	public R<SysDict> getById(@PathVariable Long id) {
 		return R.ok(sysDictService.getById(id));
 	}
 
@@ -60,8 +62,9 @@ public class SysDictController {
 	 * @param query 查询信息
 	 * @return 字典信息
 	 */
+	@Operation(summary = "查询字典信息", description = "查询字典信息")
 	@GetMapping("/details")
-	public R getDetails(@ParameterObject SysDict query) {
+	public R<SysDict> getDetails(@ParameterObject SysDict query) {
 		return R.ok(sysDictService.getOne(Wrappers.query(query), false));
 	}
 
@@ -70,8 +73,9 @@ public class SysDictController {
 	 * @param page 分页对象
 	 * @return 分页对象
 	 */
+	@Operation(summary = "分页查询", description = "分页查询")
 	@GetMapping("/page")
-	public R<IPage> getDictPage(@ParameterObject Page page, @ParameterObject SysDict sysDict) {
+	public R<Page<SysDict>> getDictPage(@ParameterObject Page page, @ParameterObject SysDict sysDict) {
 		return R.ok(sysDictService.page(page,
 				Wrappers.<SysDict>lambdaQuery()
 					.eq(StrUtil.isNotBlank(sysDict.getSystemFlag()), SysDict::getSystemFlag, sysDict.getSystemFlag())
@@ -83,10 +87,11 @@ public class SysDictController {
 	 * @param sysDict 字典信息
 	 * @return success、false
 	 */
+	@Operation(summary = "添加字典", description = "添加字典")
 	@SysLog("添加字典")
 	@PostMapping
 	@PreAuthorize("@pms.hasPermission('sys_dict_add')")
-	public R save(@Valid @RequestBody SysDict sysDict) {
+	public R<SysDict> save(@Valid @RequestBody SysDict sysDict) {
 		sysDictService.save(sysDict);
 		return R.ok(sysDict);
 	}
@@ -96,6 +101,7 @@ public class SysDictController {
 	 * @param ids ID
 	 * @return R
 	 */
+	@Operation(summary = "删除字典询", description = "删除字典")
 	@SysLog("删除字典")
 	@DeleteMapping
 	@PreAuthorize("@pms.hasPermission('sys_dict_del')")
@@ -109,6 +115,7 @@ public class SysDictController {
 	 * @param sysDict 字典信息
 	 * @return success/false
 	 */
+	@Operation(summary = "修改字典", description = "修改字典")
 	@PutMapping
 	@SysLog("修改字典")
 	@PreAuthorize("@pms.hasPermission('sys_dict_edit')")
@@ -121,8 +128,9 @@ public class SysDictController {
 	 * @param name 名称或者字典项
 	 * @return
 	 */
+	@Operation(summary = "查询字典列表", description = "查询字典列表")
 	@GetMapping("/list")
-	public R getDictList(String name) {
+	public R<List<SysDict>> getDictList(String name) {
 		return R.ok(sysDictService.list(Wrappers.<SysDict>lambdaQuery()
 			.like(StrUtil.isNotBlank(name), SysDict::getDictType, name)
 			.or()
@@ -135,8 +143,9 @@ public class SysDictController {
 	 * @param sysDictItem 字典项
 	 * @return
 	 */
+	@Operation(summary = "分页查询字典项", description = "分页查询字典项")
 	@GetMapping("/item/page")
-	public R getSysDictItemPage(Page page, SysDictItem sysDictItem) {
+	public R<Page<SysDictItem>> getSysDictItemPage(@ParameterObject Page page, @ParameterObject SysDictItem sysDictItem) {
 		return R.ok(sysDictItemService.page(page, Wrappers.query(sysDictItem)));
 	}
 
@@ -145,8 +154,9 @@ public class SysDictController {
 	 * @param id id
 	 * @return R
 	 */
+	@Operation(summary = "通过id查询字典项", description = "通过id查询字典项询")
 	@GetMapping("/item/details/{id}")
-	public R getDictItemById(@PathVariable("id") Long id) {
+	public R<SysDictItem> getDictItemById(@PathVariable("id") Long id) {
 		return R.ok(sysDictItemService.getById(id));
 	}
 
@@ -155,8 +165,9 @@ public class SysDictController {
 	 * @param query 查询条件
 	 * @return R
 	 */
+	@Operation(summary = "查询字典项详情", description = "查询字典项详情")
 	@GetMapping("/item/details")
-	public R getDictItemDetails(SysDictItem query) {
+	public R<SysDictItem> getDictItemDetails(@ParameterObject SysDictItem query) {
 		return R.ok(sysDictItemService.getOne(Wrappers.query(query), false));
 	}
 
@@ -165,6 +176,7 @@ public class SysDictController {
 	 * @param sysDictItem 字典项
 	 * @return R
 	 */
+	@Operation(summary = "新增字典项", description = "新增字典项")
 	@SysLog("新增字典项")
 	@PostMapping("/item")
 	@CacheEvict(value = CacheConstants.DICT_DETAILS, allEntries = true)
@@ -177,6 +189,7 @@ public class SysDictController {
 	 * @param sysDictItem 字典项
 	 * @return R
 	 */
+	@Operation(summary = "修改字典项", description = "修改字典项")
 	@SysLog("修改字典项")
 	@PutMapping("/item")
 	public R updateById(@RequestBody SysDictItem sysDictItem) {
@@ -188,6 +201,7 @@ public class SysDictController {
 	 * @param id id
 	 * @return R
 	 */
+	@Operation(summary = "通过id删除字典项", description = "通过id删除字典项")
 	@SysLog("删除字典项")
 	@DeleteMapping("/item/{id}")
 	public R removeDictItemById(@PathVariable Long id) {
@@ -198,12 +212,14 @@ public class SysDictController {
 	 * 同步缓存字典
 	 * @return R
 	 */
+	@Operation(summary = "同步缓存字典", description = "同步缓存字典")
 	@SysLog("同步字典")
 	@PutMapping("/sync")
 	public R sync() {
 		return sysDictService.syncDictCache();
 	}
 
+	@Operation(summary = "导出字典", description = "导出字典")
 	@ResponseExcel
 	@GetMapping("/export")
 	public List<SysDictItem> export(SysDictItem sysDictItem) {
@@ -215,6 +231,7 @@ public class SysDictController {
 	 * @param type 类型
 	 * @return 同类型字典
 	 */
+	@Operation(summary = "通过字典类型查找字典", description = "通过字典类型查找字典")
 	@GetMapping("/type/{type}")
 	@Cacheable(value = CacheConstants.DICT_DETAILS, key = "#type", unless = "#result.data.isEmpty()")
 	public R<List<SysDictItem>> getDictByType(@PathVariable String type) {
@@ -227,6 +244,7 @@ public class SysDictController {
 	 * @return 同类型字典
 	 */
 	@Inner
+	@Operation(summary = "通过字典类型查找字典 (针对feign调用) ", description = "通过字典类型查找字典 (针对feign调用) ")
 	@GetMapping("/remote/type/{type}")
 	@Cacheable(value = CacheConstants.DICT_DETAILS, key = "#type", unless = "#result.data.isEmpty()")
 	public R<List<SysDictItem>> getRemoteDictByType(@PathVariable String type) {
