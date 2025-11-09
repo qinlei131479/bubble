@@ -25,7 +25,7 @@ public class Pg<T> extends Page<T> {
 	/**
 	 * 查询类型，见枚举 ListTypeEnum
 	 */
-	@Schema(description = "查询类型，不传默认分页查询，one表示单条查询")
+	@Schema(description = "查询类型，不传默认分页查询，one表示单条查询", hidden = true)
 	protected String listType;
 
 	public boolean checkListTypeOne() {
@@ -47,7 +47,7 @@ public class Pg<T> extends Page<T> {
 	/**
 	 * 操作状态，见枚举:ActionStatusEnum
 	 */
-	@Schema(description = "默认空，初始化值:init")
+	@Schema(description = "默认空，初始化值:init", hidden = true)
 	protected String actionStatus;
 
 	/**
