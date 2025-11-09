@@ -1,0 +1,13 @@
+package ${package}.service;
+
+import com.bubblecloud.common.mybatis.service.UpService;
+import ${package_entity}.entity.${className};
+
+/**
+ * service接口：${tableComment}
+ *
+ * @author ${author}
+ * @date   ${.now?string("yyyy/MM/dd HH:mm")}
+ */
+public interface ${className}Service extends UpService<${className}> {
+}

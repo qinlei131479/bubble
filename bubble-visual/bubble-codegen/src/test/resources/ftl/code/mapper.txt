@@ -1,0 +1,15 @@
+package ${package}.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+import com.bubblecloud.common.mybatis.mapper.UpMapper;
+import ${package_entity}.entity.${className};
+
+/**
+ * Mapper接口：${tableComment}
+ *
+ * @author ${author}
+ * @date   ${.now?string("yyyy/MM/dd HH:mm")}
+ */
+@Mapper
+public interface ${className}Mapper extends UpMapper<${className}> {
+}

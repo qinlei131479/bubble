@@ -1,0 +1,53 @@
+package ${package_entity}.entity;
+
+<#list tableFields as field>
+    <#if field.type?lower_case?index_of('datetime')==0 || field.type?lower_case?index_of('timestamp')==0>
+import java.time.LocalDateTime;
+        <#break>
+    </#if>
+</#list>
+
+import com.baomidou.mybatisplus.annotation.*;
+import com.bubblecloud.common.mybatis.base.Req;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 实体类：${tableComment}
+ *
+ * @author ${author}
+ * @date   ${.now?string("yyyy/MM/dd HH:mm")}
+ */
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Schema(description = "${tableComment}")
+@TableName("${tableName}")
+public class ${className} extends Req<${className}> {
+
+    private static final long serialVersionUID = 1L;
+<#assign map={"enum":"String","bigint":"Long","tinyint":"Integer","int":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"LocalDateTime","date":"LocalDateTime","double":"Double","timestamp":"LocalDateTime"}/>
+<#list tableFields as field>
+    <#assign type= field.type?replace('\\(.*','','r')/>
+    <#-- 使用更可靠的方法进行驼峰转换 -->
+        <#assign fieldName=field.field?uncap_first>
+        <#if fieldName?contains('_')>
+            <#assign parts=fieldName?split('_')>
+            <#assign fieldName=parts[0]>
+            <#list parts as part>
+                <#if part_index != 0>
+                    <#assign fieldName=fieldName + part?cap_first>
+                </#if>
+            </#list>
+        </#if>
+    /**
+     * ${field.comment!''}
+     */
+    <#if field.field=='del_flag'>@TableLogic
+    <#elseif field.field=='create_by' || field.field=='create_time'>@TableField(fill = FieldFill.INSERT)
+    <#elseif field.field=='update_by' || field.field=='update_time'>@TableField(fill = FieldFill.UPDATE)
+    <#elseif field.field=='id'>@TableId(type = IdType.INPUT)
+    </#if>@Schema(description = "${field.comment!''}")
+	private ${(map[type])!field.type} ${fieldName};
+</#list>
+}

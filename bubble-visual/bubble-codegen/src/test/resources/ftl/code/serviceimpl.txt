@@ -1,0 +1,19 @@
+package ${package}.service.impl;
+
+import org.springframework.stereotype.Service;
+
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
+import ${package_entity}.entity.${className};
+import ${package}.mapper.${className}Mapper;
+import ${package}.service.${className}Service;
+
+/**
+ * service实现类：${tableComment}
+ *
+ * @author ${author}
+ * @date   ${.now?string("yyyy/MM/dd HH:mm")}
+ */
+@Service
+<#assign mname= className+'Mapper'/>
+public class ${className}ServiceImpl extends UpServiceImpl<${mname}, ${className}> implements ${className}Service {
+}

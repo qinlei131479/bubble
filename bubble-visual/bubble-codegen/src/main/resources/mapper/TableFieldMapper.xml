@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.codegen.mapper.TableFieldMapper">
+
+	<select id="findTableFieldListByTableName" resultType="com.bubblecloud.codegen.dto.TableFieldDTO">
+		SELECT COLUMN_NAME AS 'field',COLUMN_TYPE AS 'type',COLUMN_COMMENT AS 'comment'
+		FROM
+			information_schema.COLUMNS
+		WHERE
+			TABLE_SCHEMA = #{dbName} AND TABLE_NAME = #{tableName}
+		ORDER BY
+			ORDINAL_POSITION;
+	</select>
+
+	<select id="findTableComment" resultType="java.lang.String">
+		SELECT table_comment tableComment
+		FROM information_schema.tables
+		WHERE table_schema = #{dbName}
+		  AND table_name = #{tableName}
+	</select>
+
+</mapper>

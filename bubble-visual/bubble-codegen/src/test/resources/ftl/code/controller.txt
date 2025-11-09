@@ -1,0 +1,89 @@
+package ${package}.controller;
+
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+
+import lombok.RequiredArgsConstructor;
+import ${packageName_core}.core.util.R;
+import ${packageName_core}.mybatis.base.Req;
+import ${packageName_core}.mybatis.base.Pg;
+import ${packageName_core}.log.annotation.SysLog;
+import ${package_entity}.entity.${className};
+import ${package}.service.${className}Service;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+<#assign clazzName=className?uncap_first>
+/**
+ * 控制器：${tableComment}
+ *
+ * @author ${author}
+ * @date   ${.now?string("yyyy/MM/dd HH:mm")}
+ */
+@RestController
+@RequestMapping("/${clazzName}")
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
+@Tag(description = "${clazzName}", name = "${tableComment}模块")
+@RequiredArgsConstructor
+public class ${className}Controller {
+
+	private final ${className}Service ${clazzName}Service;
+
+    /**
+     * 通过ID查询
+     * @param id id
+     * @return ${className}
+     */
+    @Operation(summary = "按id查询", description = "按id查询说明")
+    @GetMapping("/{id}")
+    public R<${className}> getById(@PathVariable String id) {
+        ${className} detail = ${clazzName}Service
+            .getOne(Wrappers.<${className}>lambdaQuery().eq(${className}::getId, id));
+        return R.ok(detail);
+    }
+
+	/**
+	 * 分页查询
+	 */
+	@Operation(summary = "分页查询", description = "分页查询说明")
+	@GetMapping("/page")
+	public R<Page<${className}>> list(@ParameterObject Pg pg, @ParameterObject ${className} req) {
+		pg.addOrderDefault(OrderItem.desc("t.id"));
+		return R.ok(${clazzName}Service.findPg(pg,req));
+	}
+
+	/**
+	 * 添加
+	 */
+	@Operation(summary = "添加", description = "")
+	@SysLog("编辑${tableComment}")
+	@PostMapping("/create")
+	public R create(@RequestBody @Validated({ Req.Create.class }) ${className} req) {
+		return ${clazzName}Service.create(req);
+	}
+
+	/**
+	 * 修改
+	 */
+	@Operation(summary = "编辑", description = "")
+	@SysLog("编辑${tableComment}")
+	@PostMapping("/update")
+	public R update(@RequestBody @Validated({ Req.Update.class }) ${className} req) {
+		return ${clazzName}Service.update(req);
+	}
+
+	/**
+	 * 删除
+	 */
+	@Operation(summary = "删除", description = "")
+	@DeleteMapping("/delete")
+	public R delete(@RequestBody @Validated({ Req.Delete.class }) ${className} req) {
+		return ${clazzName}Service.delete(req);
+	}
+}
