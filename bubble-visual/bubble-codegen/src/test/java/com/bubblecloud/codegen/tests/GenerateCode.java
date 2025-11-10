@@ -31,13 +31,14 @@ import java.util.Map;
 @SpringBootTest(classes = BubbleCodeGenApplication.class)
 public class GenerateCode {
 	/**
-	 * 生成代码模块配置
+	 * 生成代码模块配置 module = backend、oa、flow
 	 */
-	public static String projectName = "bubble-biz/bubble-biz-backend";
-	public static String projectName_entity = "bubble-api/bubble-api-backend";
+	public static String module = "flow";
+	public static String projectName = "bubble-biz/bubble-biz-" + module;
+	public static String projectName_entity = "bubble-api/bubble-api-" + module;
 
-	public static String packageName = "com.bubblecloud.backend";
-	public static String packageName_entity = "com.bubblecloud.api.backend";
+	public static String packageName = "com.bubblecloud.biz." + module;
+	public static String packageName_entity = "com.bubblecloud.api." + module;
 	public static String packageName_common = "com.bubblecloud.common";
 
 	public static String dbName = "bubble";
@@ -45,7 +46,7 @@ public class GenerateCode {
 	/**
 	 * 填写要生成的表名
 	 */
-	public static List<String> tableNames = Arrays.asList("sys_dept_test","sys_file_test");
+	public static List<String> tableNames = Arrays.asList("sys_dept_test", "sys_file_test");
 
 	// 全局配置
 	public static String ftlPath = "classpath:/ftl/code/";
