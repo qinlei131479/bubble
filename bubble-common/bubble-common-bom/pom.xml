@@ -48,7 +48,7 @@
         <dependencies>
 			<dependency>
 				<groupId>com.bubblecloud</groupId>
-				<artifactId>bubble-api-flow</artifactId>
+				<artifactId>bubble-api-oa</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
