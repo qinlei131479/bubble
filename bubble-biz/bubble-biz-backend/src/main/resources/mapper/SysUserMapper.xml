@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bubblecloud.backend.mapper.SysUserMapper">
+<mapper namespace="com.bubblecloud.biz.backend.mapper.SysUserMapper">
     <!-- 通用查询映射结果 -->
     <resultMap id="baseResultMap" type="com.bubblecloud.api.backend.vo.UserVO">
         <id column="user_id" property="userId"/>
@@ -24,10 +24,10 @@
         <result column="name" property="name"/>
         <result column="email" property="email"/>
         <collection property="roleList" ofType="com.bubblecloud.api.backend.entity.SysRole"
-                    select="com.bubblecloud.backend.mapper.SysRoleMapper.listRolesByUserId" column="user_id">
+                    select="com.bubblecloud.biz.backend.mapper.SysRoleMapper.listRolesByUserId" column="user_id">
         </collection>
         <collection property="postList" ofType="com.bubblecloud.api.backend.entity.SysPost"
-                    select="com.bubblecloud.backend.mapper.SysPostMapper.listPostsByUserId" column="user_id">
+                    select="com.bubblecloud.biz.backend.mapper.SysPostMapper.listPostsByUserId" column="user_id">
         </collection>
     </resultMap>
 
