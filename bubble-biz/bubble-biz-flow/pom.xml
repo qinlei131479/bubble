@@ -16,7 +16,7 @@
 		<!--upms api、model 模块-->
 		<dependency>
 			<groupId>com.bubblecloud</groupId>
-			<artifactId>bubble-api-oa</artifactId>
+			<artifactId>bubble-api-flow</artifactId>
 		</dependency>
 		<!--feign 调用-->
 		<dependency>
