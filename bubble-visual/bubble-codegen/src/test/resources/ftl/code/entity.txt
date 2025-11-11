@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 实体类：${tableComment}
+ * 实体类：${tableComment!''}
  *
  * @author ${author}
  * @date   ${.now?string("yyyy/MM/dd HH:mm")}
@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
 public class ${className} extends Req<${className}> {
 
     private static final long serialVersionUID = 1L;
-<#assign map={"enum":"String","bigint":"Long","tinyint":"Integer","int":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"LocalDateTime","date":"LocalDateTime","double":"Double","timestamp":"LocalDateTime"}/>
+<#assign map={"enum":"String","bigint":"Long","bigint unsigned":"Long", "tinyint":"Integer","tinyint unsigned":"Integer","int":"Integer","int unsigned":"Integer","char":"String","varchar":"String","varbinary":"String","text":"String","mediumtext":"String","blob":"String","longblob":"String","longtext":"String","datetime":"LocalDateTime","date":"LocalDateTime","double":"Double","timestamp":"LocalDateTime"}/>
 <#list tableFields as field>
     <#assign type= field.type?replace('\\(.*','','r')/>
     <#-- 使用更可靠的方法进行驼峰转换 -->
