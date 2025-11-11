@@ -42,7 +42,7 @@ public class ${className}Controller {
      */
     @Operation(summary = "按id查询", description = "按id查询说明")
     @GetMapping("/{id}")
-    public R<${className}> getById(@PathVariable String id) {
+    public R<${className}> getById(@PathVariable Long id) {
         ${className} detail = ${clazzName}Service
             .getOne(Wrappers.<${className}>lambdaQuery().eq(${className}::getId, id));
         return R.ok(detail);

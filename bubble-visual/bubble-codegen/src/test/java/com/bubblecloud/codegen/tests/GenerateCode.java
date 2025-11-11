@@ -33,7 +33,7 @@ public class GenerateCode {
 	/**
 	 * 生成代码模块配置 module = backend、oa、flow
 	 */
-	public static String module = "flow";
+	public static String module = "oa";
 	public static String projectName = "bubble-biz/bubble-biz-" + module;
 	public static String projectName_entity = "bubble-api/bubble-api-" + module;
 
@@ -41,12 +41,17 @@ public class GenerateCode {
 	public static String packageName_entity = "com.bubblecloud.api." + module;
 	public static String packageName_common = "com.bubblecloud.common";
 
-	public static String dbName = "bubble";
+	public static String dbName = "bubble_oa";
+	/**
+	 * 表前缀，不在代码中生成
+	 */
+	public static String tablePrefix = "eb_";
 	public static String author = "Rampart Qin";
+
 	/**
 	 * 填写要生成的表名
 	 */
-	public static List<String> tableNames = Arrays.asList("sys_dept_test", "sys_file_test");
+	public static List<String> tableNames = Arrays.asList("eb_agreement", "eb_approve");
 
 	// 全局配置
 	public static String ftlPath = "classpath:/ftl/code/";
@@ -78,7 +83,8 @@ public class GenerateCode {
 	@Test
 	public void testCreateAll() throws Exception {
 		tableNames.forEach(tableName -> {
-			String className = StrUtil.upperFirst(StrUtil.toCamelCase(tableName));
+			String tableNameUpdate =  tableName.replace(tablePrefix, "");
+			String className = StrUtil.upperFirst(StrUtil.toCamelCase(tableNameUpdate));
 			dataMap.put("tableName", tableName);
 			dataMap.put("className", className);
 			List<TableFieldDTO> ret = tableFieldMapper.findTableFieldListByTableName(dbName, tableName);
