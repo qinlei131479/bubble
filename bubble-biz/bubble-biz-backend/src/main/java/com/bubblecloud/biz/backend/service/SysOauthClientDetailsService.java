@@ -1,0 +1,44 @@
+package com.bubblecloud.biz.backend.service;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.bubblecloud.backend.api.entity.SysOauthClientDetails;
+import com.bubblecloud.common.core.util.R;
+
+/**
+ * OAuth2客户端详情服务接口
+ *
+ * @author lengleng
+ * @since 2018-05-15
+ */
+public interface SysOauthClientDetailsService extends IService<SysOauthClientDetails> {
+
+	/**
+	 * 根据客户端信息更新客户端详情
+	 * @param clientDetails 客户端详情信息
+	 * @return 更新结果，成功返回true
+	 */
+	Boolean updateClientById(SysOauthClientDetails clientDetails);
+
+	/**
+	 * 保存客户端信息
+	 * @param clientDetails 客户端详细信息
+	 * @return 操作是否成功
+	 */
+	Boolean saveClient(SysOauthClientDetails clientDetails);
+
+	/**
+	 * 分页查询OAuth客户端详情
+	 * @param page 分页参数
+	 * @param query 查询条件
+	 * @return 分页查询结果
+	 */
+	Page getClientPage(Page page, SysOauthClientDetails query);
+
+	/**
+	 * 同步客户端缓存
+	 * @return 操作结果
+	 */
+	R syncClientCache();
+
+}
