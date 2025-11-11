@@ -37,10 +37,14 @@ bubble-back  -- https://github.com/qinlei131479/bubble-back.git
 
 bubble
 └── bubble-api -- 通用API模块
-     └── bubble-api-backend -- 通用用户权限管理系统公共api模块
+     ├── bubble-api-backend -- 通用用户权限管理系统公共api模块
+     ├── bubble-api-flow -- 通用flow公共api模块
+     └── bubble-api-oa -- 通用oa公共api模块
 ├── bubble-auth -- 授权服务提供[8766]
 └── bubble-biz -- 通用用户权限管理模块
      ├── bubble-biz-backend -- 通用用户权限管理系统业务处理模块[8801]
+     ├── bubble-biz-flow -- 通用flow业务处理模块[8802]
+     └── bubble-biz-oa -- 通用OA业务处理模块[8803]
 └── bubble-common -- 系统公共模块
      ├── bubble-common-bom -- 全局依赖管理控制
      ├── bubble-common-core -- 公共工具类核心包
