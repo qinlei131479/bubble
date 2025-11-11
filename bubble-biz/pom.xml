@@ -16,5 +16,7 @@
 
 	<modules>
 		<module>bubble-biz-backend</module>
+		<module>bubble-biz-flow</module>
+		<module>bubble-biz-oa</module>
 	</modules>
 </project>

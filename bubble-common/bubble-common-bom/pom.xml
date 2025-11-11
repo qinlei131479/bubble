@@ -53,6 +53,16 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.bubblecloud</groupId>
+				<artifactId>bubble-api-oa</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.bubblecloud</groupId>
+				<artifactId>bubble-api-flow</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.bubblecloud</groupId>
 				<artifactId>bubble-common-core</artifactId>
 				<version>${revision}</version>
 			</dependency>
