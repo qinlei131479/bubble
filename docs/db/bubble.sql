@@ -13,16 +13,16 @@ USE `pig`;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept` (
-  `dept_id` bigint NOT NULL COMMENT '部门ID',
-  `name` varchar(50)  DEFAULT NULL COMMENT '部门名称',
-  `sort_order` int NOT NULL DEFAULT '0' COMMENT '排序',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
-  `parent_id` bigint DEFAULT NULL COMMENT '父级部门ID',
-  PRIMARY KEY (`dept_id`) USING BTREE
+                            `dept_id` bigint NOT NULL COMMENT '部门ID',
+                            `name` varchar(50)  DEFAULT NULL COMMENT '部门名称',
+                            `sort_order` int NOT NULL DEFAULT '0' COMMENT '排序',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                            `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
+                            `parent_id` bigint DEFAULT NULL COMMENT '父级部门ID',
+                            PRIMARY KEY (`dept_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='部门管理';
 
 -- ----------------------------
@@ -50,18 +50,18 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict` (
-  `id` bigint NOT NULL COMMENT '编号',
-  `dict_type` varchar(100)  DEFAULT NULL COMMENT '字典类型',
-  `description` varchar(100)  DEFAULT NULL COMMENT '描述',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `remarks` varchar(255)  DEFAULT NULL COMMENT '备注信息',
-  `system_flag` char(1)  DEFAULT '0' COMMENT '系统标志',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `sys_dict_del_flag` (`del_flag`) USING BTREE
+                            `id` bigint NOT NULL COMMENT '编号',
+                            `dict_type` varchar(100)  DEFAULT NULL COMMENT '字典类型',
+                            `description` varchar(100)  DEFAULT NULL COMMENT '描述',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                            `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                            `remarks` varchar(255)  DEFAULT NULL COMMENT '备注信息',
+                            `system_flag` char(1)  DEFAULT '0' COMMENT '系统标志',
+                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
+                            PRIMARY KEY (`id`) USING BTREE,
+                            KEY `sys_dict_del_flag` (`del_flag`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='字典表';
 
 -- ----------------------------
@@ -102,23 +102,23 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict_item`;
 CREATE TABLE `sys_dict_item` (
-  `id` bigint NOT NULL COMMENT '编号',
-  `dict_id` bigint NOT NULL COMMENT '字典ID',
-  `item_value` varchar(100)  DEFAULT NULL COMMENT '字典项值',
-  `label` varchar(100)  DEFAULT NULL COMMENT '字典项名称',
-  `dict_type` varchar(100)  DEFAULT NULL COMMENT '字典类型',
-  `description` varchar(100)  DEFAULT NULL COMMENT '字典项描述',
-  `sort_order` int NOT NULL DEFAULT '0' COMMENT '排序（升序）',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `remarks` varchar(255)  DEFAULT NULL COMMENT '备注信息',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `sys_dict_value` (`item_value`) USING BTREE,
-  KEY `sys_dict_label` (`label`) USING BTREE,
-  KEY `sys_dict_item_del_flag` (`del_flag`) USING BTREE
+                                 `id` bigint NOT NULL COMMENT '编号',
+                                 `dict_id` bigint NOT NULL COMMENT '字典ID',
+                                 `item_value` varchar(100)  DEFAULT NULL COMMENT '字典项值',
+                                 `label` varchar(100)  DEFAULT NULL COMMENT '字典项名称',
+                                 `dict_type` varchar(100)  DEFAULT NULL COMMENT '字典类型',
+                                 `description` varchar(100)  DEFAULT NULL COMMENT '字典项描述',
+                                 `sort_order` int NOT NULL DEFAULT '0' COMMENT '排序（升序）',
+                                 `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                                 `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                                 `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                 `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                                 `remarks` varchar(255)  DEFAULT NULL COMMENT '备注信息',
+                                 `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
+                                 PRIMARY KEY (`id`) USING BTREE,
+                                 KEY `sys_dict_value` (`item_value`) USING BTREE,
+                                 KEY `sys_dict_label` (`label`) USING BTREE,
+                                 KEY `sys_dict_item_del_flag` (`del_flag`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='字典项';
 
 -- ----------------------------
@@ -217,18 +217,18 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_file`;
 CREATE TABLE `sys_file` (
-  `id` bigint NOT NULL COMMENT '编号',
-  `file_name` varchar(100)  DEFAULT NULL COMMENT '文件名',
-  `bucket_name` varchar(200)  DEFAULT NULL COMMENT '文件存储桶名称',
-  `original` varchar(100)  DEFAULT NULL COMMENT '原始文件名',
-  `type` varchar(50)  DEFAULT NULL COMMENT '文件类型',
-  `file_size` bigint DEFAULT NULL COMMENT '文件大小',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT NULL COMMENT '上传时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
-  PRIMARY KEY (`id`) USING BTREE
+                            `id` bigint NOT NULL COMMENT '编号',
+                            `file_name` varchar(100)  DEFAULT NULL COMMENT '文件名',
+                            `bucket_name` varchar(200)  DEFAULT NULL COMMENT '文件存储桶名称',
+                            `original` varchar(100)  DEFAULT NULL COMMENT '原始文件名',
+                            `type` varchar(50)  DEFAULT NULL COMMENT '文件类型',
+                            `file_size` bigint DEFAULT NULL COMMENT '文件大小',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                            `create_time` datetime DEFAULT NULL COMMENT '上传时间',
+                            `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
+                            PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='文件管理表';
 
 -- ----------------------------
@@ -242,26 +242,26 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log` (
-  `id` bigint NOT NULL COMMENT '编号',
-  `log_type` char(1)  DEFAULT '0' COMMENT '日志类型',
-  `title` varchar(255)  DEFAULT NULL COMMENT '日志标题',
-  `service_id` varchar(32)  DEFAULT NULL COMMENT '服务ID',
-  `create_by` varchar(64)  DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `remote_addr` varchar(255)  DEFAULT NULL COMMENT '远程地址',
-  `user_agent` varchar(1000)  DEFAULT NULL COMMENT '用户代理',
-  `request_uri` varchar(255)  DEFAULT NULL COMMENT '请求URI',
-  `method` varchar(10)  DEFAULT NULL COMMENT '请求方法',
-  `params` text  COMMENT '请求参数',
-  `time` bigint DEFAULT NULL COMMENT '执行时间',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
-  `exception` text  COMMENT '异常信息',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `sys_log_request_uri` (`request_uri`) USING BTREE,
-  KEY `sys_log_type` (`log_type`) USING BTREE,
-  KEY `sys_log_create_date` (`create_time`) USING BTREE
+                           `id` bigint NOT NULL COMMENT '编号',
+                           `log_type` char(1)  DEFAULT '0' COMMENT '日志类型',
+                           `title` varchar(255)  DEFAULT NULL COMMENT '日志标题',
+                           `service_id` varchar(32)  DEFAULT NULL COMMENT '服务ID',
+                           `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                           `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                           `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                           `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                           `remote_addr` varchar(255)  DEFAULT NULL COMMENT '远程地址',
+                           `user_agent` varchar(1000)  DEFAULT NULL COMMENT '用户代理',
+                           `request_uri` varchar(255)  DEFAULT NULL COMMENT '请求URI',
+                           `method` varchar(10)  DEFAULT NULL COMMENT '请求方法',
+                           `params` text  COMMENT '请求参数',
+                           `time` bigint DEFAULT NULL COMMENT '执行时间',
+                           `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志',
+                           `exception` text  COMMENT '异常信息',
+                           PRIMARY KEY (`id`) USING BTREE,
+                           KEY `sys_log_request_uri` (`request_uri`) USING BTREE,
+                           KEY `sys_log_type` (`log_type`) USING BTREE,
+                           KEY `sys_log_create_date` (`create_time`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='日志表';
 
 
@@ -270,24 +270,24 @@ CREATE TABLE `sys_log` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
-  `menu_id` bigint NOT NULL COMMENT '菜单ID',
-  `name` varchar(32)  DEFAULT NULL COMMENT '菜单名称',
-  `en_name` varchar(128)  DEFAULT NULL COMMENT '英文名称',
-  `permission` varchar(32)  DEFAULT NULL COMMENT '权限标识',
-  `path` varchar(128)  DEFAULT NULL COMMENT '路由路径',
-  `parent_id` bigint DEFAULT NULL COMMENT '父菜单ID',
-  `icon` varchar(64)  DEFAULT NULL COMMENT '菜单图标',
-  `visible` char(1)  DEFAULT '1' COMMENT '是否可见，0隐藏，1显示',
-  `sort_order` int DEFAULT '1' COMMENT '排序值，越小越靠前',
-  `keep_alive` char(1)  DEFAULT '0' COMMENT '是否缓存，0否，1是',
-  `embedded` char(1)  DEFAULT NULL COMMENT '是否内嵌，0否，1是',
-  `menu_type` char(1)  DEFAULT '0' COMMENT '菜单类型，0目录，1菜单，2按钮',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志，0未删除，1已删除',
-  PRIMARY KEY (`menu_id`) USING BTREE
+                            `menu_id` bigint NOT NULL COMMENT '菜单ID',
+                            `name` varchar(32)  DEFAULT NULL COMMENT '菜单名称',
+                            `en_name` varchar(128)  DEFAULT NULL COMMENT '英文名称',
+                            `permission` varchar(32)  DEFAULT NULL COMMENT '权限标识',
+                            `path` varchar(128)  DEFAULT NULL COMMENT '路由路径',
+                            `parent_id` bigint DEFAULT NULL COMMENT '父菜单ID',
+                            `icon` varchar(64)  DEFAULT NULL COMMENT '菜单图标',
+                            `visible` char(1)  DEFAULT '1' COMMENT '是否可见，0隐藏，1显示',
+                            `sort_order` int DEFAULT '1' COMMENT '排序值，越小越靠前',
+                            `keep_alive` char(1)  DEFAULT '0' COMMENT '是否缓存，0否，1是',
+                            `embedded` char(1)  DEFAULT NULL COMMENT '是否内嵌，0否，1是',
+                            `menu_type` char(1)  DEFAULT '0' COMMENT '菜单类型，0目录，1菜单，2按钮',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                            `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标志，0未删除，1已删除',
+                            PRIMARY KEY (`menu_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='菜单权限表';
 
 -- ----------------------------
@@ -352,7 +352,7 @@ INSERT INTO `sys_menu` VALUES (2871, '导出', NULL, 'job_sys_job_export', NULL,
 INSERT INTO `sys_menu` VALUES (2906, '文件管理', 'file', NULL, '/admin/file/index', 2000, 'ele-Files', '1', 6, '0', NULL, '0', '', '2019-06-25 12:44:46', 'admin', '2023-02-16 15:24:42', '0');
 INSERT INTO `sys_menu` VALUES (2907, '删除文件', NULL, 'sys_file_del', NULL, 2906, NULL, '1', 1, '0', NULL, '1', ' ', '2019-06-25 13:41:41', ' ', '2020-03-24 08:58:42', '0');
 INSERT INTO `sys_menu` VALUES (4000, '系统监控', 'monitor', NULL, '/daemon', -1, 'iconfont icon-shuju', '1', 3, '0', '0', '0', 'admin', '2023-02-06 20:20:47', 'admin', '2023-02-23 20:01:07', '0');
-INSERT INTO `sys_menu` VALUES (4001, '文档扩展', 'doc', NULL, 'http://bubble-gateway:9999/swagger-ui.html', 4000, 'iconfont icon-biaodan', '1', 2, '0', '1', '0', '', '2018-06-26 10:50:32', 'admin', '2023-02-23 20:01:29', '0');
+INSERT INTO `sys_menu` VALUES (4001, '文档扩展', 'doc', NULL, 'http://pig-gateway:9999/swagger-ui.html', 4000, 'iconfont icon-biaodan', '1', 2, '0', '1', '0', '', '2018-06-26 10:50:32', 'admin', '2023-02-23 20:01:29', '0');
 INSERT INTO `sys_menu` VALUES (4002, '缓存监控', 'cache', NULL, '/ext/cache', 4000, 'iconfont icon-shuju', '1', 1, '0', '0', '0', 'admin', '2023-05-29 15:12:59', 'admin', '2023-06-06 11:58:41', '0');
 INSERT INTO `sys_menu` VALUES (9000, '开发平台', 'develop', NULL, '/gen', -1, 'iconfont icon-shuxingtu', '1', 9, '0', '0', '0', '', '2019-08-12 09:35:16', 'admin', '2023-07-05 10:25:27', '0');
 INSERT INTO `sys_menu` VALUES (9005, '数据源管理', 'datasource', NULL, '/gen/datasource/index', 9000, 'ele-Coin', '1', 0, '0', NULL, '0', '', '2019-08-12 09:42:11', 'admin', '2023-07-05 10:26:56', '0');
@@ -380,24 +380,24 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_oauth_client_details`;
 CREATE TABLE `sys_oauth_client_details` (
-  `id` bigint NOT NULL COMMENT 'ID',
-  `client_id` varchar(32)  NOT NULL COMMENT '客户端ID',
-  `resource_ids` varchar(256)  DEFAULT NULL COMMENT '资源ID集合',
-  `client_secret` varchar(256)  DEFAULT NULL COMMENT '客户端秘钥',
-  `scope` varchar(256)  DEFAULT NULL COMMENT '授权范围',
-  `authorized_grant_types` varchar(256)  DEFAULT NULL COMMENT '授权类型',
-  `web_server_redirect_uri` varchar(256)  DEFAULT NULL COMMENT '回调地址',
-  `authorities` varchar(256)  DEFAULT NULL COMMENT '权限集合',
-  `access_token_validity` int DEFAULT NULL COMMENT '访问令牌有效期（秒）',
-  `refresh_token_validity` int DEFAULT NULL COMMENT '刷新令牌有效期（秒）',
-  `additional_information` varchar(4096)  DEFAULT NULL COMMENT '附加信息',
-  `autoapprove` varchar(256)  DEFAULT NULL COMMENT '自动授权',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
+                                            `id` bigint NOT NULL COMMENT 'ID',
+                                            `client_id` varchar(32)  NOT NULL COMMENT '客户端ID',
+                                            `resource_ids` varchar(256)  DEFAULT NULL COMMENT '资源ID集合',
+                                            `client_secret` varchar(256)  DEFAULT NULL COMMENT '客户端秘钥',
+                                            `scope` varchar(256)  DEFAULT NULL COMMENT '授权范围',
+                                            `authorized_grant_types` varchar(256)  DEFAULT NULL COMMENT '授权类型',
+                                            `web_server_redirect_uri` varchar(256)  DEFAULT NULL COMMENT '回调地址',
+                                            `authorities` varchar(256)  DEFAULT NULL COMMENT '权限集合',
+                                            `access_token_validity` int DEFAULT NULL COMMENT '访问令牌有效期（秒）',
+                                            `refresh_token_validity` int DEFAULT NULL COMMENT '刷新令牌有效期（秒）',
+                                            `additional_information` varchar(4096)  DEFAULT NULL COMMENT '附加信息',
+                                            `autoapprove` varchar(256)  DEFAULT NULL COMMENT '自动授权',
+                                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
+                                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                                            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                            `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                                            PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='终端信息表';
 
 -- ----------------------------
@@ -418,17 +418,17 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_post`;
 CREATE TABLE `sys_post` (
-  `post_id` bigint NOT NULL COMMENT '岗位ID',
-  `post_code` varchar(64)  NOT NULL COMMENT '岗位编码',
-  `post_name` varchar(50)  NOT NULL COMMENT '岗位名称',
-  `post_sort` int NOT NULL COMMENT '岗位排序',
-  `remark` varchar(500)  DEFAULT NULL COMMENT '岗位描述',
-  `del_flag` char(1)  NOT NULL DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `create_by` varchar(64)  NOT NULL DEFAULT '' COMMENT '创建人',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `update_by` varchar(64)  NOT NULL DEFAULT '' COMMENT '更新人',
-  PRIMARY KEY (`post_id`) USING BTREE
+                            `post_id` bigint NOT NULL COMMENT '岗位ID',
+                            `post_code` varchar(64)  NOT NULL COMMENT '岗位编码',
+                            `post_name` varchar(50)  NOT NULL COMMENT '岗位名称',
+                            `post_sort` int NOT NULL COMMENT '岗位排序',
+                            `remark` varchar(500)  DEFAULT NULL COMMENT '岗位描述',
+                            `del_flag` char(1)  NOT NULL DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
+                            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
+                            PRIMARY KEY (`post_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='岗位信息表';
 
 -- ----------------------------
@@ -443,20 +443,20 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_public_param`;
 CREATE TABLE `sys_public_param` (
-  `public_id` bigint NOT NULL COMMENT '编号',
-  `public_name` varchar(128)  DEFAULT NULL COMMENT '名称',
-  `public_key` varchar(128)  DEFAULT NULL COMMENT '键',
-  `public_value` varchar(128)  DEFAULT NULL COMMENT '值',
-  `status` char(1)  DEFAULT '0' COMMENT '状态，0禁用，1启用',
-  `validate_code` varchar(64)  DEFAULT NULL COMMENT '校验码',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `public_type` char(1)  DEFAULT '0' COMMENT '类型，0未知，1系统，2业务',
-  `system_flag` char(1)  DEFAULT '0' COMMENT '系统标识，0非系统，1系统',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
-  PRIMARY KEY (`public_id`) USING BTREE
+                                    `public_id` bigint NOT NULL COMMENT '编号',
+                                    `public_name` varchar(128)  DEFAULT NULL COMMENT '名称',
+                                    `public_key` varchar(128)  DEFAULT NULL COMMENT '键',
+                                    `public_value` varchar(128)  DEFAULT NULL COMMENT '值',
+                                    `status` char(1)  DEFAULT '0' COMMENT '状态，0禁用，1启用',
+                                    `validate_code` varchar(64)  DEFAULT NULL COMMENT '校验码',
+                                    `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                                    `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                                    `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                    `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                    `public_type` char(1)  DEFAULT '0' COMMENT '类型，0未知，1系统，2业务',
+                                    `system_flag` char(1)  DEFAULT '0' COMMENT '系统标识，0非系统，1系统',
+                                    `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
+                                    PRIMARY KEY (`public_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='公共参数配置表';
 
 -- ----------------------------
@@ -479,17 +479,17 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
-  `role_id` bigint NOT NULL COMMENT '角色ID',
-  `role_name` varchar(64)  DEFAULT NULL COMMENT '角色名称',
-  `role_code` varchar(64)  DEFAULT NULL COMMENT '角色编码',
-  `role_desc` varchar(255)  DEFAULT NULL COMMENT '角色描述',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
-  PRIMARY KEY (`role_id`) USING BTREE,
-  KEY `role_idx1_role_code` (`role_code`) USING BTREE
+                            `role_id` bigint NOT NULL COMMENT '角色ID',
+                            `role_name` varchar(64)  DEFAULT NULL COMMENT '角色名称',
+                            `role_code` varchar(64)  DEFAULT NULL COMMENT '角色编码',
+                            `role_desc` varchar(255)  DEFAULT NULL COMMENT '角色描述',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                            `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
+                            PRIMARY KEY (`role_id`) USING BTREE,
+                            KEY `role_idx1_role_code` (`role_code`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='系统角色表';
 
 -- ----------------------------
@@ -505,9 +505,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_menu`;
 CREATE TABLE `sys_role_menu` (
-  `role_id` bigint NOT NULL COMMENT '角色ID',
-  `menu_id` bigint NOT NULL COMMENT '菜单ID',
-  PRIMARY KEY (`role_id`,`menu_id`) USING BTREE
+                                 `role_id` bigint NOT NULL COMMENT '角色ID',
+                                 `menu_id` bigint NOT NULL COMMENT '菜单ID',
+                                 PRIMARY KEY (`role_id`,`menu_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='角色菜单表';
 
 -- ----------------------------
@@ -603,31 +603,31 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
-  `user_id` bigint NOT NULL COMMENT '用户ID',
-  `username` varchar(64)  DEFAULT NULL COMMENT '用户名',
-  `password` varchar(255)  DEFAULT NULL COMMENT '密码',
-  `salt` varchar(255)  DEFAULT NULL COMMENT '盐值',
-  `phone` varchar(20)  DEFAULT NULL COMMENT '电话号码',
-  `avatar` varchar(255)  DEFAULT NULL COMMENT '头像',
-  `nickname` varchar(64)  DEFAULT NULL COMMENT '昵称',
-  `name` varchar(64)  DEFAULT NULL COMMENT '姓名',
-  `email` varchar(128)  DEFAULT NULL COMMENT '邮箱地址',
-  `dept_id` bigint DEFAULT NULL COMMENT '所属部门ID',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  `lock_flag` char(1)  DEFAULT '0' COMMENT '锁定标记，0未锁定，9已锁定',
-  `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
-  `wx_openid` varchar(32)  DEFAULT NULL COMMENT '微信登录openId',
-  `mini_openid` varchar(32)  DEFAULT NULL COMMENT '小程序openId',
-  `qq_openid` varchar(32)  DEFAULT NULL COMMENT 'QQ openId',
-  `gitee_login` varchar(100)  DEFAULT NULL COMMENT '码云标识',
-  `osc_id` varchar(100)  DEFAULT NULL COMMENT '开源中国标识',
-  PRIMARY KEY (`user_id`) USING BTREE,
-  KEY `user_wx_openid` (`wx_openid`) USING BTREE,
-  KEY `user_qq_openid` (`qq_openid`) USING BTREE,
-  KEY `user_idx1_username` (`username`) USING BTREE
+                            `user_id` bigint NOT NULL COMMENT '用户ID',
+                            `username` varchar(64)  DEFAULT NULL COMMENT '用户名',
+                            `password` varchar(255)  DEFAULT NULL COMMENT '密码',
+                            `salt` varchar(255)  DEFAULT NULL COMMENT '盐值',
+                            `phone` varchar(20)  DEFAULT NULL COMMENT '电话号码',
+                            `avatar` varchar(255)  DEFAULT NULL COMMENT '头像',
+                            `nickname` varchar(64)  DEFAULT NULL COMMENT '昵称',
+                            `name` varchar(64)  DEFAULT NULL COMMENT '姓名',
+                            `email` varchar(128)  DEFAULT NULL COMMENT '邮箱地址',
+                            `dept_id` bigint DEFAULT NULL COMMENT '所属部门ID',
+                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+                            `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
+                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                            `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+                            `lock_flag` char(1)  DEFAULT '0' COMMENT '锁定标记，0未锁定，9已锁定',
+                            `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记，0未删除，1已删除',
+                            `wx_openid` varchar(32)  DEFAULT NULL COMMENT '微信登录openId',
+                            `mini_openid` varchar(32)  DEFAULT NULL COMMENT '小程序openId',
+                            `qq_openid` varchar(32)  DEFAULT NULL COMMENT 'QQ openId',
+                            `gitee_login` varchar(100)  DEFAULT NULL COMMENT '码云标识',
+                            `osc_id` varchar(100)  DEFAULT NULL COMMENT '开源中国标识',
+                            PRIMARY KEY (`user_id`) USING BTREE,
+                            KEY `user_wx_openid` (`wx_openid`) USING BTREE,
+                            KEY `user_qq_openid` (`qq_openid`) USING BTREE,
+                            KEY `user_idx1_username` (`username`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='用户表';
 
 -- ----------------------------
@@ -642,9 +642,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_post`;
 CREATE TABLE `sys_user_post` (
-  `user_id` bigint NOT NULL COMMENT '用户ID',
-  `post_id` bigint NOT NULL COMMENT '岗位ID',
-  PRIMARY KEY (`user_id`,`post_id`) USING BTREE
+                                 `user_id` bigint NOT NULL COMMENT '用户ID',
+                                 `post_id` bigint NOT NULL COMMENT '岗位ID',
+                                 PRIMARY KEY (`user_id`,`post_id`) USING BTREE
 ) ENGINE=InnoDB  ROW_FORMAT=DYNAMIC COMMENT='用户与岗位关联表';
 
 -- ----------------------------
@@ -659,9 +659,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role` (
-  `user_id` bigint NOT NULL COMMENT '用户ID',
-  `role_id` bigint NOT NULL COMMENT '角色ID',
-  PRIMARY KEY (`user_id`,`role_id`) USING BTREE
+                                 `user_id` bigint NOT NULL COMMENT '用户ID',
+                                 `role_id` bigint NOT NULL COMMENT '角色ID',
+                                 PRIMARY KEY (`user_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='用户角色表';
 
 -- ----------------------------
@@ -692,9 +692,9 @@ CREATE TABLE `sys_job` (
                            `job_status` char(1) DEFAULT '0' COMMENT '状态（1、未发布;2、运行中;3、暂停;4、删除;）',
                            `job_execute_status` char(1) DEFAULT '0' COMMENT '状态（0正常 1异常）',
                            `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
-                           `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                           `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
-                           `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                           `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                           `update_by` varchar(64) DEFAULT NULL COMMENT '更新者',
+                           `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                            `start_time` timestamp NULL DEFAULT NULL COMMENT '初次执行时间',
                            `previous_time` timestamp NULL DEFAULT NULL COMMENT '上次执行时间',
                            `next_time` timestamp NULL DEFAULT NULL COMMENT '下次执行时间',
@@ -721,7 +721,7 @@ CREATE TABLE `sys_job_log` (
                                `job_log_status` char(1)  DEFAULT '0' COMMENT '执行状态（0正常 1失败）',
                                `execute_time` varchar(30)  DEFAULT NULL COMMENT '执行时间',
                                `exception_info` varchar(2000)  DEFAULT '' COMMENT '异常信息',
-                               `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               `create_time` datetime DEFAULT NULL COMMENT '创建时间',
                                PRIMARY KEY (`job_log_id`) USING BTREE
 ) ENGINE=InnoDB  COMMENT='定时任务执行日志表';
 
@@ -984,8 +984,8 @@ CREATE TABLE `gen_group` (
   `id` bigint NOT NULL,
   `group_name` varchar(255)  DEFAULT NULL COMMENT '分组名称',
   `group_desc` varchar(255)  DEFAULT NULL COMMENT '分组描述',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
+  `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
   `create_time` datetime DEFAULT NULL COMMENT '创建人',
   `update_time` datetime DEFAULT NULL COMMENT '修改人',
   `del_flag` char(1)  DEFAULT '0' COMMENT '删除标记',
@@ -1081,8 +1081,8 @@ CREATE TABLE `gen_template` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新',
   `del_flag` char(1)  NOT NULL DEFAULT '0' COMMENT '删除标记',
-  `create_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '创建人',
-  `update_by` varchar(64)  NOT NULL DEFAULT ' ' COMMENT '修改人',
+  `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(64) DEFAULT NULL COMMENT '修改人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  COMMENT='模板';
 
