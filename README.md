@@ -26,7 +26,7 @@
 | Spring Cloud                | 2025   |
 | Spring Cloud Alibaba        | 2025   |
 | Spring Authorization Server | 1.5.2  |
-| Mybatis Plus                | 3.5.15 |
+| Mybatis Plus                | 3.5.16 |
 | Vue                         | 3.5    |
 | Element Plus                | 2.8    |
 
