@@ -7,7 +7,7 @@
 
 ## 系统说明
 
-- 基于 Spring Cloud 、Spring Boot、 OAuth2 的 RBAC **企业快速开发平台**， 同时支持微服务架构和单体架构
+- 基于 Spring Cloud 、Spring Boot、 OAuth2 的 RBAC **企业快速开发平台**， 支持微服务架构
 - 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
 - 提供对常见容器化方案支持 Kubernetes、Rancher2 、Kubesphere、EDAS、SAE 支持
 
@@ -33,7 +33,7 @@
 ### 模块说明
 
 ```lua
-bubble-back  -- https://github.com/qinlei131479/bubble-back.git
+bubble-back  -- https://github.com/qinlei131479/bubble-backend.git
 
 bubble
 └── bubble-api -- 通用API模块
