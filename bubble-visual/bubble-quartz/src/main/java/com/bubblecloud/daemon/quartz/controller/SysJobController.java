@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.daemon.quartz.constants.JobTypeQuartzEnum;
 import com.bubblecloud.daemon.quartz.constants.QuartzEnum;
 import com.bubblecloud.daemon.quartz.entity.SysJob;
 import com.bubblecloud.daemon.quartz.entity.SysJobLog;
@@ -98,7 +99,7 @@ public class SysJobController {
 		}
 
 		// 安全验证：对于Java类类型的任务，验证类名和方法名
-		if ("1".equals(sysJob.getJobType())) {
+		if (JobTypeQuartzEnum.JAVA.getType().equals(sysJob.getJobType())) {
 			if (!ClassNameValidator.isValidClassName(sysJob.getClassName())) {
 				log.warn("新增定时任务失败，类名验证不通过：{}", sysJob.getClassName());
 				return R.failed("类名验证失败，该类在黑名单中或包含危险特征，拒绝创建");
@@ -125,7 +126,7 @@ public class SysJobController {
 	@Operation(summary = "修改定时任务", description = "修改定时任务")
 	public R updateJob(@RequestBody SysJob sysJob) {
 		// 安全验证：对于Java类类型的任务，验证类名和方法名
-		if ("1".equals(sysJob.getJobType())) {
+		if (JobTypeQuartzEnum.JAVA.getType().equals(sysJob.getJobType())) {
 			if (!ClassNameValidator.isValidClassName(sysJob.getClassName())) {
 				log.warn("修改定时任务失败，类名验证不通过：{}", sysJob.getClassName());
 				return R.failed("类名验证失败，该类在黑名单中或包含危险特征，拒绝修改");
