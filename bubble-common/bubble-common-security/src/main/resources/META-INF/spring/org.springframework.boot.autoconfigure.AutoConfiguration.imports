@@ -5,3 +5,4 @@ com.bubblecloud.common.security.service.CustomRedisOAuth2AuthorizationConsentSer
 com.bubblecloud.common.security.component.CustomSecurityInnerAspect
 com.bubblecloud.common.security.component.CustomSecurityMessageSourceConfiguration
 com.bubblecloud.common.security.service.CustomRemoteRegisteredClientRepository
+com.bubblecloud.common.security.component.BootCorsProperties

@@ -13,6 +13,7 @@ import com.bubblecloud.auth.support.password.OAuth2ResourceOwnerPasswordAuthenti
 import com.bubblecloud.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationConverter;
 import com.bubblecloud.auth.support.sms.OAuth2ResourceOwnerSmsAuthenticationProvider;
 import com.bubblecloud.common.core.constant.SecurityConstants;
+import com.bubblecloud.common.security.component.BootCorsProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.DelegatingAuthenticationConverter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
@@ -55,8 +58,12 @@ public class AuthorizationServerConfiguration {
 
 	private final ValidateCodeFilter validateCodeFilter;
 
+	private final BootCorsProperties bootCorsProperties;
+
+
 	/**
 	 * Authorization Server 配置，仅对 /oauth2/** 的请求有效
+	 *
 	 * @param http http
 	 * @return {@link SecurityFilterChain }
 	 * @throws Exception 异常
@@ -74,24 +81,29 @@ public class AuthorizationServerConfiguration {
 		http.addFilterBefore(passwordDecoderFilter, UsernamePasswordAuthenticationFilter.class);
 
 		http.with(authorizationServerConfigurer.tokenEndpoint((tokenEndpoint) -> {// 个性化认证授权端点
-			tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter()) // 注入自定义的授权认证Converter
-				.accessTokenResponseHandler(new CustomAuthenticationSuccessEventHandler()) // 登录成功处理器
-				.errorResponseHandler(new CustomAuthenticationFailureEventHandler());// 登录失败处理器
-		}).clientAuthentication(oAuth2ClientAuthenticationConfigurer -> // 个性化客户端认证
-		oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new CustomAuthenticationFailureEventHandler()))// 处理客户端认证异常
-			.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint// 授权码端点个性化confirm页面
-				.consentPage(SecurityConstants.CUSTOM_CONSENT_PAGE_URI)), Customizer.withDefaults())
-			.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated());
+							tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter()) // 注入自定义的授权认证Converter
+									.accessTokenResponseHandler(new CustomAuthenticationSuccessEventHandler()) // 登录成功处理器
+									.errorResponseHandler(new CustomAuthenticationFailureEventHandler());// 登录失败处理器
+						}).clientAuthentication(oAuth2ClientAuthenticationConfigurer -> // 个性化客户端认证
+								oAuth2ClientAuthenticationConfigurer.errorResponseHandler(new CustomAuthenticationFailureEventHandler()))// 处理客户端认证异常
+						.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint// 授权码端点个性化confirm页面
+								.consentPage(SecurityConstants.CUSTOM_CONSENT_PAGE_URI)), Customizer.withDefaults())
+				.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated());
 
 		// 设置 Token 存储的策略
 		http.with(authorizationServerConfigurer.authorizationService(authorizationService)// redis存储token的实现
-			.authorizationServerSettings(
-					AuthorizationServerSettings.builder().issuer(SecurityConstants.PROJECT_LICENSE).build()),
+						.authorizationServerSettings(
+								AuthorizationServerSettings.builder().issuer(SecurityConstants.PROJECT_LICENSE).build()),
 				Customizer.withDefaults());
 
 		// 设置授权码模式登录页面
 		http.with(new FormIdentityLoginConfigurer(), Customizer.withDefaults());
 		DefaultSecurityFilterChain securityFilterChain = http.build();
+
+		// 配置 CORS 跨域资源共享
+		if (Boolean.TRUE.equals(bootCorsProperties.getEnabled())) {
+			http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+		}
 
 		// 注入自定义授权模式实现
 		addCustomOAuth2GrantAuthenticationProvider(http);
@@ -102,6 +114,7 @@ public class AuthorizationServerConfiguration {
 	/**
 	 * 令牌生成规则实现 </br>
 	 * client:username:uuid
+	 *
 	 * @return OAuth2TokenGenerator
 	 */
 	@Bean
@@ -114,6 +127,7 @@ public class AuthorizationServerConfiguration {
 
 	/**
 	 * request -> xToken 注入请求转换器
+	 *
 	 * @return DelegatingAuthenticationConverter
 	 */
 	@Bean
@@ -148,6 +162,31 @@ public class AuthorizationServerConfiguration {
 		http.authenticationProvider(resourceOwnerPasswordAuthenticationProvider);
 		// 处理 OAuth2ResourceOwnerSmsAuthenticationToken
 		http.authenticationProvider(resourceOwnerSmsAuthenticationProvider);
+	}
+
+
+	/**
+	 * 配置 CORS 跨域资源共享
+	 *
+	 * @return UrlBasedCorsConfigurationSource CORS配置源
+	 */
+	private UrlBasedCorsConfigurationSource corsConfigurationSource() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+		// 从配置文件读取允许的源模式
+		bootCorsProperties.getAllowedOriginPatterns().forEach(corsConfiguration::addAllowedOriginPattern);
+		// 从配置文件读取允许的请求头
+		bootCorsProperties.getAllowedHeaders().forEach(corsConfiguration::addAllowedHeader);
+		// 从配置文件读取允许的HTTP方法
+		bootCorsProperties.getAllowedMethods().forEach(corsConfiguration::addAllowedMethod);
+		// 从配置文件读取是否允许携带凭证
+		corsConfiguration.setAllowCredentials(bootCorsProperties.getAllowCredentials());
+
+		// 注册CORS配置到指定路径
+		source.registerCorsConfiguration(bootCorsProperties.getPathPattern(), corsConfiguration);
+
+		return source;
 	}
 
 }
