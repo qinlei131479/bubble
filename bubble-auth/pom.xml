@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.bubblecloud</groupId>
-        <artifactId>bubble</artifactId>
+        <artifactId>BubbleCloud</artifactId>
         <version>${revision}</version>
     </parent>
 
