@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.bubblecloud</groupId>
-		<artifactId>bubble</artifactId>
+		<artifactId>BubbleCloud</artifactId>
 		<version>${revision}</version>
 	</parent>
 
@@ -15,6 +15,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>bubble-biz-agi</module>
 		<module>bubble-biz-backend</module>
 		<module>bubble-biz-flow</module>
 		<module>bubble-biz-oa</module>

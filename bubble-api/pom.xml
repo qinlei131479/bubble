@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.bubblecloud</groupId>
-		<artifactId>bubble</artifactId>
+		<artifactId>BubbleCloud</artifactId>
 		<version>${revision}</version>
 	</parent>
 
@@ -16,5 +16,6 @@
 		<module>bubble-api-backend</module>
 		<module>bubble-api-flow</module>
 		<module>bubble-api-oa</module>
+		<module>bubble-api-agi</module>
 	</modules>
 </project>
