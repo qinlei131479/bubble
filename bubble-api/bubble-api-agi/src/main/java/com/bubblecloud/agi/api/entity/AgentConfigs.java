@@ -1,7 +1,7 @@
 package com.bubblecloud.agi.api.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.bubblecloud.common.mybatis.base.Req;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @TableName("agent_configs")
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "智能体配置表")
-public class AgentConfigs extends Model<AgentConfigs> {
+public class AgentConfigs extends Req<AgentConfigs> {
 
 
 	/**
@@ -78,12 +78,14 @@ public class AgentConfigs extends Model<AgentConfigs> {
 	/**
 	* 创建人
 	*/
+	@TableField(fill = FieldFill.INSERT)
     @Schema(description="创建人")
     private String createdBy;
 
 	/**
 	* 更新人
 	*/
+	@TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description="更新人")
     private String updatedBy;
 

@@ -17,4 +17,9 @@
 		<result property="createdAt" column="created_at" />
 		<result property="updatedAt" column="updated_at"/>
 	</resultMap>
+
+	<select id="findPg" resultType="com.bubblecloud.agi.api.entity.AgentConfigs">
+		SELECT t.*
+		FROM agent_configs t
+	</select>
 </mapper>
