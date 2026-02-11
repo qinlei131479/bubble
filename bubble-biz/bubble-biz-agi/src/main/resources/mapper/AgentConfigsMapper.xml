@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.agi.mapper.AgentConfigsMapper">
+
+	<resultMap id="agentConfigsMap" type="com.bubblecloud.agi.api.entity.AgentConfigs">
+		<id property="id" column="id" />
+		<result property="agentId" column="agent_id"/>
+		<result property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="icon" column="icon"/>
+		<result property="pics" column="pics"/>
+		<result property="examples" column="examples"/>
+		<result property="configJson" column="config_json"/>
+		<result property="defaultFlag" column="default_flag"/>
+		<result property="createdBy" column="created_by"/>
+		<result property="updatedBy" column="updated_by"/>
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at"/>
+	</resultMap>
+</mapper>
