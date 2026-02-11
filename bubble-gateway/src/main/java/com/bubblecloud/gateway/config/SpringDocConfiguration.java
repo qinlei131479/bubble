@@ -36,7 +36,10 @@ public class SpringDocConfiguration implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() {
-		NotifyCenter.registerSubscriber(new SwaggerDocRegister(swaggerUiConfigProperties, discoveryClient));
+		SwaggerDocRegister swaggerDocRegister = new SwaggerDocRegister(swaggerUiConfigProperties, discoveryClient);
+		NotifyCenter.registerSubscriber(swaggerDocRegister);
+		// 初始加载一次文档配置
+		swaggerDocRegister.onEvent(null);
 	}
 
 }

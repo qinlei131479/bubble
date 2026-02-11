@@ -4,6 +4,7 @@ import lombok.Setter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -29,15 +30,20 @@ public class OpenAPIMetadataConfiguration implements InitializingBean, Applicati
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-
-		String[] beanNamesForType = applicationContext.getBeanNamesForType(ServiceInstance.class);
-
-		if (beanNamesForType.length == 0) {
+		// 1. 优先尝试通过 Registration 获取并设置元数据 (Spring Cloud 标准方式)
+		String[] registrationBeans = applicationContext.getBeanNamesForType(Registration.class);
+		if (registrationBeans.length > 0) {
+			Registration registration = applicationContext.getBean(Registration.class);
+			registration.getMetadata().put("spring-doc", path);
 			return;
 		}
 
-		ServiceInstance serviceInstance = applicationContext.getBean(ServiceInstance.class);
-		serviceInstance.getMetadata().put("spring-doc", path);
+		// 2. 备选方案：尝试通过 ServiceInstance 获取 (某些旧版本或特殊配置)
+		String[] serviceInstanceBeans = applicationContext.getBeanNamesForType(ServiceInstance.class);
+		if (serviceInstanceBeans.length > 0) {
+			ServiceInstance serviceInstance = applicationContext.getBean(ServiceInstance.class);
+			serviceInstance.getMetadata().put("spring-doc", path);
+		}
 	}
 
 	/**
