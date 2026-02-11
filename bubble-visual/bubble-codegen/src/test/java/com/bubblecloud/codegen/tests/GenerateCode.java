@@ -33,15 +33,15 @@ public class GenerateCode {
 	/**
 	 * 生成代码模块配置 module = backend、oa、flow
 	 */
-	public static String module = "oa";
+	public static String module = "agi";
 	public static String projectName = "bubble-biz/bubble-biz-" + module;
 	public static String projectName_entity = "bubble-api/bubble-api-" + module;
 
 	public static String packageName = "com.bubblecloud.biz." + module;
-	public static String packageName_entity = "com.bubblecloud.api." + module;
+	public static String packageName_entity = "com.bubblecloud." + module +".api";
 	public static String packageName_common = "com.bubblecloud.common";
 
-	public static String dbName = "bubble_oa";
+	public static String dbName = "bubble_ai";
 	/**
 	 * 表前缀，不在代码中生成
 	 */
@@ -51,7 +51,7 @@ public class GenerateCode {
 	/**
 	 * 填写要生成的表名
 	 */
-	public static List<String> tableNames = Arrays.asList("eb_agreement", "eb_approve");
+	public static List<String> tableNames = Arrays.asList("terminology", "supplier");
 
 	// 全局配置
 	public static String ftlPath = "classpath:/ftl/code/";

@@ -62,7 +62,7 @@ public class ${className}Controller {
 	 * 添加
 	 */
 	@Operation(summary = "添加", description = "")
-	@SysLog("编辑${tableComment}")
+	@SysLog("添加${tableComment}")
 	@PostMapping("/create")
 	public R create(@RequestBody @Validated({ Req.Create.class }) ${className} req) {
 		return ${clazzName}Service.create(req);

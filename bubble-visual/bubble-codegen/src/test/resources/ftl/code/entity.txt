@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Schema(description = "${tableComment}")
+@Schema(description = "${tableComment!''}")
 @TableName("${tableName}")
 public class ${className} extends Req<${className}> {
 
@@ -44,8 +44,8 @@ public class ${className} extends Req<${className}> {
      * ${field.comment!''}
      */
     <#if field.field=='del_flag'>@TableLogic
-    <#elseif field.field=='create_by' || field.field=='create_time'>@TableField(fill = FieldFill.INSERT)
-    <#elseif field.field=='update_by' || field.field=='update_time'>@TableField(fill = FieldFill.UPDATE)
+    <#elseif field.field=='create_by' || field.field=='create_time' || field.field=='created_at' || field.field=='created_by'>@TableField(fill = FieldFill.INSERT)
+    <#elseif field.field=='update_by' || field.field=='update_time' || field.field=='updated_at' || field.field=='updated_by'>@TableField(fill = FieldFill.INSERT_UPDATE)
     <#elseif field.field=='id'>@TableId(type = IdType.INPUT)
     </#if>@Schema(description = "${field.comment!''}")
 	private ${(map[type])!field.type} ${fieldName};
