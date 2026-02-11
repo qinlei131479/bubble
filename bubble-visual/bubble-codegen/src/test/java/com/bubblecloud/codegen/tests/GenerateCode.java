@@ -51,7 +51,7 @@ public class GenerateCode {
 	/**
 	 * 填写要生成的表名
 	 */
-	public static List<String> tableNames = Arrays.asList("terminology", "supplier");
+	public static List<String> tableNames = Arrays.asList("terminology");
 
 	// 全局配置
 	public static String ftlPath = "classpath:/ftl/code/";
@@ -68,6 +68,7 @@ public class GenerateCode {
 		dataMap.put("package_entity", packageName_entity);
 		dataMap.put("packageName_core", packageName_common);
 		dataMap.put("author", author);
+		dataMap.put("module", module);
 	}
 
 	@Resource
