@@ -97,7 +97,7 @@ public class AgentConfigs extends Model<AgentConfigs> {
 	/**
 	* 更新时间
 	*/
-	@TableField(fill = FieldFill.UPDATE)
+	@TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description="更新时间")
     private LocalDateTime updatedAt;
 }
