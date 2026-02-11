@@ -9,6 +9,7 @@ import com.bubblecloud.agi.api.entity.AgentConfigs;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.bubblecloud.common.mybatis.base.Pg;
+import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.security.annotation.HasPermission;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import com.bubblecloud.biz.agi.service.AgentConfigsService;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,7 +79,7 @@ public class AgentConfigsController {
 	@SysLog("新增智能体")
 	@PostMapping
 	@HasPermission("agi_agentConfigs_add")
-	public R create(@RequestBody AgentConfigs req) {
+	public R create(@RequestBody @Validated({Req.Create.class}) AgentConfigs req) {
 		return R.ok(agentConfigsService.create(req));
 	}
 
@@ -91,7 +93,7 @@ public class AgentConfigsController {
 	@SysLog("修改智能体")
 	@PutMapping
 	@HasPermission("agi_agentConfigs_edit")
-	public R update(@RequestBody AgentConfigs req) {
+	public R update(@RequestBody @Validated({Req.Update.class}) AgentConfigs req) {
 		return R.ok(agentConfigsService.update(req));
 	}
 
