@@ -92,7 +92,7 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 						queryWrapper.eq(item, HuToolUtil.getFieldValueIfExist(req, item));
 					});
 				}
-				Object id = null ;// req.calId();
+				Object id = null;// req.calId();
 				// 非创建情况下，增加id条件
 				if (id != null && isCreate == false) {
 					queryWrapper.ne("id", id);
@@ -129,14 +129,23 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	@Override
 	public R update(T req) {
-		baseMapper.updateCustom(req);
+		return this.update(req, false);
+	}
+
+	@Override
+	public R update(T req, boolean isCustom) {
+		if (isCustom) {
+			baseMapper.updateCustom(req);
+		} else {
+			baseMapper.updateById(req);
+		}
 		return R.ok();
 	}
 
 	@Override
 	public R update(UpMapper mapper, Req req) {
 		mapper.updateCustom(req);
-		return  R.ok();
+		return R.ok();
 	}
 
 	@Override
@@ -147,18 +156,18 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 	@Override
 	public R create(UpMapper mapper, Req req) {
 		this.createVoid(mapper, req);
-		return  R.ok();
+		return R.ok();
 	}
 
 	/**
 	 * 直接写入（不自动生成id）
-	 * 
+	 *
 	 * @param req
 	 */
 	@Override
 	public R insert(T req) {
 		this.baseMapper.insert(req);
-		return  R.ok();
+		return R.ok();
 	}
 
 	@Override

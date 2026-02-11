@@ -17,7 +17,7 @@ import java.util.List;
 public interface UpService<T> extends IService<T> {
 	/**
 	 * 检查字段重复 -- 创建模式
-	 * 
+	 *
 	 * @param req：请求参数
 	 * @param fieldAndNames：字段名称
 	 * @return
@@ -26,7 +26,7 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复 -- 创建模式
-	 * 
+	 *
 	 * @param req
 	 * @param eqNameList
 	 * @param fieldAndNames
@@ -36,7 +36,7 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复 -- 修改模式
-	 * 
+	 *
 	 * @param req
 	 * @param fieldAndNames
 	 * @return
@@ -45,7 +45,7 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复 -- 修改模式
-	 * 
+	 *
 	 * @param req
 	 * @param eqNameList
 	 * @param fieldAndNames
@@ -55,7 +55,7 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复（包含eq相等字段）
-	 * 
+	 *
 	 * @param req
 	 * @param isCreate
 	 * @param eqList
@@ -66,7 +66,7 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 分页查询
-	 * 
+	 *
 	 * @param page
 	 * @param req
 	 * @return
@@ -91,16 +91,23 @@ public interface UpService<T> extends IService<T> {
 	List<T> findList(Page page, T req);
 
 	/**
-	 * 修改
+	 * 修改（默认非自定义修改）
 	 *
 	 * @param req
 	 * @return
 	 */
 	R update(T req);
+	/**
+	 * 修改
+	 *
+	 * @param req
+	 * @return
+	 */
+	R update(T req, boolean isCustom);
 
 	/**
 	 * 修改
-	 * 
+	 *
 	 * @param mapper
 	 * @param req
 	 * @return
@@ -126,7 +133,7 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 添加，不返回创建对象，直接写入（不自动生成id）
-	 * 
+	 *
 	 * @param req
 	 * @return
 	 */
