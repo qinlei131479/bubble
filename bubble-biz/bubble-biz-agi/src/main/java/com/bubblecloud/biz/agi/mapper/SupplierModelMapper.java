@@ -10,4 +10,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SupplierModelMapper extends UpMapper<SupplierModel> {
 
+	/**
+	 * 自定义更新，需要自行实现xml SQL
+	 *
+	 * @param req
+	 * @return
+	 */
+	int updateCustom(SupplierModel req);
 }

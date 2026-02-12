@@ -11,4 +11,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AgentConfigsMapper extends UpMapper<AgentConfigs> {
 
+	/**
+	 * 自定义更新，需要自行实现xml SQL
+	 *
+	 * @param req
+	 * @return
+	 */
+	int updateCustom(AgentConfigs req);
 }

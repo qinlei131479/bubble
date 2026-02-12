@@ -1,7 +1,5 @@
 package com.bubblecloud.biz.agi.mapper;
 
-
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.bubblecloud.common.mybatis.mapper.UpMapper;
 import com.bubblecloud.agi.api.entity.McpServers;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,4 +13,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface McpServersMapper extends UpMapper<McpServers> {
 
+	/**
+	 * 自定义更新，需要自行实现xml SQL
+	 *
+	 * @param req
+	 * @return
+	 */
+	int updateCustom(McpServers req);
 }
