@@ -36,7 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/terminology")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
-@Tag(description = "terminology", name = "术语表模块")
+@Tag(description = "terminology", name = "术语管理")
 @RequiredArgsConstructor
 public class TerminologyController {
 
@@ -76,8 +76,8 @@ public class TerminologyController {
 	 * @param req 术语表
 	 * @return R
 	 */
-	@Operation(summary = "新增术语表", description = "新增术语表")
-	@SysLog("新增术语表")
+	@Operation(summary = "新增术语", description = "新增术语")
+	@SysLog("新增术语")
 	@PostMapping
 	@HasPermission("agi_terminology_add")
 	public R create(@RequestBody @Validated({Req.Create.class}) Terminology req) {
@@ -90,8 +90,8 @@ public class TerminologyController {
 	 * @param req 术语表
 	 * @return R
 	 */
-	@Operation(summary = "修改术语表", description = "修改术语表")
-	@SysLog("修改术语表")
+	@Operation(summary = "修改术语", description = "修改术语")
+	@SysLog("修改术语")
 	@PutMapping
 	@HasPermission("agi_terminology_edit")
 	public R update(@RequestBody @Validated({Req.Update.class}) Terminology req) {

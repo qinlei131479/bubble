@@ -35,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/supplier")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
-@Tag(description = "supplier", name = "AI供应商模块")
+@Tag(description = "supplier", name = "供应商管理")
 @RequiredArgsConstructor
 public class SupplierController {
 
@@ -76,7 +76,7 @@ public class SupplierController {
 	 * @return R
 	 */
 	@Operation(summary = "添加", description = "")
-	@SysLog("添加AI供应商")
+	@SysLog("添加供应商")
 	@PostMapping()
 	@HasPermission("agi_supplier_add")
 	public R create(@RequestBody @Validated({Req.Create.class}) Supplier req) {
@@ -90,7 +90,7 @@ public class SupplierController {
 	 * @return R
 	 */
 	@Operation(summary = "编辑", description = "")
-	@SysLog("编辑AI供应商")
+	@SysLog("编辑供应商")
 	@PutMapping()
 	@HasPermission("agi_supplier_edit")
 	public R update(@RequestBody @Validated({Req.Update.class}) Supplier req) {

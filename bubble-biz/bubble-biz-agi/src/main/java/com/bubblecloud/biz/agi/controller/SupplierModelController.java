@@ -37,7 +37,7 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/supplierModel")
-@Tag(description = "supplierModel", name = "AI供应商模型表管理")
+@Tag(description = "supplierModel", name = "供应商模型管理")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class SupplierModelController {
 
@@ -78,8 +78,8 @@ public class SupplierModelController {
 	 * @param req AI供应商模型表
 	 * @return R
 	 */
-	@Operation(summary = "新增AI供应商模型表", description = "新增AI供应商模型表")
-	@SysLog("新增AI供应商模型表")
+	@Operation(summary = "新增供应商模型", description = "新增供应商模型")
+	@SysLog("新增供应商模型")
 	@PostMapping
 	@HasPermission("agi_supplierModel_add")
 	public R create(@RequestBody @Validated({Req.Create.class}) SupplierModel req) {
@@ -92,8 +92,8 @@ public class SupplierModelController {
 	 * @param req AI供应商模型表
 	 * @return R
 	 */
-	@Operation(summary = "修改AI供应商模型表", description = "修改AI供应商模型表")
-	@SysLog("修改AI供应商模型表")
+	@Operation(summary = "修改供应商模型", description = "修改供应商模型")
+	@SysLog("修改供应商模型")
 	@PutMapping
 	@HasPermission("agi_supplierModel_edit")
 	public R update(@RequestBody @Validated({Req.Update.class}) SupplierModel req) {
@@ -106,8 +106,8 @@ public class SupplierModelController {
 	 * @param ids id列表
 	 * @return R
 	 */
-	@Operation(summary = "通过id删除AI供应商模型表", description = "通过id删除AI供应商模型表")
-	@SysLog("通过id删除AI供应商模型表")
+	@Operation(summary = "通过id删除供应商模型", description = "通过id删除供应商模型")
+	@SysLog("通过id删除供应商模型")
 	@DeleteMapping
 	@HasPermission("agi_supplierModel_del")
 	public R removeById(@RequestBody Long[] ids) {
