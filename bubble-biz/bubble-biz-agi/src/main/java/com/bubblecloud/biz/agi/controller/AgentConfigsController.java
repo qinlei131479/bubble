@@ -43,7 +43,7 @@ public class AgentConfigsController {
 	/**
 	 * 分页查询
 	 *
-	 * @param pg  分页对象
+	 * @param pg  分页对象（默认按 id 降序排序）
 	 * @param req 智能体配置表
 	 * @return
 	 */
