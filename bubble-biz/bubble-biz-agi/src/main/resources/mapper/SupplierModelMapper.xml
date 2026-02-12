@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.SupplierModelMapper">
+
+  <resultMap id="supplierModelMap" type="com.bubblecloud.agi.api.entity.SupplierModel">
+        <id property="id" column="id"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="name" column="name"/>
+        <result property="baseModel" column="base_model"/>
+        <result property="modelType" column="model_type"/>
+        <result property="contextLength" column="context_length"/>
+        <result property="description" column="description"/>
+        <result property="defaultFlag" column="default_flag"/>
+        <result property="extConfig" column="ext_config"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.SupplierModel">
+     SELECT t.*
+     FROM supplier_model t
+  </select>
+	
+</mapper>
