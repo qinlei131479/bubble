@@ -12,4 +12,12 @@ import ${package_entity}.entity.${className};
  */
 @Mapper
 public interface ${className}Mapper extends UpMapper<${className}> {
+
+    /**
+	 * 自定义更新，需要自行实现xml SQL
+	 *
+	 * @param req
+	 * @return
+	 */
+	int updateCustom(${className} req);
 }
