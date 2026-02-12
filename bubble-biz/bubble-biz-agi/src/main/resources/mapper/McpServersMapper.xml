@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.McpServersMapper">
+
+  <resultMap id="mcpServersMap" type="com.bubblecloud.agi.api.entity.McpServers">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="transport" column="transport"/>
+        <result property="url" column="url"/>
+        <result property="command" column="command"/>
+        <result property="args" column="args"/>
+        <result property="headers" column="headers"/>
+        <result property="timeout" column="timeout"/>
+        <result property="sseReadTimeout" column="sse_read_timeout"/>
+        <result property="tags" column="tags"/>
+        <result property="icon" column="icon"/>
+        <result property="enabledFlag" column="enabled_flag"/>
+        <result property="disabledTools" column="disabled_tools"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.McpServers">
+     SELECT t.*
+     FROM mcp_servers t
+  </select>
+	
+</mapper>
