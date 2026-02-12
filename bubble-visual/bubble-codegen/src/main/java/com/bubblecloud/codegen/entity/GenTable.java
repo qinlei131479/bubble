@@ -82,6 +82,18 @@ public class GenTable extends Model<GenTable> {
 	private String packageName;
 
 	/**
+	 * 项目包名-公共模块
+	 */
+	@Schema(description = "项目包名-公共模块")
+	private String packageCommonName;
+
+	/**
+	 * 项目包名-实体模块
+	 */
+	@Schema(description = "项目包名-实体模块")
+	private String packageEntityName;
+
+	/**
 	 * 项目版本号
 	 */
 	@Schema(description = "项目版本号")

@@ -173,6 +173,8 @@ public class GenTableServiceImpl extends ServiceImpl<GenTableMapper, GenTable> i
 		// 获取默认表配置信息 （）
 
 		table.setPackageName(configurationProperties.getPackageName());
+		table.setPackageCommonName(configurationProperties.getPackageCommonName());
+		table.setPackageEntityName(configurationProperties.getPackageEntityName());
 		table.setVersion(configurationProperties.getVersion());
 		table.setBackendPath(configurationProperties.getBackendPath());
 		table.setFrontendPath(configurationProperties.getFrontendPath());

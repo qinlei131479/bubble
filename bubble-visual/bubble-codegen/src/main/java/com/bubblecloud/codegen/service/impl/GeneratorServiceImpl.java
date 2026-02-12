@@ -55,8 +55,9 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 生成代码zip写出
+	 *
 	 * @param tableId 表
-	 * @param zip 输出流
+	 * @param zip     输出流
 	 */
 	@Override
 	@SneakyThrows
@@ -92,6 +93,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 表达式优化的预览代码方法
+	 *
 	 * @param tableId 表
 	 * @return [{模板名称:渲染结果}]
 	 */
@@ -133,6 +135,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 目标目录写入渲染结果方法
+	 *
 	 * @param tableId 表
 	 */
 	@Override
@@ -155,6 +158,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 通过 Lambda 表达式优化的获取数据模型方法
+	 *
 	 * @param tableId 表格 ID
 	 * @return 数据模型 Map 对象
 	 */
@@ -163,21 +167,26 @@ public class GeneratorServiceImpl implements GeneratorService {
 		GenTable table = tableService.getById(tableId);
 		// 获取字段列表
 		List<GenTableColumnEntity> fieldList = columnService.lambdaQuery()
-			.eq(GenTableColumnEntity::getDsName, table.getDsName())
-			.eq(GenTableColumnEntity::getTableName, table.getTableName())
-			.orderByAsc(GenTableColumnEntity::getSort)
-			.list();
+				.eq(GenTableColumnEntity::getDsName, table.getDsName())
+				.eq(GenTableColumnEntity::getTableName, table.getTableName())
+				.orderByAsc(GenTableColumnEntity::getSort)
+				.list();
 
 		table.setFieldList(fieldList);
 
 		// 创建数据模型对象
 		Map<String, Object> dataModel = new HashMap<>();
 
+		String packageCore = StrUtil.blankToDefault(table.getPackageCommonName(), table.getPackageName());
+		String packageEntity = StrUtil.blankToDefault(table.getPackageEntityName(), table.getPackageName());
+
 		// 填充数据模型
 		dataModel.put("opensource", true);
 		dataModel.put("isSpringBoot3", isSpringBoot3());
 		dataModel.put("dbType", table.getDbType());
 		dataModel.put("package", table.getPackageName());
+		dataModel.put("packageCore", packageCore);
+		dataModel.put("packageEntity", packageEntity);
 		dataModel.put("packagePath", table.getPackageName().replace(".", "/"));
 		dataModel.put("version", table.getVersion());
 		dataModel.put("moduleName", table.getModuleName());
@@ -207,9 +216,9 @@ public class GeneratorServiceImpl implements GeneratorService {
 		String childTableName = table.getChildTableName();
 		if (StrUtil.isNotBlank(childTableName)) {
 			List<GenTableColumnEntity> childFieldList = columnService.lambdaQuery()
-				.eq(GenTableColumnEntity::getDsName, table.getDsName())
-				.eq(GenTableColumnEntity::getTableName, table.getChildTableName())
-				.list();
+					.eq(GenTableColumnEntity::getDsName, table.getDsName())
+					.eq(GenTableColumnEntity::getTableName, table.getChildTableName())
+					.list();
 			dataModel.put("childFieldList", childFieldList);
 			dataModel.put("childTableName", childTableName);
 			dataModel.put("mainField", NamingCase.toCamelCase(table.getMainField()));
@@ -218,23 +227,24 @@ public class GeneratorServiceImpl implements GeneratorService {
 			dataModel.put("childClassName", StrUtil.lowerFirst(NamingCase.toPascalCase(childTableName)));
 			// 设置是否是多租户模式 (判断字段列表中是否包含 tenant_id 字段)
 			childFieldList.stream()
-				.filter(genTableColumnEntity -> genTableColumnEntity.getFieldName().equals("tenant_id"))
-				.findFirst()
-				.ifPresent(columnEntity -> dataModel.put("isChildTenant", true));
+					.filter(genTableColumnEntity -> genTableColumnEntity.getFieldName().equals("tenant_id"))
+					.findFirst()
+					.ifPresent(columnEntity -> dataModel.put("isChildTenant", true));
 		}
 
 		// 设置是否是多租户模式 (判断字段列表中是否包含 tenant_id 字段)
 		table.getFieldList()
-			.stream()
-			.filter(genTableColumnEntity -> genTableColumnEntity.getFieldName().equals("tenant_id"))
-			.findFirst()
-			.ifPresent(columnEntity -> dataModel.put("isTenant", true));
+				.stream()
+				.filter(genTableColumnEntity -> genTableColumnEntity.getFieldName().equals("tenant_id"))
+				.findFirst()
+				.ifPresent(columnEntity -> dataModel.put("isTenant", true));
 
 		return dataModel;
 	}
 
 	/**
 	 * 判断当前是否是 SpringBoot3 版本
+	 *
 	 * @return true/fasle
 	 */
 	private boolean isSpringBoot3() {
@@ -243,29 +253,30 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 将表字段按照类型分组并存储到数据模型中
+	 *
 	 * @param dataModel 存储数据的 Map 对象
-	 * @param table 表信息对象
+	 * @param table     表信息对象
 	 */
 	private void setFieldTypeList(Map<String, Object> dataModel, GenTable table) {
 		// 按字段类型分组，使用 Map 存储不同类型的字段列表
 		Map<Boolean, List<GenTableColumnEntity>> typeMap = table.getFieldList()
-			.stream()
-			.collect(Collectors.partitioningBy(columnEntity -> BooleanUtil.toBoolean(columnEntity.getPrimaryPk())));
+				.stream()
+				.collect(Collectors.partitioningBy(columnEntity -> BooleanUtil.toBoolean(columnEntity.getPrimaryPk())));
 
 		// 从分组后的 Map 中获取不同类型的字段列表
 		List<GenTableColumnEntity> primaryList = typeMap.get(true);
 		List<GenTableColumnEntity> formList = typeMap.get(false)
-			.stream()
-			.filter(columnEntity -> BooleanUtil.toBoolean(columnEntity.getFormItem()))
-			.toList();
+				.stream()
+				.filter(columnEntity -> BooleanUtil.toBoolean(columnEntity.getFormItem()))
+				.toList();
 		List<GenTableColumnEntity> gridList = typeMap.get(false)
-			.stream()
-			.filter(columnEntity -> BooleanUtil.toBoolean(columnEntity.getGridItem()))
-			.toList();
+				.stream()
+				.filter(columnEntity -> BooleanUtil.toBoolean(columnEntity.getGridItem()))
+				.toList();
 		List<GenTableColumnEntity> queryList = typeMap.get(false)
-			.stream()
-			.filter(columnEntity -> BooleanUtil.toBoolean(columnEntity.getQueryItem()))
-			.toList();
+				.stream()
+				.filter(columnEntity -> BooleanUtil.toBoolean(columnEntity.getQueryItem()))
+				.toList();
 
 		if (CollUtil.isNotEmpty(primaryList)) {
 			dataModel.put("pk", primaryList.get(0));

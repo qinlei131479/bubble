@@ -33,7 +33,18 @@ public class CodeGenDefaultProperties implements InitializingBean {
 	/**
 	 * 生成代码的包名
 	 */
-	private String packageName = "com.bubblecloud";
+	private String packageName = "com.bubblecloud.biz";
+
+	/**
+	 * 生成代码的包名
+	 */
+	private String packageCommonName = "com.bubblecloud";
+
+
+	/**
+	 * 生成代码的包名
+	 */
+	private String packageEntityName = "com.bubblecloud.agi";
 
 	/**
 	 * 生成代码的版本
@@ -43,22 +54,22 @@ public class CodeGenDefaultProperties implements InitializingBean {
 	/**
 	 * 生成代码的模块名
 	 */
-	private String moduleName = "admin";
+	private String moduleName = "agi";
 
 	/**
 	 * 生成代码的后端路径
 	 */
-	private String backendPath = "bubble";
+	private String backendPath = "BubbleCloud";
 
 	/**
 	 * 生成代码的前端路径
 	 */
-	private String frontendPath = "bubble-backend";
+	private String frontendPath = "AgetBubbles";
 
 	/**
 	 * 生成代码的作者
 	 */
-	private String author = "bubble";
+	private String author = "Rampart";
 
 	/**
 	 * 生成代码的邮箱
