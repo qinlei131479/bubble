@@ -78,29 +78,29 @@ public class SupplierModel extends Req<SupplierModel> {
 	/**
 	* 创建人
 	*/
-	@TableField(fill = FieldFill.INSERT)
     @Schema(description="创建人")
+	@TableField(fill = FieldFill.INSERT)
     private String createBy;
 
 	/**
 	* 创建时间
 	*/
-	@TableField(fill = FieldFill.INSERT)
     @Schema(description="创建时间")
+	@TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
 	/**
 	* 更新人
 	*/
-	@TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description="更新人")
+	@TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
 
 	/**
 	* 更新时间
 	*/
-	@TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description="更新时间")
+	@TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
 	/**
