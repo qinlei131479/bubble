@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.EvaluationResultDetailsMapper">
+
+  <resultMap id="evaluationResultDetailsMap" type="com.bubblecloud.agi.api.entity.EvaluationResultDetails">
+        <id property="id" column="id"/>
+        <result property="taskId" column="task_id"/>
+        <result property="queryIndex" column="query_index"/>
+        <result property="queryText" column="query_text"/>
+        <result property="goldChunkIds" column="gold_chunk_ids"/>
+        <result property="goldAnswer" column="gold_answer"/>
+        <result property="generatedAnswer" column="generated_answer"/>
+        <result property="retrievedChunks" column="retrieved_chunks"/>
+        <result property="metrics" column="metrics"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.EvaluationResultDetails">
+     SELECT t.*
+     FROM evaluation_result_details t
+  </select>
+	
+</mapper>

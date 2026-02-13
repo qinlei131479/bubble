@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.DatasourceTableMapper">
+
+  <resultMap id="datasourceTableMap" type="com.bubblecloud.agi.api.entity.DatasourceTable">
+        <id property="id" column="id"/>
+        <result property="dsId" column="ds_id"/>
+        <result property="checkedFlag" column="checked_flag"/>
+        <result property="tableName" column="table_name"/>
+        <result property="tableComment" column="table_comment"/>
+        <result property="customComment" column="custom_comment"/>
+        <result property="embedding" column="embedding"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.DatasourceTable">
+     SELECT t.*
+     FROM datasource_table t
+  </select>
+	
+</mapper>

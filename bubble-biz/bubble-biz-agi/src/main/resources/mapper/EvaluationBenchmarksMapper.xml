@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.EvaluationBenchmarksMapper">
+
+  <resultMap id="evaluationBenchmarksMap" type="com.bubblecloud.agi.api.entity.EvaluationBenchmarks">
+        <id property="id" column="id"/>
+        <result property="benchmarkId" column="benchmark_id"/>
+        <result property="dbId" column="db_id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="questionNum" column="question_num"/>
+        <result property="hasGoldChunks" column="has_gold_chunks"/>
+        <result property="hasGoldAnswers" column="has_gold_answers"/>
+        <result property="dataFilePath" column="data_file_path"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.EvaluationBenchmarks">
+     SELECT t.*
+     FROM evaluation_benchmarks t
+  </select>
+	
+</mapper>
