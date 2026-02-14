@@ -129,17 +129,17 @@ public class McpServersController {
 		return mcpServersService.list(Wrappers.lambdaQuery(req).in(ArrayUtil.isNotEmpty(ids), McpServers::getId, ids));
 	}
 
-	/**
-	 * 导入excel 表
-	 *
-	 * @param mcpServersList 对象实体列表
-	 * @param bindingResult  错误信息列表
-	 * @return ok fail
-	 */
-	@Operation(summary = "导入", description = "导入")
-	@PostMapping("/import")
-	@HasPermission("agi_mcpServers_export")
-	public R importExcel(@RequestExcel List<McpServers> mcpServersList, BindingResult bindingResult) {
-		return R.ok(mcpServersService.saveBatch(mcpServersList));
-	}
+//	/**
+//	 * 导入excel 表
+//	 *
+//	 * @param mcpServersList 对象实体列表
+//	 * @param bindingResult  错误信息列表
+//	 * @return ok fail
+//	 */
+//	@Operation(summary = "导入", description = "导入")
+//	@PostMapping("/import")
+//	@HasPermission("agi_mcpServers_export")
+//	public R importExcel(@RequestExcel List<McpServers> mcpServersList, BindingResult bindingResult) {
+//		return R.ok(mcpServersService.saveBatch(mcpServersList));
+//	}
 }

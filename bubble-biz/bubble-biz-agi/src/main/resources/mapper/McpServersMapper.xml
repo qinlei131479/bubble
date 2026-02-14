@@ -18,15 +18,23 @@
         <result property="icon" column="icon"/>
         <result property="enabledFlag" column="enabled_flag"/>
         <result property="disabledTools" column="disabled_tools"/>
-        <result property="createdBy" column="created_by"/>
-        <result property="updatedBy" column="updated_by"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
+	    <result property="createBy" column="create_by"/>
+	    <result property="createTime" column="create_time"/>
+	    <result property="updateBy" column="update_by"/>
+	    <result property="updateTime" column="update_time"/>
   </resultMap>
   
   <select id="findPg" resultType="com.bubblecloud.agi.api.entity.McpServers">
-     SELECT t.*
-     FROM mcp_servers t
+	  SELECT t.*
+	  FROM mcp_servers t
+	  <where>
+		  <if test="query.transport != null and query.transport != ''">
+			  AND t.transport = #{query.transport}
+		  </if>
+		  <if test="query.name != null and query.name != ''">
+			  AND (t.name LIKE CONCAT('%',#{query.name},'%') OR t.description LIKE CONCAT('%',#{query.name},'%'))
+		  </if>
+	  </where>
   </select>
 	
 </mapper>

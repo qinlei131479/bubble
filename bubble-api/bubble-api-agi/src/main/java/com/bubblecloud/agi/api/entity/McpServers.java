@@ -97,7 +97,7 @@ public class McpServers extends Req<McpServers> {
 	* 是否启用：0=否,1=是
 	*/
     @Schema(description="是否启用：0=否,1=是")
-    private Integer enabledFlag;
+    private String enabledFlag;
 
 	/**
 	* 禁用的工具名称列表
@@ -110,26 +110,26 @@ public class McpServers extends Req<McpServers> {
 	*/
     @Schema(description="创建人用户名")
 	@TableField(fill = FieldFill.INSERT)
-    private String createdBy;
+    private String createBy;
 
 	/**
 	* 修改人用户名
 	*/
     @Schema(description="修改人用户名")
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-    private String updatedBy;
+    private String updateBy;
 
 	/**
 	* 创建时间
 	*/
     @Schema(description="创建时间")
 	@TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
+    private LocalDateTime updateTime;
 
 	/**
 	* 更新时间
 	*/
     @Schema(description="更新时间")
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedAt;
+    private LocalDateTime createTime;
 }
