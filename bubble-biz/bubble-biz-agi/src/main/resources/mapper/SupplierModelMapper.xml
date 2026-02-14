@@ -21,8 +21,16 @@
   </resultMap>
   
   <select id="findPg" resultType="com.bubblecloud.agi.api.entity.SupplierModel">
-     SELECT t.*
-     FROM supplier_model t
+	  SELECT t.*,s.name supplier_name,s.api_key,s.api_domain
+	  FROM supplier_model t
+	  LEFT JOIN supplier s ON t.supplier_id = s.id
+	  WHERE t.del_flag = 0
+	  <if test="query.modelType != null and query.modelType != ''">
+		  AND t.model_type = #{query.modelType}
+	  </if>
+	  <if test="query.name != null and query.name != ''">
+		  AND t.name LIKE CONCAT('%',#{query.name},'%')
+	  </if>
   </select>
 	
 </mapper>

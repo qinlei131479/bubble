@@ -1,16 +1,14 @@
 package com.bubblecloud.biz.agi.controller;
 
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.agi.service.SupplierService;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
-import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
-import com.pig4cloud.plugin.excel.annotation.RequestExcel;
 import com.bubblecloud.agi.api.entity.SupplierModel;
 import com.bubblecloud.biz.agi.service.SupplierModelService;
 
@@ -21,12 +19,12 @@ import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * AI供应商模型表
@@ -42,6 +40,7 @@ import java.util.Objects;
 public class SupplierModelController {
 
 	private final SupplierModelService supplierModelService;
+	private final SupplierService supplierService;
 
 	/**
 	 * 分页查询
@@ -58,7 +57,6 @@ public class SupplierModelController {
 		return R.ok(supplierModelService.findPg(pg, req));
 	}
 
-
 	/**
 	 * 通过条件查询AI供应商模型表
 	 *
@@ -69,7 +67,15 @@ public class SupplierModelController {
 	@GetMapping("/details")
 	@HasPermission("agi_supplierModel_view")
 	public R<List<SupplierModel>> getDetails(@ParameterObject SupplierModel req) {
-		return R.ok(supplierModelService.list(Wrappers.query(req)));
+		List<SupplierModel> list = supplierModelService.list(Wrappers.query(req));
+		if (Objects.nonNull(req.getId()) && CollUtil.isNotEmpty(list)) {
+			list.forEach(item -> Optional.ofNullable(supplierService.getById(item.getSupplierId()))
+					.ifPresent(supplier -> {
+						item.setApiKey(supplier.getApiKey());
+						item.setApiDomain(supplier.getApiDomain());
+					}));
+		}
+		return R.ok(list);
 	}
 
 	/**
@@ -114,33 +120,4 @@ public class SupplierModelController {
 		return R.ok(supplierModelService.removeBatchByIds(CollUtil.toList(ids)));
 	}
 
-
-	/**
-	 * 导出excel 表格
-	 *
-	 * @param req 查询条件
-	 * @param ids 导出指定ID
-	 * @return excel 文件流
-	 */
-	@Operation(summary = "导出", description = "导出")
-	@ResponseExcel
-	@GetMapping("/export")
-	@HasPermission("agi_supplierModel_export")
-	public List<SupplierModel> exportExcel(SupplierModel req, Long[] ids) {
-		return supplierModelService.list(Wrappers.lambdaQuery(req).in(ArrayUtil.isNotEmpty(ids), SupplierModel::getId, ids));
-	}
-
-	/**
-	 * 导入excel 表
-	 *
-	 * @param supplierModelList 对象实体列表
-	 * @param bindingResult     错误信息列表
-	 * @return ok fail
-	 */
-	@Operation(summary = "导入", description = "导入")
-	@PostMapping("/import")
-	@HasPermission("agi_supplierModel_export")
-	public R importExcel(@RequestExcel List<SupplierModel> supplierModelList, BindingResult bindingResult) {
-		return R.ok(supplierModelService.saveBatch(supplierModelList));
-	}
 }
