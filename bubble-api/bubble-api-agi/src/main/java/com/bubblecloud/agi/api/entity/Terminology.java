@@ -24,7 +24,7 @@ public class Terminology extends Req<Terminology> {
     /**
      * 主键
      */
-    @TableId(type = IdType.INPUT)
+    @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "主键")
 	private Long id;
     /**
@@ -46,7 +46,7 @@ public class Terminology extends Req<Terminology> {
      * 是否指定数据源，0否；1是
      */
     @Schema(description = "是否指定数据源，0否；1是")
-	private Integer specificDs;
+	private String specificDs;
     /**
      * 术语向量数据（pgvector VECTOR 类型，支持动态维度）
      */
@@ -61,7 +61,7 @@ public class Terminology extends Req<Terminology> {
      * 是否启用，0否；1是
      */
     @Schema(description = "是否启用，0否；1是")
-	private Integer enabledFlag;
+	private String enabledFlag;
     /**
      * 创建时间
      */
