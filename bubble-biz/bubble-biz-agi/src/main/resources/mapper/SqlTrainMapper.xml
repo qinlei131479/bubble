@@ -15,8 +15,18 @@
   </resultMap>
   
   <select id="findPg" resultType="com.bubblecloud.agi.api.entity.SqlTrain">
-     SELECT t.*
+     SELECT t.*, ds.name AS ds_name
      FROM sql_train t
+     LEFT JOIN datasource ds ON ds.id = t.ds_id
+	 <where>
+		 <if test="query.dsId != null">
+			 AND t.ds_id = #{query.dsId}
+		 </if>
+		 <if test="query.enabledFlag != null and query.enabledFlag != ''">
+			 AND t.enabled_flag = #{query.enabledFlag}
+		 </if>
+	 </where>
+
   </select>
 	
 </mapper>

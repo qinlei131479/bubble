@@ -67,7 +67,12 @@ public class TerminologyController {
 	@GetMapping("/details")
 	@HasPermission("agi_terminology_view")
 	public R<List<Terminology>> details(@ParameterObject Terminology req) {
-		return R.ok(terminologyService.list(Wrappers.query(req)));
+		req.setParentId(0L);
+		List<Terminology> list = terminologyService.list(Wrappers.query(req));
+		if (CollUtil.isNotEmpty(list)) {
+			list.forEach(item -> this.terminologyService.fill(item));
+		}
+		return R.ok(list);
 	}
 
 	/**

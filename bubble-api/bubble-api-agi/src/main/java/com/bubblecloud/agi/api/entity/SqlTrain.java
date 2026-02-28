@@ -70,4 +70,11 @@ public class SqlTrain extends Req<SqlTrain> {
     @Schema(description="更新时间")
 	@TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+	/**
+	 * 数据源ID
+	 */
+	@TableField(exist = false)
+	@Schema(description="数据源名称")
+	private String dsName;
 }

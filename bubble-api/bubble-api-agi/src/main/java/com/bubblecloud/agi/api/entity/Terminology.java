@@ -1,6 +1,7 @@
 package com.bubblecloud.agi.api.entity;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.bubblecloud.common.mybatis.base.Req;
@@ -12,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * 实体类：术语表
  *
  * @author Rampart Qin
- * @date   2026/02/11 22:35
+ * @date 2026/02/11 22:35
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -20,58 +21,72 @@ import lombok.EqualsAndHashCode;
 @TableName("terminology")
 public class Terminology extends Req<Terminology> {
 
-    private static final long serialVersionUID = 1L;
-    /**
-     * 主键
-     */
-    @TableId(type = IdType.ASSIGN_ID)
-    @Schema(description = "主键")
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 主键
+	 */
+	@TableId(type = IdType.ASSIGN_ID)
+	@Schema(description = "主键")
 	private Long id;
-    /**
-     * 父级ID
-     */
-    @Schema(description = "父级ID")
+	/**
+	 * 父级ID
+	 */
+	@Schema(description = "父级ID")
 	private Long parentId;
-    /**
-     * 术语名称
-     */
-    @Schema(description = "术语名称")
+	/**
+	 * 术语名称
+	 */
+	@Schema(description = "术语名称")
 	private String word;
-    /**
-     * 术语描述
-     */
-    @Schema(description = "术语描述")
+	/**
+	 * 术语描述
+	 */
+	@Schema(description = "术语描述")
 	private String description;
-    /**
-     * 是否指定数据源，0否；1是
-     */
-    @Schema(description = "是否指定数据源，0否；1是")
+	/**
+	 * 是否指定数据源，0否；1是
+	 */
+	@Schema(description = "是否指定数据源，0否；1是")
 	private String specificDs;
-    /**
-     * 术语向量数据（pgvector VECTOR 类型，支持动态维度）
-     */
-    @Schema(description = "术语向量数据（pgvector VECTOR 类型，支持动态维度）")
+	/**
+	 * 术语向量数据（pgvector VECTOR 类型，支持动态维度）
+	 */
+	@Schema(description = "术语向量数据（pgvector VECTOR 类型，支持动态维度）")
 	private String embedding;
-    /**
-     * 数据源ID列表(JSON)
-     */
-    @Schema(description = "数据源ID列表(JSON)")
+	/**
+	 * 数据源ID列表(JSON)
+	 */
+	@Schema(description = "数据源ID列表(JSON)")
 	private String datasourceIds;
-    /**
-     * 是否启用，0否；1是
-     */
-    @Schema(description = "是否启用，0否；1是")
+	/**
+	 * 是否启用，0否；1是
+	 */
+	@Schema(description = "是否启用，0否；1是")
 	private String enabledFlag;
-    /**
-     * 创建时间
-     */
-    @Schema(description = "创建时间")
+	/**
+	 * 创建时间
+	 */
+	@Schema(description = "创建时间")
 	@TableField(fill = FieldFill.INSERT)
 	private LocalDateTime createTime;
-    /**
-     * 更新时间
-     */
-    @Schema(description = "更新时间")
+	/**
+	 * 更新时间
+	 */
+	@Schema(description = "更新时间")
 	@TableField(fill = FieldFill.INSERT_UPDATE)
 	private LocalDateTime updateTime;
+
+	/**
+	 * 数据源名称列表
+	 */
+	@TableField(exist = false)
+	@Schema(description = "数据源名称列表")
+	private String datasourceNames;
+
+	/**
+	 * 同义词
+	 */
+	@TableField(exist = false)
+	@Schema(description = "同义词")
+	private Set<String> words;
 }

@@ -64,7 +64,7 @@ public class DatasourceController {
 	 */
 	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
 	@GetMapping("/details")
-	@HasPermission("agi_datasource_view")
+//	@HasPermission("agi_datasource_view")
 	public R<List<Datasource>> details(@ParameterObject Datasource req) {
 		return R.ok(datasourceService.list(Wrappers.query(req)));
 	}
