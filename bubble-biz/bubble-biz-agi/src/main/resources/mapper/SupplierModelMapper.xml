@@ -29,6 +29,9 @@
 		  <if test="query.modelType != null and query.modelType != ''">
 			  AND t.model_type = #{query.modelType}
 		  </if>
+		  <if test="query.supplierId != null">
+			  AND t.supplier_id = #{query.supplierId}
+		  </if>
 		  <if test="query.name != null and query.name != ''">
 			  AND t.name LIKE CONCAT('%',#{query.name},'%')
 		  </if>
