@@ -10,7 +10,6 @@ import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
-import com.pig4cloud.plugin.excel.annotation.RequestExcel;
 import com.bubblecloud.agi.api.entity.McpServers;
 import com.bubblecloud.biz.agi.service.McpServersService;
 
@@ -21,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +50,7 @@ public class McpServersController {
 	@Operation(summary = "分页查询", description = "分页查询")
 	@GetMapping("/page")
 	@HasPermission("agi_mcpServers_view")
-	public R<Page<McpServers>> getMcpServersPage(@ParameterObject Pg pg, @ParameterObject McpServers req) {
+	public R<Page<McpServers>> page(@ParameterObject Pg pg, @ParameterObject McpServers req) {
 		pg.addOrderDefault(OrderItem.desc("t.id"));
 		return R.ok(mcpServersService.findPg(pg, req));
 	}
@@ -67,7 +65,7 @@ public class McpServersController {
 	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
 	@GetMapping("/details")
 	@HasPermission("agi_mcpServers_view")
-	public R<List<McpServers>> getDetails(@ParameterObject McpServers req) {
+	public R<List<McpServers>> details(@ParameterObject McpServers req) {
 		return R.ok(mcpServersService.list(Wrappers.query(req)));
 	}
 
@@ -113,7 +111,6 @@ public class McpServersController {
 		return R.ok(mcpServersService.removeBatchByIds(CollUtil.toList(ids)));
 	}
 
-
 	/**
 	 * 导出excel 表格
 	 *
@@ -129,17 +126,4 @@ public class McpServersController {
 		return mcpServersService.list(Wrappers.lambdaQuery(req).in(ArrayUtil.isNotEmpty(ids), McpServers::getId, ids));
 	}
 
-//	/**
-//	 * 导入excel 表
-//	 *
-//	 * @param mcpServersList 对象实体列表
-//	 * @param bindingResult  错误信息列表
-//	 * @return ok fail
-//	 */
-//	@Operation(summary = "导入", description = "导入")
-//	@PostMapping("/import")
-//	@HasPermission("agi_mcpServers_export")
-//	public R importExcel(@RequestExcel List<McpServers> mcpServersList, BindingResult bindingResult) {
-//		return R.ok(mcpServersService.saveBatch(mcpServersList));
-//	}
 }

@@ -65,7 +65,7 @@ public class AgentConfigsController {
 	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
 	@GetMapping("/details")
 	@HasPermission("agi_agentConfigs_view")
-	public R<List<AgentConfigs>> getDetails(@ParameterObject AgentConfigs req) {
+	public R<List<AgentConfigs>> details(@ParameterObject AgentConfigs req) {
 		return R.ok(agentConfigsService.list(Wrappers.query(req)));
 	}
 

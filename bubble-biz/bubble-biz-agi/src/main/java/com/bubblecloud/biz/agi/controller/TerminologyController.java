@@ -31,7 +31,7 @@ import java.util.List;
  * 控制器：术语表
  *
  * @author Rampart Qin
- * @date   2026/02/11 22:35
+ * @date 2026/02/11 22:35
  */
 @RestController
 @RequestMapping("/terminology")
@@ -42,35 +42,35 @@ public class TerminologyController {
 
 	private final TerminologyService terminologyService;
 
-    /**
-     * 分页查询
-     *
-     * @param pg  分页对象
-     * @param req 查询参数对象
-     * @return
-     */
-    @Operation(summary = "分页查询", description = "分页查询说明")
-    @GetMapping("/page")
-    @HasPermission("agi_terminology_view")
-    public R<Page<Terminology>> page(@ParameterObject Pg pg, @ParameterObject Terminology req) {
-        pg.addOrderDefault(OrderItem.desc("t.id"));
-        return R.ok(terminologyService.findPg(pg, req));
-    }
+	/**
+	 * 分页查询
+	 *
+	 * @param pg  分页对象
+	 * @param req 查询参数对象
+	 * @return
+	 */
+	@Operation(summary = "分页查询", description = "分页查询说明")
+	@GetMapping("/page")
+	@HasPermission("agi_terminology_view")
+	public R<Page<Terminology>> page(@ParameterObject Pg pg, @ParameterObject Terminology req) {
+		pg.addOrderDefault(OrderItem.desc("t.id"));
+		return R.ok(terminologyService.findPg(pg, req));
+	}
 
-    /**
-     * 通过条件查询
-     *
-     * @param req 查询条件
-     * @return R  对象列表
-     */
-    @Operation(summary = "通过条件查询", description = "通过条件查询对象")
-    @GetMapping("/details")
-    @HasPermission("agi_terminology_view")
-    public R<List<Terminology>> getDetails(@ParameterObject Terminology req) {
-        return R.ok(terminologyService.list(Wrappers.query(req)));
-    }
+	/**
+	 * 通过条件查询
+	 *
+	 * @param req 查询条件
+	 * @return R  对象列表
+	 */
+	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
+	@GetMapping("/details")
+	@HasPermission("agi_terminology_view")
+	public R<List<Terminology>> details(@ParameterObject Terminology req) {
+		return R.ok(terminologyService.list(Wrappers.query(req)));
+	}
 
-    /**
+	/**
 	 * 新增术语表
 	 *
 	 * @param req 术语表

@@ -10,7 +10,6 @@ import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
-import com.pig4cloud.plugin.excel.annotation.RequestExcel;
 import com.bubblecloud.agi.api.entity.ConversationStats;
 import com.bubblecloud.biz.agi.service.ConversationStatsService;
 
@@ -21,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +50,7 @@ public class ConversationStatsController {
 	@Operation(summary = "分页查询", description = "分页查询")
 	@GetMapping("/page")
 	@HasPermission("agi_conversationStats_view")
-	public R<Page<ConversationStats>> getConversationStatsPage(@ParameterObject Pg pg, @ParameterObject ConversationStats req) {
+	public R<Page<ConversationStats>> page(@ParameterObject Pg pg, @ParameterObject ConversationStats req) {
 		pg.addOrderDefault(OrderItem.desc("t.id"));
 		return R.ok(conversationStatsService.findPg(pg, req));
 	}
@@ -67,7 +65,7 @@ public class ConversationStatsController {
 	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
 	@GetMapping("/details")
 	@HasPermission("agi_conversationStats_view")
-	public R<List<ConversationStats>> getDetails(@ParameterObject ConversationStats req) {
+	public R<List<ConversationStats>> details(@ParameterObject ConversationStats req) {
 		return R.ok(conversationStatsService.list(Wrappers.query(req)));
 	}
 
@@ -129,17 +127,4 @@ public class ConversationStatsController {
 		return conversationStatsService.list(Wrappers.lambdaQuery(req).in(ArrayUtil.isNotEmpty(ids), ConversationStats::getId, ids));
 	}
 
-	/**
-	 * 导入excel 表
-	 *
-	 * @param conversationStatsList 对象实体列表
-	 * @param bindingResult         错误信息列表
-	 * @return ok fail
-	 */
-	@Operation(summary = "导入", description = "导入")
-	@PostMapping("/import")
-	@HasPermission("agi_conversationStats_export")
-	public R importExcel(@RequestExcel List<ConversationStats> conversationStatsList, BindingResult bindingResult) {
-		return R.ok(conversationStatsService.saveBatch(conversationStatsList));
-	}
 }

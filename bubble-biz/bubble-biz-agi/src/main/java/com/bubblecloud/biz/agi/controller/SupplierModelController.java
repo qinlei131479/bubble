@@ -52,7 +52,7 @@ public class SupplierModelController {
 	@Operation(summary = "分页查询", description = "分页查询")
 	@GetMapping("/page")
 	@HasPermission("agi_supplierModel_view")
-	public R<Page<SupplierModel>> getSupplierModelPage(@ParameterObject Pg pg, @ParameterObject SupplierModel req) {
+	public R<Page<SupplierModel>> page(@ParameterObject Pg pg, @ParameterObject SupplierModel req) {
 		pg.addOrderDefault(OrderItem.desc("t.id"));
 		return R.ok(supplierModelService.findPg(pg, req));
 	}
@@ -66,7 +66,7 @@ public class SupplierModelController {
 	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
 	@GetMapping("/details")
 	@HasPermission("agi_supplierModel_view")
-	public R<List<SupplierModel>> getDetails(@ParameterObject SupplierModel req) {
+	public R<List<SupplierModel>> details(@ParameterObject SupplierModel req) {
 		List<SupplierModel> list = supplierModelService.list(Wrappers.query(req));
 		if (Objects.nonNull(req.getId()) && CollUtil.isNotEmpty(list)) {
 			list.forEach(item -> Optional.ofNullable(supplierService.getById(item.getSupplierId()))
