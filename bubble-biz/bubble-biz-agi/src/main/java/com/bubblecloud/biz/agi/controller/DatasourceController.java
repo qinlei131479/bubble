@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.agi.api.entity.DatasourceTable;
+import com.bubblecloud.agi.api.entity.DatasourceTableField;
+import com.bubblecloud.biz.agi.service.DatasourceTableFieldService;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.R;
@@ -45,6 +47,7 @@ public class DatasourceController {
 
 	private final DatasourceService datasourceService;
 	private final DatasourceTableService datasourceTableService;
+	private final DatasourceTableFieldService datasourceTableFieldService;
 
 	/**
 	 * 分页查询
@@ -181,4 +184,57 @@ public class DatasourceController {
 		return datasourceService.list(Wrappers.lambdaQuery(req).in(ArrayUtil.isNotEmpty(ids), Datasource::getId, ids));
 	}
 
+
+	/**
+	 * 通过条件查询数据源授权
+	 *
+	 * @param req 查询条件
+	 * @return R  对象列表
+	 */
+	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
+	@GetMapping("/detailsTable")
+	public R<List<DatasourceTable>> detailsTable(@ParameterObject DatasourceTable req) {
+		return R.ok(datasourceTableService.list(Wrappers.query(req)));
+	}
+
+
+	/**
+	 * 修改数据源授权
+	 *
+	 * @param req 数据源授权
+	 * @return R
+	 */
+	@Operation(summary = "修改数据源授权", description = "修改数据源授权")
+	@SysLog("修改数据源授权")
+	@PutMapping("/updateTable")
+	@HasPermission("agi_datasource_edit")
+	public R updateTable(@RequestBody @Validated({Req.Update.class}) DatasourceTable req) {
+		return R.ok(datasourceTableService.update(req));
+	}
+
+	/**
+	 * 通过条件查询数据源表字段
+	 *
+	 * @param req 查询条件
+	 * @return R  对象列表
+	 */
+	@Operation(summary = "通过条件查询", description = "通过条件查询对象")
+	@GetMapping("/detailsTableField")
+	public R<List<DatasourceTableField>> detailsTableField(@ParameterObject DatasourceTableField req) {
+		return R.ok(datasourceTableFieldService.list(Wrappers.query(req)));
+	}
+
+	/**
+	 * 修改数据源表字段
+	 *
+	 * @param req 数据源表字段
+	 * @return R
+	 */
+	@Operation(summary = "修改数据源表字段", description = "修改数据源表字段")
+	@SysLog("修改数据源表字段")
+	@PutMapping("/updateTableField")
+	@HasPermission("agi_datasource_edit")
+	public R updateTableField(@RequestBody @Validated({Req.Update.class}) DatasourceTableField req) {
+		return R.ok(datasourceTableFieldService.update(req));
+	}
 }

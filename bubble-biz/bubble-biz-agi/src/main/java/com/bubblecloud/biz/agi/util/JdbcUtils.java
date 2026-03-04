@@ -329,7 +329,10 @@ public class JdbcUtils {
 				DatasourceTableField field = new DatasourceTableField();
 				field.setFieldName(rs.getString("COLUMN_NAME"));
 				field.setFieldType(rs.getString("TYPE_NAME"));
-				field.setFieldComment(rs.getString("REMARKS") != null ? rs.getString("REMARKS") : "");
+				String remark = rs.getString("REMARKS") != null ? rs.getString("REMARKS") : "";
+				field.setFieldComment(remark);
+				// 自定义注释默认等于字段注释
+				field.setCustomComment(remark);
 				field.setWeight(order++);
 				fields.add(field);
 			}

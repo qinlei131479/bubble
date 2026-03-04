@@ -64,6 +64,12 @@ public class DatasourceTableField extends Req<DatasourceTableField> {
     private String customComment;
 
 	/**
+	 * 数据映射
+	 */
+	@Schema(description = "数据映射")
+	private String dataMapping;
+
+	/**
 	* 字段排序，越小越靠前
 	*/
     @Schema(description="字段排序，越小越靠前")
