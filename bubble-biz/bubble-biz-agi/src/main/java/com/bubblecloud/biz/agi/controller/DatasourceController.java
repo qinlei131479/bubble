@@ -5,13 +5,18 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.agi.api.entity.DatasourceTable;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.log.annotation.SysLog;
 import com.pig4cloud.plugin.excel.annotation.ResponseExcel;
 import com.bubblecloud.agi.api.entity.Datasource;
+import com.bubblecloud.agi.api.dto.DatasourceTestDTO;
+import com.bubblecloud.agi.api.vo.DatasourceTestResultVO;
+import com.bubblecloud.agi.api.vo.TableInfoVO;
 import com.bubblecloud.biz.agi.service.DatasourceService;
+import com.bubblecloud.biz.agi.service.DatasourceTableService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import com.bubblecloud.common.security.annotation.HasPermission;
@@ -39,6 +44,7 @@ import java.util.List;
 public class DatasourceController {
 
 	private final DatasourceService datasourceService;
+	private final DatasourceTableService datasourceTableService;
 
 	/**
 	 * 分页查询
@@ -66,7 +72,16 @@ public class DatasourceController {
 	@GetMapping("/details")
 //	@HasPermission("agi_datasource_view")
 	public R<List<Datasource>> details(@ParameterObject Datasource req) {
-		return R.ok(datasourceService.list(Wrappers.query(req)));
+		List<Datasource> list = datasourceService.list(Wrappers.query(req));
+		if (CollUtil.isNotEmpty(list)) {
+			list.forEach(datasource -> datasource.setTableNames(datasourceTableService.list(Wrappers.lambdaQuery(DatasourceTable.class)
+							.eq(DatasourceTable::getDsId, datasource.getId())
+							.select(DatasourceTable::getTableName))
+					.stream()
+					.map(DatasourceTable::getTableName)
+					.toList()));
+		}
+		return R.ok(list);
 	}
 
 	/**
@@ -79,8 +94,17 @@ public class DatasourceController {
 	@SysLog("新增数据源")
 	@PostMapping
 	@HasPermission("agi_datasource_add")
-	public R create(@RequestBody @Validated({Req.Create.class}) Datasource req) {
-		return R.ok(datasourceService.create(req));
+	public R<Datasource> create(@RequestBody @Validated({Req.Create.class}) Datasource req) {
+		// 使用insert方法确保ID被正确设置
+		datasourceService.insert(req);
+
+		// 同步表结构
+		if (req.getTableNames() != null && !req.getTableNames().isEmpty()) {
+			datasourceService.syncTables(req.getId(), req.getTableNames());
+		}
+
+		// 返回新创建的数据源（包含ID）
+		return R.ok(req);
 	}
 
 	/**
@@ -94,7 +118,14 @@ public class DatasourceController {
 	@PutMapping
 	@HasPermission("agi_datasource_edit")
 	public R update(@RequestBody @Validated({Req.Update.class}) Datasource req) {
-		return R.ok(datasourceService.update(req));
+		datasourceService.update(req);
+
+		// 编辑模式下，同步表结构（先删除旧的表结构和字段，再新增）
+		if (req.getTableNames() != null && !req.getTableNames().isEmpty()) {
+			datasourceService.syncTables(req.getId(), req.getTableNames());
+		}
+
+		return R.ok(true);
 	}
 
 	/**
@@ -109,6 +140,30 @@ public class DatasourceController {
 	@HasPermission("agi_datasource_del")
 	public R removeById(@RequestBody Long[] ids) {
 		return R.ok(datasourceService.removeBatchByIds(CollUtil.toList(ids)));
+	}
+
+	/**
+	 * 测试数据源连接
+	 *
+	 * @param dto 测试连接参数
+	 * @return R 测试结果
+	 */
+	@Operation(summary = "测试数据源连接", description = "测试数据源连接")
+	@PostMapping("/test")
+	public R<DatasourceTestResultVO> test(@RequestBody DatasourceTestDTO dto) {
+		return R.ok(datasourceService.testConnection(dto));
+	}
+
+	/**
+	 * 获取数据库表列表
+	 *
+	 * @param dto 数据源配置
+	 * @return R 表名列表
+	 */
+	@Operation(summary = "获取数据库表列表", description = "获取数据库表列表")
+	@PostMapping("/tables")
+	public R<List<TableInfoVO>> getTables(@RequestBody DatasourceTestDTO dto) {
+		return R.ok(datasourceService.getTableInfo(dto));
 	}
 
 	/**

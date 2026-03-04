@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 数据源
@@ -34,6 +35,18 @@ public class Datasource extends Req<Datasource> {
     private String name;
 
 	/**
+	* 描述
+	*/
+    @Schema(description="描述")
+    private String description;
+
+	/**
+	* 数据库类型: mysql, postgresql, oracle, sqlserver, ck, dm, doris, starrocks等
+	*/
+    @Schema(description="数据库类型")
+    private String dsType;
+
+	/**
 	* jdbcurl
 	*/
     @Schema(description="jdbcurl")
@@ -50,12 +63,6 @@ public class Datasource extends Req<Datasource> {
 	*/
     @Schema(description="密码(加密)")
     private String password;
-
-	/**
-	* 数据库类型: mysql, postgresql, oracle, sqlserver等
-	*/
-    @Schema(description="数据库类型: mysql, postgresql, oracle, sqlserver等")
-    private String dsType;
 
 	/**
 	* 配置类型
@@ -88,6 +95,12 @@ public class Datasource extends Req<Datasource> {
     private String host;
 
 	/**
+	* 连接状态: Success, Failed
+	*/
+    @Schema(description="连接状态")
+    private String status;
+
+	/**
 	* 创建时间
 	*/
 	@TableField(fill = FieldFill.INSERT)
@@ -108,4 +121,12 @@ public class Datasource extends Req<Datasource> {
 	@TableField(fill = FieldFill.INSERT)
     @Schema(description="删除标记，0正常；1删除")
     private String delFlag;
+
+
+	/**
+	 * 已保存的表名
+	 */
+	@TableField(exist = false)
+	@Schema(description="已保存的表名")
+	private List<String> tableNames;
 }
