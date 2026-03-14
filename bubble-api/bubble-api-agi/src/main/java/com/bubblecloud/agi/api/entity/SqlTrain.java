@@ -55,7 +55,7 @@ public class SqlTrain extends Req<SqlTrain> {
 	* 是否启用，0否；1是
 	*/
     @Schema(description="是否启用，0否；1是")
-    private String enabledFlag;
+    private Integer enabledFlag;
 
 	/**
 	* 创建时间

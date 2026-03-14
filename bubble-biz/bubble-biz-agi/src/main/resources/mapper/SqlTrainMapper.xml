@@ -22,7 +22,7 @@
 		 <if test="query.dsId != null">
 			 AND t.ds_id = #{query.dsId}
 		 </if>
-		 <if test="query.enabledFlag != null and query.enabledFlag != ''">
+		 <if test="query.enabledFlag != null ">
 			 AND t.enabled_flag = #{query.enabledFlag}
 		 </if>
 	 </where>

@@ -61,13 +61,13 @@ public class Supplier extends Req<Supplier> {
 	 * 状态，0：正常，1：停用
 	 */
 	@Schema(description = "状态，0：正常，1：停用")
-	private Integer status;
+	private String status;
 	/**
 	 * 删除标识，0：存在，1：删除
 	 */
 	@TableLogic
 	@Schema(description = "删除标识，0：存在，1：删除")
-	private Integer delFlag;
+	private String delFlag;
 	/**
 	 * 创建人
 	 */
