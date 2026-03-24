@@ -1,5 +1,5 @@
 <p align="center">
- <img src="https://img.shields.io/badge/BubbleCloud-1.0.0-success.svg" alt="Build Status">
+ <img src="https://img.shields.io/badge/Bubble-Cloud-1.0.0-success.svg" alt="Build Status">
  <img src="https://img.shields.io/badge/Spring%20Cloud-2025-blue.svg" alt="Coverage Status">
  <img src="https://img.shields.io/badge/Spring%20Boot-3.5-blue.svg" alt="Downloads">
  <img src="https://img.shields.io/badge/Vue-3.5-blue.svg" alt="Downloads">
@@ -7,7 +7,7 @@
 
 ## 项目概述
 
-**BubbleCloud** 是一个面向下一代人机交互的智能体原生平台，将大语言模型、RAG 检索增强生成与自主智能体技术深度融合， 以“泡泡”为核心理念，构建轻量化、可组合、自进化的 AI 应用生态。
+**Bubble-Cloud** 是一个面向下一代人机交互的智能体原生平台，将大语言模型、RAG 检索增强生成与自主智能体技术深度融合， 以“泡泡”为核心理念，构建轻量化、可组合、自进化的 AI 应用生态。
 
 - 基于 Spring Cloud 、Spring Boot、 OAuth2 的 RBAC **企业快速开发平台**， 支持微服务架构
 - 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
@@ -37,7 +37,7 @@
 ```lua
 Vue前端  -- https://github.com/qinlei131479/AgetBubbles.git
 
-BubbleCloud
+Bubble-Cloud
 └── bubble-api -- 通用API模块
      ├── bubble-api-backend -- 通用用户权限管理系统公共api模块
      ├── bubble-api-flow -- 通用flow公共api模块
