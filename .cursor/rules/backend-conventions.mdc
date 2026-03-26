@@ -1,0 +1,66 @@
+---
+description: Java 后端开发规范，涵盖 Spring Cloud 微服务架构中的编码约定和模块依赖规则
+globs: "**/*.java"
+alwaysApply: false
+---
+
+# 后端开发规范
+
+## 代码格式
+
+- 使用 Spring Java Format 插件（`spring-javaformat-maven-plugin 0.0.47`）
+- 格式化命令: `mvn spring-javaformat:apply`
+- 缩进: Tab，宽度 4，续行缩进 8（见 `.editorconfig`）
+- 编码: UTF-8
+
+## 模块分层约定
+
+```
+bubble-api-{module}     → 公共 API：实体、DTO/VO、Feign 接口（jar 库，不可独立运行）
+bubble-biz-{module}     → 业务服务：Controller/Service/Mapper（Spring Boot 应用）
+bubble-common-{feature} → 公共组件：跨模块复用的工具与自动配置（jar 库）
+bubble-visual-{feature} → 可视化管理工具服务
+```
+
+## 新增模块检查清单
+
+1. 在父 POM 的 `<modules>` 中注册
+2. 在 `bubble-common-bom` 中声明版本管理
+3. 可部署服务需配置 `application.yml` + `logback-spring.xml` + `Dockerfile`
+4. 启动类注解组合: `@EnableDoc("模块名")` + `@EnableCustomFeignClients` + `@EnableCustomResourceServer`
+5. Nacos 配置命名: `{spring.application.name}-{profile}.yml`
+
+## 自动配置注册
+
+- 使用 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`（Spring Boot 3 方式）
+- Feign 客户端注册: `META-INF/spring/org.springframework.cloud.openfeign.FeignClient.imports`
+
+## 关键注解
+
+| 注解 | 用途 | 来源模块 |
+|------|------|---------|
+| `@EnableCustomResourceServer` | 启用 OAuth2 资源服务器 | common-security |
+| `@EnableCustomFeignClients` | 自定义 Feign 扫描 | common-feign |
+| `@EnableDoc("name")` | SpringDoc OpenAPI | common-swagger |
+| `@EnableDynamicDataSource` | 动态多数据源 | common-datasource |
+| `@Inner` | 内部调用免鉴权 | common-security |
+| `@SysLog("描述")` | 操作日志记录 | common-log |
+| `@HasPermission` | 方法级权限校验 | common-security |
+
+## 实体规范
+
+- 继承 `BaseEntity`（含 createBy/createTime/updateBy/updateTime/delFlag 自动填充）
+- MyBatis-Plus `MybatisPlusMetaObjectHandler` 自动处理审计字段
+- JSON 数组字段使用 `JsonStringArrayTypeHandler` / `JsonLongArrayTypeHandler`
+
+## 统一返回
+
+- 使用 `R<T>` 包装所有 REST 响应
+- 成功: `R.ok(data)`，失败: `R.failed(msg)` 或 `R.failed(ErrorCodes.XXX)`
+- 国际化错误码定义在 `ErrorCodes` + `i18n/messages` 资源文件
+
+## 依赖引入原则
+
+- 版本统一由 `bubble-common-bom` 管理，业务模块**不要**硬编码版本号
+- Web 服务使用 Undertow（已排除 Tomcat）
+- Feign 使用 OkHttp 作为底层客户端
