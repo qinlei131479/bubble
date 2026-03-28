@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 工作汇报（占位，待按 eb_enterprise_user_daily 等表实现）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequestMapping("/ent/report")
@@ -20,7 +22,7 @@ public class ReportController {
 	@GetMapping("/page")
 	@Operation(summary = "汇报分页")
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

@@ -28,6 +28,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * 用户菜单与按钮权限实现。
+ *
+ * @author qinlei
  */
 @Service
 @RequiredArgsConstructor
@@ -44,8 +46,8 @@ public class MenusServiceImpl implements MenusService {
 	@Override
 	public MenusVO menus(MenusQueryDTO dto) {
 		Admin admin = adminMapper.selectOne(Wrappers.lambdaQuery(Admin.class)
-			.eq(Admin::getId, dto.getUserId())
-			.isNull(Admin::getDeletedAt));
+				.eq(Admin::getId, dto.getUserId())
+				.isNull(Admin::getDeletedAt));
 		if (admin == null) {
 			return new MenusVO(Collections.emptyList(), Collections.emptyList());
 		}
@@ -61,10 +63,10 @@ public class MenusServiceImpl implements MenusService {
 
 	private Set<Long> loadAllMenuIds() {
 		List<SystemMenus> rows = systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
-			.select(SystemMenus::getId)
-			.eq(SystemMenus::getStatus, 1)
-			.isNull(SystemMenus::getDeletedAt)
-			.in(SystemMenus::getType, "M", "B", "A"));
+				.select(SystemMenus::getId)
+				.eq(SystemMenus::getStatus, 1)
+				.isNull(SystemMenus::getDeletedAt)
+				.in(SystemMenus::getType, "M", "B", "A"));
 		return rows.stream().map(SystemMenus::getId).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
@@ -74,8 +76,8 @@ public class MenusServiceImpl implements MenusService {
 			return Collections.emptySet();
 		}
 		List<EnterpriseRole> roles = enterpriseRoleMapper.selectList(Wrappers.lambdaQuery(EnterpriseRole.class)
-			.eq(EnterpriseRole::getStatus, 1)
-			.in(EnterpriseRole::getId, roleIds));
+				.eq(EnterpriseRole::getStatus, 1)
+				.in(EnterpriseRole::getId, roleIds));
 		Set<Long> menuIds = new LinkedHashSet<>();
 		for (EnterpriseRole role : roles) {
 			if (role.getRules() != null) {
@@ -90,12 +92,12 @@ public class MenusServiceImpl implements MenusService {
 			return Collections.emptyList();
 		}
 		return systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
-			.eq(SystemMenus::getStatus, 1)
-			.isNull(SystemMenus::getDeletedAt)
-			.eq(SystemMenus::getType, type)
-			.in(SystemMenus::getId, menuIds)
-			.orderByDesc(SystemMenus::getSort)
-			.orderByAsc(SystemMenus::getId));
+				.eq(SystemMenus::getStatus, 1)
+				.isNull(SystemMenus::getDeletedAt)
+				.eq(SystemMenus::getType, type)
+				.in(SystemMenus::getId, menuIds)
+				.orderByDesc(SystemMenus::getSort)
+				.orderByAsc(SystemMenus::getId));
 	}
 
 	private List<String> loadButtonAuthByIds(Set<Long> menuIds, String type) {
@@ -103,16 +105,16 @@ public class MenusServiceImpl implements MenusService {
 			return Collections.emptyList();
 		}
 		List<SystemMenus> rows = systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
-			.select(SystemMenus::getUniqueAuth)
-			.eq(SystemMenus::getStatus, 1)
-			.isNull(SystemMenus::getDeletedAt)
-			.eq(SystemMenus::getType, type)
-			.in(SystemMenus::getId, menuIds));
+				.select(SystemMenus::getUniqueAuth)
+				.eq(SystemMenus::getStatus, 1)
+				.isNull(SystemMenus::getDeletedAt)
+				.eq(SystemMenus::getType, type)
+				.in(SystemMenus::getId, menuIds));
 		return rows.stream()
-			.map(SystemMenus::getUniqueAuth)
-			.filter(StringUtils::hasText)
-			.distinct()
-			.toList();
+				.map(SystemMenus::getUniqueAuth)
+				.filter(StringUtils::hasText)
+				.distinct()
+				.toList();
 	}
 
 	private List<SystemMenus> buildMenuTree(List<SystemMenus> menuFlat) {
@@ -131,15 +133,13 @@ public class MenusServiceImpl implements MenusService {
 						parent.setTopPosition(new ArrayList<>());
 					}
 					parent.getTopPosition().add(node);
-				}
-				else {
+				} else {
 					if (parent.getChildren() == null) {
 						parent.setChildren(new ArrayList<>());
 					}
 					parent.getChildren().add(node);
 				}
-			}
-			else {
+			} else {
 				tree.add(node);
 			}
 		}
@@ -157,8 +157,7 @@ public class MenusServiceImpl implements MenusService {
 				});
 				return parsed.stream().filter(Objects::nonNull).toList();
 			}
-		}
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// fallback
 		}
 		String normalized = value.replace("[", "").replace("]", "").replace("\"", "");
@@ -166,19 +165,18 @@ public class MenusServiceImpl implements MenusService {
 			return Collections.emptyList();
 		}
 		return List.of(normalized.split(","))
-			.stream()
-			.map(String::trim)
-			.filter(StringUtils::hasText)
-			.map(item -> {
-				try {
-					return Long.parseLong(item);
-				}
-				catch (NumberFormatException ex) {
-					return null;
-				}
-			})
-			.filter(Objects::nonNull)
-			.toList();
+				.stream()
+				.map(String::trim)
+				.filter(StringUtils::hasText)
+				.map(item -> {
+					try {
+						return Long.parseLong(item);
+					} catch (NumberFormatException ex) {
+						return null;
+					}
+				})
+				.filter(Objects::nonNull)
+				.toList();
 	}
 
 }

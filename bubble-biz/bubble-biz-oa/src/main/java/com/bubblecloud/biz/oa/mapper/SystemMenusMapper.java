@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * eb_system_menus 表 Mapper。
+ *
+ * @author qinlei
  */
 @Mapper
 public interface SystemMenusMapper extends UpMapper<SystemMenus> {

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Phase 5：考勤（占位）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class AttendanceController {
 	@GetMapping("/group/page")
 	@Operation(summary = "考勤组分页")
 	public PhpResponse<SimplePageVO> groupPage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+											   @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

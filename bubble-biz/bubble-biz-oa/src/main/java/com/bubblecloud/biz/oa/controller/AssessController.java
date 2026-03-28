@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 绩效（占位，待按 eb_assess_scheme 等表实现）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequestMapping("/ent/assess")
@@ -20,7 +22,7 @@ public class AssessController {
 	@GetMapping("/page")
 	@Operation(summary = "绩效方案分页")
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

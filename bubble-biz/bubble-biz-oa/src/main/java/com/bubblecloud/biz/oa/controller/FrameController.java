@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Phase 2：组织架构模块（占位）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class FrameController {
 	@GetMapping("/page")
 	@Operation(summary = "组织架构分页")
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

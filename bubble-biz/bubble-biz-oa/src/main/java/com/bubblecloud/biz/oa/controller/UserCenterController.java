@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 用户中心模块（Phase 9，占位：待按表实现 Mapper 与业务）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class UserCenterController {
 	@GetMapping("/resume/page")
 	@Operation(summary = "用户简历分页")
 	public PhpResponse<SimplePageVO> resumePage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+												@RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

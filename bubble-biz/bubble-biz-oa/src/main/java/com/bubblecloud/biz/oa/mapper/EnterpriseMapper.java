@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * eb_enterprise 表 Mapper。
+ *
+ * @author qinlei
  */
 @Mapper
 public interface EnterpriseMapper extends UpMapper<Enterprise> {

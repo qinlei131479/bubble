@@ -6,6 +6,8 @@ import lombok.Data;
 
 /**
  * 用户菜单查询参数。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "用户菜单查询")

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Phase 3：企业与人事（占位）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class CompanyController {
 	@GetMapping("/user-card/page")
 	@Operation(summary = "员工档案分页")
 	public PhpResponse<SimplePageVO> userCardPage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+												  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

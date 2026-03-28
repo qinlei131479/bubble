@@ -17,6 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * PHP JWT 鉴权过滤器。
+ *
+ * @author qinlei
  */
 @Component
 public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Phase 6：审批（占位）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ApproveController {
 	@GetMapping("/page")
 	@Operation(summary = "审批配置分页")
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

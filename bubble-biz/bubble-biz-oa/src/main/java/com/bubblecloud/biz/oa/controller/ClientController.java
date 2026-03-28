@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * CRM 客户（占位，待按 eb_customer 表实现）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequestMapping("/ent/client")
@@ -20,7 +22,7 @@ public class ClientController {
 	@GetMapping("/customer/page")
 	@Operation(summary = "客户分页")
 	public PhpResponse<SimplePageVO> customerPage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+												  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

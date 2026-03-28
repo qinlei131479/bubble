@@ -1,4 +1,4 @@
-package com.bubblecloud.biz.oa.controller;
+package com.bubblecloud.biz.oa.handler;
 
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import jakarta.validation.ConstraintViolationException;
@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * OA 异常统一处理。
+ *
+ * @author qinlei
  */
 @RestControllerAdvice(basePackages = "com.bubblecloud.biz.oa.controller")
 public class OaExceptionHandler {

@@ -2,13 +2,15 @@ package com.bubblecloud.biz.oa.mapper;
 
 import java.util.List;
 
-import com.bubblecloud.biz.oa.dto.FrameAssistView;
+import com.bubblecloud.oa.api.dto.FrameAssistView;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
  * eb_frame_assist 查询。
+ *
+ * @author qinlei
  */
 @Mapper
 public interface FrameAssistMapper {

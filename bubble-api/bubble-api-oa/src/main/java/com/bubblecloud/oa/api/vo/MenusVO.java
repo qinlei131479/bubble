@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * 用户菜单响应。
+ *
+ * @author qinlei
  */
 @Data
 @NoArgsConstructor

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 财务（占位，待按 eb_bill_list 等表实现）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequestMapping("/ent/finance")
@@ -20,7 +22,7 @@ public class FinanceController {
 	@GetMapping("/bill/page")
 	@Operation(summary = "账单分页")
 	public PhpResponse<SimplePageVO> billPage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+											  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

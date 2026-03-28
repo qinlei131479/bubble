@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * eb_admin 员工账号服务实现。
+ *
+ * @author qinlei
  */
 @Service
 public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements AdminService {
@@ -16,12 +18,12 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 	@Override
 	public Admin getByAccount(String account) {
 		Admin admin = this.getOne(Wrappers.lambdaQuery(Admin.class)
-			.eq(Admin::getAccount, account)
-			.isNull(Admin::getDeletedAt), false);
+				.eq(Admin::getAccount, account)
+				.isNull(Admin::getDeletedAt), false);
 		if (admin == null) {
 			admin = this.getOne(Wrappers.lambdaQuery(Admin.class)
-				.eq(Admin::getPhone, account)
-				.isNull(Admin::getDeletedAt), false);
+					.eq(Admin::getPhone, account)
+					.isNull(Admin::getDeletedAt), false);
 		}
 		return admin;
 	}

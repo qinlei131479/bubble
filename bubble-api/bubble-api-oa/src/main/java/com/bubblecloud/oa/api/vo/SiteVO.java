@@ -7,6 +7,8 @@ import lombok.Data;
 
 /**
  * 站点配置响应（兼容 PHP 前端蛇形字段命名）。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "站点配置")

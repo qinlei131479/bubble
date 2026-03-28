@@ -6,6 +6,8 @@ import lombok.Data;
 
 /**
  * 登录请求参数。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "登录请求")

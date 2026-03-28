@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 当前登录用户信息。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "当前登录用户")

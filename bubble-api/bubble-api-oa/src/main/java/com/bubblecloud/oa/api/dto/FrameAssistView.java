@@ -1,4 +1,4 @@
-package com.bubblecloud.biz.oa.dto;
+package com.bubblecloud.oa.api.dto;
 
 import lombok.Data;
 

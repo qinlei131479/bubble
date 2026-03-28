@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * eb_enterprise_role 表 Mapper。
+ *
+ * @author qinlei
  */
 @Mapper
 public interface EnterpriseRoleMapper extends UpMapper<EnterpriseRole> {

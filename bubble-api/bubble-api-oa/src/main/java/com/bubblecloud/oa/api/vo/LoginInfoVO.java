@@ -7,6 +7,8 @@ import lombok.Data;
 
 /**
  * 登录后用户信息（与 PHP AdminService::loginInfo 一致：userInfo + enterprise）。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "登录会话信息")

@@ -6,6 +6,8 @@ import lombok.Data;
 
 /**
  * PHP JWT 配置。
+ *
+ * @author qinlei
  */
 @Data
 @ConfigurationProperties(prefix = "oa.php-jwt")

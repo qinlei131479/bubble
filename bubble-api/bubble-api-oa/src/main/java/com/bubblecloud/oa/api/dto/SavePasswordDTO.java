@@ -6,6 +6,8 @@ import lombok.Data;
 
 /**
  * 修改密码（兼容 PHP ent/user/savePassword）。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "修改密码参数")

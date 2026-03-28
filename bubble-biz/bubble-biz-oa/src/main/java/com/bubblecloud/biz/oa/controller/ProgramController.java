@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 项目管理（占位，待按 eb_program 表实现）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequestMapping("/ent/program")
@@ -20,7 +22,7 @@ public class ProgramController {
 	@GetMapping("/page")
 	@Operation(summary = "项目分页")
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

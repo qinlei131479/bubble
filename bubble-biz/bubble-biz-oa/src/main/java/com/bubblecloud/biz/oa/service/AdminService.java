@@ -5,11 +5,14 @@ import com.bubblecloud.oa.api.entity.Admin;
 
 /**
  * eb_admin 员工账号服务。
+ *
+ * @author qinlei
  */
 public interface AdminService extends UpService<Admin> {
 
 	/**
 	 * 按账号或手机号查询员工。
+	 *
 	 * @param account 账号或手机号
 	 * @return 员工
 	 */

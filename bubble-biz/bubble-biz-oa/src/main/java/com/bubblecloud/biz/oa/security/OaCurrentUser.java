@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * OA 当前用户凭证。
+ *
+ * @author qinlei
  */
 @Data
 @NoArgsConstructor

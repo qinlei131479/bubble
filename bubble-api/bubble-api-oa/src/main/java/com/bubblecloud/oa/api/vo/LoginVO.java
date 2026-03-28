@@ -7,6 +7,8 @@ import lombok.Data;
 
 /**
  * 登录响应（兼容 PHP 前端蛇形字段命名）。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "登录响应")

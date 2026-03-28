@@ -21,6 +21,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * 站点展示配置实现。
+ *
+ * @author qinlei
  */
 @Service
 @RequiredArgsConstructor
@@ -37,15 +39,15 @@ public class SiteServiceImpl implements SiteService {
 	@Override
 	public SiteVO site() {
 		List<SystemConfig> configs = systemConfigMapper
-			.selectList(Wrappers.lambdaQuery(SystemConfig.class));
+				.selectList(Wrappers.lambdaQuery(SystemConfig.class));
 		Map<String, String> configMap = configs.stream()
-			.filter(c -> c.getMenuName() != null)
-			.collect(Collectors.toMap(SystemConfig::getMenuName,
-					c -> c.getValue() == null ? "" : c.getValue(), (a, b) -> b, LinkedHashMap::new));
+				.filter(c -> c.getMenuName() != null)
+				.collect(Collectors.toMap(SystemConfig::getMenuName,
+						c -> c.getValue() == null ? "" : c.getValue(), (a, b) -> b, LinkedHashMap::new));
 
 		Enterprise ent = enterpriseMapper.selectOne(Wrappers.lambdaQuery(Enterprise.class)
-			.eq(Enterprise::getId, 1L)
-			.eq(Enterprise::getStatus, 1));
+				.eq(Enterprise::getId, 1L)
+				.eq(Enterprise::getStatus, 1));
 
 		SiteVO vo = new SiteVO();
 		vo.setSiteRecordNumber(configMap.getOrDefault("site_record_number", ""));
@@ -80,8 +82,7 @@ public class SiteServiceImpl implements SiteService {
 			if (!sorted.isEmpty()) {
 				return sorted.stream().map(String::valueOf).collect(Collectors.joining());
 			}
-		}
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// fallback 到逗号分隔
 		}
 		List<Long> parsed = parseIdList(raw);
@@ -95,8 +96,7 @@ public class SiteServiceImpl implements SiteService {
 	private Integer parseInteger(String raw, int defaultValue) {
 		try {
 			return StringUtils.hasText(raw) ? Integer.parseInt(raw) : defaultValue;
-		}
-		catch (NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			return defaultValue;
 		}
 	}
@@ -112,8 +112,7 @@ public class SiteServiceImpl implements SiteService {
 				});
 				return parsed.stream().filter(Objects::nonNull).toList();
 			}
-		}
-		catch (Exception ignored) {
+		} catch (Exception ignored) {
 			// fallback
 		}
 		String normalized = value.replace("[", "").replace("]", "").replace("\"", "");
@@ -121,18 +120,17 @@ public class SiteServiceImpl implements SiteService {
 			return List.of();
 		}
 		return java.util.Arrays.stream(normalized.split(","))
-			.map(String::trim)
-			.filter(StringUtils::hasText)
-			.map(item -> {
-				try {
-					return Long.parseLong(item);
-				}
-				catch (NumberFormatException ex) {
-					return null;
-				}
-			})
-			.filter(Objects::nonNull)
-			.toList();
+				.map(String::trim)
+				.filter(StringUtils::hasText)
+				.map(item -> {
+					try {
+						return Long.parseLong(item);
+					} catch (NumberFormatException ex) {
+						return null;
+					}
+				})
+				.filter(Objects::nonNull)
+				.toList();
 	}
 
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 系统配置查询参数。
+ *
+ * @author qinlei
  */
 @Data
 @Schema(description = "系统配置查询")

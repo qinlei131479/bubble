@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 消息（占位，待按 eb_message 表实现）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequestMapping("/ent/message")
@@ -20,7 +22,7 @@ public class MessageController {
 	@GetMapping("/page")
 	@Operation(summary = "消息分页")
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

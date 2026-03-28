@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * OA 登录鉴权接口（兼容 PHP 路径）。
+ *
+ * @author qinlei
  */
 @RestController
 @RequiredArgsConstructor
@@ -52,10 +54,10 @@ public class LoginController {
 		return PhpResponse.ok(Boolean.TRUE);
 	}
 
-	@PutMapping({ "/savePassword", "/common/savePassword" })
+	@PutMapping({"/savePassword", "/common/savePassword"})
 	@Operation(summary = "修改密码（与 PHP ent/user/savePassword 一致）")
 	public PhpResponse<String> savePassword(Authentication authentication,
-			@RequestBody @Valid SavePasswordDTO dto) {
+											@RequestBody @Valid SavePasswordDTO dto) {
 		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}

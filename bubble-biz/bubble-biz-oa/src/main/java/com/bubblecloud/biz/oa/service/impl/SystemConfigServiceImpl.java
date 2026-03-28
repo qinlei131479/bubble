@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * eb_system_config 系统配置服务实现。
+ *
+ * @author qinlei
  */
 @Service
 public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig>
@@ -21,7 +23,7 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	@Override
 	public ConfigVO config(ConfigQueryDTO dto) {
 		List<SystemConfig> list = this.list(Wrappers.lambdaQuery(SystemConfig.class)
-			.eq(SystemConfig::getType, dto.getType()));
+				.eq(SystemConfig::getType, dto.getType()));
 		ConfigVO vo = new ConfigVO();
 		for (SystemConfig c : list) {
 			if (c.getMenuName() != null) {

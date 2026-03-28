@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.bubblecloud.biz.oa.dto.FrameAssistView;
+import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
@@ -36,6 +36,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * 兼容 PHP 的登录鉴权服务实现。
+ *
+ * @author qinlei
  */
 @Service
 @RequiredArgsConstructor
@@ -131,9 +133,9 @@ public class AuthServiceImpl implements AuthService {
 			return Collections.emptyList();
 		}
 		try {
-			return objectMapper.readValue(raw, new TypeReference<List<Object>>() {});
-		}
-		catch (Exception e) {
+			return objectMapper.readValue(raw, new TypeReference<List<Object>>() {
+			});
+		} catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
@@ -193,16 +195,15 @@ public class AuthServiceImpl implements AuthService {
 		String v = configValue(key, String.valueOf(def));
 		try {
 			return Integer.parseInt(v.trim());
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			return def;
 		}
 	}
 
 	private String configValue(String key, String defaultVal) {
 		SystemConfig c = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-			.eq(SystemConfig::getMenuName, key)
-			.last("LIMIT 1"));
+				.eq(SystemConfig::getMenuName, key)
+				.last("LIMIT 1"));
 		if (c == null || c.getValue() == null) {
 			return defaultVal;
 		}
