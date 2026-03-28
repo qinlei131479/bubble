@@ -1,5 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +30,15 @@ public class ApproveController {
 	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
 										  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
+	}
+
+	/**
+	 * 与 PHP {@code ent/approve/holiday_type/select} 一致：{@code [{value,label,duration_type},...]}。
+	 */
+	@GetMapping("/holiday_type/select")
+	@Operation(summary = "假期类型下拉")
+	public PhpResponse<List<Map<String, Object>>> holidayTypeSelect() {
+		return PhpResponse.ok(Collections.emptyList());
 	}
 
 }

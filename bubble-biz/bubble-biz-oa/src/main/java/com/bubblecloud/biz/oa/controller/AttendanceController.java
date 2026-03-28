@@ -1,5 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +30,15 @@ public class AttendanceController {
 	public PhpResponse<SimplePageVO> groupPage(@RequestParam(defaultValue = "1") Integer current,
 											   @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
+	}
+
+	/**
+	 * 与 PHP {@code ent/attendance/abnormal_date} 一致：可补卡异常日期下拉 {@code [{value,label},...]}。
+	 */
+	@GetMapping("/abnormal_date")
+	@Operation(summary = "考勤异常日期列表")
+	public PhpResponse<List<Map<String, Object>>> abnormalDate() {
+		return PhpResponse.ok(Collections.emptyList());
 	}
 
 }

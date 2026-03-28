@@ -1,6 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.bubblecloud.biz.oa.support.PhpResponse;
@@ -51,6 +54,38 @@ public class ConfigController {
 	public PhpResponse<SimplePageVO> formPage(@RequestParam(defaultValue = "1") Integer current,
 											  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
+	}
+
+	/**
+	 * 与 PHP {@code ent/config/frame/tree} 一致：部门树（占位）。
+	 */
+	@GetMapping("/frame/tree")
+	@Operation(summary = "组织架构树（工作台/权限范围）")
+	public PhpResponse<List<Map<String, Object>>> frameTree(@RequestParam(defaultValue = "0") int role,
+														   @RequestParam(defaultValue = "0") int scope) {
+		return PhpResponse.ok(Collections.emptyList());
+	}
+
+	/**
+	 * 与 PHP {@code ent/config/frame/user} 一致：人员树；首节点须含 {@code children}，供 Vuex getMember 使用。
+	 */
+	@GetMapping("/frame/user")
+	@Operation(summary = "组织架构人员树")
+	public PhpResponse<List<Map<String, Object>>> frameUser(@RequestParam(defaultValue = "0") int role,
+														  @RequestParam(defaultValue = "0") int leave) {
+		Map<String, Object> root = new LinkedHashMap<>();
+		root.put("id", 0);
+		root.put("value", 0);
+		root.put("label", "组织架构");
+		root.put("pid", 0);
+		root.put("type", 0);
+		root.put("disabled", false);
+		root.put("user_single_count", 0);
+		root.put("isCheck", false);
+		root.put("children", Collections.emptyList());
+		List<Map<String, Object>> list = new ArrayList<>(1);
+		list.add(root);
+		return PhpResponse.ok(list);
 	}
 
 }

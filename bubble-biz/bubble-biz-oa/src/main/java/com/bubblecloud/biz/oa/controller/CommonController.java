@@ -10,6 +10,7 @@ import com.bubblecloud.oa.api.vo.SiteVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -62,6 +63,21 @@ public class CommonController {
 		Map<String, Object> data = new LinkedHashMap<>();
 		data.put("status", 1);
 		data.put("day", 999);
+		return PhpResponse.ok(data);
+	}
+
+	/**
+	 * 与 PHP {@code ent/common/message} 一致：{@code list} + {@code messageNum}。
+	 */
+	@GetMapping("/message")
+	@Operation(summary = "消息列表（工作台角标）")
+	public PhpResponse<Map<String, Object>> message(@RequestParam(defaultValue = "1") Integer page,
+													  @RequestParam(defaultValue = "20") Integer limit,
+													  @RequestParam(required = false) String cate_id,
+													  @RequestParam(required = false) String title) {
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("list", Collections.emptyList());
+		data.put("messageNum", 0);
 		return PhpResponse.ok(data);
 	}
 
