@@ -72,3 +72,7 @@ bubble-visual-{feature} → 可视化管理工具服务
 - **Service 契约**：入参使用 `bubble-api-oa` 中的 `*DTO`，返回使用 `*VO`；避免在 Service 接口上使用 `Map<String, Object>` 作为业务返回类型。
 - **数据访问**：禁止在业务代码中使用 `JdbcTemplate` 直接拼 SQL 访问 OA 库表；统一使用 `XxxMapper` + `classpath:/mapper/*.xml`，并优先使用 MyBatis-Plus 提供的 `lambdaQuery` / `UpService` 封装方法。
 - **PHP 兼容响应**：对外兼容前端的包装类为 `com.bubblecloud.biz.oa.support.PhpResponse`（`status` / `msg` / `data`），与网关/微服务默认的 `R<T>` 区分使用场景。
+
+## 类文件头 Javadoc
+
+- **新建** Java 类型时类上注释格式（`@author` 取自 git、`@date` 为创建时间）见同目录 **`java-class-javadoc.mdc`**，全模块 Java 源文件均适用。
