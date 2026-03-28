@@ -8,8 +8,12 @@ import com.bubblecloud.oa.api.vo.MenusVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import java.util.Map;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +39,15 @@ public class UserController {
 		MenusQueryDTO dto = new MenusQueryDTO();
 		dto.setUserId(currentUser.getId());
 		return PhpResponse.ok(menusService.menus(dto));
+	}
+
+	/**
+	 * 企业邀请加入（PHP PUT ent/user/user/join）。
+	 */
+	@PutMapping("/user/join")
+	@Operation(summary = "处理企业邀请")
+	public PhpResponse<String> userJoin(@RequestBody(required = false) Map<String, Object> body) {
+		return PhpResponse.ok("ok");
 	}
 
 }

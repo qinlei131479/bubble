@@ -1,5 +1,8 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Phase 3：企业与人事（占位）。
+ * 企业与人事、企业消息（占位）。
  *
  * @author qinlei
  */
@@ -26,6 +29,15 @@ public class CompanyController {
 	public PhpResponse<SimplePageVO> userCardPage(@RequestParam(defaultValue = "1") Integer current,
 												  @RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
+	}
+
+	@GetMapping("/message")
+	@Operation(summary = "消息中心列表（工作台系统通知）")
+	public PhpResponse<Map<String, Object>> messageList(@RequestParam Map<String, String> query) {
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("list", java.util.Collections.emptyList());
+		data.put("count", 0);
+		return PhpResponse.ok(data);
 	}
 
 }

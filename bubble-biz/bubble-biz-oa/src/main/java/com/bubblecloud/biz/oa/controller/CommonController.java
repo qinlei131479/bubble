@@ -10,6 +10,9 @@ import com.bubblecloud.oa.api.vo.SiteVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +51,18 @@ public class CommonController {
 	@Operation(summary = "站点配置")
 	public PhpResponse<SiteVO> site() {
 		return PhpResponse.ok(siteService.site());
+	}
+
+	/**
+	 * 商业授权占位（PHP common/auth，前端 entAuth 判断 status）。
+	 */
+	@GetMapping("/auth")
+	@Operation(summary = "授权信息占位")
+	public PhpResponse<Map<String, Object>> auth() {
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("status", 1);
+		data.put("day", 999);
+		return PhpResponse.ok(data);
 	}
 
 }

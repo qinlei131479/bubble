@@ -1,0 +1,44 @@
+package com.bubblecloud.biz.oa.service;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 工作台接口（兼容 PHP ent/user/work）。
+ *
+ * @author qinlei
+ * @date 2026/3/28 15:30
+ */
+public interface WorkbenchService {
+
+	/**
+	 * 快捷入口：cates + checkd（默认含工作台、我的日程、企业通讯录）。
+	 */
+	Map<String, Object> getFastEntry();
+
+	/**
+	 * 顶部四宫格数量。
+	 */
+	Map<String, Object> getWorkCount();
+
+	/**
+	 * 业绩统计卡片。
+	 */
+	List<Map<String, Object>> getStatistics(int types);
+
+	/**
+	 * 业绩统计类型管理数据。
+	 */
+	Map<String, Object> getStatisticsType();
+
+	/**
+	 * 保存快捷入口（占位成功）。
+	 */
+	void saveFastEntry(List<Integer> ids);
+
+	/**
+	 * 保存业绩统计类型（占位成功）。
+	 */
+	void saveStatisticsType(List<String> keys);
+
+}

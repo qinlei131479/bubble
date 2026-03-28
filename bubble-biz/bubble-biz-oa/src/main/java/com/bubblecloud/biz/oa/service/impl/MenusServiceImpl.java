@@ -19,6 +19,7 @@ import com.bubblecloud.oa.api.dto.MenusQueryDTO;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
 import com.bubblecloud.oa.api.entity.SystemMenus;
+import com.bubblecloud.oa.api.vo.MenuTreeNodeVO;
 import com.bubblecloud.oa.api.vo.MenusVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,7 +59,7 @@ public class MenusServiceImpl implements MenusService {
 		List<SystemMenus> menuFlat = loadMenuListByIds(menuIds, "M");
 		List<String> roleAuths = loadButtonAuthByIds(menuIds, "B");
 
-		return new MenusVO(buildMenuTree(menuFlat), roleAuths);
+		return new MenusVO(toMenuTreeVo(buildMenuTree(menuFlat)), roleAuths);
 	}
 
 	private Set<Long> loadAllMenuIds() {
@@ -115,6 +116,53 @@ public class MenusServiceImpl implements MenusService {
 				.filter(StringUtils::hasText)
 				.distinct()
 				.toList();
+	}
+
+	private List<MenuTreeNodeVO> toMenuTreeVo(List<SystemMenus> tree) {
+		if (tree == null || tree.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<MenuTreeNodeVO> list = new ArrayList<>(tree.size());
+		for (SystemMenus node : tree) {
+			list.add(toMenuNodeVo(node));
+		}
+		return list;
+	}
+
+	private MenuTreeNodeVO toMenuNodeVo(SystemMenus m) {
+		MenuTreeNodeVO vo = new MenuTreeNodeVO();
+		vo.setId(m.getId());
+		vo.setPid(m.getPid());
+		vo.setMenuName(m.getMenuName());
+		vo.setMenuPath(m.getMenuPath());
+		vo.setUniPath(blankToEmpty(m.getUniPath()));
+		vo.setUniImg(blankToEmpty(m.getUniImg()));
+		vo.setIcon(blankToEmpty(m.getIcon()));
+		vo.setPath(m.getPath());
+		vo.setEntid(m.getEntid());
+		vo.setPosition(m.getPosition());
+		vo.setUniqueAuth(m.getUniqueAuth());
+		vo.setIsShow(m.getIsShow());
+		vo.setComponent(blankToEmpty(m.getComponent()));
+		List<MenuTreeNodeVO> children = new ArrayList<>();
+		if (m.getTopPosition() != null) {
+			for (SystemMenus c : m.getTopPosition()) {
+				children.add(toMenuNodeVo(c));
+			}
+		}
+		if (m.getChildren() != null) {
+			for (SystemMenus c : m.getChildren()) {
+				children.add(toMenuNodeVo(c));
+			}
+		}
+		if (!children.isEmpty()) {
+			vo.setChildren(children);
+		}
+		return vo;
+	}
+
+	private static String blankToEmpty(String s) {
+		return StringUtils.hasText(s) ? s : "";
 	}
 
 	private List<SystemMenus> buildMenuTree(List<SystemMenus> menuFlat) {

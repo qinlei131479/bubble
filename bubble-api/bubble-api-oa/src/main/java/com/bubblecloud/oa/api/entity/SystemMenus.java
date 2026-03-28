@@ -8,8 +8,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bubblecloud.common.mybatis.base.Req;
+import com.bubblecloud.oa.api.json.MenuPathSerializer;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -67,7 +69,8 @@ public class SystemMenus extends Req<SystemMenus> {
 	@Schema(description = "位置：0默认 1置顶")
 	private Integer position;
 
-	@Schema(description = "菜单层级路径（JSON数组）")
+	@Schema(description = "菜单层级路径（库内为 1/2/3 串，接口 JSON 输出为数字数组）")
+	@JsonSerialize(using = MenuPathSerializer.class)
 	private String path;
 
 	@Schema(description = "前端组件")

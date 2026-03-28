@@ -1,10 +1,14 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ent/config")
 @Tag(name = "系统配置扩展")
 public class ConfigController {
+
+	@GetMapping("/client_rule/approve/{isForm}")
+	@Operation(summary = "客户审批规则（工作台合同弹窗）")
+	public PhpResponse<Map<String, Object>> clientRuleApprove(@PathVariable int isForm) {
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("contract_refund_switch", 0);
+		data.put("contract_renew_switch", 0);
+		return PhpResponse.ok(data);
+	}
 
 	@GetMapping("/dict/type/page")
 	@Operation(summary = "字典类型分页")
