@@ -1,0 +1,21 @@
+package com.bubblecloud.biz.oa.service;
+
+import com.bubblecloud.oa.api.dto.CompanyUpdateDTO;
+import com.bubblecloud.oa.api.vo.company.CompanyEntInfoVO;
+import com.bubblecloud.oa.api.vo.company.CompanyQuantityVO;
+
+/**
+ * 企业管理（对齐 PHP {@code CompanyController} / {@code CompanyService}）。
+ *
+ * @author qinlei
+ * @date 2026/3/29 下午5:30
+ */
+public interface CompanyService {
+
+	CompanyEntInfoVO getEntAndUserInfo(int entId);
+
+	boolean updateEnt(int entId, CompanyUpdateDTO dto);
+
+	CompanyQuantityVO getQuantity(String type, int entId);
+
+}

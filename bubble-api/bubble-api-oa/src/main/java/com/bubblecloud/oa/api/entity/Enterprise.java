@@ -58,6 +58,17 @@ public class Enterprise extends Req<Enterprise> {
 	@Schema(description = "联系电话")
 	private String phone;
 
+	@Schema(description = "所属用户 UID")
+	private String uid;
+
+	@Schema(description = "公司简称")
+	@TableField("short_name")
+	private String shortName;
+
+	@Schema(description = "软删除时间（PHP 列名 delete）")
+	@TableField("`delete`")
+	private LocalDateTime deleteTime;
+
 	@Schema(description = "状态：1启用 0禁用")
 	private Integer status;
 

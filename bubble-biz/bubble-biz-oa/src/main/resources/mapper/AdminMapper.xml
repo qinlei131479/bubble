@@ -33,4 +33,31 @@
 		WHERE t.deleted_at IS NULL
 	</select>
 
+	<select id="selectEntUserList" resultType="com.bubblecloud.oa.api.vo.company.CompanyUserListItemVO">
+		SELECT a.id,
+		       a.name,
+		       a.avatar,
+		       a.phone,
+		       a.job,
+		       MAX(j.name) AS jobName,
+		       GROUP_CONCAT(DISTINCT f.name ORDER BY f.id SEPARATOR ',') AS frameNames
+		FROM eb_admin a
+		INNER JOIN eb_frame_assist fa ON fa.user_id = a.id
+			AND fa.entid = #{entid}
+			AND fa.deleted_at IS NULL
+		LEFT JOIN eb_frame f ON f.id = fa.frame_id
+			AND f.deleted_at IS NULL
+		LEFT JOIN eb_rank_job j ON j.id = a.job
+			AND j.entid = #{entid}
+		WHERE a.deleted_at IS NULL
+		<if test="status != null">
+			AND a.status = #{status}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name LIKE CONCAT('%', #{name}, '%')
+		</if>
+		GROUP BY a.id, a.name, a.avatar, a.phone, a.job
+		ORDER BY MAX(fa.is_admin) DESC, MAX(fa.is_mastart) DESC, a.id ASC
+	</select>
+
 </mapper>
