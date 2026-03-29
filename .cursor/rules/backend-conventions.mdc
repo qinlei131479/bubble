@@ -69,7 +69,9 @@ bubble-visual-{feature} → 可视化管理工具服务
 
 - **命名与表一致**：业务类名与 `eb_*` 表对应，不使用 `Oa` 前缀。例如 `eb_admin` → `Admin` 实体、`AdminMapper`、`AdminService`；`eb_system_config` → `SystemConfig` 等。安全桥接（PHP JWT）、兼容响应包装等基础设施类可保留在 `security` / `support` 包中并使用明确前缀区分职责。
 - **禁止“无表聚合”空壳 Service**：不要新增仅作方法堆砌、与持久化无关的 `Bootstrap`/`Facade` 类；站点、菜单等能力应落在与表或明确业务域对应的 `XxxService` 中。
-- **Service 契约**：入参使用 `bubble-api-oa` 中的 `*DTO`，返回使用 `*VO`；避免在 Service 接口上使用 `Map<String, Object>` 作为业务返回类型。
+- **Controller / Service / Mapper 禁止使用 `Map<String, Object>`**：业务入参、出参、Mapper 查询结果行不得使用 `Map<String, Object>`（不透明、难维护）。统一在 `bubble-api-oa` 中定义 `*DTO`、`*VO`、实体或专用行视图（如 `XxxRowVO`）。**例外**：JWT claims、第三方 SDK 入参、仅在 `security` / 工具类内部完成解析且**不作为对外 API 契约**的临时结构。
+- **Mapper SQL 一律写在 XML**：所有自定义 SQL（含简单 `COUNT`、`SELECT`）写在 `bubble-biz-oa/src/main/resources/mapper/` 下与接口同名的 `XxxMapper.xml` 中；`Mapper` 接口上**禁止**使用 `@Select`、`@Update`、`@Insert`、`@Delete` 等注解承载 SQL，仅保留方法签名与 `@Param`。MyBatis-Plus `BaseMapper` / `lambdaQuery` 无 XML 的 CRUD 除外。
+- **Service 契约**：入参使用 `bubble-api-oa` 中的 `*DTO`，返回使用 `*VO`（或实体，当与表一一对应且已存在时）。
 - **数据访问**：禁止在业务代码中使用 `JdbcTemplate` 直接拼 SQL 访问 OA 库表；统一使用 `XxxMapper` + `classpath:/mapper/*.xml`，并优先使用 MyBatis-Plus 提供的 `lambdaQuery` / `UpService` 封装方法。
 - **PHP 兼容响应**：对外兼容前端的包装类为 `com.bubblecloud.biz.oa.support.PhpResponse`（`status` / `msg` / `data`），与网关/微服务默认的 `R<T>` 区分使用场景。
 
