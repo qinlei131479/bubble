@@ -2,9 +2,9 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.oa.api.vo.placeholder.DailyReportMemberVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public class DailyController {
 	 */
 	@GetMapping("/report_member")
 	@Operation(summary = "默认汇报人")
-	public PhpResponse<List<Map<String, Object>>> reportMember() {
+	public PhpResponse<List<DailyReportMemberVO>> reportMember() {
 		return PhpResponse.ok(Collections.emptyList());
 	}
 

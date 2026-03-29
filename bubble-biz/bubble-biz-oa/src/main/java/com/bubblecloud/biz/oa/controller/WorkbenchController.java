@@ -1,11 +1,15 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.bubblecloud.biz.oa.service.WorkbenchService;
 import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.oa.api.dto.WorkbenchSaveMenusDTO;
+import com.bubblecloud.oa.api.dto.WorkbenchSaveStatisticsTypeDTO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchCountVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchFastEntryVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticCardVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticsTypeVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,59 +36,41 @@ public class WorkbenchController {
 
 	@GetMapping("/menus")
 	@Operation(summary = "快捷入口")
-	public PhpResponse<Map<String, Object>> menus() {
+	public PhpResponse<WorkbenchFastEntryVO> menus() {
 		return PhpResponse.ok(workbenchService.getFastEntry());
 	}
 
 	@PostMapping("/menus")
 	@Operation(summary = "保存快捷入口")
-	@SuppressWarnings("unchecked")
-	public PhpResponse<String> saveMenus(@RequestBody Map<String, Object> body) {
-		Object d = body.get("data");
-		List<Integer> ids = new ArrayList<>();
-		if (d instanceof List<?> list) {
-			for (Object o : list) {
-				if (o instanceof Number n) {
-					ids.add(n.intValue());
-				}
-			}
-		}
+	public PhpResponse<String> saveMenus(@RequestBody(required = false) WorkbenchSaveMenusDTO body) {
+		List<Integer> ids = body != null && body.getData() != null ? body.getData() : List.of();
 		workbenchService.saveFastEntry(ids);
 		return PhpResponse.ok("ok");
 	}
 
 	@GetMapping("/count")
 	@Operation(summary = "顶部数量统计")
-	public PhpResponse<Map<String, Object>> count() {
+	public PhpResponse<WorkbenchCountVO> count() {
 		return PhpResponse.ok(workbenchService.getWorkCount());
 	}
 
 	@GetMapping("/statistics_type")
 	@Operation(summary = "业绩统计类型管理")
-	public PhpResponse<Map<String, Object>> statisticsType() {
+	public PhpResponse<WorkbenchStatisticsTypeVO> statisticsType() {
 		return PhpResponse.ok(workbenchService.getStatisticsType());
 	}
 
 	@PostMapping("/statistics_type")
 	@Operation(summary = "保存业绩统计类型")
-	@SuppressWarnings("unchecked")
-	public PhpResponse<String> saveStatisticsType(@RequestBody Map<String, Object> body) {
-		Object d = body.get("data");
-		List<String> keys = new ArrayList<>();
-		if (d instanceof List<?> list) {
-			for (Object o : list) {
-				if (o != null) {
-					keys.add(String.valueOf(o));
-				}
-			}
-		}
+	public PhpResponse<String> saveStatisticsType(@RequestBody(required = false) WorkbenchSaveStatisticsTypeDTO body) {
+		List<String> keys = body != null && body.getData() != null ? body.getData() : List.of();
 		workbenchService.saveStatisticsType(keys);
 		return PhpResponse.ok("ok");
 	}
 
 	@GetMapping("/statistics/{types}")
 	@Operation(summary = "业绩统计卡片")
-	public PhpResponse<List<Map<String, Object>>> statistics(@PathVariable int types) {
+	public PhpResponse<List<WorkbenchStatisticCardVO>> statistics(@PathVariable int types) {
 		return PhpResponse.ok(workbenchService.getStatistics(types));
 	}
 

@@ -1,11 +1,14 @@
 package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
 import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.oa.api.dto.ScheduleIndexQueryDTO;
+import com.bubblecloud.oa.api.dto.ScheduleStatusUpdateDTO;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.schedule.ScheduleRecordVO;
+import com.bubblecloud.oa.api.vo.schedule.ScheduleTypeVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -41,21 +44,21 @@ public class ScheduleController {
 
 	@GetMapping("/types")
 	@Operation(summary = "日程类型列表")
-	public PhpResponse<List<Map<String, Object>>> types() {
+	public PhpResponse<List<ScheduleTypeVO>> types() {
 		return PhpResponse.ok(scheduleApiService.typeList());
 	}
 
 	@PostMapping("/index")
 	@Operation(summary = "日程列表")
-	public PhpResponse<List<Map<String, Object>>> index(@RequestBody(required = false) Map<String, Object> body) {
-		return PhpResponse.ok(scheduleApiService.scheduleIndex(body == null ? Map.of() : body));
+	public PhpResponse<List<ScheduleRecordVO>> index(@RequestBody(required = false) ScheduleIndexQueryDTO body) {
+		return PhpResponse.ok(scheduleApiService.scheduleIndex(body != null ? body : new ScheduleIndexQueryDTO()));
 	}
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "修改日程状态")
 	public PhpResponse<String> status(@PathVariable long id,
-			@RequestBody(required = false) Map<String, Object> body) {
-		scheduleApiService.updateStatus(id, body == null ? Map.of() : body);
+			@RequestBody(required = false) ScheduleStatusUpdateDTO body) {
+		scheduleApiService.updateStatus(id, body != null ? body : new ScheduleStatusUpdateDTO());
 		return PhpResponse.ok("ok");
 	}
 

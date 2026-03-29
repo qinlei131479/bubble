@@ -1,10 +1,10 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.company.CompanyMessageListVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,17 +27,14 @@ public class CompanyController {
 	@GetMapping("/user-card/page")
 	@Operation(summary = "员工档案分页")
 	public PhpResponse<SimplePageVO> userCardPage(@RequestParam(defaultValue = "1") Integer current,
-												  @RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 
 	@GetMapping("/message")
 	@Operation(summary = "消息中心列表（工作台系统通知）")
-	public PhpResponse<Map<String, Object>> messageList(@RequestParam Map<String, String> query) {
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("list", java.util.Collections.emptyList());
-		data.put("count", 0);
-		return PhpResponse.ok(data);
+	public PhpResponse<CompanyMessageListVO> messageList(@RequestParam Map<String, String> query) {
+		return PhpResponse.ok(new CompanyMessageListVO());
 	}
 
 }

@@ -4,11 +4,11 @@ import com.bubblecloud.biz.oa.security.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.MenusService;
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.dto.MenusQueryDTO;
+import com.bubblecloud.oa.api.dto.UserJoinDTO;
 import com.bubblecloud.oa.api.vo.MenusVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +46,7 @@ public class UserController {
 	 */
 	@PutMapping("/user/join")
 	@Operation(summary = "处理企业邀请")
-	public PhpResponse<String> userJoin(@RequestBody(required = false) Map<String, Object> body) {
+	public PhpResponse<String> userJoin(@RequestBody(required = false) UserJoinDTO body) {
 		return PhpResponse.ok("ok");
 	}
 

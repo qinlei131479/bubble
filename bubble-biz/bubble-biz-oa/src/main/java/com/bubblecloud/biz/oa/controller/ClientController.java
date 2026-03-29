@@ -1,10 +1,8 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.client.ClientRemindInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,20 +24,20 @@ public class ClientController {
 	@GetMapping("/customer/page")
 	@Operation(summary = "客户分页")
 	public PhpResponse<SimplePageVO> customerPage(@RequestParam(defaultValue = "1") Integer current,
-												  @RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 
 	@GetMapping("/remind/info/{id}")
 	@Operation(summary = "付款提醒详情（工作台待办）")
-	public PhpResponse<Map<String, Object>> remindInfo(@PathVariable long id) {
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("id", id);
-		data.put("eid", 0);
-		data.put("cid", 0);
-		data.put("types", 0);
-		data.put("remind_id", 0);
-		return PhpResponse.ok(data);
+	public PhpResponse<ClientRemindInfoVO> remindInfo(@PathVariable long id) {
+		ClientRemindInfoVO vo = new ClientRemindInfoVO();
+		vo.setId(id);
+		vo.setEid(0);
+		vo.setCid(0);
+		vo.setTypes(0);
+		vo.setRemindId(0);
+		return PhpResponse.ok(vo);
 	}
 
 }

@@ -1,9 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.oa.api.vo.notice.NoticeBoardListVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +24,11 @@ public class NoticeBoardController {
 
 	@GetMapping("/list")
 	@Operation(summary = "通知公告列表")
-	public PhpResponse<Map<String, Object>> list(@RequestParam Map<String, String> query) {
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("list", java.util.Collections.emptyList());
-		data.put("count", 0);
-		return PhpResponse.ok(data);
+	public PhpResponse<NoticeBoardListVO> list(@RequestParam Map<String, String> query) {
+		NoticeBoardListVO vo = new NoticeBoardListVO();
+		vo.setList(java.util.Collections.emptyList());
+		vo.setCount(0);
+		return PhpResponse.ok(vo);
 	}
 
 }

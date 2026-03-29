@@ -1,11 +1,15 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
+import com.bubblecloud.oa.api.dto.ScheduleIndexQueryDTO;
+import com.bubblecloud.oa.api.dto.ScheduleStatusUpdateDTO;
+import com.bubblecloud.oa.api.dto.UserScheduleQueryDTO;
+import com.bubblecloud.oa.api.vo.schedule.ScheduleRecordVO;
+import com.bubblecloud.oa.api.vo.schedule.ScheduleTypeVO;
+import com.bubblecloud.oa.api.vo.schedule.UserScheduleDayWrapperVO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,41 +22,32 @@ import org.springframework.stereotype.Service;
 public class ScheduleApiServiceImpl implements ScheduleApiService {
 
 	@Override
-	public List<Map<String, Object>> typeList() {
-		List<Map<String, Object>> list = new ArrayList<>();
+	public List<ScheduleTypeVO> typeList() {
+		List<ScheduleTypeVO> list = new ArrayList<>();
 		list.add(typeRow(1L, "默认", "default", "#409EFF"));
 		list.add(typeRow(2L, "个人提醒", "personal", "#1890FF"));
 		list.add(typeRow(3L, "客户跟进", "client_track", "#19BE6B"));
 		return list;
 	}
 
-	private Map<String, Object> typeRow(long id, String name, String key, String color) {
-		Map<String, Object> m = new LinkedHashMap<>();
-		m.put("id", id);
-		m.put("name", name);
-		m.put("key", key);
-		m.put("color", color);
-		m.put("info", "");
-		m.put("is_public", 1);
-		return m;
+	private ScheduleTypeVO typeRow(long id, String name, String key, String color) {
+		return new ScheduleTypeVO(id, name, key, color, "", 1);
 	}
 
 	@Override
-	public List<Map<String, Object>> scheduleIndex(Map<String, Object> body) {
+	public List<ScheduleRecordVO> scheduleIndex(ScheduleIndexQueryDTO body) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public void updateStatus(long id, Map<String, Object> body) {
+	public void updateStatus(long id, ScheduleStatusUpdateDTO body) {
 		// 占位
 	}
 
 	@Override
-	public List<Map<String, Object>> userScheduleList(Map<String, String> query) {
-		List<Map<String, Object>> outer = new ArrayList<>();
-		Map<String, Object> day = new LinkedHashMap<>();
-		day.put("list", new ArrayList<>());
-		outer.add(day);
+	public List<UserScheduleDayWrapperVO> userScheduleList(UserScheduleQueryDTO query) {
+		List<UserScheduleDayWrapperVO> outer = new ArrayList<>();
+		outer.add(new UserScheduleDayWrapperVO());
 		return outer;
 	}
 

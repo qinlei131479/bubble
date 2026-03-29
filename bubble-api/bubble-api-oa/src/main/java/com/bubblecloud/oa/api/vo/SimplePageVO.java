@@ -1,5 +1,6 @@
 package com.bubblecloud.oa.api.vo;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 简易分页占位（未实现业务模块前返回空数据）。
+ * 简易分页（兼容 PHP 列表分页占位与 MyBatis-Page）。
  *
  * @author qinlei
  */
@@ -33,6 +34,10 @@ public class SimplePageVO {
 
 	public static SimplePageVO empty(int current, int size) {
 		return new SimplePageVO(current, size, 0L, Collections.emptyList());
+	}
+
+	public static SimplePageVO of(int current, int size, long total, List<?> records) {
+		return new SimplePageVO(current, size, total, new ArrayList<>(records));
 	}
 
 }

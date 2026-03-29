@@ -2,12 +2,9 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
@@ -17,6 +14,7 @@ import com.bubblecloud.biz.oa.security.OaPhpJwtProperties;
 import com.bubblecloud.biz.oa.security.OaPhpJwtTokenService;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.AuthService;
+import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.oa.api.dto.LoginDTO;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.Enterprise;
@@ -24,11 +22,13 @@ import com.bubblecloud.oa.api.entity.RankJob;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.LoginInfoVO;
 import com.bubblecloud.oa.api.vo.LoginVO;
+import com.bubblecloud.oa.api.vo.auth.EnterpriseLoginVO;
+import com.bubblecloud.oa.api.vo.auth.FrameAssistLoginRowVO;
+import com.bubblecloud.oa.api.vo.auth.FrameNameRefVO;
+import com.bubblecloud.oa.api.vo.auth.LoginUserInfoPayloadVO;
+import com.bubblecloud.oa.api.vo.auth.RankJobLoginVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,13 +119,31 @@ public class AuthServiceImpl implements AuthService {
 		adminService.updateById(self);
 	}
 
-	private Map<String, Object> buildUserInfo(Admin admin) {
-		Map<String, Object> map = adminToSnakeMap(admin);
-		map.put("roles", parseRoles(admin.getRoles()));
-		map.put("frames", buildFrames(admin.getId()));
-		map.put("job", jobMap(admin.getJob()));
-		map.put("real_name", admin.getName());
-		return map;
+	private LoginUserInfoPayloadVO buildUserInfo(Admin admin) {
+		LoginUserInfoPayloadVO vo = new LoginUserInfoPayloadVO();
+		vo.setId(admin.getId());
+		vo.setUid(admin.getUid());
+		vo.setAccount(admin.getAccount());
+		vo.setAvatar(admin.getAvatar());
+		vo.setName(admin.getName());
+		vo.setPhone(admin.getPhone());
+		vo.setIsAdmin(admin.getIsAdmin());
+		vo.setUniOnline(admin.getUniOnline());
+		vo.setClientId(admin.getClientId());
+		vo.setScanKey(admin.getScanKey());
+		vo.setLastIp(admin.getLastIp());
+		vo.setLoginCount(admin.getLoginCount());
+		vo.setStatus(admin.getStatus());
+		vo.setIsInit(admin.getIsInit());
+		vo.setLanguage(admin.getLanguage());
+		vo.setMark(admin.getMark());
+		vo.setCreatedAt(admin.getCreatedAt());
+		vo.setUpdatedAt(admin.getUpdatedAt());
+		vo.setRoles(parseRoles(admin.getRoles()));
+		vo.setFrames(buildFrameRows(admin.getId()));
+		vo.setJob(copyRankJob(admin.getJob()));
+		vo.setRealName(admin.getName());
+		return vo;
 	}
 
 	private List<Object> parseRoles(String raw) {
@@ -140,28 +158,26 @@ public class AuthServiceImpl implements AuthService {
 		}
 	}
 
-	private List<Map<String, Object>> buildFrames(Long userId) {
+	private List<FrameAssistLoginRowVO> buildFrameRows(Long userId) {
 		List<FrameAssistView> rows = frameAssistMapper.selectUserFrames(userId, DEFAULT_ENTID);
-		List<Map<String, Object>> frames = new ArrayList<>();
+		List<FrameAssistLoginRowVO> frames = new ArrayList<>();
 		for (FrameAssistView v : rows) {
-			Map<String, Object> row = new LinkedHashMap<>();
-			row.put("id", v.getId());
-			row.put("entid", v.getEntid());
-			row.put("frame_id", v.getFrameId());
-			row.put("user_id", v.getUserId());
-			row.put("is_mastart", v.getIsMastart());
-			row.put("is_admin", v.getIsAdmin());
-			row.put("superior_uid", v.getSuperiorUid());
-			Map<String, Object> frame = new LinkedHashMap<>();
-			frame.put("id", v.getFrameId());
-			frame.put("name", v.getFrameName() != null ? v.getFrameName() : "");
-			row.put("frame", frame);
+			FrameAssistLoginRowVO row = new FrameAssistLoginRowVO();
+			row.setId(v.getId());
+			row.setEntid(v.getEntid());
+			row.setFrameId(v.getFrameId());
+			row.setUserId(v.getUserId());
+			row.setIsMastart(v.getIsMastart());
+			row.setIsAdmin(v.getIsAdmin());
+			row.setSuperiorUid(v.getSuperiorUid());
+			String frameName = v.getFrameName() != null ? v.getFrameName() : "";
+			row.setFrame(new FrameNameRefVO(v.getFrameId(), frameName));
 			frames.add(row);
 		}
 		return frames;
 	}
 
-	private Object jobMap(Integer jobId) {
+	private RankJobLoginVO copyRankJob(Integer jobId) {
 		if (jobId == null || jobId == 0) {
 			return null;
 		}
@@ -169,26 +185,35 @@ public class AuthServiceImpl implements AuthService {
 		if (job == null) {
 			return null;
 		}
-		return jobToSnakeMap(job);
+		RankJobLoginVO vo = new RankJobLoginVO();
+		vo.setId(job.getId());
+		vo.setEntid(job.getEntid());
+		vo.setName(job.getName());
+		vo.setDescribe(job.getDescribe());
+		vo.setDuty(job.getDuty());
+		vo.setStatus(job.getStatus());
+		vo.setCreatedAt(job.getCreatedAt());
+		vo.setUpdatedAt(job.getUpdatedAt());
+		return vo;
 	}
 
-	private Map<String, Object> buildEnterprise() {
+	private EnterpriseLoginVO buildEnterprise() {
 		Enterprise e = enterpriseMapper.selectById((long) DEFAULT_ENTID);
-		Map<String, Object> map = new LinkedHashMap<>();
+		EnterpriseLoginVO vo = new EnterpriseLoginVO();
 		if (e == null) {
-			return map;
+			return vo;
 		}
-		map.put("title", nullToEmpty(e.getTitle()));
-		map.put("enterprise_name", nullToEmpty(e.getName()));
-		map.put("enterprise_name_en", nullToEmpty(e.getEnterpriseNameEn()));
-		map.put("entid", e.getId());
-		map.put("logo", nullToEmpty(e.getLogo()));
-		map.put("uniqued", nullToEmpty(e.getUniqued()));
+		vo.setTitle(nullToEmpty(e.getTitle()));
+		vo.setEnterpriseName(nullToEmpty(e.getName()));
+		vo.setEnterpriseNameEn(nullToEmpty(e.getEnterpriseNameEn()));
+		vo.setEntid(e.getId());
+		vo.setLogo(nullToEmpty(e.getLogo()));
+		vo.setUniqued(nullToEmpty(e.getUniqued()));
 		Integer max = assessScoreMapper.selectMaxScoreByEntid(DEFAULT_ENTID);
-		map.put("maxScore", max != null ? max : 0);
-		map.put("culture", configValue("enterprise_culture", ""));
-		map.put("compute_mode", parseIntConfig("assess_compute_mode", 1));
-		return map;
+		vo.setMaxScore(max != null ? max : 0);
+		vo.setCulture(configValue("enterprise_culture", ""));
+		vo.setComputeMode(parseIntConfig("assess_compute_mode", 1));
+		return vo;
 	}
 
 	private int parseIntConfig(String key, int def) {
@@ -212,28 +237,6 @@ public class AuthServiceImpl implements AuthService {
 
 	private String nullToEmpty(String s) {
 		return s == null ? "" : s;
-	}
-
-	private Map<String, Object> adminToSnakeMap(Admin admin) {
-		ObjectMapper m = objectMapper.copy();
-		m.registerModule(new JavaTimeModule());
-		m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		m.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-		@SuppressWarnings("unchecked")
-		Map<String, Object> map = m.convertValue(admin, Map.class);
-		map.remove("password");
-		map.remove("deleted_at");
-		return map;
-	}
-
-	private Map<String, Object> jobToSnakeMap(RankJob job) {
-		ObjectMapper m = objectMapper.copy();
-		m.registerModule(new JavaTimeModule());
-		m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		m.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-		@SuppressWarnings("unchecked")
-		Map<String, Object> map = m.convertValue(job, Map.class);
-		return map;
 	}
 
 	private String normalizePhpBcrypt(String hash) {

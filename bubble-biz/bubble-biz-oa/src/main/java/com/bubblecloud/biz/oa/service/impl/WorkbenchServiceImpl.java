@@ -1,11 +1,16 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.bubblecloud.biz.oa.service.WorkbenchService;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchCountVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchFastEntryVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchQuickCateVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchQuickItemVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticCardVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticOptionVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticsTypeVO;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,79 +42,86 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 	};
 
 	@Override
-	public Map<String, Object> getFastEntry() {
-		List<Map<String, Object>> checkd = new ArrayList<>();
+	public WorkbenchFastEntryVO getFastEntry() {
+		List<WorkbenchQuickItemVO> checkd = new ArrayList<>();
 		checkd.add(quickItem(1001L, "工作台", 1, "/user/workbench/index", "", 0));
 		checkd.add(quickItem(1002L, "我的日程", 1, "/user/calendar/index", "", 1));
 		checkd.add(quickItem(1003L, "企业通讯录", 1, "/user/ent/index", "", 2));
 
-		List<Map<String, Object>> fastEntry = new ArrayList<>();
-		for (Map<String, Object> m : checkd) {
-			Map<String, Object> copy = new LinkedHashMap<>(m);
-			copy.put("checked", 1);
+		List<WorkbenchQuickItemVO> fastEntry = new ArrayList<>();
+		for (WorkbenchQuickItemVO m : checkd) {
+			WorkbenchQuickItemVO copy = copyQuickItem(m);
+			copy.setChecked(1);
 			fastEntry.add(copy);
 		}
 
-		Map<String, Object> cate = new LinkedHashMap<>();
-		cate.put("id", 1);
-		cate.put("cate_name", "办公");
-		cate.put("pic", "");
-		cate.put("fast_entry", fastEntry);
+		WorkbenchQuickCateVO cate = new WorkbenchQuickCateVO();
+		cate.setId(1);
+		cate.setCateName("办公");
+		cate.setPic("");
+		cate.setFastEntry(fastEntry);
 
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("cates", List.of(cate));
-		data.put("checkd", checkd);
+		WorkbenchFastEntryVO data = new WorkbenchFastEntryVO();
+		data.setCates(List.of(cate));
+		data.setCheckd(checkd);
 		return data;
 	}
 
-	private Map<String, Object> quickItem(long id, String name, int cid, String pcUrl, String uniUrl, int sort) {
-		Map<String, Object> m = new LinkedHashMap<>();
-		m.put("id", id);
-		m.put("name", name);
-		m.put("cid", cid);
-		m.put("pc_url", pcUrl);
-		m.put("uni_url", uniUrl);
-		m.put("image", name.equals("企业通讯录") ? IMG_CONTACTS : (name.equals("我的日程") ? IMG_CALENDAR : IMG_WORKBENCH));
-		m.put("checked", 1);
-		m.put("sort", sort);
+	private WorkbenchQuickItemVO quickItem(long id, String name, int cid, String pcUrl, String uniUrl, int sort) {
+		WorkbenchQuickItemVO m = new WorkbenchQuickItemVO();
+		m.setId(id);
+		m.setName(name);
+		m.setCid(cid);
+		m.setPcUrl(pcUrl);
+		m.setUniUrl(uniUrl);
+		m.setImage(name.equals("企业通讯录") ? IMG_CONTACTS : (name.equals("我的日程") ? IMG_CALENDAR : IMG_WORKBENCH));
+		m.setChecked(1);
+		m.setSort(sort);
+		return m;
+	}
+
+	private WorkbenchQuickItemVO copyQuickItem(WorkbenchQuickItemVO src) {
+		WorkbenchQuickItemVO m = new WorkbenchQuickItemVO();
+		m.setId(src.getId());
+		m.setName(src.getName());
+		m.setCid(src.getCid());
+		m.setPcUrl(src.getPcUrl());
+		m.setUniUrl(src.getUniUrl());
+		m.setImage(src.getImage());
+		m.setChecked(src.getChecked());
+		m.setSort(src.getSort());
 		return m;
 	}
 
 	@Override
-	public Map<String, Object> getWorkCount() {
-		Map<String, Object> m = new LinkedHashMap<>();
-		m.put("scheduleCount", 0);
-		m.put("applyCount", 0);
-		m.put("approveCount", 0);
-		m.put("noticeCount", 0);
+	public WorkbenchCountVO getWorkCount() {
+		WorkbenchCountVO m = new WorkbenchCountVO();
+		m.setScheduleCount(0);
+		m.setApplyCount(0);
+		m.setApproveCount(0);
+		m.setNoticeCount(0);
 		return m;
 	}
 
 	@Override
-	public List<Map<String, Object>> getStatistics(int types) {
-		List<Map<String, Object>> list = new ArrayList<>();
+	public List<WorkbenchStatisticCardVO> getStatistics(int types) {
+		List<WorkbenchStatisticCardVO> list = new ArrayList<>();
 		for (String[] row : STATISTICS) {
-			Map<String, Object> item = new LinkedHashMap<>();
-			item.put("title", row[0]);
-			item.put("value", "0");
-			list.add(item);
+			list.add(new WorkbenchStatisticCardVO(row[0], "0"));
 		}
 		return list;
 	}
 
 	@Override
-	public Map<String, Object> getStatisticsType() {
-		List<Map<String, Object>> list = new ArrayList<>();
-		List<Map<String, Object>> select = new ArrayList<>();
+	public WorkbenchStatisticsTypeVO getStatisticsType() {
+		List<WorkbenchStatisticOptionVO> list = new ArrayList<>();
+		List<WorkbenchStatisticOptionVO> select = new ArrayList<>();
 		for (String[] row : STATISTICS) {
-			Map<String, Object> item = new LinkedHashMap<>();
-			item.put("id", row[1]);
-			item.put("title", row[0]);
-			list.add(item);
+			list.add(new WorkbenchStatisticOptionVO(row[1], row[0]));
 		}
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("list", list);
-		data.put("select", select);
+		WorkbenchStatisticsTypeVO data = new WorkbenchStatisticsTypeVO();
+		data.setList(list);
+		data.setSelect(select);
 		return data;
 	}
 

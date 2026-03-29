@@ -2,10 +2,10 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.placeholder.LabelValueOptionVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class AttendanceController {
 	@GetMapping("/group/page")
 	@Operation(summary = "考勤组分页")
 	public PhpResponse<SimplePageVO> groupPage(@RequestParam(defaultValue = "1") Integer current,
-											   @RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 
@@ -37,7 +37,7 @@ public class AttendanceController {
 	 */
 	@GetMapping("/abnormal_date")
 	@Operation(summary = "考勤异常日期列表")
-	public PhpResponse<List<Map<String, Object>>> abnormalDate() {
+	public PhpResponse<List<LabelValueOptionVO>> abnormalDate() {
 		return PhpResponse.ok(Collections.emptyList());
 	}
 

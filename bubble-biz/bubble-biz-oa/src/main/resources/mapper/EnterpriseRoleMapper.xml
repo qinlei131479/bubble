@@ -5,20 +5,24 @@
 	<resultMap id="enterpriseRoleMap" type="com.bubblecloud.oa.api.entity.EnterpriseRole">
 		<id property="id" column="id" />
 		<result property="roleName" column="role_name" />
+		<result property="types" column="types" />
+		<result property="userCount" column="user_count" />
 		<result property="rules" column="rules" />
+		<result property="ruleUnique" column="rule_unique" />
 		<result property="apis" column="apis" />
+		<result property="apiUnique" column="api_unique" />
 		<result property="entid" column="entid" />
+		<result property="dataLevel" column="data_level" />
+		<result property="directly" column="directly" />
+		<result property="frameId" column="frame_id" />
 		<result property="status" column="status" />
 		<result property="mark" column="mark" />
-		<result property="createdAt" column="created_at" />
-		<result property="updatedAt" column="updated_at" />
-		<result property="deletedAt" column="deleted_at" />
 	</resultMap>
 
 	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.EnterpriseRole">
 		SELECT t.*
 		FROM eb_enterprise_role t
-		WHERE t.deleted_at IS NULL
+		WHERE 1 = 1
 	</select>
 
 </mapper>

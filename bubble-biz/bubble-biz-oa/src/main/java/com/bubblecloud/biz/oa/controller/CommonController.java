@@ -7,12 +7,11 @@ import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.vo.CaptchaVO;
 import com.bubblecloud.oa.api.vo.ConfigVO;
 import com.bubblecloud.oa.api.vo.SiteVO;
+import com.bubblecloud.oa.api.vo.common.CommonAuthVO;
+import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,11 +58,8 @@ public class CommonController {
 	 */
 	@GetMapping("/auth")
 	@Operation(summary = "授权信息占位")
-	public PhpResponse<Map<String, Object>> auth() {
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("status", 1);
-		data.put("day", 999);
-		return PhpResponse.ok(data);
+	public PhpResponse<CommonAuthVO> auth() {
+		return PhpResponse.ok(new CommonAuthVO(1, 999));
 	}
 
 	/**
@@ -71,14 +67,11 @@ public class CommonController {
 	 */
 	@GetMapping("/message")
 	@Operation(summary = "消息列表（工作台角标）")
-	public PhpResponse<Map<String, Object>> message(@RequestParam(defaultValue = "1") Integer page,
-													  @RequestParam(defaultValue = "20") Integer limit,
-													  @RequestParam(required = false) String cate_id,
-													  @RequestParam(required = false) String title) {
-		Map<String, Object> data = new LinkedHashMap<>();
-		data.put("list", Collections.emptyList());
-		data.put("messageNum", 0);
-		return PhpResponse.ok(data);
+	public PhpResponse<CommonMessageVO> message(@RequestParam(defaultValue = "1") Integer page,
+			@RequestParam(defaultValue = "20") Integer limit,
+			@RequestParam(required = false) String cate_id,
+			@RequestParam(required = false) String title) {
+		return PhpResponse.ok(new CommonMessageVO());
 	}
 
 }
