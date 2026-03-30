@@ -3,7 +3,6 @@
 > **版本**: 1.0  
 > **创建日期**: 2026-03-30  
 > **目标**: 功能对齐，不新增能力；前端 Vue2 保持不变  
-> **关联文档**: [oa-migration-phase1-phase2-status.md](../oa-migration-phase1-phase2-status.md)、[oa-migration-phase3-deferred.md](../oa-migration-phase3-deferred.md)
 
 ---
 

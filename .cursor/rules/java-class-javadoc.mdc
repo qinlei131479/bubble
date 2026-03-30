@@ -1,5 +1,5 @@
 ---
-description: 新建 Java 类型（类/接口/枚举/记录）时类上方 Javadoc 头注释格式；@author 取自 git、@date 为创建时间
+description: 新建 Java 类型须含类 Javadoc、@author（git user.name）、@date（创建时间）；bubble-api-oa / bubble-biz-oa 全量 Java 类须同时具备 @author 与 @date；实体对齐 Admin.java（@Schema 字段注释）
 globs: "**/*.java"
 alwaysApply: true
 ---
@@ -36,6 +36,33 @@ alwaysApply: true
 - 适用于**新文件**中第一个顶层类型；同一文件内若新增第二个顶层类型，该类型同样需带完整头注释。
 - **不要**为仅修改的已有文件强制补写（除非用户明确要求统一补全）。
 
+## OA 模块（`bubble-api-oa` / `bubble-biz-oa`）
+
+- 上述两个模块内**每一个** `.java` 源文件的**第一个顶层类型**的 Javadoc 中必须**同时**包含 `@author` 与 `@date`（缺一不可）。
+- `@author` 取值规则同上文（`git config user.name`）。
+- 批量补历史文件时，允许使用统一补全时的同一 `@date`；**新建文件**仍须使用创建时刻，禁止照抄无关旧日期。
+
 ## 与现有代码的关系
 
 - 与 `backend-conventions.mdc` 中的格式、缩进等规范同时遵守；本规则优先约束**类上 Javadoc 结构**。
+
+## Bubble-API `entity` 实体类（与 `Admin.java` 一致）
+
+对 `bubble-api/bubble-api-oa`（及同模块风格）中 **MyBatis-Plus 实体**（`extends Req<T>`、`@TableName`），须与 `bubble-api-oa` 下 `com.bubblecloud.oa.api.entity.Admin` 保持同一套注释与注解方式：
+
+- **类上 Javadoc**（第一行中文业务说明，并写明物理表名）  
+  - 格式：`/**` + 换行 + ` * <业务说明>，对应 <eb_xxx> 表。` + ` */`  
+  - 示例见：`Admin.java` 中 `员工账号，对应 eb_admin 表。`
+
+- **类上 Swagger**  
+  - `@Schema(description = "<中文短名>")` 与 `Admin` 一致，便于 OpenAPI 展示。
+
+- **字段**  
+  - **每个**非 `serialVersionUID` 的持久化字段必须带 `@Schema(description = "...")`，说明为**中文**（含义、枚举取值说明可写在括号内）  
+  - 与 MyBatis-Plus 注解并存：主键 `@TableId`、特殊列名 `@TableField` 等写在字段上，`@Schema` 紧贴字段声明（与 `Admin` 相同顺序）。
+
+- **`@author` / `@date`**  
+  - 与 OA 模块全量要求一致：实体类同样必须在类 Javadoc 中写明 `@author` 与 `@date`（与 `Admin.java` 当前形态一致）。
+
+- **参考文件**  
+  - `bubble-api/bubble-api-oa/src/main/java/com/bubblecloud/oa/api/entity/Admin.java`
