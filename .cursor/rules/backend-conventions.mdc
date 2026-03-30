@@ -74,6 +74,7 @@ bubble-visual-{feature} → 可视化管理工具服务
 - **Service 契约**：入参使用 `bubble-api-oa` 中的 `*DTO`，返回使用 `*VO`（或实体，当与表一一对应且已存在时）。
 - **数据访问**：禁止在业务代码中使用 `JdbcTemplate` 直接拼 SQL 访问 OA 库表；统一使用 `XxxMapper` + `classpath:/mapper/*.xml`，并优先使用 MyBatis-Plus 提供的 `lambdaQuery` / `UpService` 封装方法。
 - **PHP 兼容响应**：对外兼容前端的包装类为 `com.bubblecloud.biz.oa.support.PhpResponse`（`status` / `msg` / `data`），与网关/微服务默认的 `R<T>` 区分使用场景。
+- **阶段化实施**：OA 迁移按 11 阶段执行（详见 `docs/plans/oa-migration-plan.md`），每阶段要求全部接口实现真实业务逻辑，**禁止新增 `SimplePageVO.empty` 或固定空返回值的占位桩**。已有占位桩应在对应阶段实施时替换为真实实现。
 
 ## 类文件头 Javadoc
 

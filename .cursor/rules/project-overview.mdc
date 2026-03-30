@@ -48,8 +48,10 @@ Bubble-Cloud 是面向下一代人机交互的**智能体原生微服务平台**
 ## 开发状态
 
 - **已实现**: backend(用户权限)、agi(智能体)、codegen(代码生成)、quartz(定时任务)、auth(认证)、gateway(网关)、monitor(监控)
-- **占位模块**: bubble-api-flow、bubble-api-oa、bubble-biz-flow(仅启动类)、bubble-biz-oa(仅启动类)
+- **迁移进行中**: bubble-api-oa(24 实体 + DTO/VO)、bubble-biz-oa(30 Controller/88 端点，约 40% 真实逻辑，60% 占位桩待替换)
+- **占位模块**: bubble-api-flow、bubble-biz-flow(仅启动类)
 - **待关注**: bubble-common-bom 未包含 bubble-common-seata 版本管理；前端 .env 文件未入仓库
+- **迁移计划**: 详见 docs/plans/oa-migration-plan.md（共 11 阶段，PHP Laravel 9 → Java Spring Boot 3）
 
 ## 部署方式
 

@@ -13,7 +13,7 @@ alwaysApply: true
 | bubble-auth | 8766 | OAuth2 认证授权中心 | Redis, Nacos, Feign→backend |
 | bubble-biz-backend | 8801 | 用户权限管理系统业务 | MySQL, Redis, Nacos, OSS |
 | bubble-biz-flow | 8802 | 工作流业务 (占位) | MySQL, Redis, Nacos |
-| bubble-biz-oa | 8803 | OA 业务 (占位) | MySQL, Redis, Nacos |
+| bubble-biz-oa | 8803 | OA 业务 (迁移中，详见 docs/plans/) | MySQL, Redis, Nacos |
 | bubble-biz-agi | 8805 | AGI 智能体业务 | MySQL(多驱动), Redis, Nacos |
 | bubble-codegen | 8901 | 代码生成 | MySQL, Redis, Nacos, 动态数据源 |
 | bubble-monitor | 8902 | Spring Boot Admin 监控 | Nacos |
@@ -27,7 +27,7 @@ alwaysApply: true
 | bubble-api-backend | 35 | 用户/角色/菜单等实体 + RemoteXxxService Feign |
 | bubble-api-agi | 20 | Agent/数据源/知识库/对话等实体 + DTO |
 | bubble-api-flow | 0 | 占位，待实现 |
-| bubble-api-oa | 0 | 占位，待实现 |
+| bubble-api-oa | 24+ | OA 实体(Admin/Enterprise/Frame/Schedule 等) + DTO/VO，迁移持续扩充 |
 
 ## 公共组件模块 (jar 库)
 
