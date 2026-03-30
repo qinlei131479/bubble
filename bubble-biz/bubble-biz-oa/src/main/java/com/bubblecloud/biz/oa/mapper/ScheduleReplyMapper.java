@@ -1,0 +1,17 @@
+package com.bubblecloud.biz.oa.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.bubblecloud.common.mybatis.mapper.UpMapper;
+import com.bubblecloud.oa.api.entity.ScheduleReply;
+
+/**
+ * eb_schedule_reply Mapper。
+ *
+ * @author qinlei
+ * @date 2026/3/29 20:35
+ */
+@Mapper
+public interface ScheduleReplyMapper extends UpMapper<ScheduleReply> {
+
+}

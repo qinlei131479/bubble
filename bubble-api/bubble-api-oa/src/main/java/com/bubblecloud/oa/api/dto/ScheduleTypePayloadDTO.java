@@ -7,23 +7,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * GET /ent/user/schedule 查询参数。
+ * 日程类型保存/更新字段。
  *
  * @author qinlei
  * @date 2026/3/29 20:40
  */
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "用户待办日程查询")
-public class UserScheduleQueryDTO {
+@Schema(description = "日程类型")
+public class ScheduleTypePayloadDTO {
 
-	@Schema(description = "企业 id")
-	private Integer entid = 1;
+	private String name;
 
-	@Schema(description = "范围开始日期 yyyy-MM-dd")
-	private String start;
+	private String color;
 
-	@Schema(description = "范围结束日期 yyyy-MM-dd")
-	private String end;
+	private String info;
 
 }
