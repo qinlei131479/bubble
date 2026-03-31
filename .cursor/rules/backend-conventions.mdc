@@ -114,6 +114,12 @@ bubble-visual-{feature}  → 可视化管理服务
 - **其它业务接口**（状态切换、树、导出等）在 Controller 中**另起方法**；能复用 **`UpService`/`findPg`/`getById`** 的优先复用。
 - **自定义更新 SQL**：在 **`XxxServiceImpl`** 中调用 **`update(T req, boolean isCustom)`**，`isCustom == true` 时走 **`XxxMapper.xml` 的 `updateCustom`**（见 `UpServiceImpl`）。
 
+#### OA 增删改查书写模板与事务（`bubble-biz-oa`）
+
+- **Controller 模板**：以 **`AgreementAdminController`** 为准对齐 PHP 路由习惯——**`GET`** 列表、`GET /{id}/edit` 详情、**`POST`** 调用 `UpService.create`（新增）、**`PUT /{id}`** 在入参上 `setId` 后调用 `UpService.update`（修改）、**`DELETE /{id}`** 调用 `removeBatchByIds`/`removeById` 等删除；成功返回统一 **`R.phpOk(...)`**（勿与网关 `R.ok` 混用，除非明确非 OA 接口）。
+- **同一资源禁止**重复注册相同 **`@XxxMapping` 路径+方法**（例如两个 `PUT /{id}`）**，** 会导致映射歧义或启动失败。
+- **`XxxServiceImpl` 事务**：对继承 **`UpService`** 的 **新增、修改** 写操作，**必须**在实现类中 **重写** **`create(T req)`、`update(T req)`**，在重写方法上标注 **`@Transactional(rollbackFor = Exception.class)`**，再 **`return super.xxx(...)`**；**禁止**仅依赖基类默认而无事务的「隐式」写操作（便于 Code Review 与一致行为）。删除、查询类方法（如 `deleteById`、`removeBatchByIds`、`list`、`findPg`）**不**强制在实现类重写并加事务（可按业务需要自行加）。
+
 ---
 
 ## 类 Javadoc（全模块 Java）

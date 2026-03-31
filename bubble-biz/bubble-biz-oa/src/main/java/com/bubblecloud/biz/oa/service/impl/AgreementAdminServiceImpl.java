@@ -13,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * 用户协议实现。
+ * 用户协议实现。新增/修改需在实现类中重写 {@link #create}、{@link #update} 并加事务（见后端规范）。
  *
  * @author qinlei
  * @date 2026/3/31
  */
 @Service
-public class AgreementAdminServiceImpl extends UpServiceImpl<AgreementMapper, Agreement> implements AgreementAdminService {
+public class AgreementAdminServiceImpl extends UpServiceImpl<AgreementMapper, Agreement>
+		implements AgreementAdminService {
 
 	@Override
 	public List<Agreement> list(String title, String ident) {
@@ -31,6 +32,12 @@ public class AgreementAdminServiceImpl extends UpServiceImpl<AgreementMapper, Ag
 			q.eq(Agreement::getIdent, ident);
 		}
 		return baseMapper.selectList(q);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Agreement req) {
+		return super.create(req);
 	}
 
 	@Override
