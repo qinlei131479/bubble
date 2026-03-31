@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * OA 登录鉴权接口（兼容 PHP 路径）。
@@ -50,11 +51,11 @@ public class LoginController {
 	@GetMapping("/info")
 	@Operation(summary = "当前登录用户信息（PHP：userInfo + enterprise）")
 	public PhpResponse<LoginInfoVO> info(Authentication authentication) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		LoginInfoVO data = authService.loginInfo(currentUser.getId());
-		return data == null ? PhpResponse.failed("用户不存在") : PhpResponse.ok(data);
+		return ObjectUtil.isNull(data) ? PhpResponse.failed("用户不存在") : PhpResponse.ok(data);
 	}
 
 	@GetMapping("/logout")
@@ -66,7 +67,7 @@ public class LoginController {
 	@PutMapping({ "/savePassword", "/common/savePassword" })
 	@Operation(summary = "修改密码（与 PHP ent/user/savePassword 一致）")
 	public PhpResponse<String> savePassword(Authentication authentication, @RequestBody @Valid SavePasswordDTO dto) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		authService.updatePassword(currentUser.getId(), dto.getPhone(), dto.getPassword());

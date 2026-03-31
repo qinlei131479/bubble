@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.config.ConfigCateItemVO;
 import com.bubblecloud.oa.api.vo.config.FirewallConfigVO;
@@ -13,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author qinlei
  * @date 2026/3/30 下午9:15
  */
-public interface ConfigAdminService {
+public interface ConfigAdminService extends UpService<SystemConfig> {
 
 	/**
 	 * 工作台配置行（企业维度，category=work_bench）。

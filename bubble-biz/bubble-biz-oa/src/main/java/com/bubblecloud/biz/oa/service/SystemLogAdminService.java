@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.EnterpriseLog;
 
 /**
@@ -9,7 +10,7 @@ import com.bubblecloud.oa.api.entity.EnterpriseLog;
  * @author qinlei
  * @date 2026/3/31
  */
-public interface SystemLogAdminService {
+public interface SystemLogAdminService extends UpService<EnterpriseLog> {
 
 	/**
 	 * 日志分页。

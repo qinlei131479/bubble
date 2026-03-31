@@ -2,7 +2,6 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Set;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.DictTypeService;
 import com.bubblecloud.biz.oa.support.PhpResponse;
@@ -13,7 +12,6 @@ import com.bubblecloud.oa.api.vo.config.DictTypeStoreResultVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 数据字典类型，对齐 PHP {@code ent/config/dict_type} 资源接口。
@@ -46,19 +45,7 @@ public class DictTypeController {
 	public PhpResponse<SimplePageVO> index(@RequestParam(defaultValue = "1") long current,
 			@RequestParam(defaultValue = "20") long size, @RequestParam(required = false) String name,
 			@RequestParam(required = false) String link_type, @RequestParam(required = false) Integer status) {
-		var q = Wrappers.lambdaQuery(DictType.class);
-		if (StringUtils.hasText(name)) {
-			q.like(DictType::getName, name);
-		}
-		if (StringUtils.hasText(link_type)) {
-			q.eq(DictType::getLinkType, link_type);
-		}
-		if (status != null) {
-			q.eq(DictType::getStatus, status);
-		}
-		q.orderByDesc(DictType::getId);
-		Page<DictType> page = new Page<>(current, size);
-		Page<DictType> r = dictTypeService.page(page, q);
+		Page<DictType> r = dictTypeService.pageDictTypes(current, size, name, link_type, status);
 		return PhpResponse.ok(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
 	}
 
@@ -82,10 +69,10 @@ public class DictTypeController {
 	@GetMapping("/{id}")
 	@Operation(summary = "显示/隐藏字典（status 查询参数）")
 	public PhpResponse<String> show(@PathVariable Long id, @RequestParam Integer status) {
-		if (id == null || id <= 0) {
+		if (ObjectUtil.isNull(id) || id <= 0) {
 			return PhpResponse.failed("缺少ID");
 		}
-		if (status == null) {
+		if (ObjectUtil.isNull(status)) {
 			return PhpResponse.failed("缺少状态");
 		}
 		DictType u = new DictType();
@@ -113,10 +100,10 @@ public class DictTypeController {
 	@Operation(summary = "删除字典")
 	public PhpResponse<String> destroy(@PathVariable Long id) {
 		DictType row = dictTypeService.getById(id);
-		if (row == null) {
+		if (ObjectUtil.isNull(row)) {
 			return PhpResponse.failed("数据不存在");
 		}
-		if (row.getIdent() == null || !CAN_DELETE_IDENTS.contains(row.getIdent())) {
+		if (ObjectUtil.isNull(row.getIdent()) || !CAN_DELETE_IDENTS.contains(row.getIdent())) {
 			return PhpResponse.failed("仅允许删除业务白名单内的字典类型");
 		}
 		dictTypeService.removeById(id);
@@ -127,7 +114,7 @@ public class DictTypeController {
 	@Operation(summary = "字典详情（含是否可删标记）")
 	public PhpResponse<DictTypeInfoVO> info(@PathVariable Long id) {
 		DictType row = dictTypeService.getById(id);
-		if (row == null) {
+		if (ObjectUtil.isNull(row)) {
 			return PhpResponse.failed("数据不存在");
 		}
 		DictTypeInfoVO vo = new DictTypeInfoVO();
@@ -138,7 +125,7 @@ public class DictTypeController {
 		vo.setLevel(row.getLevel());
 		vo.setStatus(row.getStatus());
 		vo.setMark(row.getMark());
-		vo.setCanDelete(row.getIdent() != null && CAN_DELETE_IDENTS.contains(row.getIdent()));
+		vo.setCanDelete(ObjectUtil.isNotNull(row.getIdent()) && CAN_DELETE_IDENTS.contains(row.getIdent()));
 		return PhpResponse.ok(vo);
 	}
 

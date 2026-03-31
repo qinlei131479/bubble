@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 企业系统配置（对齐 PHP {@code SysremConfigController} + {@code ConfigCateController}）。
@@ -71,7 +72,7 @@ public class ConfigAdminController {
 	@PutMapping("/data/firewall")
 	@Operation(summary = "保存防火墙配置")
 	public PhpResponse<String> saveFirewallConfig(@RequestBody FirewallConfigSaveDTO dto) {
-		int sw = dto.getFirewallSwitch() != null ? dto.getFirewallSwitch() : 0;
+		int sw = ObjectUtil.isNotNull(dto.getFirewallSwitch()) ? dto.getFirewallSwitch() : 0;
 		configAdminService.saveFirewallConfig(sw, dto.getFirewallContent());
 		return PhpResponse.ok("保存成功");
 	}

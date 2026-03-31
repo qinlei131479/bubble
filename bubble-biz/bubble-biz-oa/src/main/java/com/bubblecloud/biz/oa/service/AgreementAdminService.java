@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.Agreement;
 
 /**
@@ -10,7 +11,7 @@ import com.bubblecloud.oa.api.entity.Agreement;
  * @author qinlei
  * @date 2026/3/31
  */
-public interface AgreementAdminService {
+public interface AgreementAdminService extends UpService<Agreement> {
 
 	/**
 	 * 协议列表，支持按标题模糊、标识精确筛选。
@@ -19,18 +20,5 @@ public interface AgreementAdminService {
 	 * @return 协议列表
 	 */
 	List<Agreement> list(String title, String ident);
-
-	/**
-	 * 按主键查询。
-	 * @param id 主键
-	 * @return 实体，可能为 null
-	 */
-	Agreement getById(int id);
-
-	/**
-	 * 按主键更新。
-	 * @param row 含 id 的实体
-	 */
-	void updateById(Agreement row);
 
 }

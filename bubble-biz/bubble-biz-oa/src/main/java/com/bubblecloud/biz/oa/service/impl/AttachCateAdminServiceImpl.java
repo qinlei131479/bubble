@@ -5,8 +5,8 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.CategoryMapper;
 import com.bubblecloud.biz.oa.service.AttachCateAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.Category;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,16 +16,13 @@ import org.springframework.stereotype.Service;
  * @date 2026/3/31
  */
 @Service
-@RequiredArgsConstructor
-public class AttachCateAdminServiceImpl implements AttachCateAdminService {
+public class AttachCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category> implements AttachCateAdminService {
 
 	private static final String TYPE_ATTACH = "systemAttach";
 
-	private final CategoryMapper categoryMapper;
-
 	@Override
 	public List<Category> listByEntid(int entid) {
-		return categoryMapper.selectList(Wrappers.lambdaQuery(Category.class)
+		return baseMapper.selectList(Wrappers.lambdaQuery(Category.class)
 			.eq(Category::getType, TYPE_ATTACH)
 			.eq(Category::getEntid, entid)
 			.orderByDesc(Category::getSort));

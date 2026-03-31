@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 企业用户（对齐 PHP {@code CompanyUserController}，前缀 {@code ent/user}）。
@@ -77,7 +78,7 @@ public class CompanyUserController {
 	@Operation(summary = "获取用户关联企业详情")
 	public PhpResponse<CompanyUserProfileVO> userInfo(Authentication authentication,
 			@RequestParam(defaultValue = "1") int entid) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return PhpResponse.failed("未登录");
 		}
 		try {
@@ -92,7 +93,7 @@ public class CompanyUserController {
 	@Operation(summary = "获取用户部门信息")
 	public PhpResponse<UserFrameBriefVO> userFrame(Authentication authentication,
 			@RequestParam(defaultValue = "1") int entid) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return PhpResponse.failed("未登录");
 		}
 		try {

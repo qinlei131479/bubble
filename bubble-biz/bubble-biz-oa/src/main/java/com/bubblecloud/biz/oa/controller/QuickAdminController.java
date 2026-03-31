@@ -47,21 +47,21 @@ public class QuickAdminController {
 	@PostMapping
 	@Operation(summary = "新增")
 	public PhpResponse<String> store(@RequestBody SystemQuick body) {
-		quickAdminService.save(body);
+		quickAdminService.saveQuick(body);
 		return PhpResponse.ok("common.insert.succ");
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
 	public PhpResponse<SystemQuick> edit(@PathVariable int id) {
-		return PhpResponse.ok(quickAdminService.get(id));
+		return PhpResponse.ok(quickAdminService.getQuick(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改保存")
 	public PhpResponse<String> update(@PathVariable int id, @RequestBody SystemQuick body) {
 		body.setId(id);
-		quickAdminService.update(body);
+		quickAdminService.updateQuick(body);
 		return PhpResponse.ok("common.update.succ");
 	}
 
@@ -74,7 +74,7 @@ public class QuickAdminController {
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
 	public PhpResponse<String> destroy(@PathVariable int id) {
-		quickAdminService.delete(id);
+		quickAdminService.deleteQuick(id);
 		return PhpResponse.ok("common.delete.succ");
 	}
 

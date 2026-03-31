@@ -9,6 +9,7 @@ import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.Admin;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * eb_admin 员工账号服务实现。
@@ -29,7 +30,7 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 	public Admin getByAccount(String account) {
 		Admin admin = this.getOne(
 				Wrappers.lambdaQuery(Admin.class).eq(Admin::getAccount, account).isNull(Admin::getDeletedAt), false);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			admin = this.getOne(
 					Wrappers.lambdaQuery(Admin.class).eq(Admin::getPhone, account).isNull(Admin::getDeletedAt), false);
 		}
@@ -61,7 +62,7 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 	@Override
 	public Admin ensureUserForPhoneLogin(String phone) {
 		Admin existing = getByAccount(phone);
-		if (existing != null) {
+		if (ObjectUtil.isNotNull(existing)) {
 			return existing;
 		}
 		return createRegisteredUser(phone, ENCODER.encode(java.util.UUID.randomUUID().toString()));
@@ -71,7 +72,7 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 	public void updatePasswordByUid(String uid, String rawPassword) {
 		Admin admin = this.getOne(Wrappers.lambdaQuery(Admin.class).eq(Admin::getUid, uid).isNull(Admin::getDeletedAt),
 				false);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");
 		}
 		admin.setPassword(ENCODER.encode(rawPassword));

@@ -19,6 +19,7 @@ import com.bubblecloud.biz.oa.mapper.FormCategoryMapper;
 import com.bubblecloud.biz.oa.mapper.FormDataMapper;
 import com.bubblecloud.biz.oa.mapper.SalesmanCustomFieldMapper;
 import com.bubblecloud.biz.oa.service.FormAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.FormCategory;
 import com.bubblecloud.oa.api.entity.FormData;
 import com.bubblecloud.oa.api.entity.SalesmanCustomField;
@@ -31,7 +32,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 自定义表单管理实现。
@@ -41,15 +43,13 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class FormAdminServiceImpl implements FormAdminService {
+public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData> implements FormAdminService {
 
 	private static final String LIST_SELECT = "list_select";
 
 	private static final String SEARCH_SELECT = "search_select";
 
 	private final FormCategoryMapper formCategoryMapper;
-
-	private final FormDataMapper formDataMapper;
 
 	private final SalesmanCustomFieldMapper salesmanCustomFieldMapper;
 
@@ -75,7 +75,7 @@ public class FormAdminServiceImpl implements FormAdminService {
 			vo.setSort(c.getSort());
 			vo.setTypes(c.getTypes());
 			vo.setStatus(c.getStatus());
-			List<FormData> rows = formDataMapper.selectList(Wrappers.lambdaQuery(FormData.class)
+			List<FormData> rows = baseMapper.selectList(Wrappers.lambdaQuery(FormData.class)
 				.eq(FormData::getCateId, c.getId().intValue())
 				.orderByDesc(FormData::getSort));
 			List<FormDataItemVO> data = new ArrayList<>();
@@ -129,8 +129,8 @@ public class FormAdminServiceImpl implements FormAdminService {
 	@Transactional(rollbackFor = Exception.class)
 	public long saveCate(int types, String title, Integer sort, int status) {
 		FormCategory c = new FormCategory();
-		c.setTitle(title == null ? "" : title);
-		c.setSort(sort == null ? 0 : sort);
+		c.setTitle(ObjectUtil.isNull(title) ? "" : title);
+		c.setSort(ObjectUtil.isNull(sort) ? 0 : sort);
 		c.setTypes(types);
 		c.setStatus(status);
 		c.setCreatedAt(LocalDateTime.now());
@@ -155,7 +155,7 @@ public class FormAdminServiceImpl implements FormAdminService {
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteCate(long id) {
 		formCategoryMapper.deleteById(id);
-		formDataMapper.delete(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, (int) id));
+		baseMapper.delete(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, (int) id));
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class FormAdminServiceImpl implements FormAdminService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void saveFormData(int types, JsonNode body) {
-		if (body == null || !body.isArray()) {
+		if (ObjectUtil.isNull(body) || !body.isArray()) {
 			throw new IllegalArgumentException("data 格式错误");
 		}
 		List<Integer> cateIds = formCategoryMapper
@@ -189,38 +189,38 @@ public class FormAdminServiceImpl implements FormAdminService {
 				throw new IllegalArgumentException("分组数据异常");
 			}
 			JsonNode dataArr = group.get("data");
-			if (dataArr == null || !dataArr.isArray()) {
+			if (ObjectUtil.isNull(dataArr) || !dataArr.isArray()) {
 				continue;
 			}
 			if (dataArr.isEmpty()) {
-				formDataMapper.delete(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, cateId));
+				baseMapper.delete(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, cateId));
 				continue;
 			}
-			Map<Long, Long> remaining = formDataMapper
+			Map<Long, Long> remaining = baseMapper
 				.selectList(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, cateId))
 				.stream()
 				.collect(Collectors.toMap(FormData::getId, FormData::getId));
 			int num = dataArr.size();
 			for (JsonNode form : dataArr) {
-				if (form == null || form.isNull()) {
+				if (ObjectUtil.isNull(form) || form.isNull()) {
 					continue;
 				}
 				FormData row = patchFormDataFromJson(form, cateId, num);
 				long rawId = form.hasNonNull("id") ? form.get("id").asLong() : 0L;
-				if (rawId > 0 && remaining.remove(rawId) != null) {
+				if (rawId > 0 && ObjectUtil.isNotNull(remaining.remove(rawId))) {
 					row.setId(rawId);
 					row.setUpdatedAt(LocalDateTime.now());
-					formDataMapper.updateById(row);
+					baseMapper.updateById(row);
 				}
 				else {
 					row.setCreatedAt(LocalDateTime.now());
 					row.setUpdatedAt(LocalDateTime.now());
-					formDataMapper.insert(row);
+					baseMapper.insert(row);
 				}
 				num--;
 			}
 			if (!remaining.isEmpty()) {
-				formDataMapper.delete(Wrappers.lambdaQuery(FormData.class)
+				baseMapper.delete(Wrappers.lambdaQuery(FormData.class)
 					.eq(FormData::getCateId, cateId)
 					.in(FormData::getId, remaining.keySet()));
 			}
@@ -231,13 +231,13 @@ public class FormAdminServiceImpl implements FormAdminService {
 		FormData row = new FormData();
 		row.setCateId(cateId);
 		String key = text(form, "key");
-		if (!StringUtils.hasText(key)) {
+		if (StrUtil.isBlank(key)) {
 			key = randomFieldKey();
 		}
 		row.setFieldKey(key);
 		row.setKeyName(text(form, "key_name"));
 		row.setType(text(form, "type"));
-		row.setInputType(StringUtils.hasText(text(form, "input_type")) ? text(form, "input_type") : "input");
+		row.setInputType(StrUtil.isNotBlank(text(form, "input_type")) ? text(form, "input_type") : "input");
 		row.setParam(text(form, "param"));
 		row.setDecimalPlace(intOrZero(form, "decimal_place"));
 		row.setUploadType(intOrZero(form, "upload_type"));
@@ -255,21 +255,21 @@ public class FormAdminServiceImpl implements FormAdminService {
 	}
 
 	private static String text(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return "";
 		}
 		return n.get(field).asText("");
 	}
 
 	private static int intOrZero(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return 0;
 		}
 		return n.get(field).asInt();
 	}
 
 	private String stringifyValue(JsonNode v) {
-		if (v == null || v.isNull()) {
+		if (ObjectUtil.isNull(v) || v.isNull()) {
 			return "";
 		}
 		if (v.isArray() || v.isObject()) {
@@ -281,8 +281,8 @@ public class FormAdminServiceImpl implements FormAdminService {
 	private String randomFieldKey() {
 		for (int i = 0; i < 50; i++) {
 			String k = randomKey8();
-			Long c = formDataMapper.selectCount(Wrappers.lambdaQuery(FormData.class).eq(FormData::getFieldKey, k));
-			if (c == null || c == 0) {
+			Long c = getBaseMapper().selectCount(Wrappers.lambdaQuery(FormData.class).eq(FormData::getFieldKey, k));
+			if (ObjectUtil.isNull(c) || c == 0) {
 				return k;
 			}
 		}
@@ -321,13 +321,13 @@ public class FormAdminServiceImpl implements FormAdminService {
 		if (!cateIds.contains(targetCateId)) {
 			throw new IllegalArgumentException("分组数据异常");
 		}
-		FormData fd = formDataMapper.selectById(formDataId);
-		if (fd == null || !cateIds.contains(fd.getCateId())) {
+		FormData fd = getBaseMapper().selectById(formDataId);
+		if (ObjectUtil.isNull(fd) || !cateIds.contains(fd.getCateId())) {
 			throw new IllegalArgumentException("移动失败");
 		}
 		fd.setCateId(targetCateId);
 		fd.setUpdatedAt(LocalDateTime.now());
-		formDataMapper.updateById(fd);
+		getBaseMapper().updateById(fd);
 	}
 
 	@Override
@@ -342,16 +342,16 @@ public class FormAdminServiceImpl implements FormAdminService {
 			return root;
 		}
 		for (FormCateListItemVO c : listByTypes(formTypes)) {
-			if (c.getData() == null) {
+			if (ObjectUtil.isNull(c.getData())) {
 				continue;
 			}
 			for (FormDataItemVO row : c.getData()) {
 				ObjectNode o = objectMapper.createObjectNode();
 				o.put("field", row.getKey());
 				o.put("name", row.getKeyName());
-				o.put("type", row.getType() == null ? "" : row.getType());
-				o.put("input_type", row.getInputType() == null ? "" : row.getInputType());
-				o.put("dict_ident", row.getDictIdent() == null ? "" : row.getDictIdent());
+				o.put("type", ObjectUtil.isNull(row.getType()) ? "" : row.getType());
+				o.put("input_type", ObjectUtil.isNull(row.getInputType()) ? "" : row.getInputType());
+				o.put("dict_ident", ObjectUtil.isNull(row.getDictIdent()) ? "" : row.getDictIdent());
 				list.add(o);
 				search.add(o.deepCopy());
 			}
@@ -367,7 +367,7 @@ public class FormAdminServiceImpl implements FormAdminService {
 		SalesmanCustomField row = salesmanCustomFieldMapper.selectOne(Wrappers.lambdaQuery(SalesmanCustomField.class)
 			.eq(SalesmanCustomField::getUid, (int) adminId)
 			.eq(SalesmanCustomField::getCustomType, compositeType));
-		if (row == null || !StringUtils.hasText(row.getFieldList())) {
+		if (ObjectUtil.isNull(row) || StrUtil.isBlank(row.getFieldList())) {
 			return objectMapper.createArrayNode();
 		}
 		try {
@@ -387,12 +387,12 @@ public class FormAdminServiceImpl implements FormAdminService {
 		if (!LIST_SELECT.equals(selectType) && !SEARCH_SELECT.equals(selectType)) {
 			throw new IllegalArgumentException("业务类型错误");
 		}
-		if (dataArray == null || !dataArray.isArray()) {
+		if (ObjectUtil.isNull(dataArray) || !dataArray.isArray()) {
 			throw new IllegalArgumentException("data 格式错误");
 		}
 		Set<String> uniq = new HashSet<>();
 		for (JsonNode n : dataArray) {
-			if (n != null && !n.isNull()) {
+			if (ObjectUtil.isNotNull(n) && !n.isNull()) {
 				uniq.add(n.asText());
 			}
 		}
@@ -408,7 +408,7 @@ public class FormAdminServiceImpl implements FormAdminService {
 				.eq(SalesmanCustomField::getUid, (int) adminId)
 				.eq(SalesmanCustomField::getCustomType, composite));
 		LocalDateTime now = LocalDateTime.now();
-		if (existing != null) {
+		if (ObjectUtil.isNotNull(existing)) {
 			existing.setFieldList(json);
 			existing.setUpdatedAt(now);
 			salesmanCustomFieldMapper.updateById(existing);

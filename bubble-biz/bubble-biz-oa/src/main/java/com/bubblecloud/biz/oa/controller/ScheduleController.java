@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 日程接口（PHP ent/schedule）。
@@ -51,14 +52,14 @@ public class ScheduleController {
 	@PostMapping("/index")
 	@Operation(summary = "日程列表")
 	public PhpResponse<List<ScheduleRecordVO>> index(@RequestBody(required = false) ScheduleIndexQueryDTO body) {
-		return PhpResponse.ok(scheduleApiService.scheduleIndex(body != null ? body : new ScheduleIndexQueryDTO()));
+		return PhpResponse.ok(scheduleApiService.scheduleIndex(ObjectUtil.isNotNull(body) ? body : new ScheduleIndexQueryDTO()));
 	}
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "修改日程状态")
 	public PhpResponse<String> status(@PathVariable long id,
 			@RequestBody(required = false) ScheduleStatusUpdateDTO body) {
-		scheduleApiService.updateStatus(id, body != null ? body : new ScheduleStatusUpdateDTO());
+		scheduleApiService.updateStatus(id, ObjectUtil.isNotNull(body) ? body : new ScheduleStatusUpdateDTO());
 		return PhpResponse.ok("ok");
 	}
 

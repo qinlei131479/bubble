@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 员工培训（对齐 PHP {@code ent/company/train}）。
@@ -43,7 +44,7 @@ public class EmployeeTrainController {
 	@Operation(summary = "更新培训内容")
 	public PhpResponse<String> update(@PathVariable String type,
 			@RequestBody(required = false) EmployeeTrainUpdateDTO dto) {
-		if (dto == null) {
+		if (ObjectUtil.isNull(dto)) {
 			dto = new EmployeeTrainUpdateDTO();
 		}
 		try {

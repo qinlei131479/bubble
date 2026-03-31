@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 企业角色（对齐 PHP {@code ent/system/roles}）。
@@ -178,7 +178,7 @@ public class RolesAdminController {
 	public PhpResponse<String> updateUserPassword(@RequestBody JsonNode body) {
 		String password = body.has("password") ? body.get("password").asText() : "";
 		String uid = body.has("uid") ? body.get("uid").asText() : "";
-		if (!StringUtils.hasText(password) || !StringUtils.hasText(uid)) {
+		if (StrUtil.isBlank(password) || StrUtil.isBlank(uid)) {
 			return PhpResponse.failed("参数错误");
 		}
 		try {

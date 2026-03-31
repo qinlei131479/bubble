@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bubblecloud.biz.oa.mapper.FrameAssistMapper">
 
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.FrameAssist">
+		SELECT t.*
+		FROM eb_frame_assist t
+		WHERE t.deleted_at IS NULL
+	</select>
+
 	<select id="selectUserFrames" resultType="com.bubblecloud.oa.api.dto.FrameAssistView">
 		SELECT fa.id AS id,
 		       fa.entid AS entid,

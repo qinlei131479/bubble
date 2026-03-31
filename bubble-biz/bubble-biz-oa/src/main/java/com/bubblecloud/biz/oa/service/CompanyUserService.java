@@ -1,5 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.company.CompanyUserCardVO;
 import com.bubblecloud.oa.api.dto.EnterpriseUserCardUpdateDTO;
@@ -15,7 +17,7 @@ import java.util.List;
  * @author qinlei
  * @date 2026/3/29 下午5:30
  */
-public interface CompanyUserService {
+public interface CompanyUserService extends UpService<Admin> {
 
 	SimplePageVO listCompanyUsers(int entid, String pid, String name, Integer status, int current, int size);
 

@@ -7,11 +7,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.SystemQuickMapper;
 import com.bubblecloud.biz.oa.service.QuickAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.SystemQuick;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 快捷入口实现。
@@ -20,59 +21,56 @@ import org.springframework.util.StringUtils;
  * @date 2026/3/30
  */
 @Service
-@RequiredArgsConstructor
-public class QuickAdminServiceImpl implements QuickAdminService {
-
-	private final SystemQuickMapper systemQuickMapper;
+public class QuickAdminServiceImpl extends UpServiceImpl<SystemQuickMapper, SystemQuick> implements QuickAdminService {
 
 	@Override
 	public Page<SystemQuick> page(Integer cid, String nameLike, int current, int size) {
 		var q = Wrappers.lambdaQuery(SystemQuick.class)
 			.orderByDesc(SystemQuick::getSort)
 			.orderByAsc(SystemQuick::getId);
-		if (cid != null && cid > 0) {
+		if (ObjectUtil.isNotNull(cid) && cid > 0) {
 			q.eq(SystemQuick::getCid, cid);
 		}
-		if (StringUtils.hasText(nameLike)) {
+		if (StrUtil.isNotBlank(nameLike)) {
 			q.like(SystemQuick::getName, nameLike);
 		}
-		return systemQuickMapper.selectPage(new Page<>(current, size), q);
+		return baseMapper.selectPage(new Page<>(current, size), q);
 	}
 
 	@Override
 	public List<SystemQuick> listAll(Integer cid) {
 		var q = Wrappers.lambdaQuery(SystemQuick.class).orderByDesc(SystemQuick::getSort);
-		if (cid != null && cid > 0) {
+		if (ObjectUtil.isNotNull(cid) && cid > 0) {
 			q.eq(SystemQuick::getCid, cid);
 		}
-		return systemQuickMapper.selectList(q);
+		return baseMapper.selectList(q);
 	}
 
 	@Override
-	public SystemQuick get(int id) {
-		return systemQuickMapper.selectById(id);
+	public SystemQuick getQuick(int id) {
+		return baseMapper.selectById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void save(SystemQuick row) {
+	public void saveQuick(SystemQuick row) {
 		LocalDateTime now = LocalDateTime.now();
 		row.setCreatedAt(now);
 		row.setUpdatedAt(now);
-		systemQuickMapper.insert(row);
+		baseMapper.insert(row);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void update(SystemQuick row) {
+	public void updateQuick(SystemQuick row) {
 		row.setUpdatedAt(LocalDateTime.now());
-		systemQuickMapper.updateById(row);
+		baseMapper.updateById(row);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void delete(int id) {
-		systemQuickMapper.deleteById(id);
+	public void deleteQuick(int id) {
+		baseMapper.deleteById(id);
 	}
 
 }

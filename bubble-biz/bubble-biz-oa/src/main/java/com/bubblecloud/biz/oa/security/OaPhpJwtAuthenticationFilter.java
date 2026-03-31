@@ -12,8 +12,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * PHP JWT 鉴权过滤器。
@@ -34,11 +35,11 @@ public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String token = resolveToken(request);
-		if (StringUtils.hasText(token)) {
+		if (StrUtil.isNotBlank(token)) {
 			Map<String, Object> claims = tokenService.parseAndValidate(token);
-			if (claims != null && claims.get("sub") != null) {
+			if (ObjectUtil.isNotNull(claims) && ObjectUtil.isNotNull(claims.get("sub"))) {
 				Long userId = Long.valueOf(String.valueOf(claims.get("sub")));
-				String account = claims.get("account") == null ? null : String.valueOf(claims.get("account"));
+				String account = ObjectUtil.isNull(claims.get("account")) ? null : String.valueOf(claims.get("account"));
 				OaCurrentUser principal = new OaCurrentUser(userId, account);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal,
 						null, Collections.emptyList());
@@ -50,7 +51,7 @@ public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private String resolveToken(HttpServletRequest request) {
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if (!StringUtils.hasText(authorization)) {
+		if (StrUtil.isBlank(authorization)) {
 			return null;
 		}
 		if (authorization.startsWith("Bearer ")) {

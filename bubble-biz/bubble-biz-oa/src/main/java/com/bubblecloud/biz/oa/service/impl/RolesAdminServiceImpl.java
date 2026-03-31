@@ -13,6 +13,7 @@ import com.bubblecloud.biz.oa.mapper.EnterpriseRoleMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseRoleUserMapper;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
 import com.bubblecloud.biz.oa.service.RolesAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.biz.oa.util.TreeUtil;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
@@ -27,7 +28,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 企业角色管理实现。
@@ -37,9 +39,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class RolesAdminServiceImpl implements RolesAdminService {
-
-	private final EnterpriseRoleMapper enterpriseRoleMapper;
+public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, EnterpriseRole> implements RolesAdminService {
 
 	private final EnterpriseRoleUserMapper enterpriseRoleUserMapper;
 
@@ -52,11 +52,11 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	@Override
 	public List<EnterpriseRole> listRoles(String roleName, int entid) {
 		var q = Wrappers.lambdaQuery(EnterpriseRole.class).eq(EnterpriseRole::getEntid, entid);
-		if (StringUtils.hasText(roleName)) {
+		if (StrUtil.isNotBlank(roleName)) {
 			q.like(EnterpriseRole::getRoleName, roleName);
 		}
 		q.orderByDesc(EnterpriseRole::getId);
-		return enterpriseRoleMapper.selectList(q);
+		return baseMapper.selectList(q);
 	}
 
 	@Override
@@ -65,22 +65,22 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 		EnterpriseRole r = new EnterpriseRole();
 		fillRole(r, body);
 		r.setEntid(entid);
-		enterpriseRoleMapper.insert(r);
+		baseMapper.insert(r);
 		return r.getId();
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateRole(long id, int entid, JsonNode body) {
-		EnterpriseRole exist = enterpriseRoleMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
+		EnterpriseRole exist = baseMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
 			.eq(EnterpriseRole::getId, id)
 			.eq(EnterpriseRole::getEntid, entid));
-		if (exist == null) {
+		if (ObjectUtil.isNull(exist)) {
 			throw new IllegalArgumentException("未找到可修改的角色");
 		}
 		fillRole(exist, body);
 		exist.setId(id);
-		enterpriseRoleMapper.updateById(exist);
+		baseMapper.updateById(exist);
 	}
 
 	private void fillRole(EnterpriseRole r, JsonNode body) {
@@ -104,14 +104,14 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	}
 
 	private static String text(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return "";
 		}
 		return n.get(field).asText("");
 	}
 
 	private String jsonField(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return "[]";
 		}
 		JsonNode v = n.get(field);
@@ -124,31 +124,31 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteRole(long id, int entid) {
-		EnterpriseRole r = enterpriseRoleMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
+		EnterpriseRole r = baseMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
 			.eq(EnterpriseRole::getId, id)
 			.eq(EnterpriseRole::getEntid, entid));
-		if (r == null) {
+		if (ObjectUtil.isNull(r)) {
 			throw new IllegalArgumentException("未找到可删除的角色");
 		}
-		enterpriseRoleUserMapper
-			.delete(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, id));
-		enterpriseRoleMapper.deleteById(id);
+		enterpriseRoleUserMapper.delete(
+				Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, id));
+		getBaseMapper().deleteById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void changeRoleStatus(int entid, long roleId, int status) {
-		EnterpriseRole r = enterpriseRoleMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
+		EnterpriseRole r = getBaseMapper().selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
 			.eq(EnterpriseRole::getId, roleId)
 			.eq(EnterpriseRole::getEntid, entid));
-		if (r == null) {
+		if (ObjectUtil.isNull(r)) {
 			throw new IllegalArgumentException("未找到可修改的角色");
 		}
 		if (Objects.equals(r.getStatus(), status)) {
 			return;
 		}
 		r.setStatus(status);
-		enterpriseRoleMapper.updateById(r);
+		getBaseMapper().updateById(r);
 		enterpriseRoleUserMapper.update(null,
 				Wrappers.lambdaUpdate(EnterpriseRoleUser.class)
 					.eq(EnterpriseRoleUser::getRoleId, roleId)
@@ -185,7 +185,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 		ArrayNode rolesArr = objectMapper.createArrayNode();
 		roleIds.forEach(rolesArr::add);
 
-		List<EnterpriseRole> all = enterpriseRoleMapper
+		List<EnterpriseRole> all = getBaseMapper()
 			.selectList(Wrappers.lambdaQuery(EnterpriseRole.class).eq(EnterpriseRole::getEntid, entid));
 		ArrayNode roleList = objectMapper.createArrayNode();
 		for (EnterpriseRole er : all) {
@@ -203,7 +203,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	}
 
 	private JsonNode readJson(String raw) {
-		if (!StringUtils.hasText(raw)) {
+		if (StrUtil.isBlank(raw)) {
 			return objectMapper.createArrayNode();
 		}
 		try {
@@ -239,7 +239,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	@Transactional(rollbackFor = Exception.class)
 	public void changeUserRole(int entid, long userId, JsonNode roleIdsNode) {
 		List<Long> roleIds = new ArrayList<>();
-		if (roleIdsNode != null && roleIdsNode.isArray()) {
+		if (ObjectUtil.isNotNull(roleIdsNode) && roleIdsNode.isArray()) {
 			for (JsonNode n : roleIdsNode) {
 				roleIds.add(n.asLong());
 			}
@@ -256,7 +256,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 			enterpriseRoleUserMapper.insert(ru);
 		}
 		Admin a = adminMapper.selectById(userId);
-		if (a != null) {
+		if (ObjectUtil.isNotNull(a)) {
 			try {
 				a.setRoles(objectMapper.writeValueAsString(roleIds));
 			}
@@ -270,7 +270,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addRoleUsers(int entid, int roleId, List<Integer> userIds) {
-		if (userIds == null || userIds.isEmpty()) {
+		if (ObjectUtil.isNull(userIds) || userIds.isEmpty()) {
 			throw new IllegalArgumentException("至少选择一个部门或者一个用户");
 		}
 		Set<Integer> existing = enterpriseRoleUserMapper
@@ -293,18 +293,18 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 			enterpriseRoleUserMapper.insert(ru);
 			mergeRoleIntoAdmin(uid.longValue(), roleId);
 		}
-		EnterpriseRole role = enterpriseRoleMapper.selectById((long) roleId);
-		if (role != null) {
+		EnterpriseRole role = getBaseMapper().selectById((long) roleId);
+		if (ObjectUtil.isNotNull(role)) {
 			long cnt = enterpriseRoleUserMapper
 				.selectCount(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, roleId));
 			role.setUserCount((int) cnt);
-			enterpriseRoleMapper.updateById(role);
+			getBaseMapper().updateById(role);
 		}
 	}
 
 	private void mergeRoleIntoAdmin(long adminId, int roleId) {
 		Admin a = adminMapper.selectById(adminId);
-		if (a == null) {
+		if (ObjectUtil.isNull(a)) {
 			return;
 		}
 		Set<Long> ids = new LinkedHashSet<>(parseRoleIds(a.getRoles()));
@@ -319,7 +319,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 	}
 
 	private List<Long> parseRoleIds(String raw) {
-		if (!StringUtils.hasText(raw)) {
+		if (StrUtil.isBlank(raw)) {
 			return new ArrayList<>();
 		}
 		try {
@@ -338,7 +338,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 			.eq(EnterpriseRoleUser::getUserId, uid)
 			.eq(EnterpriseRoleUser::getEntid, entid)
 			.eq(EnterpriseRoleUser::getRoleId, roleId));
-		if (ru == null) {
+		if (ObjectUtil.isNull(ru)) {
 			throw new IllegalArgumentException("修改的成员不存在!");
 		}
 		ru.setStatus(status);
@@ -353,7 +353,7 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 			.eq(EnterpriseRoleUser::getEntid, entid)
 			.eq(EnterpriseRoleUser::getRoleId, roleId));
 		Admin a = adminMapper.selectById((long) uid);
-		if (a != null) {
+		if (ObjectUtil.isNotNull(a)) {
 			List<Long> ids = parseRoleIds(a.getRoles());
 			ids.remove(Long.valueOf(roleId));
 			try {
@@ -364,12 +364,12 @@ public class RolesAdminServiceImpl implements RolesAdminService {
 			}
 			adminMapper.updateById(a);
 		}
-		EnterpriseRole role = enterpriseRoleMapper.selectById((long) roleId);
-		if (role != null) {
+		EnterpriseRole role = getBaseMapper().selectById((long) roleId);
+		if (ObjectUtil.isNotNull(role)) {
 			long cnt = enterpriseRoleUserMapper
 				.selectCount(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, roleId));
 			role.setUserCount((int) cnt);
-			enterpriseRoleMapper.updateById(role);
+			getBaseMapper().updateById(role);
 		}
 	}
 

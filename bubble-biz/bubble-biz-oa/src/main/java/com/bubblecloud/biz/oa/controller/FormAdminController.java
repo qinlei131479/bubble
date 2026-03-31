@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 自定义表单（对齐 PHP {@code ent/config/form}）。
@@ -36,7 +38,7 @@ public class FormAdminController {
 	@GetMapping("/cate")
 	@Operation(summary = "表单分组与字段列表")
 	public PhpResponse<?> index(@RequestParam String types) {
-		if (types == null || types.isBlank()) {
+		if (StrUtil.isBlank(types)) {
 			return PhpResponse.failed("common.empty.attrs");
 		}
 		try {
@@ -106,7 +108,7 @@ public class FormAdminController {
 	public PhpResponse<String> storeData(@PathVariable int types, @RequestBody JsonNode body) {
 		try {
 			JsonNode data = body.get("data");
-			if (data == null) {
+			if (ObjectUtil.isNull(data)) {
 				data = body;
 			}
 			formAdminService.saveFormData(types, data);
@@ -135,7 +137,7 @@ public class FormAdminController {
 	@Operation(summary = "业务员自定义字段列表")
 	public PhpResponse<JsonNode> getSalesmanCustom(@PathVariable int customType) {
 		Long uid = OaSecurityUtil.currentUserId();
-		if (uid == null) {
+		if (ObjectUtil.isNull(uid)) {
 			return PhpResponse.failed("未登录");
 		}
 		return PhpResponse.ok(formAdminService.getSalesmanCustomFields(uid, customType));
@@ -145,7 +147,7 @@ public class FormAdminController {
 	@Operation(summary = "保存业务员自定义字段")
 	public PhpResponse<String> saveSalesmanCustom(@PathVariable int customType, @RequestBody JsonNode body) {
 		Long uid = OaSecurityUtil.currentUserId();
-		if (uid == null) {
+		if (ObjectUtil.isNull(uid)) {
 			return PhpResponse.failed("未登录");
 		}
 		try {
@@ -160,14 +162,14 @@ public class FormAdminController {
 	}
 
 	private static String text(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return "";
 		}
 		return n.get(field).asText("");
 	}
 
 	private static Integer intOrNull(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return null;
 		}
 		return n.get(field).asInt();

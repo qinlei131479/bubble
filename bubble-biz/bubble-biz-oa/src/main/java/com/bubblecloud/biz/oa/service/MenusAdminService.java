@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.SystemMenus;
 import com.bubblecloud.oa.api.vo.menu.MenuAdminTreeNodeVO;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface MenusAdminService {
+public interface MenusAdminService extends UpService<SystemMenus> {
 
 	/**
 	 * 企业菜单树（与 PHP 列表一致）。

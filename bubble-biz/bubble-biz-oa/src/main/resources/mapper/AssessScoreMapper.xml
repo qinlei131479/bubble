@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bubblecloud.biz.oa.mapper.AssessScoreMapper">
 
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.AssessScore">
+		SELECT t.*
+		FROM eb_assess_score t
+	</select>
+
 	<select id="selectMaxScoreByEntid" resultType="java.lang.Integer">
 		SELECT COALESCE(MAX(`max`), 0)
 		FROM eb_assess_score

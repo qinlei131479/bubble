@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.bubblecloud.biz.oa.mapper.AdminMapper;
 import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
@@ -15,6 +16,7 @@ import com.bubblecloud.biz.oa.security.OaPhpJwtTokenService;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.AuthService;
 import com.bubblecloud.biz.oa.service.SmsVerifyService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.oa.api.dto.LoginDTO;
 import com.bubblecloud.oa.api.dto.PhoneLoginDTO;
@@ -35,7 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 兼容 PHP 的登录鉴权服务实现。
@@ -45,7 +48,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements AuthService {
 
 	private static final int DEFAULT_ENTID = 1;
 
@@ -74,10 +77,10 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public LoginVO login(LoginDTO dto) {
 		Admin admin = adminService.getByAccount(dto.getAccount());
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("账号不存在");
 		}
-		if (admin.getStatus() != null && admin.getStatus() == 0) {
+		if (ObjectUtil.isNotNull(admin.getStatus()) && admin.getStatus() == 0) {
 			throw new IllegalArgumentException("账号已被锁定");
 		}
 		String dbPassword = normalizePhpBcrypt(admin.getPassword());
@@ -108,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
 			throw new IllegalArgumentException("验证码错误或已过期");
 		}
 		Admin admin = adminService.ensureUserForPhoneLogin(dto.getPhone());
-		if (admin.getStatus() != null && admin.getStatus() == 0) {
+		if (ObjectUtil.isNotNull(admin.getStatus()) && admin.getStatus() == 0) {
 			throw new IllegalArgumentException("账号已被锁定");
 		}
 		return buildLoginVo(admin);
@@ -117,10 +120,10 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public LoginVO loginByPhone(String phone) {
 		Admin admin = adminService.getByAccount(phone);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("账号不存在");
 		}
-		if (admin.getStatus() != null && admin.getStatus() == 0) {
+		if (ObjectUtil.isNotNull(admin.getStatus()) && admin.getStatus() == 0) {
 			throw new IllegalArgumentException("账号已被锁定");
 		}
 		return buildLoginVo(admin);
@@ -140,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public LoginInfoVO loginInfo(Long userId) {
 		Admin admin = adminService.getById(userId);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			return null;
 		}
 		LoginInfoVO vo = new LoginInfoVO();
@@ -152,11 +155,11 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void updatePassword(Long userId, String phone, String newPassword) {
 		Admin self = adminService.getById(userId);
-		if (self == null) {
+		if (ObjectUtil.isNull(self)) {
 			throw new IllegalArgumentException("用户不存在");
 		}
 		Admin byPhone = adminService.getByAccount(phone);
-		if (byPhone == null) {
+		if (ObjectUtil.isNull(byPhone)) {
 			throw new IllegalArgumentException("您的手机号码尚未注册");
 		}
 		if (!self.getId().equals(byPhone.getId())) {
@@ -195,7 +198,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	private List<Object> parseRoles(String raw) {
-		if (!StringUtils.hasText(raw)) {
+		if (StrUtil.isBlank(raw)) {
 			return Collections.emptyList();
 		}
 		try {
@@ -219,7 +222,7 @@ public class AuthServiceImpl implements AuthService {
 			row.setIsMastart(v.getIsMastart());
 			row.setIsAdmin(v.getIsAdmin());
 			row.setSuperiorUid(v.getSuperiorUid());
-			String frameName = v.getFrameName() != null ? v.getFrameName() : "";
+			String frameName = ObjectUtil.isNotNull(v.getFrameName()) ? v.getFrameName() : "";
 			row.setFrame(new FrameNameRefVO(v.getFrameId(), frameName));
 			frames.add(row);
 		}
@@ -227,11 +230,11 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	private RankJobLoginVO copyRankJob(Integer jobId) {
-		if (jobId == null || jobId == 0) {
+		if (ObjectUtil.isNull(jobId) || jobId == 0) {
 			return null;
 		}
 		RankJob job = rankJobMapper.selectById(jobId.longValue());
-		if (job == null) {
+		if (ObjectUtil.isNull(job)) {
 			return null;
 		}
 		RankJobLoginVO vo = new RankJobLoginVO();
@@ -249,7 +252,7 @@ public class AuthServiceImpl implements AuthService {
 	private EnterpriseLoginVO buildEnterprise() {
 		Enterprise e = enterpriseMapper.selectById((long) DEFAULT_ENTID);
 		EnterpriseLoginVO vo = new EnterpriseLoginVO();
-		if (e == null) {
+		if (ObjectUtil.isNull(e)) {
 			return vo;
 		}
 		vo.setTitle(nullToEmpty(e.getTitle()));
@@ -259,7 +262,7 @@ public class AuthServiceImpl implements AuthService {
 		vo.setLogo(nullToEmpty(e.getLogo()));
 		vo.setUniqued(nullToEmpty(e.getUniqued()));
 		Integer max = assessScoreMapper.selectMaxScoreByEntid(DEFAULT_ENTID);
-		vo.setMaxScore(max != null ? max : 0);
+		vo.setMaxScore(ObjectUtil.isNotNull(max) ? max : 0);
 		vo.setCulture(configValue("enterprise_culture", ""));
 		vo.setComputeMode(parseIntConfig("assess_compute_mode", 1));
 		return vo;
@@ -278,18 +281,18 @@ public class AuthServiceImpl implements AuthService {
 	private String configValue(String key, String defaultVal) {
 		SystemConfig c = systemConfigMapper
 			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
-		if (c == null || c.getValue() == null) {
+		if (ObjectUtil.isNull(c) || ObjectUtil.isNull(c.getValue())) {
 			return defaultVal;
 		}
 		return c.getValue();
 	}
 
 	private String nullToEmpty(String s) {
-		return s == null ? "" : s;
+		return ObjectUtil.isNull(s) ? "" : s;
 	}
 
 	private String normalizePhpBcrypt(String hash) {
-		if (hash == null) {
+		if (ObjectUtil.isNull(hash)) {
 			return "";
 		}
 		if (hash.startsWith("$2y$")) {

@@ -9,10 +9,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.EnterpriseUserSalaryMapper;
 import com.bubblecloud.biz.oa.service.CompanySalaryService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.CompanySalarySaveDTO;
 import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
-
-import lombok.RequiredArgsConstructor;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 调薪记录实现。
@@ -21,84 +21,82 @@ import lombok.RequiredArgsConstructor;
  * @date 2026/3/29 下午6:30
  */
 @Service
-@RequiredArgsConstructor
-public class CompanySalaryServiceImpl implements CompanySalaryService {
-
-	private final EnterpriseUserSalaryMapper enterpriseUserSalaryMapper;
+public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalaryMapper, EnterpriseUserSalary>
+		implements CompanySalaryService {
 
 	@Override
 	public Page<EnterpriseUserSalary> pageSalary(int entid, Integer cardId, Integer linkId, Long id,
 			Page<EnterpriseUserSalary> page) {
 		var q = Wrappers.lambdaQuery(EnterpriseUserSalary.class).eq(EnterpriseUserSalary::getEntid, entid);
-		if (cardId != null && cardId > 0) {
+		if (ObjectUtil.isNotNull(cardId) && cardId > 0) {
 			q.eq(EnterpriseUserSalary::getCardId, cardId);
 		}
-		if (linkId != null && linkId > 0) {
+		if (ObjectUtil.isNotNull(linkId) && linkId > 0) {
 			q.eq(EnterpriseUserSalary::getLinkId, linkId);
 		}
-		if (id != null && id > 0) {
+		if (ObjectUtil.isNotNull(id) && id > 0) {
 			q.eq(EnterpriseUserSalary::getId, id);
 		}
 		q.orderByDesc(EnterpriseUserSalary::getTakeDate).orderByDesc(EnterpriseUserSalary::getId);
-		return enterpriseUserSalaryMapper.selectPage(page, q);
+		return baseMapper.selectPage(page, q);
 	}
 
 	@Override
 	public EnterpriseUserSalary getForEdit(long id) {
-		return enterpriseUserSalaryMapper.selectById(id);
+		return baseMapper.selectById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean saveSalary(CompanySalarySaveDTO dto) {
 		EnterpriseUserSalary e = new EnterpriseUserSalary();
-		e.setEntid(dto.getEntid() == null ? 1 : dto.getEntid());
-		e.setCardId(dto.getCardId() == null ? 0 : dto.getCardId());
-		e.setTotal(dto.getTotal() == null ? java.math.BigDecimal.ZERO : dto.getTotal());
-		e.setContent(dto.getContent() == null ? "" : dto.getContent());
-		e.setMark(dto.getMark() == null ? "" : dto.getMark());
+		e.setEntid(ObjectUtil.isNull(dto.getEntid()) ? 1 : dto.getEntid());
+		e.setCardId(ObjectUtil.isNull(dto.getCardId()) ? 0 : dto.getCardId());
+		e.setTotal(ObjectUtil.isNull(dto.getTotal()) ? java.math.BigDecimal.ZERO : dto.getTotal());
+		e.setContent(ObjectUtil.isNull(dto.getContent()) ? "" : dto.getContent());
+		e.setMark(ObjectUtil.isNull(dto.getMark()) ? "" : dto.getMark());
 		e.setTakeDate(dto.getTakeDate());
 		e.setLinkId(0);
-		return enterpriseUserSalaryMapper.insert(e) > 0;
+		return baseMapper.insert(e) > 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean updateSalary(long id, CompanySalarySaveDTO dto) {
-		EnterpriseUserSalary e = enterpriseUserSalaryMapper.selectById(id);
-		if (e == null) {
+		EnterpriseUserSalary e = baseMapper.selectById(id);
+		if (ObjectUtil.isNull(e)) {
 			return false;
 		}
-		if (dto.getCardId() != null) {
+		if (ObjectUtil.isNotNull(dto.getCardId())) {
 			e.setCardId(dto.getCardId());
 		}
-		if (dto.getTotal() != null) {
+		if (ObjectUtil.isNotNull(dto.getTotal())) {
 			e.setTotal(dto.getTotal());
 		}
-		if (dto.getContent() != null) {
+		if (ObjectUtil.isNotNull(dto.getContent())) {
 			e.setContent(dto.getContent());
 		}
-		if (dto.getMark() != null) {
+		if (ObjectUtil.isNotNull(dto.getMark())) {
 			e.setMark(dto.getMark());
 		}
-		if (dto.getTakeDate() != null) {
+		if (ObjectUtil.isNotNull(dto.getTakeDate())) {
 			e.setTakeDate(dto.getTakeDate());
 		}
-		if (dto.getEntid() != null) {
+		if (ObjectUtil.isNotNull(dto.getEntid())) {
 			e.setEntid(dto.getEntid());
 		}
-		return enterpriseUserSalaryMapper.updateById(e) > 0;
+		return baseMapper.updateById(e) > 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean removeSalary(long id) {
-		return enterpriseUserSalaryMapper.deleteById(id) > 0;
+		return baseMapper.deleteById(id) > 0;
 	}
 
 	@Override
 	public List<EnterpriseUserSalary> lastByCardId(int cardId) {
-		return enterpriseUserSalaryMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
+		return baseMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
 			.eq(EnterpriseUserSalary::getCardId, cardId)
 			.orderByDesc(EnterpriseUserSalary::getTakeDate)
 			.orderByDesc(EnterpriseUserSalary::getId)

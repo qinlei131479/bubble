@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.form;
 
 import java.util.Set;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 与 PHP CustomEnum 对齐的不可删除字段 key 集合（types：1 客户 2 合同 3 联系人）。
@@ -22,7 +23,7 @@ public final class FormProtectedKeys {
 	}
 
 	public static boolean isProtected(int types, String key) {
-		if (key == null) {
+		if (ObjectUtil.isNull(key)) {
 			return false;
 		}
 		return switch (types) {

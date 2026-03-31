@@ -6,6 +6,7 @@ import com.bubblecloud.biz.oa.mapper.UserResumeMapper;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.SmsVerifyService;
 import com.bubblecloud.biz.oa.service.UserProfileService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.CheckPwdDTO;
 import com.bubblecloud.oa.api.dto.UserResumeSaveDTO;
 import com.bubblecloud.oa.api.dto.UserSelfUpdateDTO;
@@ -18,7 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 当前用户资料与简历。
@@ -28,13 +30,11 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class UserProfileServiceImpl implements UserProfileService {
+public class UserProfileServiceImpl extends UpServiceImpl<AdminInfoMapper, AdminInfo> implements UserProfileService {
 
 	private static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
 	private final AdminService adminService;
-
-	private final AdminInfoMapper adminInfoMapper;
 
 	private final UserResumeMapper userResumeMapper;
 
@@ -43,7 +43,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserSelfInfoVO getSelfInfo(long adminId) {
 		Admin admin = adminService.getById(adminId);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			return null;
 		}
 		UserSelfInfoVO vo = new UserSelfInfoVO();
@@ -53,8 +53,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		vo.setPhone(admin.getPhone());
 		vo.setName(admin.getName());
 		vo.setAvatar(admin.getAvatar());
-		AdminInfo info = adminInfoMapper.selectById(adminId);
-		if (info != null && StringUtils.hasText(info.getEmail())) {
+		AdminInfo info = baseMapper.selectById(adminId);
+		if (ObjectUtil.isNotNull(info) && StrUtil.isNotBlank(info.getEmail())) {
 			vo.setEmail(info.getEmail());
 		}
 		else {
@@ -67,24 +67,24 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateSelf(long adminId, UserSelfUpdateDTO dto) {
 		Admin admin = adminService.getById(adminId);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");
 		}
-		if (StringUtils.hasText(dto.getEmail())) {
-			AdminInfo info = adminInfoMapper.selectById(adminId);
-			if (info == null) {
+		if (StrUtil.isNotBlank(dto.getEmail())) {
+			AdminInfo info = baseMapper.selectById(adminId);
+			if (ObjectUtil.isNull(info)) {
 				info = new AdminInfo();
 				info.setId(adminId);
 				info.setUid(admin.getUid());
 				info.setEmail(dto.getEmail());
-				adminInfoMapper.insert(info);
+				baseMapper.insert(info);
 			}
 			else {
 				info.setEmail(dto.getEmail());
-				adminInfoMapper.updateById(info);
+				baseMapper.updateById(info);
 			}
 		}
-		if (StringUtils.hasText(dto.getPhone()) && StringUtils.hasText(dto.getVerificationCode())) {
+		if (StrUtil.isNotBlank(dto.getPhone()) && StrUtil.isNotBlank(dto.getVerificationCode())) {
 			if (!smsVerifyService.verifyCode(dto.getPhone(), dto.getVerificationCode())) {
 				throw new IllegalArgumentException("验证码错误或已过期");
 			}
@@ -93,7 +93,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 			}
 			admin.setPhone(dto.getPhone());
 		}
-		if (StringUtils.hasText(dto.getPassword()) && StringUtils.hasText(dto.getPasswordConfirm())) {
+		if (StrUtil.isNotBlank(dto.getPassword()) && StrUtil.isNotBlank(dto.getPasswordConfirm())) {
 			if (!dto.getPassword().equals(dto.getPasswordConfirm())) {
 				throw new IllegalArgumentException("两次输入的密码不正确");
 			}
@@ -103,10 +103,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 			admin.setPassword(ENCODER.encode(dto.getPassword()));
 			admin.setIsInit(0);
 		}
-		if (StringUtils.hasText(dto.getName())) {
+		if (StrUtil.isNotBlank(dto.getName())) {
 			admin.setName(dto.getName());
 		}
-		if (StringUtils.hasText(dto.getAvatar())) {
+		if (StrUtil.isNotBlank(dto.getAvatar())) {
 			admin.setAvatar(dto.getAvatar());
 		}
 		adminService.updateById(admin);
@@ -122,13 +122,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public UserResumeDetailVO getResume(long adminId) {
 		Admin admin = adminService.getById(adminId);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");
 		}
 		String uid = admin.getUid();
 		UserResume row = userResumeMapper
 			.selectOne(Wrappers.lambdaQuery(UserResume.class).eq(UserResume::getUid, uid).last("LIMIT 1"));
-		if (row == null) {
+		if (ObjectUtil.isNull(row)) {
 			row = new UserResume();
 			row.setUid(uid);
 			userResumeMapper.insert(row);
@@ -144,13 +144,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Transactional(rollbackFor = Exception.class)
 	public void saveResume(long adminId, UserResumeSaveDTO dto) {
 		Admin admin = adminService.getById(adminId);
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");
 		}
 		String uid = admin.getUid();
 		UserResume row = userResumeMapper
 			.selectOne(Wrappers.lambdaQuery(UserResume.class).eq(UserResume::getUid, uid).last("LIMIT 1"));
-		if (row == null) {
+		if (ObjectUtil.isNull(row)) {
 			throw new IllegalArgumentException("保存失败,未找到简历信息");
 		}
 		applyResume(row, dto);
@@ -158,112 +158,112 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 
 	private static void applyResume(UserResume row, UserResumeSaveDTO dto) {
-		if (dto.getName() != null) {
+		if (ObjectUtil.isNotNull(dto.getName())) {
 			row.setName(dto.getName());
 		}
-		if (dto.getPhoto() != null) {
+		if (ObjectUtil.isNotNull(dto.getPhoto())) {
 			row.setPhoto(dto.getPhoto());
 		}
-		if (dto.getPosition() != null) {
+		if (ObjectUtil.isNotNull(dto.getPosition())) {
 			row.setPosition(dto.getPosition());
 		}
-		if (dto.getCardId() != null) {
+		if (ObjectUtil.isNotNull(dto.getCardId())) {
 			row.setCardId(dto.getCardId());
 		}
-		if (dto.getBirthday() != null) {
+		if (ObjectUtil.isNotNull(dto.getBirthday())) {
 			row.setBirthday(dto.getBirthday());
 		}
-		if (dto.getAge() != null) {
+		if (ObjectUtil.isNotNull(dto.getAge())) {
 			row.setAge(parseIntOrNull(dto.getAge()));
 		}
-		if (dto.getEducation() != null) {
+		if (ObjectUtil.isNotNull(dto.getEducation())) {
 			row.setEducation(dto.getEducation());
 		}
-		if (dto.getEducationImage() != null) {
+		if (ObjectUtil.isNotNull(dto.getEducationImage())) {
 			row.setEducationImage(dto.getEducationImage());
 		}
-		if (dto.getPhone() != null) {
+		if (ObjectUtil.isNotNull(dto.getPhone())) {
 			row.setPhone(dto.getPhone());
 		}
-		if (dto.getSex() != null) {
+		if (ObjectUtil.isNotNull(dto.getSex())) {
 			row.setSex(dto.getSex());
 		}
-		if (dto.getNation() != null) {
+		if (ObjectUtil.isNotNull(dto.getNation())) {
 			row.setNation(dto.getNation());
 		}
-		if (dto.getAcad() != null) {
+		if (ObjectUtil.isNotNull(dto.getAcad())) {
 			row.setAcad(dto.getAcad());
 		}
-		if (dto.getAcadImage() != null) {
+		if (ObjectUtil.isNotNull(dto.getAcadImage())) {
 			row.setAcadImage(dto.getAcadImage());
 		}
-		if (dto.getPolitic() != null) {
+		if (ObjectUtil.isNotNull(dto.getPolitic())) {
 			row.setPolitic(dto.getPolitic());
 		}
-		if (dto.getNativePlace() != null) {
+		if (ObjectUtil.isNotNull(dto.getNativePlace())) {
 			row.setNativePlace(dto.getNativePlace());
 		}
-		if (dto.getAddress() != null) {
+		if (ObjectUtil.isNotNull(dto.getAddress())) {
 			row.setAddress(dto.getAddress());
 		}
-		if (dto.getMarriage() != null) {
+		if (ObjectUtil.isNotNull(dto.getMarriage())) {
 			row.setMarriage(dto.getMarriage());
 		}
-		if (dto.getWorkYears() != null) {
+		if (ObjectUtil.isNotNull(dto.getWorkYears())) {
 			row.setWorkYears(parseIntOrNull(dto.getWorkYears()));
 		}
-		if (dto.getSpareName() != null) {
+		if (ObjectUtil.isNotNull(dto.getSpareName())) {
 			row.setSpareName(dto.getSpareName());
 		}
-		if (dto.getSpareTel() != null) {
+		if (ObjectUtil.isNotNull(dto.getSpareTel())) {
 			row.setSpareTel(dto.getSpareTel());
 		}
-		if (dto.getEmail() != null) {
+		if (ObjectUtil.isNotNull(dto.getEmail())) {
 			row.setEmail(dto.getEmail());
 		}
-		if (dto.getWorkTime() != null) {
+		if (ObjectUtil.isNotNull(dto.getWorkTime())) {
 			row.setWorkTime(dto.getWorkTime());
 		}
-		if (dto.getTrialTime() != null) {
+		if (ObjectUtil.isNotNull(dto.getTrialTime())) {
 			row.setTrialTime(dto.getTrialTime());
 		}
-		if (dto.getFormalTime() != null) {
+		if (ObjectUtil.isNotNull(dto.getFormalTime())) {
 			row.setFormalTime(dto.getFormalTime());
 		}
-		if (dto.getTreatyTime() != null) {
+		if (ObjectUtil.isNotNull(dto.getTreatyTime())) {
 			row.setTreatyTime(dto.getTreatyTime());
 		}
-		if (dto.getIsPart() != null) {
+		if (ObjectUtil.isNotNull(dto.getIsPart())) {
 			row.setIsPart(dto.getIsPart());
 		}
-		if (dto.getSocialNum() != null) {
+		if (ObjectUtil.isNotNull(dto.getSocialNum())) {
 			row.setSocialNum(dto.getSocialNum());
 		}
-		if (dto.getFundNum() != null) {
+		if (ObjectUtil.isNotNull(dto.getFundNum())) {
 			row.setFundNum(dto.getFundNum());
 		}
-		if (dto.getBankNum() != null) {
+		if (ObjectUtil.isNotNull(dto.getBankNum())) {
 			row.setBankNum(dto.getBankNum());
 		}
-		if (dto.getBankName() != null) {
+		if (ObjectUtil.isNotNull(dto.getBankName())) {
 			row.setBankName(dto.getBankName());
 		}
-		if (dto.getGraduateName() != null) {
+		if (ObjectUtil.isNotNull(dto.getGraduateName())) {
 			row.setGraduateName(dto.getGraduateName());
 		}
-		if (dto.getGraduateDate() != null) {
+		if (ObjectUtil.isNotNull(dto.getGraduateDate())) {
 			row.setGraduateDate(dto.getGraduateDate());
 		}
-		if (dto.getCardFront() != null) {
+		if (ObjectUtil.isNotNull(dto.getCardFront())) {
 			row.setCardFront(dto.getCardFront());
 		}
-		if (dto.getCardBoth() != null) {
+		if (ObjectUtil.isNotNull(dto.getCardBoth())) {
 			row.setCardBoth(dto.getCardBoth());
 		}
 	}
 
 	private static Integer parseIntOrNull(String s) {
-		if (s == null || s.isBlank()) {
+		if (StrUtil.isBlank(s)) {
 			return null;
 		}
 		try {

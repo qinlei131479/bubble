@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 云存储（对齐 PHP {@code ent/config/storage}，无真实云 SDK）。
@@ -144,7 +145,7 @@ public class SystemStorageAdminController {
 	}
 
 	private static String text(JsonNode n, String field) {
-		if (n == null || !n.has(field) || n.get(field).isNull()) {
+		if (ObjectUtil.isNull(n) || !n.has(field) || n.get(field).isNull()) {
 			return "";
 		}
 		return n.get(field).asText("");

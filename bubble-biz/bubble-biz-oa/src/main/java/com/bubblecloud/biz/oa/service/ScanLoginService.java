@@ -1,5 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.vo.ScanKeyVO;
 import com.bubblecloud.oa.api.vo.ScanStatusResultVO;
 
@@ -9,7 +11,7 @@ import com.bubblecloud.oa.api.vo.ScanStatusResultVO;
  * @author qinlei
  * @date 2026/3/30 18:00
  */
-public interface ScanLoginService {
+public interface ScanLoginService extends UpService<Admin> {
 
 	ScanKeyVO createScanKey();
 

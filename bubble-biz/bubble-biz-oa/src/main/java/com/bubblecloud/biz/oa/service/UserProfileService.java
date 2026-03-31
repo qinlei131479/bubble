@@ -1,5 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.AdminInfo;
 import com.bubblecloud.oa.api.dto.CheckPwdDTO;
 import com.bubblecloud.oa.api.dto.UserResumeSaveDTO;
 import com.bubblecloud.oa.api.dto.UserSelfUpdateDTO;
@@ -12,7 +14,7 @@ import com.bubblecloud.oa.api.vo.user.UserSelfInfoVO;
  * @author qinlei
  * @date 2026/3/30 18:00
  */
-public interface UserProfileService {
+public interface UserProfileService extends UpService<AdminInfo> {
 
 	UserSelfInfoVO getSelfInfo(long adminId);
 

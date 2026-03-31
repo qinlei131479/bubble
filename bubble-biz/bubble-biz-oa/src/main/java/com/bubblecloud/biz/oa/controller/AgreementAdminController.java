@@ -31,21 +31,21 @@ public class AgreementAdminController {
 	@GetMapping
 	@Operation(summary = "协议列表")
 	public PhpResponse<?> index(@RequestParam(required = false) String title,
-			@RequestParam(required = false) String ident) {
+								@RequestParam(required = false) String ident) {
 		return PhpResponse.ok(agreementAdminService.list(title, ident));
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "协议详情")
-	public PhpResponse<Agreement> edit(@PathVariable int id) {
+	public PhpResponse<Agreement> detail(@PathVariable Long id) {
 		return PhpResponse.ok(agreementAdminService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "保存协议")
-	public PhpResponse<String> update(@PathVariable int id, @RequestBody Agreement body) {
+	public PhpResponse<String> update(@PathVariable Long id, @RequestBody Agreement body) {
 		body.setId(id);
-		agreementAdminService.updateById(body);
+		agreementAdminService.update(body);
 		return PhpResponse.ok("common.update.succ");
 	}
 

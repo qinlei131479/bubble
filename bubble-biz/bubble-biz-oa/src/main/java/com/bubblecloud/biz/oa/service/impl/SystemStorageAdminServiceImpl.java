@@ -7,13 +7,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
 import com.bubblecloud.biz.oa.mapper.SystemStorageMapper;
 import com.bubblecloud.biz.oa.service.SystemStorageAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.entity.SystemStorage;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 云存储配置实现。
@@ -23,9 +25,8 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class SystemStorageAdminServiceImpl implements SystemStorageAdminService {
-
-	private final SystemStorageMapper systemStorageMapper;
+public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMapper, SystemStorage>
+		implements SystemStorageAdminService {
 
 	private final SystemConfigMapper systemConfigMapper;
 
@@ -34,15 +35,15 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		var q = Wrappers.lambdaQuery(SystemStorage.class)
 			.eq(SystemStorage::getIsDelete, 0)
 			.orderByDesc(SystemStorage::getId);
-		if (type != null && type > 0) {
+		if (ObjectUtil.isNotNull(type) && type > 0) {
 			q.eq(SystemStorage::getType, type);
 		}
-		return systemStorageMapper.selectList(q);
+		return baseMapper.selectList(q);
 	}
 
 	@Override
 	public SystemStorage get(int id) {
-		return systemStorageMapper.selectById(id);
+		return baseMapper.selectById(id);
 	}
 
 	@Override
@@ -51,10 +52,10 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		int now = (int) (System.currentTimeMillis() / 1000L);
 		SystemStorage s = new SystemStorage();
 		s.setType(type);
-		s.setAccessKey(accessKey == null ? "" : accessKey);
-		s.setName(name == null ? "" : name);
-		s.setRegion(region == null ? "" : region);
-		s.setAcl(StringUtils.hasText(acl) ? acl : "public-read");
+		s.setAccessKey(ObjectUtil.isNull(accessKey) ? "" : accessKey);
+		s.setName(ObjectUtil.isNull(name) ? "" : name);
+		s.setRegion(ObjectUtil.isNull(region) ? "" : region);
+		s.setAcl(StrUtil.isNotBlank(acl) ? acl : "public-read");
 		s.setDomain("");
 		s.setCdn("");
 		s.setCname("");
@@ -65,36 +66,36 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		s.setUpdateTime(now);
 		s.setCreatedAt(LocalDateTime.now());
 		s.setUpdatedAt(LocalDateTime.now());
-		systemStorageMapper.insert(s);
+		baseMapper.insert(s);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateDomain(int id, String domain, String cdn) {
-		SystemStorage s = systemStorageMapper.selectById(id);
-		if (s == null) {
+		SystemStorage s = baseMapper.selectById(id);
+		if (ObjectUtil.isNull(s)) {
 			throw new IllegalArgumentException("记录不存在");
 		}
 		s.setDomain(domain);
-		if (cdn != null) {
+		if (ObjectUtil.isNotNull(cdn)) {
 			s.setCdn(cdn);
 		}
 		s.setUpdateTime((int) (System.currentTimeMillis() / 1000L));
 		s.setUpdatedAt(LocalDateTime.now());
-		systemStorageMapper.updateById(s);
+		baseMapper.updateById(s);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void setActiveStatus(int id) {
-		SystemStorage info = systemStorageMapper.selectById(id);
-		if (info == null) {
+		SystemStorage info = baseMapper.selectById(id);
+		if (ObjectUtil.isNull(info)) {
 			throw new IllegalArgumentException("记录不存在");
 		}
-		if (!StringUtils.hasText(info.getDomain())) {
+		if (StrUtil.isBlank(info.getDomain())) {
 			throw new IllegalArgumentException("请先设置空间域名");
 		}
-		systemStorageMapper.update(null,
+		baseMapper.update(null,
 				Wrappers.lambdaUpdate(SystemStorage.class)
 					.eq(SystemStorage::getType, info.getType())
 					.set(SystemStorage::getStatus, 0));
@@ -102,26 +103,26 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		info.setIsDelete(0);
 		info.setUpdateTime((int) (System.currentTimeMillis() / 1000L));
 		info.setUpdatedAt(LocalDateTime.now());
-		systemStorageMapper.updateById(info);
+		baseMapper.updateById(info);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteStorage(int id) {
-		SystemStorage s = systemStorageMapper.selectById(id);
-		if (s == null) {
+		SystemStorage s = baseMapper.selectById(id);
+		if (ObjectUtil.isNull(s)) {
 			return;
 		}
 		s.setIsDelete(1);
 		s.setUpdateTime((int) (System.currentTimeMillis() / 1000L));
 		s.setUpdatedAt(LocalDateTime.now());
-		systemStorageMapper.updateById(s);
+		baseMapper.updateById(s);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void setUploadType(int type) {
-		long active = systemStorageMapper.selectCount(Wrappers.lambdaQuery(SystemStorage.class)
+		long active = baseMapper.selectCount(Wrappers.lambdaQuery(SystemStorage.class)
 			.eq(SystemStorage::getType, type)
 			.eq(SystemStorage::getStatus, 1)
 			.eq(SystemStorage::getIsDelete, 0));
@@ -131,7 +132,7 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getConfigKey, "upload_type")
 			.eq(SystemConfig::getEntid, 0));
-		if (row != null) {
+		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(String.valueOf(type));
 			systemConfigMapper.updateById(row);
 		}
@@ -142,7 +143,7 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getConfigKey, "upload_type")
 			.eq(SystemConfig::getEntid, 0));
-		if (row == null || row.getValue() == null) {
+		if (ObjectUtil.isNull(row) || ObjectUtil.isNull(row.getValue())) {
 			return 1;
 		}
 		try {
@@ -156,7 +157,7 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void saveBasicConfig(JsonNode body) {
-		if (body == null || !body.isObject()) {
+		if (ObjectUtil.isNull(body) || !body.isObject()) {
 			return;
 		}
 		body.fields().forEachRemaining(e -> upsertConfig(e.getKey(), e.getValue().asText()));
@@ -166,7 +167,7 @@ public class SystemStorageAdminServiceImpl implements SystemStorageAdminService 
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getConfigKey, key)
 			.eq(SystemConfig::getEntid, 0));
-		if (row != null) {
+		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(value);
 			systemConfigMapper.updateById(row);
 		}

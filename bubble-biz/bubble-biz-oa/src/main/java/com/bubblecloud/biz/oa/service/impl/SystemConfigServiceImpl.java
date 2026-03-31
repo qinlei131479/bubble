@@ -10,6 +10,7 @@ import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.ConfigVO;
 import org.springframework.stereotype.Service;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * eb_system_config 系统配置服务实现。
@@ -27,11 +28,19 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			.list(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getCategory, dto.getType()));
 		ConfigVO vo = new ConfigVO();
 		for (SystemConfig c : list) {
-			if (c.getConfigKey() != null) {
-				vo.getEntries().put(c.getConfigKey(), c.getValue() == null ? "" : c.getValue());
+			if (ObjectUtil.isNotNull(c.getConfigKey())) {
+				vo.getEntries().put(c.getConfigKey(), ObjectUtil.isNull(c.getValue()) ? "" : c.getValue());
 			}
 		}
 		return vo;
+	}
+
+	@Override
+	public boolean isRegistrationOpen() {
+		SystemConfig reg = this.getOne(Wrappers.lambdaQuery(SystemConfig.class)
+			.eq(SystemConfig::getConfigKey, "registration_open")
+			.last("LIMIT 1"), false);
+		return ObjectUtil.isNotNull(reg) && ("1".equals(reg.getValue()) || "true".equalsIgnoreCase(reg.getValue()));
 	}
 
 }

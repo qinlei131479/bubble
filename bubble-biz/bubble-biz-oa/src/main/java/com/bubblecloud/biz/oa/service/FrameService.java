@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.Frame;
 import com.bubblecloud.oa.api.dto.FrameSaveDTO;
 import com.bubblecloud.oa.api.dto.FrameUpdateDTO;
 import com.bubblecloud.oa.api.vo.frame.FrameAdminBriefVO;
@@ -18,7 +20,7 @@ import com.bubblecloud.oa.api.vo.frame.FrameUserTreeNodeVO;
  * @author qinlei
  * @date 2026/3/29 下午4:00
  */
-public interface FrameService {
+public interface FrameService extends UpService<Frame> {
 
 	List<FrameDepartmentTreeNodeVO> departmentTreeList(int isShow, int entid);
 

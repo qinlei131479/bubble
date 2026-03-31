@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 兼容 PHP 的 HS256 JWT 令牌服务。
@@ -90,7 +90,7 @@ public class OaPhpJwtTokenService {
 	}
 
 	private String sign(String data) throws Exception {
-		if (!StringUtils.hasText(properties.getSecret())) {
+		if (StrUtil.isBlank(properties.getSecret())) {
 			throw new IllegalStateException("oa.php-jwt.secret 未配置");
 		}
 		Mac mac = Mac.getInstance(HMAC_SHA256);

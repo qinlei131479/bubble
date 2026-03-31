@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
 import com.bubblecloud.biz.oa.service.AuthService;
 import com.bubblecloud.biz.oa.service.ScanLoginService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.vo.LoginVO;
 import com.bubblecloud.oa.api.vo.ScanKeyVO;
@@ -15,7 +16,8 @@ import com.bubblecloud.oa.api.vo.ScanStatusResultVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 扫码登录实现。
@@ -25,15 +27,13 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class ScanLoginServiceImpl implements ScanLoginService {
+public class ScanLoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements ScanLoginService {
 
 	private static final String KEY_PREFIX = "oa:scan:key:";
 
 	private static final int TTL_SECONDS = 180;
 
 	private final StringRedisTemplate stringRedisTemplate;
-
-	private final AdminMapper adminMapper;
 
 	private final AuthService authService;
 
@@ -50,17 +50,17 @@ public class ScanLoginServiceImpl implements ScanLoginService {
 	@Override
 	public ScanStatusResultVO pollStatus(String key) {
 		ScanStatusResultVO vo = new ScanStatusResultVO();
-		if (!StringUtils.hasText(key)) {
+		if (StrUtil.isBlank(key)) {
 			vo.setStatus(-1);
 			vo.setMsg("参数已失效,请重新获取");
 			return vo;
 		}
-		Admin byScan = adminMapper.selectOne(Wrappers.lambdaQuery(Admin.class)
+		Admin byScan = baseMapper.selectOne(Wrappers.lambdaQuery(Admin.class)
 			.eq(Admin::getScanKey, key)
 			.isNull(Admin::getDeletedAt)
 			.last("LIMIT 1"));
-		if (byScan != null && StringUtils.hasText(byScan.getPhone())) {
-			adminMapper.update(null,
+		if (ObjectUtil.isNotNull(byScan) && StrUtil.isNotBlank(byScan.getPhone())) {
+			baseMapper.update(null,
 					Wrappers.lambdaUpdate(Admin.class).eq(Admin::getId, byScan.getId()).set(Admin::getScanKey, ""));
 			stringRedisTemplate.delete(KEY_PREFIX + key);
 			LoginVO login = authService.loginByPhone(byScan.getPhone());
@@ -70,7 +70,7 @@ public class ScanLoginServiceImpl implements ScanLoginService {
 
 		String redisKey = KEY_PREFIX + key;
 		String v = stringRedisTemplate.opsForValue().get(redisKey);
-		if (v == null) {
+		if (ObjectUtil.isNull(v)) {
 			vo.setStatus(-1);
 			vo.setMsg("参数已失效,请重新获取");
 			return vo;

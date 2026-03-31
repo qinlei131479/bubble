@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.Message;
 
 /**
@@ -9,7 +10,7 @@ import com.bubblecloud.oa.api.entity.Message;
  * @author qinlei
  * @date 2026/3/31
  */
-public interface SystemMessageAdminService {
+public interface SystemMessageAdminService extends UpService<Message> {
 
 	/**
 	 * 分页列表。

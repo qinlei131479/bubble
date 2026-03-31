@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.Schedule;
 import com.bubblecloud.oa.api.dto.ScheduleIndexQueryDTO;
 import com.bubblecloud.oa.api.dto.ScheduleStatusUpdateDTO;
 import com.bubblecloud.oa.api.dto.UserScheduleQueryDTO;
@@ -15,7 +17,7 @@ import com.bubblecloud.oa.api.vo.schedule.UserScheduleDayWrapperVO;
  * @author qinlei
  * @date 2026/3/28 15:30
  */
-public interface ScheduleApiService {
+public interface ScheduleApiService extends UpService<Schedule> {
 
 	/**
 	 * 日程类型列表。

@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.SystemStorage;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface SystemStorageAdminService {
+public interface SystemStorageAdminService extends UpService<SystemStorage> {
 
 	List<SystemStorage> list(Integer type);
 

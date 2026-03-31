@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EmployeeTrainMapper;
 import com.bubblecloud.biz.oa.service.EmployeeTrainService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.EmployeeTrainUpdateDTO;
 import com.bubblecloud.oa.api.entity.EmployeeTrain;
-
-import lombok.RequiredArgsConstructor;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 员工培训实现。
@@ -18,16 +18,14 @@ import lombok.RequiredArgsConstructor;
  * @date 2026/3/29 下午6:30
  */
 @Service
-@RequiredArgsConstructor
-public class EmployeeTrainServiceImpl implements EmployeeTrainService {
+public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper, EmployeeTrain>
+		implements EmployeeTrainService {
 
 	private static final String COMPANY_PROFILE = "company_profile";
 
 	private static final String STRATEGIC_PLAN = "strategic_plan";
 
 	private static final String ORGANIZATION_CHART = "organization_chart";
-
-	private final EmployeeTrainMapper employeeTrainMapper;
 
 	private static void validateType(String type) {
 		if (!COMPANY_PROFILE.equals(type) && !STRATEGIC_PLAN.equals(type) && !ORGANIZATION_CHART.equals(type)) {
@@ -38,9 +36,9 @@ public class EmployeeTrainServiceImpl implements EmployeeTrainService {
 	@Override
 	public EmployeeTrain getInfo(String type) {
 		validateType(type);
-		EmployeeTrain row = employeeTrainMapper
+		EmployeeTrain row = baseMapper
 			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
-		if (row == null) {
+		if (ObjectUtil.isNull(row)) {
 			row = new EmployeeTrain();
 			row.setType(type);
 			row.setContent("");
@@ -52,18 +50,18 @@ public class EmployeeTrainServiceImpl implements EmployeeTrainService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateTrain(String type, EmployeeTrainUpdateDTO dto) {
 		validateType(type);
-		String content = dto.getContent() == null ? "" : dto.getContent();
-		EmployeeTrain existing = employeeTrainMapper
+		String content = ObjectUtil.isNull(dto.getContent()) ? "" : dto.getContent();
+		EmployeeTrain existing = baseMapper
 			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
-		if (existing == null) {
+		if (ObjectUtil.isNull(existing)) {
 			EmployeeTrain e = new EmployeeTrain();
 			e.setType(type);
 			e.setContent(content);
-			employeeTrainMapper.insert(e);
+			baseMapper.insert(e);
 		}
 		else {
 			existing.setContent(content);
-			employeeTrainMapper.updateById(existing);
+			baseMapper.updateById(existing);
 		}
 	}
 

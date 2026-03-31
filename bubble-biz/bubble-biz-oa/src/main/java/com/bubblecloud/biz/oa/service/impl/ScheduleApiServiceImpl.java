@@ -3,7 +3,10 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bubblecloud.biz.oa.mapper.ScheduleMapper;
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
+import com.bubblecloud.oa.api.entity.Schedule;
 import com.bubblecloud.oa.api.dto.ScheduleIndexQueryDTO;
 import com.bubblecloud.oa.api.dto.ScheduleStatusUpdateDTO;
 import com.bubblecloud.oa.api.dto.UserScheduleQueryDTO;
@@ -19,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @date 2026/3/28 15:30
  */
 @Service
-public class ScheduleApiServiceImpl implements ScheduleApiService {
+public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedule> implements ScheduleApiService {
 
 	@Override
 	public List<ScheduleTypeVO> typeList() {

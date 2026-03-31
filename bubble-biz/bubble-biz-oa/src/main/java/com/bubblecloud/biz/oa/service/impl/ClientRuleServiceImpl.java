@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
 import com.bubblecloud.biz.oa.service.ClientRuleService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.config.ClientRuleApproveSaveDTO;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.config.ClientRuleApproveConfigVO;
@@ -16,7 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 客户规则配置实现。
@@ -26,9 +28,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class ClientRuleServiceImpl implements ClientRuleService {
-
-	private final SystemConfigMapper systemConfigMapper;
+public class ClientRuleServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig> implements ClientRuleService {
 
 	private final ObjectMapper objectMapper;
 
@@ -55,7 +55,7 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 
 	@Override
 	public void saveApproveConfig(ClientRuleApproveSaveDTO dto) {
-		if (dto == null) {
+		if (ObjectUtil.isNull(dto)) {
 			return;
 		}
 		putIfPresent("contract_refund_switch", dto.getContractRefundSwitch());
@@ -66,7 +66,7 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 	}
 
 	private void putIfPresent(String key, Integer val) {
-		if (val == null) {
+		if (ObjectUtil.isNull(val)) {
 			return;
 		}
 		upsertConfigKey(key, String.valueOf(val));
@@ -74,16 +74,16 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 
 	@Override
 	public JsonNode getConfigByCategory(String category) {
-		if (!StringUtils.hasText(category)) {
+		if (StrUtil.isBlank(category)) {
 			return objectMapper.createObjectNode();
 		}
-		List<SystemConfig> rows = systemConfigMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
+		List<SystemConfig> rows = baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getCategory, category)
 			.eq(SystemConfig::getEntid, 0));
 		ObjectNode out = objectMapper.createObjectNode();
 		for (SystemConfig r : rows) {
-			if (r.getConfigKey() != null) {
-				out.put(r.getConfigKey(), r.getValue() == null ? "" : r.getValue());
+			if (ObjectUtil.isNotNull(r.getConfigKey())) {
+				out.put(r.getConfigKey(), ObjectUtil.isNull(r.getValue()) ? "" : r.getValue());
 			}
 		}
 		return out;
@@ -91,25 +91,25 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 
 	@Override
 	public void saveConfigByCategory(String category, JsonNode body) {
-		if (!StringUtils.hasText(category) || body == null || !body.isObject()) {
+		if (StrUtil.isBlank(category) || ObjectUtil.isNull(body) || !body.isObject()) {
 			return;
 		}
 		body.fields().forEachRemaining(e -> {
 			String k = e.getKey();
-			if (!StringUtils.hasText(k)) {
+			if (StrUtil.isBlank(k)) {
 				return;
 			}
 			String val = jsonNodeToString(e.getValue());
-			SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
+			SystemConfig row = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 				.eq(SystemConfig::getConfigKey, k)
 				.eq(SystemConfig::getEntid, 0)
 				.last("LIMIT 1"));
-			if (row != null) {
+			if (ObjectUtil.isNotNull(row)) {
 				row.setValue(val);
 				if (!Objects.equals(category, row.getCategory())) {
 					row.setCategory(category);
 				}
-				systemConfigMapper.updateById(row);
+				baseMapper.updateById(row);
 			}
 			else {
 				SystemConfig n = new SystemConfig();
@@ -122,13 +122,13 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 				n.setInputType("input");
 				n.setSort(0);
 				n.setIsShow(0);
-				systemConfigMapper.insert(n);
+				baseMapper.insert(n);
 			}
 		});
 	}
 
 	private static String jsonNodeToString(JsonNode n) {
-		if (n == null || n.isNull()) {
+		if (ObjectUtil.isNull(n) || n.isNull()) {
 			return "";
 		}
 		if (n.isValueNode()) {
@@ -138,9 +138,9 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 	}
 
 	private int loadIntConfig(String key, int def) {
-		SystemConfig row = systemConfigMapper
+		SystemConfig row = baseMapper
 			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
-		if (row == null || row.getValue() == null) {
+		if (ObjectUtil.isNull(row) || ObjectUtil.isNull(row.getValue())) {
 			return def;
 		}
 		try {
@@ -152,11 +152,11 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 	}
 
 	private void upsertConfigKey(String key, String value) {
-		SystemConfig row = systemConfigMapper
+		SystemConfig row = baseMapper
 			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
-		if (row != null) {
+		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(value);
-			systemConfigMapper.updateById(row);
+			baseMapper.updateById(row);
 		}
 		else {
 			SystemConfig n = new SystemConfig();
@@ -167,7 +167,7 @@ public class ClientRuleServiceImpl implements ClientRuleService {
 			n.setEntid(0);
 			n.setType("text");
 			n.setInputType("input");
-			systemConfigMapper.insert(n);
+			baseMapper.insert(n);
 		}
 	}
 

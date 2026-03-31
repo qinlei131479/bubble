@@ -1,5 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.SystemMenus;
 import com.bubblecloud.oa.api.dto.MenusQueryDTO;
 import com.bubblecloud.oa.api.vo.MenusVO;
 
@@ -9,7 +11,7 @@ import com.bubblecloud.oa.api.vo.MenusVO;
  * @author qinlei
  * @date 2026/3/30 18:00
  */
-public interface MenusService {
+public interface MenusService extends UpService<SystemMenus> {
 
 	/**
 	 * 当前用户菜单树与按钮权限标识。

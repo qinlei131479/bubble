@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 通用树组装（对齐 PHP {@code get_tree_children}，键类型统一归一化）。
@@ -25,14 +26,14 @@ public final class TreeUtil {
 	 */
 	public static <T> List<T> buildTree(List<T> flat, Function<T, Object> idGetter, Function<T, Object> pidGetter,
 			Function<T, List<T>> childrenGetter) {
-		if (flat == null || flat.isEmpty()) {
+		if (ObjectUtil.isNull(flat) || flat.isEmpty()) {
 			return List.of();
 		}
 		Map<Object, T> map = new LinkedHashMap<>();
 		for (T item : flat) {
 			map.put(normalizeKey(idGetter.apply(item)), item);
 			List<T> ch = childrenGetter.apply(item);
-			if (ch != null) {
+			if (ObjectUtil.isNotNull(ch)) {
 				ch.clear();
 			}
 		}
@@ -40,9 +41,9 @@ public final class TreeUtil {
 		for (T item : flat) {
 			Object pidRaw = pidGetter.apply(item);
 			Object pid = normalizeKey(pidRaw);
-			if (pidRaw != null && !isZeroPid(pidRaw) && map.containsKey(pid)) {
+			if (ObjectUtil.isNotNull(pidRaw) && !isZeroPid(pidRaw) && map.containsKey(pid)) {
 				List<T> parentChildren = childrenGetter.apply(map.get(pid));
-				if (parentChildren != null) {
+				if (ObjectUtil.isNotNull(parentChildren)) {
 					parentChildren.add(item);
 				}
 			}
@@ -61,7 +62,7 @@ public final class TreeUtil {
 	}
 
 	private static Object normalizeKey(Object key) {
-		if (key == null) {
+		if (ObjectUtil.isNull(key)) {
 			return null;
 		}
 		if (key instanceof Number n) {

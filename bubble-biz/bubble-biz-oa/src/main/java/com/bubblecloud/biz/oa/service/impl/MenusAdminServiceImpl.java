@@ -7,6 +7,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
 import com.bubblecloud.biz.oa.service.MenusAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.biz.oa.util.TreeUtil;
 import com.bubblecloud.oa.api.entity.SystemMenus;
 import com.bubblecloud.oa.api.vo.menu.MenuAdminTreeNodeVO;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 企业菜单管理实现。
@@ -26,9 +27,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class MenusAdminServiceImpl implements MenusAdminService {
-
-	private final SystemMenusMapper systemMenusMapper;
+public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMenus> implements MenusAdminService {
 
 	private final ObjectMapper objectMapper;
 
@@ -37,11 +36,11 @@ public class MenusAdminServiceImpl implements MenusAdminService {
 		var q = Wrappers.lambdaQuery(SystemMenus.class)
 			.eq(SystemMenus::getEntid, entid)
 			.isNull(SystemMenus::getDeletedAt);
-		if (StringUtils.hasText(menuName)) {
+		if (StrUtil.isNotBlank(menuName)) {
 			q.like(SystemMenus::getMenuName, menuName);
 		}
 		q.orderByDesc(SystemMenus::getSort).orderByAsc(SystemMenus::getId);
-		List<SystemMenus> rows = systemMenusMapper.selectList(q);
+		List<SystemMenus> rows = baseMapper.selectList(q);
 		List<MenuAdminTreeNodeVO> flat = new ArrayList<>(rows.size());
 		for (SystemMenus m : rows) {
 			MenuAdminTreeNodeVO n = new MenuAdminTreeNodeVO();
@@ -63,24 +62,24 @@ public class MenusAdminServiceImpl implements MenusAdminService {
 		LocalDateTime now = LocalDateTime.now();
 		menu.setCreatedAt(now);
 		menu.setUpdatedAt(now);
-		systemMenusMapper.insert(menu);
+		baseMapper.insert(menu);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateMenu(SystemMenus menu) {
 		menu.setUpdatedAt(LocalDateTime.now());
-		systemMenusMapper.updateById(menu);
+		baseMapper.updateById(menu);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteMenu(long id) {
-		long child = systemMenusMapper.selectCount(Wrappers.lambdaQuery(SystemMenus.class).eq(SystemMenus::getPid, id));
+		long child = baseMapper.selectCount(Wrappers.lambdaQuery(SystemMenus.class).eq(SystemMenus::getPid, id));
 		if (child > 0) {
 			throw new IllegalArgumentException("请先删除下级菜单");
 		}
-		systemMenusMapper.deleteById(id);
+		baseMapper.deleteById(id);
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class MenusAdminServiceImpl implements MenusAdminService {
 		m.setId(id);
 		m.setIsShow(isShow);
 		m.setUpdatedAt(LocalDateTime.now());
-		systemMenusMapper.updateById(m);
+		baseMapper.updateById(m);
 	}
 
 	@Override

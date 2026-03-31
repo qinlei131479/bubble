@@ -12,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 短信验证码实现：验证码写入 Redis，不调用真实短信网关（开发/对齐环境可查看日志或 Redis）。
@@ -52,7 +53,7 @@ public class SmsVerifyServiceImpl implements SmsVerifyService {
 
 	@Override
 	public void sendVerifyCode(SmsVerifySendDTO dto) {
-		if (!StringUtils.hasText(dto.getKey())) {
+		if (StrUtil.isBlank(dto.getKey())) {
 			throw new IllegalArgumentException("请先获取短信发送KEY");
 		}
 		String sendKeyRedis = KEY_PREFIX_SEND + dto.getKey();
@@ -72,10 +73,10 @@ public class SmsVerifyServiceImpl implements SmsVerifyService {
 
 		String dayKey = KEY_PREFIX_SEND_COUNT + phone + ":" + LocalDateTime.now().toLocalDate();
 		Long cnt = stringRedisTemplate.opsForValue().increment(dayKey);
-		if (cnt != null && cnt == 1L) {
+		if (ObjectUtil.isNotNull(cnt) && cnt == 1L) {
 			stringRedisTemplate.expire(dayKey, 1, TimeUnit.DAYS);
 		}
-		if (cnt != null && cnt > 20) {
+		if (ObjectUtil.isNotNull(cnt) && cnt > 20) {
 			stringRedisTemplate.delete(codeKey);
 			throw new IllegalArgumentException("当前手机号今日发送验证码已达上限!");
 		}
@@ -85,12 +86,12 @@ public class SmsVerifyServiceImpl implements SmsVerifyService {
 
 	@Override
 	public boolean verifyCode(String phone, String code) {
-		if (!StringUtils.hasText(phone) || !StringUtils.hasText(code)) {
+		if (StrUtil.isBlank(phone) || StrUtil.isBlank(code)) {
 			return false;
 		}
 		String codeKey = KEY_PREFIX_CODE + phone;
 		String cached = stringRedisTemplate.opsForValue().get(codeKey);
-		if (cached == null) {
+		if (ObjectUtil.isNull(cached)) {
 			return false;
 		}
 		if (!cached.equals(code.trim())) {

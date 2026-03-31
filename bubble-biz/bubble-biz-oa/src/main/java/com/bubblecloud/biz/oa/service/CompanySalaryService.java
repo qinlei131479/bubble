@@ -3,6 +3,7 @@ package com.bubblecloud.biz.oa.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.dto.CompanySalarySaveDTO;
 import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
 
@@ -12,7 +13,7 @@ import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
  * @author qinlei
  * @date 2026/3/29 下午6:30
  */
-public interface CompanySalaryService {
+public interface CompanySalaryService extends UpService<EnterpriseUserSalary> {
 
 	Page<EnterpriseUserSalary> pageSalary(int entid, Integer cardId, Integer linkId, Long id,
 			Page<EnterpriseUserSalary> page);

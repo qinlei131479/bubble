@@ -6,8 +6,8 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.CategoryMapper;
 import com.bubblecloud.biz.oa.service.QuickCateAdminService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.Category;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2026/3/30
  */
 @Service
-@RequiredArgsConstructor
-public class QuickCateAdminServiceImpl implements QuickCateAdminService {
+public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category> implements QuickCateAdminService {
 
 	private static final String TYPE_QUICK = "quickConfig";
 
-	private final CategoryMapper categoryMapper;
-
 	@Override
 	public List<Category> list(int entid) {
-		return categoryMapper.selectList(Wrappers.lambdaQuery(Category.class)
+		return baseMapper.selectList(Wrappers.lambdaQuery(Category.class)
 			.eq(Category::getType, TYPE_QUICK)
 			.eq(Category::getEntid, entid)
 			.orderByDesc(Category::getSort)
@@ -35,32 +32,32 @@ public class QuickCateAdminServiceImpl implements QuickCateAdminService {
 	}
 
 	@Override
-	public Category get(long id) {
-		return categoryMapper.selectById(id);
+	public Category getCate(long id) {
+		return baseMapper.selectById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public long save(Category row) {
+	public long saveCate(Category row) {
 		row.setType(TYPE_QUICK);
 		LocalDateTime now = LocalDateTime.now();
 		row.setCreatedAt(now);
 		row.setUpdatedAt(now);
-		categoryMapper.insert(row);
+		baseMapper.insert(row);
 		return row.getId();
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void update(Category row) {
+	public void updateCate(Category row) {
 		row.setUpdatedAt(LocalDateTime.now());
-		categoryMapper.updateById(row);
+		baseMapper.updateById(row);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void delete(long id) {
-		categoryMapper.deleteById(id);
+	public void deleteCate(long id) {
+		baseMapper.deleteById(id);
 	}
 
 }

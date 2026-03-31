@@ -15,6 +15,7 @@ import com.bubblecloud.biz.oa.mapper.AdminMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseRoleMapper;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
 import com.bubblecloud.biz.oa.service.MenusService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.MenusQueryDTO;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
@@ -25,7 +26,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 用户菜单与按钮权限实现。
@@ -35,11 +37,9 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class MenusServiceImpl implements MenusService {
+public class MenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMenus> implements MenusService {
 
 	private final AdminMapper adminMapper;
-
-	private final SystemMenusMapper systemMenusMapper;
 
 	private final EnterpriseRoleMapper enterpriseRoleMapper;
 
@@ -49,7 +49,7 @@ public class MenusServiceImpl implements MenusService {
 	public MenusVO menus(MenusQueryDTO dto) {
 		Admin admin = adminMapper
 			.selectOne(Wrappers.lambdaQuery(Admin.class).eq(Admin::getId, dto.getUserId()).isNull(Admin::getDeletedAt));
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			return new MenusVO(Collections.emptyList(), Collections.emptyList());
 		}
 
@@ -63,7 +63,7 @@ public class MenusServiceImpl implements MenusService {
 	}
 
 	private Set<Long> loadAllMenuIds() {
-		List<SystemMenus> rows = systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
+		List<SystemMenus> rows = baseMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
 			.select(SystemMenus::getId)
 			.eq(SystemMenus::getStatus, 1)
 			.isNull(SystemMenus::getDeletedAt)
@@ -81,7 +81,7 @@ public class MenusServiceImpl implements MenusService {
 			.in(EnterpriseRole::getId, roleIds));
 		Set<Long> menuIds = new LinkedHashSet<>();
 		for (EnterpriseRole role : roles) {
-			if (role.getRules() != null) {
+			if (ObjectUtil.isNotNull(role.getRules())) {
 				menuIds.addAll(parseIdList(role.getRules()));
 			}
 		}
@@ -92,7 +92,7 @@ public class MenusServiceImpl implements MenusService {
 		if (menuIds.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
+		return baseMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
 			.eq(SystemMenus::getStatus, 1)
 			.isNull(SystemMenus::getDeletedAt)
 			.eq(SystemMenus::getType, type)
@@ -105,17 +105,17 @@ public class MenusServiceImpl implements MenusService {
 		if (menuIds.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<SystemMenus> rows = systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
+		List<SystemMenus> rows = baseMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
 			.select(SystemMenus::getUniqueAuth)
 			.eq(SystemMenus::getStatus, 1)
 			.isNull(SystemMenus::getDeletedAt)
 			.eq(SystemMenus::getType, type)
 			.in(SystemMenus::getId, menuIds));
-		return rows.stream().map(SystemMenus::getUniqueAuth).filter(StringUtils::hasText).distinct().toList();
+		return rows.stream().map(SystemMenus::getUniqueAuth).filter(StrUtil::isNotBlank).distinct().toList();
 	}
 
 	private List<MenuTreeNodeVO> toMenuTreeVo(List<SystemMenus> tree) {
-		if (tree == null || tree.isEmpty()) {
+		if (ObjectUtil.isNull(tree) || tree.isEmpty()) {
 			return Collections.emptyList();
 		}
 		List<MenuTreeNodeVO> list = new ArrayList<>(tree.size());
@@ -141,12 +141,12 @@ public class MenusServiceImpl implements MenusService {
 		vo.setIsShow(m.getIsShow());
 		vo.setComponent(blankToEmpty(m.getComponent()));
 		List<MenuTreeNodeVO> children = new ArrayList<>();
-		if (m.getTopPosition() != null) {
+		if (ObjectUtil.isNotNull(m.getTopPosition())) {
 			for (SystemMenus c : m.getTopPosition()) {
 				children.add(toMenuNodeVo(c));
 			}
 		}
-		if (m.getChildren() != null) {
+		if (ObjectUtil.isNotNull(m.getChildren())) {
 			for (SystemMenus c : m.getChildren()) {
 				children.add(toMenuNodeVo(c));
 			}
@@ -158,7 +158,7 @@ public class MenusServiceImpl implements MenusService {
 	}
 
 	private static String blankToEmpty(String s) {
-		return StringUtils.hasText(s) ? s : "";
+		return StrUtil.isNotBlank(s) ? s : "";
 	}
 
 	private List<SystemMenus> buildMenuTree(List<SystemMenus> menuFlat) {
@@ -169,17 +169,17 @@ public class MenusServiceImpl implements MenusService {
 		List<SystemMenus> tree = new ArrayList<>();
 		for (SystemMenus node : nodeMap.values()) {
 			Integer pid = node.getPid();
-			Long pidLong = pid == null ? null : pid.longValue();
-			if (pidLong != null && nodeMap.containsKey(pidLong)) {
+			Long pidLong = ObjectUtil.isNull(pid) ? null : pid.longValue();
+			if (ObjectUtil.isNotNull(pidLong) && nodeMap.containsKey(pidLong)) {
 				SystemMenus parent = nodeMap.get(pidLong);
 				if (Integer.valueOf(1).equals(node.getPosition())) {
-					if (parent.getTopPosition() == null) {
+					if (ObjectUtil.isNull(parent.getTopPosition())) {
 						parent.setTopPosition(new ArrayList<>());
 					}
 					parent.getTopPosition().add(node);
 				}
 				else {
-					if (parent.getChildren() == null) {
+					if (ObjectUtil.isNull(parent.getChildren())) {
 						parent.setChildren(new ArrayList<>());
 					}
 					parent.getChildren().add(node);
@@ -193,7 +193,7 @@ public class MenusServiceImpl implements MenusService {
 	}
 
 	private List<Long> parseIdList(String raw) {
-		if (!StringUtils.hasText(raw)) {
+		if (StrUtil.isBlank(raw)) {
 			return Collections.emptyList();
 		}
 		String value = raw.trim();
@@ -208,10 +208,10 @@ public class MenusServiceImpl implements MenusService {
 			// fallback
 		}
 		String normalized = value.replace("[", "").replace("]", "").replace("\"", "");
-		if (!StringUtils.hasText(normalized)) {
+		if (StrUtil.isBlank(normalized)) {
 			return Collections.emptyList();
 		}
-		return List.of(normalized.split(",")).stream().map(String::trim).filter(StringUtils::hasText).map(item -> {
+		return List.of(normalized.split(",")).stream().map(String::trim).filter(StrUtil::isNotBlank).map(item -> {
 			try {
 				return Long.parseLong(item);
 			}

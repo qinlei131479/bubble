@@ -26,7 +26,7 @@ public class Agreement extends Req<Agreement> {
 
 	@TableId(type = IdType.AUTO)
 	@Schema(description = "主键ID")
-	private Integer id;
+	private Long id;
 
 	@Schema(description = "协议标识")
 	private String ident;

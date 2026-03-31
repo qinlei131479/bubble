@@ -3,6 +3,8 @@ package com.bubblecloud.biz.oa.service;
 import java.util.List;
 import java.util.Map;
 
+import com.bubblecloud.common.mybatis.service.UpService;
+import com.bubblecloud.oa.api.entity.EnterpriseUserDaily;
 import com.bubblecloud.oa.api.entity.UserPending;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchCountVO;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchDailyDayVO;
@@ -16,7 +18,7 @@ import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticsTypeVO;
  * @author qinlei
  * @date 2026/3/28 15:30
  */
-public interface WorkbenchService {
+public interface WorkbenchService extends UpService<EnterpriseUserDaily> {
 
 	/**
 	 * 快捷入口：cates + checkd（默认含工作台、我的日程、企业通讯录）。

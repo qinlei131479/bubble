@@ -45,28 +45,28 @@ public class QuickCateAdminController {
 	@PostMapping
 	@Operation(summary = "新增分类")
 	public PhpResponse<String> store(@RequestBody Category body) {
-		quickCateAdminService.save(body);
+		quickCateAdminService.saveCate(body);
 		return PhpResponse.ok("common.insert.succ");
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
 	public PhpResponse<Category> edit(@PathVariable long id) {
-		return PhpResponse.ok(quickCateAdminService.get(id));
+		return PhpResponse.ok(quickCateAdminService.getCate(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "保存修改")
 	public PhpResponse<String> update(@PathVariable long id, @RequestBody Category body) {
 		body.setId(id);
-		quickCateAdminService.update(body);
+		quickCateAdminService.updateCate(body);
 		return PhpResponse.ok("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除分类")
 	public PhpResponse<String> destroy(@PathVariable long id) {
-		quickCateAdminService.delete(id);
+		quickCateAdminService.deleteCate(id);
 		return PhpResponse.ok("common.delete.succ");
 	}
 

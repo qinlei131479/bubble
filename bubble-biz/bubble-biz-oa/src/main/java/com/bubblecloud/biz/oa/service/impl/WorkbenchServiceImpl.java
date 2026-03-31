@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EnterpriseUserDailyMapper;
 import com.bubblecloud.biz.oa.mapper.UserPendingMapper;
 import com.bubblecloud.biz.oa.service.WorkbenchService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.EnterpriseUserDaily;
 import com.bubblecloud.oa.api.entity.UserPending;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchCountVO;
@@ -23,7 +24,8 @@ import com.bubblecloud.oa.api.vo.workbench.WorkbenchDailyDayVO;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticsTypeVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 工作台默认数据与占位实现。
@@ -33,9 +35,8 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class WorkbenchServiceImpl implements WorkbenchService {
-
-	private final EnterpriseUserDailyMapper enterpriseUserDailyMapper;
+public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMapper, EnterpriseUserDaily>
+		implements WorkbenchService {
 
 	private final UserPendingMapper userPendingMapper;
 
@@ -149,7 +150,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 		YearMonth ym = YearMonth.parse(yearMonth);
 		LocalDateTime start = ym.atDay(1).atStartOfDay();
 		LocalDateTime end = ym.plusMonths(1).atDay(1).atStartOfDay();
-		List<EnterpriseUserDaily> rows = enterpriseUserDailyMapper
+		List<EnterpriseUserDaily> rows = baseMapper
 			.selectList(Wrappers.lambdaQuery(EnterpriseUserDaily.class)
 				.eq(EnterpriseUserDaily::getUid, uid)
 				.eq(EnterpriseUserDaily::getEntid, (long) entid)
@@ -158,7 +159,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 				.orderByAsc(EnterpriseUserDaily::getCreatedAt));
 		Map<Integer, WorkbenchDailyDayVO> map = new LinkedHashMap<>();
 		for (EnterpriseUserDaily d : rows) {
-			if (d.getCreatedAt() == null) {
+			if (ObjectUtil.isNull(d.getCreatedAt())) {
 				continue;
 			}
 			int day = d.getCreatedAt().getDayOfMonth();
@@ -176,7 +177,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 		var q = Wrappers.lambdaQuery(UserPending.class)
 			.eq(UserPending::getUid, uid)
 			.eq(UserPending::getEntid, (long) entid);
-		if (StringUtils.hasText(status)) {
+		if (StrUtil.isNotBlank(status)) {
 			try {
 				q.eq(UserPending::getStatus, Integer.parseInt(status.trim()));
 			}

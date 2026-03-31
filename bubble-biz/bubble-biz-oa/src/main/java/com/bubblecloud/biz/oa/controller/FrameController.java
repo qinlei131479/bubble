@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 组织架构（对齐 PHP {@code ent/config/frame}）。
@@ -55,7 +56,7 @@ public class FrameController {
 	public PhpResponse<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") int role,
 			@RequestParam(defaultValue = "0") int scope, @RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
-		if (uid == null) {
+		if (ObjectUtil.isNull(uid)) {
 			return PhpResponse.failed("未登录");
 		}
 		return PhpResponse.ok(frameService.getTree(uid, entid, role == 1, scope == 1));
@@ -66,7 +67,7 @@ public class FrameController {
 	public PhpResponse<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") int role,
 			@RequestParam(defaultValue = "0") int leave, @RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
-		if (uid == null) {
+		if (ObjectUtil.isNull(uid)) {
 			return PhpResponse.failed("未登录");
 		}
 		return PhpResponse.ok(frameService.getUserTree(uid, entid, role == 1, leave == 1));
@@ -123,7 +124,7 @@ public class FrameController {
 	@Operation(summary = "管理范围部门")
 	public PhpResponse<List<FrameScopeItemVO>> scope(@RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
-		if (uid == null) {
+		if (ObjectUtil.isNull(uid)) {
 			return PhpResponse.failed("未登录");
 		}
 		return PhpResponse.ok(frameService.scopeFrames(uid, entid));
@@ -131,7 +132,7 @@ public class FrameController {
 
 	private static Long currentUserId() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null || !(auth.getPrincipal() instanceof OaCurrentUser u)) {
+		if (ObjectUtil.isNull(auth) || !(auth.getPrincipal() instanceof OaCurrentUser u)) {
 			return null;
 		}
 		return u.getId();

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
 import com.bubblecloud.biz.oa.service.SiteService;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.Enterprise;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.SiteVO;
@@ -17,7 +18,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 站点展示配置实现。
@@ -27,11 +29,9 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @RequiredArgsConstructor
-public class SiteServiceImpl implements SiteService {
+public class SiteServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig> implements SiteService {
 
 	private static final String APP_VERSION = "3.9.2";
-
-	private final SystemConfigMapper systemConfigMapper;
 
 	private final EnterpriseMapper enterpriseMapper;
 
@@ -39,10 +39,10 @@ public class SiteServiceImpl implements SiteService {
 
 	@Override
 	public SiteVO site() {
-		List<SystemConfig> configs = systemConfigMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class));
+		List<SystemConfig> configs = baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class));
 		Map<String, String> configMap = configs.stream()
-			.filter(c -> c.getConfigKey() != null)
-			.collect(Collectors.toMap(SystemConfig::getConfigKey, c -> c.getValue() == null ? "" : c.getValue(),
+			.filter(c -> ObjectUtil.isNotNull(c.getConfigKey()))
+			.collect(Collectors.toMap(SystemConfig::getConfigKey, c -> ObjectUtil.isNull(c.getValue()) ? "" : c.getValue(),
 					(a, b) -> b, LinkedHashMap::new));
 
 		Enterprise ent = enterpriseMapper
@@ -52,7 +52,7 @@ public class SiteServiceImpl implements SiteService {
 		vo.setSiteRecordNumber(configMap.getOrDefault("site_record_number", ""));
 		vo.setSiteAddress(buildAddress(ent));
 		vo.setSiteTel(configMap.getOrDefault("site_tel", ""));
-		vo.setSiteLogo(ent == null || ent.getLogo() == null ? "" : ent.getLogo());
+		vo.setSiteLogo(ObjectUtil.isNull(ent) || ObjectUtil.isNull(ent.getLogo()) ? "" : ent.getLogo());
 		vo.setPasswordType(parsePasswordType(configMap.get("login_password_type")));
 		vo.setPasswordLength(parseInteger(configMap.get("login_password_length"), 0));
 		vo.setVersionName(APP_VERSION);
@@ -61,17 +61,17 @@ public class SiteServiceImpl implements SiteService {
 	}
 
 	private String buildAddress(Enterprise enterprise) {
-		if (enterprise == null) {
+		if (ObjectUtil.isNull(enterprise)) {
 			return "";
 		}
-		return String.valueOf(enterprise.getProvince() == null ? "" : enterprise.getProvince())
-				+ (enterprise.getCity() == null ? "" : enterprise.getCity())
-				+ (enterprise.getArea() == null ? "" : enterprise.getArea())
-				+ (enterprise.getAddress() == null ? "" : enterprise.getAddress());
+		return String.valueOf(ObjectUtil.isNull(enterprise.getProvince()) ? "" : enterprise.getProvince())
+				+ (ObjectUtil.isNull(enterprise.getCity()) ? "" : enterprise.getCity())
+				+ (ObjectUtil.isNull(enterprise.getArea()) ? "" : enterprise.getArea())
+				+ (ObjectUtil.isNull(enterprise.getAddress()) ? "" : enterprise.getAddress());
 	}
 
 	private String parsePasswordType(String raw) {
-		if (!StringUtils.hasText(raw)) {
+		if (StrUtil.isBlank(raw)) {
 			return "02";
 		}
 		try {
@@ -95,7 +95,7 @@ public class SiteServiceImpl implements SiteService {
 
 	private Integer parseInteger(String raw, int defaultValue) {
 		try {
-			return StringUtils.hasText(raw) ? Integer.parseInt(raw) : defaultValue;
+			return StrUtil.isNotBlank(raw) ? Integer.parseInt(raw) : defaultValue;
 		}
 		catch (NumberFormatException ex) {
 			return defaultValue;
@@ -103,7 +103,7 @@ public class SiteServiceImpl implements SiteService {
 	}
 
 	private List<Long> parseIdList(String raw) {
-		if (!StringUtils.hasText(raw)) {
+		if (StrUtil.isBlank(raw)) {
 			return List.of();
 		}
 		String value = raw.trim();
@@ -118,12 +118,12 @@ public class SiteServiceImpl implements SiteService {
 			// fallback
 		}
 		String normalized = value.replace("[", "").replace("]", "").replace("\"", "");
-		if (!StringUtils.hasText(normalized)) {
+		if (StrUtil.isBlank(normalized)) {
 			return List.of();
 		}
 		return java.util.Arrays.stream(normalized.split(","))
 			.map(String::trim)
-			.filter(StringUtils::hasText)
+			.filter(StrUtil::isNotBlank)
 			.map(item -> {
 				try {
 					return Long.parseLong(item);

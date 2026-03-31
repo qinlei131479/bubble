@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * OA 用户模块。
@@ -44,7 +45,7 @@ public class UserController {
 	@GetMapping("/menus")
 	@Operation(summary = "获取当前用户菜单")
 	public PhpResponse<MenusVO> menus(Authentication authentication) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		MenusQueryDTO dto = new MenusQueryDTO();
@@ -68,21 +69,21 @@ public class UserController {
 	@GetMapping("/account_info")
 	@Operation(summary = "获取当前用户账号资料（含邮箱扩展）")
 	public PhpResponse<UserSelfInfoVO> accountInfo(Authentication authentication) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		UserSelfInfoVO vo = userProfileService.getSelfInfo(currentUser.getId());
-		return vo == null ? PhpResponse.failed("用户不存在") : PhpResponse.ok(vo);
+		return ObjectUtil.isNull(vo) ? PhpResponse.failed("用户不存在") : PhpResponse.ok(vo);
 	}
 
 	@PutMapping("/account_info")
 	@Operation(summary = "修改当前用户账号资料")
 	public PhpResponse<String> updateAccountInfo(Authentication authentication,
 			@RequestBody(required = false) UserSelfUpdateDTO dto) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
-		if (dto == null) {
+		if (ObjectUtil.isNull(dto)) {
 			// 兼容 PHP empty body
 			return PhpResponse.ok("common.update.succ");
 		}
@@ -110,7 +111,7 @@ public class UserController {
 	@GetMapping("/resume")
 	@Operation(summary = "获取个人简历")
 	public PhpResponse<UserResumeDetailVO> resume(Authentication authentication) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		return PhpResponse.ok(userProfileService.getResume(currentUser.getId()));
@@ -119,7 +120,7 @@ public class UserController {
 	@PutMapping("/resume_save")
 	@Operation(summary = "保存个人简历")
 	public PhpResponse<String> resumeSave(Authentication authentication, @RequestBody UserResumeSaveDTO dto) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		try {

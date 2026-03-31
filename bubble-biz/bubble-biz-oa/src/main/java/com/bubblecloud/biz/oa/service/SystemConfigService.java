@@ -20,4 +20,9 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 	 */
 	ConfigVO config(ConfigQueryDTO dto);
 
+	/**
+	 * 是否开放注册（registration_open）。
+	 */
+	boolean isRegistrationOpen();
+
 }

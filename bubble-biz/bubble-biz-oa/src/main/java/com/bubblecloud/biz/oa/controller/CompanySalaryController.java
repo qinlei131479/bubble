@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 调薪记录（对齐 PHP {@code ent/company/salary}）。
@@ -48,7 +49,7 @@ public class CompanySalaryController {
 	@Operation(summary = "获取调薪记录")
 	public PhpResponse<EnterpriseUserSalary> edit(@PathVariable long id) {
 		EnterpriseUserSalary e = companySalaryService.getForEdit(id);
-		if (e == null) {
+		if (ObjectUtil.isNull(e)) {
 			return PhpResponse.failed("缺少必要参数");
 		}
 		return PhpResponse.ok(e);

@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.Category;
 
 /**
@@ -10,16 +11,16 @@ import com.bubblecloud.oa.api.entity.Category;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface QuickCateAdminService {
+public interface QuickCateAdminService extends UpService<Category> {
 
 	List<Category> list(int entid);
 
-	Category get(long id);
+	Category getCate(long id);
 
-	long save(Category row);
+	long saveCate(Category row);
 
-	void update(Category row);
+	void updateCate(Category row);
 
-	void delete(long id);
+	void deleteCate(long id);
 
 }

@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
+import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface RolesAdminService {
+public interface RolesAdminService extends UpService<EnterpriseRole> {
 
 	/**
 	 * 角色列表（筛选）。

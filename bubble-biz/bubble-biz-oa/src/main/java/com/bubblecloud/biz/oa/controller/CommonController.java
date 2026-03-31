@@ -1,6 +1,5 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.security.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.MessageService;
@@ -11,7 +10,6 @@ import com.bubblecloud.biz.oa.support.PhpResponse;
 import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.dto.SmsVerifySendDTO;
 import com.bubblecloud.oa.api.entity.Admin;
-import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.CaptchaVO;
 import com.bubblecloud.oa.api.vo.ConfigVO;
 import com.bubblecloud.oa.api.vo.SiteVO;
@@ -33,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * OA 公共接口。
@@ -94,20 +93,16 @@ public class CommonController {
 	@PostMapping("/verify")
 	@Operation(summary = "发送短信验证码")
 	public PhpResponse<String> verify(@RequestBody @Valid SmsVerifySendDTO dto) {
-		if (dto.getFrom() != null && dto.getFrom() != 0) {
+		if (ObjectUtil.defaultIfNull(dto.getFrom(), 0) != 0) {
 			long cnt = adminService.countByPhone(dto.getPhone());
 			if (cnt > 0) {
 				Admin a = adminService.getByAccount(dto.getPhone());
-				if (a != null && a.getStatus() != null && a.getStatus() == 0) {
+				if (ObjectUtil.isNotNull(a) && ObjectUtil.isNotNull(a.getStatus()) && a.getStatus() == 0) {
 					return PhpResponse.failed("该手机号已被锁定");
 				}
 			}
 			else {
-				SystemConfig reg = systemConfigService.getOne(Wrappers.lambdaQuery(SystemConfig.class)
-					.eq(SystemConfig::getConfigKey, "registration_open")
-					.last("LIMIT 1"));
-				boolean open = reg != null && ("1".equals(reg.getValue()) || "true".equalsIgnoreCase(reg.getValue()));
-				if (!open) {
+				if (!systemConfigService.isRegistrationOpen()) {
 					return PhpResponse.failed("短信发送失败，未注册的手机号");
 				}
 			}
@@ -132,26 +127,26 @@ public class CommonController {
 	public PhpResponse<CommonMessageVO> message(Authentication authentication,
 			@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "20") Integer limit,
 			@RequestParam(required = false) String cate_id, @RequestParam(required = false) String title) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		Admin admin = adminService.getById(currentUser.getId());
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			return PhpResponse.failed("用户不存在");
 		}
 		return PhpResponse.ok(messageService.getMessageList(currentUser.getId(), admin.getUid(), 1, page, limit,
-				cate_id == null ? "" : cate_id, title == null ? "" : title));
+				ObjectUtil.isNull(cate_id) ? "" : cate_id, ObjectUtil.isNull(title) ? "" : title));
 	}
 
 	@PutMapping("/message/{id}/{isRead}")
 	@Operation(summary = "修改消息已读状态")
 	public PhpResponse<String> updateMessage(Authentication authentication, @PathVariable long id,
 			@PathVariable int isRead) {
-		if (authentication == null || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
 			return PhpResponse.failed("未登录");
 		}
 		Admin admin = adminService.getById(currentUser.getId());
-		if (admin == null) {
+		if (ObjectUtil.isNull(admin)) {
 			return PhpResponse.failed("用户不存在");
 		}
 		try {
