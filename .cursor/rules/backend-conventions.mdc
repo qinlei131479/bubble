@@ -1,90 +1,116 @@
 ---
-description: Java 后端开发规范，涵盖 Spring Cloud 微服务架构中的编码约定和模块依赖规则
+description: Java 后端规范：Spring Cloud 分层与注解、OA 迁移（含 UpService/UpMapper）、REST 与依赖；类 Javadoc、OA 实体与 Admin.java 对齐
 globs: "**/*.java"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # 后端开发规范
 
 ## 代码格式
 
-- 使用 Spring Java Format 插件（`spring-javaformat-maven-plugin 0.0.47`）
-- 格式化命令: `mvn spring-javaformat:apply`
-- 缩进: Tab，宽度 4，续行缩进 8（见 `.editorconfig`）
-- 编码: UTF-8
+- Spring Java Format（`spring-javaformat-maven-plugin 0.0.47`），`mvn spring-javaformat:apply`
+- 缩进：Tab、宽 4、续行 8（`.editorconfig`），UTF-8
 
-## 模块分层约定
+## 模块分层
 
 ```
-bubble-api-{module}     → 公共 API：实体、DTO/VO、Feign 接口（jar 库，不可独立运行）
-bubble-biz-{module}     → 业务服务：Controller/Service/Mapper（Spring Boot 应用）
-bubble-common-{feature} → 公共组件：跨模块复用的工具与自动配置（jar 库）
-bubble-visual-{feature} → 可视化管理工具服务
+bubble-api-{module}      → 实体、DTO/VO、Feign（jar，不可独立运行）
+bubble-biz-{module}      → Controller / Service / Mapper（可部署）
+bubble-common-{feature}  → 跨模块组件
+bubble-visual-{feature}  → 可视化管理服务
 ```
 
-## 新增模块检查清单
+## 新增模块
 
-1. 在父 POM 的 `<modules>` 中注册
-2. 在 `bubble-common-bom` 中声明版本管理
-3. 可部署服务需配置 `application.yml` + `logback-spring.xml` + `Dockerfile`
-4. 启动类注解组合: `@EnableDoc("模块名")` + `@EnableCustomFeignClients` + `@EnableCustomResourceServer`
-5. Nacos 配置命名: `{spring.application.name}-{profile}.yml`
+1. 父 POM `<modules>` 注册  
+2. `bubble-common-bom` 版本管理  
+3. 可部署服务：`application.yml` + `logback-spring.xml` + `Dockerfile`  
+4. 启动类：`@EnableDoc("模块名")` + `@EnableCustomFeignClients` + `@EnableCustomResourceServer`  
+5. Nacos：`{spring.application.name}-{profile}.yml`
 
-## 自动配置注册
+## 自动配置
 
-- 使用 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`（Spring Boot 3 方式）
-- Feign 客户端注册: `META-INF/spring/org.springframework.cloud.openfeign.FeignClient.imports`
+- Boot 3：`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`  
+- Feign：`META-INF/spring/org.springframework.cloud.openfeign.FeignClient.imports`
 
 ## 关键注解
 
-| 注解 | 用途 | 来源模块 |
-|------|------|---------|
-| `@EnableCustomResourceServer` | 启用 OAuth2 资源服务器 | common-security |
-| `@EnableCustomFeignClients` | 自定义 Feign 扫描 | common-feign |
-| `@EnableDoc("name")` | SpringDoc OpenAPI | common-swagger |
-| `@EnableDynamicDataSource` | 动态多数据源 | common-datasource |
+| 注解 | 用途 | 模块 |
+|------|------|------|
+| `@EnableCustomResourceServer` | OAuth2 资源服务器 | common-security |
+| `@EnableCustomFeignClients` | Feign 扫描 | common-feign |
+| `@EnableDoc("name")` | SpringDoc | common-swagger |
+| `@EnableDynamicDataSource` | 多数据源 | common-datasource |
 | `@Inner` | 内部调用免鉴权 | common-security |
-| `@SysLog("描述")` | 操作日志记录 | common-log |
-| `@HasPermission` | 方法级权限校验 | common-security |
+| `@SysLog("描述")` | 操作日志 | common-log |
+| `@HasPermission` | 方法权限 | common-security |
 
-## 实体规范
+## 实体
 
-- 继承 `BaseEntity`（含 createBy/createTime/updateBy/updateTime/delFlag 自动填充）
-- MyBatis-Plus `MybatisPlusMetaObjectHandler` 自动处理审计字段
-- JSON 数组字段使用 `JsonStringArrayTypeHandler` / `JsonLongArrayTypeHandler`
-- **OA 模块例外**：`bubble-api-oa` 中迁移表实体继承 `com.bubblecloud.common.mybatis.base.Req<T>`，与 `eb_*` 表字段对齐，不适用本条的 `BaseEntity`；类注释与 `@Schema` 见 **`java-class-javadoc.mdc`** 中 `Admin.java` 约定。
+- 一般继承 `BaseEntity`（审计字段由 `MybatisPlusMetaObjectHandler` 填充）；JSON 数组用 `JsonStringArrayTypeHandler` / `JsonLongArrayTypeHandler`
+- **OA（`bubble-api-oa`）**：迁移表实体继承 `Req<T>`，与 `eb_*` 对齐，**不**用 `BaseEntity`；类 Javadoc、`@Schema`、字段注释见下文 **OA 实体与 `Admin.java`**
 
 ## 统一返回
 
-- 使用 `R<T>` 包装所有 REST 响应
-- 成功: `R.ok(data)`，失败: `R.failed(msg)` 或 `R.failed(ErrorCodes.XXX)`
-- 国际化错误码定义在 `ErrorCodes` + `i18n/messages` 资源文件
+- `R<T>`；成功 `R.ok(data)`，失败 `R.failed(msg)` 或 `R.failed(ErrorCodes.XXX)`；错误码与 `i18n/messages` 配套
 
-## 依赖引入原则
+## 依赖
 
-- 版本统一由 `bubble-common-bom` 管理，业务模块**不要**硬编码版本号
-- Web 服务使用 Undertow（已排除 Tomcat）
-- Feign 使用 OkHttp 作为底层客户端
+- 版本由 `bubble-common-bom` 管理，业务模块勿硬编码；Web 用 Undertow；Feign 用 OkHttp
 
-## bubble-biz-oa（OA 迁移）专项约定
+---
 
-- **命名与表一致**：业务类名与 `eb_*` 表对应，不使用 `Oa` 前缀。例如 `eb_admin` → `Admin` 实体、`AdminMapper`、`AdminService`；`eb_system_config` → `SystemConfig` 等。安全桥接（PHP JWT）、兼容响应包装等基础设施类可保留在 `security` / `support` 包中并使用明确前缀区分职责。
-- **禁止“无表聚合”空壳 Service**：不要新增仅作方法堆砌、与持久化无关的 `Bootstrap`/`Facade` 类；站点、菜单等能力应落在与表或明确业务域对应的 `XxxService` 中。
-- **Controller / Service / Mapper 禁止使用 `Map<String, Object>`**：业务入参、出参、Mapper 查询结果行不得使用 `Map<String, Object>`（不透明、难维护）。统一在 `bubble-api-oa` 中定义 `*DTO`、`*VO`、实体或专用行视图（如 `XxxRowVO`）。**例外**：JWT claims、第三方 SDK 入参、仅在 `security` / 工具类内部完成解析且**不作为对外 API 契约**的临时结构；PHP 侧为「扁平动态键」的 JSON 请求/响应时，可使用 **`com.fasterxml.jackson.databind.JsonNode` / `ObjectNode`** 承载（**勿用** `Map<String, Object>` 充当动态表单），并在 Service 内解析为具体 DTO/实体或写库；若需固定键值对列表，用 `List<XxxItemVO>` 等明确类型。
-- **Mapper SQL 一律写在 XML**：所有自定义 SQL（含简单 `COUNT`、`SELECT`）写在 `bubble-biz-oa/src/main/resources/mapper/` 下与接口同名的 `XxxMapper.xml` 中；`Mapper` 接口上**禁止**使用 `@Select`、`@Update`、`@Insert`、`@Delete` 等注解承载 SQL，仅保留方法签名与 `@Param`。MyBatis-Plus `BaseMapper` / `lambdaQuery` 无 XML 的 CRUD 除外。
-- **Service 契约**：入参使用 `bubble-api-oa` 中的 `*DTO`，返回使用 `*VO`（或实体，当与表一一对应且已存在时）。
-- **数据访问**：禁止在业务代码中使用 `JdbcTemplate` 直接拼 SQL 访问 OA 库表；统一使用 `XxxMapper` + `classpath:/mapper/*.xml`，并优先使用 MyBatis-Plus 提供的 `lambdaQuery` / `UpService` 封装方法。
-- **PHP 兼容响应**：对外兼容前端的包装类为 `com.bubblecloud.biz.oa.support.PhpResponse`（`status` / `msg` / `data`），与网关/微服务默认的 `R<T>` 区分使用场景。
-- **阶段化实施**：OA 迁移按 11 阶段执行（详见 `docs/plans/oa-migration-plan.md`），每阶段要求全部接口实现真实业务逻辑，**禁止新增 `SimplePageVO.empty` 或固定空返回值的占位桩**。已有占位桩应在对应阶段实施时替换为真实实现。
+## bubble-biz-oa（迁移）
 
-### bubble-biz-oa Controller 分层与接口风格
+- **命名**：与 `eb_*` 表一致，无 `Oa` 前缀（如 `eb_admin` → `Admin` / `AdminMapper` / `AdminService`）
+- **禁止**无表空壳 `Bootstrap`/`Facade`；能力落在对应 `XxxService`
+- **禁止**业务层 `Map<String, Object>`（入参、出参、Mapper 行）；用 `bubble-api-oa` 的 DTO/VO/实体或行视图。**例外**：JWT、第三方 SDK、内部解析；PHP 扁平动态 JSON 用 `JsonNode`/`ObjectNode`，勿用 `Map` 作动态表单；键值列表用 `List<XxxItemVO>`
+- **SQL**：自定义 SQL 写在 `bubble-biz-oa/.../mapper/XxxMapper.xml`；接口上**禁止** `@Select`/`@Update` 等（BaseMapper/lambda 无 XML 的 CRUD 除外）
+- **Service**：入参 `*DTO`，返回 `*VO` 或已有实体；禁止 `JdbcTemplate` 直查 OA 表
+- **对外兼容**：`com.bubblecloud.biz.oa.support.PhpResponse`（`status`/`msg`/`data`），与网关默认 `R<T>` 区分场景
+- **阶段**：见 `docs/plans/oa-migration-plan.md`；**禁止**新增 `SimplePageVO.empty` 类占位桩
 
-- **Controller 禁止调用 Mapper（强制）**：`Controller` **不得**注入 `XxxMapper`，不得在 Controller 中编写 `Wrappers.lambdaQuery(...)` / 自定义 SQL 拼装。数据访问必须经 **`XxxService` / `XxxServiceImpl`**，由 Service 调用 Mapper 或 XML。若需纯查询封装，放在 Service 或 `repository` 包，由 Service 对外暴露。
-- **接口风格参考（PHP 契约为先）**：编写方式可参考 `bubble-biz-agi` 的 `AgentConfigsController`（仅注入 Service、`@Operation` 文档、分页在 Service 内处理并设默认排序）。**优先级**：**PHP 路由、请求/响应字段、分页参数名** 与现有前端/Laravel 行为一致 > 本项目 Java 通用写法（如 `R<T>`、`Pg` 的 query 名）。
-- **OA 与 AGI 的差异**：OA 对外兼容接口优先使用 `PhpResponse<T>`（`status` / `msg` / `data`），**不要**为对齐 AGI 而修改 PHP 路径或 query 名称。
-- **分页**：若 PHP 使用 `current`/`size` 等与 `Pg` 字段不一致，在 **Service** 内将请求参数装配为 `Page`/`Pg`（或项目统一分页模型），并设置与 PHP 一致的默认排序（参考 `Pg.addOrderDefault` + `OrderItem` 的思路）；Controller 仅接收参数并委托 Service，**保持 PHP 形参**。
-- **权限与日志**：需要权限时可用 `@HasPermission`（以 PHP/网关实际鉴权策略为准）；写操作可配合 `@SysLog`，与 AGI 一致。
+### Service 与 Mapper（`UpService` / `UpMapper`）
 
-## 类文件头 Javadoc
+- **`XxxService`**：必须 `extends UpService<实体>`（实体与表/`eb_*` 一一对应，泛型随业务而变，勿写死为某一表名）
+- **`XxxServiceImpl`**：必须 `extends UpServiceImpl<XxxMapper, 实体> implements XxxService`（参考 `AdminService` / `AdminServiceImpl`）
+- **`XxxMapper`**：必须 `extends UpMapper<实体>`，并加 `@Mapper`（参考 `AdminInfoMapper`）
+- **方法扩展**：优先使用 `UpService`、`UpMapper` 已有通用方法（含 lambda 条件封装）；仅在基类无法满足时再新增接口方法或 `XxxMapper.xml` 自定义 SQL
 
-- **新建** Java 类型时类上注释格式（`@author` 取自 git、`@date` 为创建时间）见同目录 **`java-class-javadoc.mdc`**，全模块 Java 源文件均适用。
+### Controller
+
+- **禁止**注入 Mapper、在 Controller 写 `Wrappers.lambdaQuery`；经 `XxxService` → Mapper/XML
+- **风格**：可参考 `bubble-biz-agi` 的 `AgentConfigsController`；**优先级**：PHP 路由与字段 > Java 通用写法
+- OA 对外兼容优先 `PhpResponse<T>`，勿为对齐 AGI 改 PHP 路径
+- **分页**：PHP 的 `current`/`size` 等与 `Pg` 不一致时在 **Service** 装配 `Page`/`Pg` 与默认排序；Controller 只传参
+- 权限 `@HasPermission`，写操作可 `@SysLog`
+
+---
+
+## 类 Javadoc（全模块 Java）
+
+每个**顶层类型**（`class` / `interface` / `enum` / `record`）声明**正上方**须有 Javadoc：首行**中文**简述类型职责，勿空；并含：
+
+```java
+/**
+ * 类型说明（例：OA 启动类、登录请求 DTO）
+ *
+ * @author <git config user.name，先 local 再 global>
+ * @date <创建时刻的本地时间>
+ */
+```
+
+- **@author**：仓库 `git config user.name`，否则 `--global`；全无则用 `Unknown`，勿编造
+- **@date**：**创建该文件时**的时间，勿抄旧文件；格式任选：`2026/3/28 下午2:57` 或 `2026/3/28 14:57`
+- **范围**：**新建**文件（及同文件新增的第二顶层类型）必写；仅改旧文件不强制补（除非用户要求批量统一）
+- **`bubble-api-oa` / `bubble-biz-oa`**：每个 `.java` 第一个顶层类型的 Javadoc **必须同时**含 `@author` 与 `@date`；批量补历史可共用同一 `@date`，新建仍用创建时刻
+
+## OA 实体与 `Admin.java`（`bubble-api-oa` MyBatis-Plus 实体）
+
+与 `com.bubblecloud.oa.api.entity.Admin` 一致：
+
+- 类 Javadoc 首行：`业务说明，对应 eb_xxx 表。`；`@Schema(description = "中文短名")`
+- 除 `serialVersionUID` 外每个持久化字段 `@Schema(description = "中文…")`；与 `@TableId` / `@TableField` 等顺序同 `Admin`
+- 类 Javadoc 含 `@author`、`@date`
+
+参考：`bubble-api/bubble-api-oa/src/main/java/com/bubblecloud/oa/api/entity/Admin.java`
