@@ -1,8 +1,11 @@
 package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.bubblecloud.oa.api.entity.UserPending;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchCountVO;
+import com.bubblecloud.oa.api.vo.workbench.WorkbenchDailyDayVO;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchFastEntryVO;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticCardVO;
 import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticsTypeVO;
@@ -44,5 +47,15 @@ public interface WorkbenchService {
 	 * 保存业绩统计类型（占位成功）。
 	 */
 	void saveStatisticsType(List<String> keys);
+
+	/**
+	 * 某月每日汇报摘要（对齐 PHP ReportService::getMonthDailyList）。
+	 */
+	Map<Integer, WorkbenchDailyDayVO> getMonthDaily(String uid, int entid, String yearMonth);
+
+	/**
+	 * 待办列表（对齐 PHP UserPendingService::getPendingList）。
+	 */
+	List<UserPending> getPendingList(String uid, int entid, String status);
 
 }

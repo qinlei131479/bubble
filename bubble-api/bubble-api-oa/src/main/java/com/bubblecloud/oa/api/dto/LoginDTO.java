@@ -8,6 +8,7 @@ import lombok.Data;
  * 登录请求参数。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @Schema(description = "登录请求")

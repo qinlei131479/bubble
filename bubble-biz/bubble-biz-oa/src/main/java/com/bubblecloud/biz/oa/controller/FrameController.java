@@ -46,15 +46,14 @@ public class FrameController {
 	@GetMapping
 	@Operation(summary = "部门树列表")
 	public PhpResponse<List<FrameDepartmentTreeNodeVO>> index(@RequestParam(defaultValue = "1") int is_show,
-															  @RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "1") int entid) {
 		return PhpResponse.ok(frameService.departmentTreeList(is_show, entid));
 	}
 
 	@GetMapping("/tree")
 	@Operation(summary = "权限/范围用部门树")
 	public PhpResponse<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") int role,
-														@RequestParam(defaultValue = "0") int scope,
-														@RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "0") int scope, @RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
 		if (uid == null) {
 			return PhpResponse.failed("未登录");
@@ -65,8 +64,7 @@ public class FrameController {
 	@GetMapping("/user")
 	@Operation(summary = "部门人员树")
 	public PhpResponse<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") int role,
-														   @RequestParam(defaultValue = "0") int leave,
-														   @RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "0") int leave, @RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
 		if (uid == null) {
 			return PhpResponse.failed("未登录");
@@ -96,7 +94,7 @@ public class FrameController {
 	@PutMapping("/{id}")
 	@Operation(summary = "更新部门")
 	public PhpResponse<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
-									  @RequestBody FrameUpdateDTO dto) {
+			@RequestBody FrameUpdateDTO dto) {
 		frameService.updateDepartment(id, entid, dto);
 		return PhpResponse.ok("修改成功");
 	}
@@ -117,7 +115,7 @@ public class FrameController {
 	@GetMapping("/users/{frameId}")
 	@Operation(summary = "部门负责人/成员")
 	public PhpResponse<List<FrameAdminBriefVO>> frameUsers(@PathVariable int frameId,
-														   @RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "1") int entid) {
 		return PhpResponse.ok(frameService.getFrameUsers(frameId, entid));
 	}
 

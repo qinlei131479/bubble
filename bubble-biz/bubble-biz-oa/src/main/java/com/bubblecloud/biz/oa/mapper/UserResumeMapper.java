@@ -3,15 +3,15 @@ package com.bubblecloud.biz.oa.mapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.bubblecloud.common.mybatis.mapper.UpMapper;
-import com.bubblecloud.oa.api.entity.OaMessage;
+import com.bubblecloud.oa.api.entity.UserResume;
 
 /**
- * eb_message Mapper。
+ * eb_user_resume。
  *
  * @author qinlei
- * @date 2026/3/29 20:35
+ * @date 2026/3/30 18:00
  */
 @Mapper
-public interface OaMessageMapper extends UpMapper<OaMessage> {
+public interface UserResumeMapper extends UpMapper<UserResume> {
 
 }

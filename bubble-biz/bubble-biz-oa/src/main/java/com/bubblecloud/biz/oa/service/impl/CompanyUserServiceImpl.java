@@ -3,6 +3,8 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,7 +13,9 @@ import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
 import com.bubblecloud.biz.oa.service.CompanyUserService;
+import com.bubblecloud.biz.oa.service.FrameAssistWriteService;
 import com.bubblecloud.biz.oa.service.FrameService;
+import com.bubblecloud.oa.api.dto.EnterpriseUserCardUpdateDTO;
 import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.SystemConfig;
@@ -44,6 +48,8 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 
 	private final FrameService frameService;
 
+	private final FrameAssistWriteService frameAssistWriteService;
+
 	@Override
 	public SimplePageVO listCompanyUsers(int entid, String pid, String name, Integer status, int current, int size) {
 		Page<CompanyUserListItemVO> p = new Page<>(current, size);
@@ -69,8 +75,8 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 			max = 0;
 		}
 		int computeMode = 1;
-		SystemConfig cfg = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getMenuName, "assess_compute_mode"));
+		SystemConfig cfg = systemConfigMapper
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, "assess_compute_mode"));
 		if (cfg != null && cfg.getValue() != null && !cfg.getValue().isEmpty() && !"1".equals(cfg.getValue())
 				&& !"true".equalsIgnoreCase(cfg.getValue())) {
 			computeMode = 0;
@@ -119,10 +125,7 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 		if (nodes == null || nodes.isEmpty()) {
 			return List.of();
 		}
-		return nodes.stream()
-				.map(n -> filterNode(n, keyword))
-				.filter(java.util.Objects::nonNull)
-				.toList();
+		return nodes.stream().map(n -> filterNode(n, keyword)).filter(java.util.Objects::nonNull).toList();
 	}
 
 	@Override
@@ -142,6 +145,56 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 		vo.setAvatar(admin.getAvatar());
 		vo.setJob(admin.getJob());
 		return vo;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCompanyUserCard(long targetAdminId, int entid, EnterpriseUserCardUpdateDTO dto) {
+		if (dto.getFrameId() == null || dto.getFrameId().isEmpty()) {
+			throw new IllegalArgumentException("必须选择一个部门");
+		}
+		if (dto.getMastartId() == null || dto.getMastartId() == 0) {
+			throw new IllegalArgumentException("必须选择一个主部门");
+		}
+		if (!dto.getFrameId().contains(dto.getMastartId())) {
+			throw new IllegalArgumentException("主部门必须在所选部门中");
+		}
+		boolean isAdmin = dto.getIsAdmin() != null && dto.getIsAdmin() == 1;
+		if (isAdmin && (dto.getManageFrames() == null || dto.getManageFrames().isEmpty())) {
+			throw new IllegalArgumentException("必须选择一个负责部门");
+		}
+		Admin target = adminMapper.selectById(targetAdminId);
+		if (target == null) {
+			throw new IllegalArgumentException("修改的用户不存在");
+		}
+		if (StringUtils.hasText(dto.getPhone())) {
+			long cnt = adminMapper.selectCount(Wrappers.lambdaQuery(Admin.class)
+				.eq(Admin::getPhone, dto.getPhone())
+				.ne(Admin::getId, targetAdminId)
+				.isNull(Admin::getDeletedAt));
+			if (cnt > 0) {
+				throw new IllegalArgumentException("该手机号已存在");
+			}
+		}
+		if (StringUtils.hasText(dto.getName())) {
+			target.setName(dto.getName());
+		}
+		if (StringUtils.hasText(dto.getPhone())) {
+			target.setPhone(dto.getPhone());
+		}
+		if (StringUtils.hasText(dto.getPosition())) {
+			try {
+				target.setJob(Integer.parseInt(dto.getPosition().trim()));
+			}
+			catch (NumberFormatException e) {
+				// 保持原岗位
+			}
+		}
+		adminMapper.updateById(target);
+
+		long sup = dto.getSuperiorUid() == null ? 0L : dto.getSuperiorUid();
+		frameAssistWriteService.setUserFrames(entid, targetAdminId, dto.getFrameId(), dto.getMastartId(), isAdmin, sup,
+				dto.getManageFrames() == null ? List.of() : dto.getManageFrames());
 	}
 
 	private static FrameDepartmentTreeNodeVO filterNode(FrameDepartmentTreeNodeVO n, String keyword) {

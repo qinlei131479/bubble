@@ -20,21 +20,26 @@ import java.util.regex.Pattern;
  * @date 2020/3/26 下午2:57
  */
 public class HuToolUtil {
+
 	/**
 	 * 默认枚举转换code和name字段
 	 */
 	private static final String ENUM_CODE = "code";
+
 	private static final String ENUM_NAME = "name";
+
 	private static final String BASE_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	/**
 	 * 有效邮件正则表达式
 	 */
 	private static final Pattern PATTERN_EMAIL = Pattern.compile(".+@.+\\..+");
+
 	/**
 	 * 手机号正则表达式
 	 */
 	private static final Pattern PATTERN_MOBILE = Pattern.compile("[0-9]{11}");
+
 	/**
 	 * 路径分隔符
 	 */
@@ -42,7 +47,6 @@ public class HuToolUtil {
 
 	/**
 	 * 判断是否有效邮件
-	 *
 	 * @param email
 	 */
 	public static boolean isValidEmail(String email) {
@@ -52,31 +56,31 @@ public class HuToolUtil {
 		Matcher m = PATTERN_EMAIL.matcher(email);
 		if (m.matches()) {
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
 
 	/**
 	 * 判断是否有效手机号
-	 *
 	 * @param mobile
 	 */
 	public static boolean isValidMobile(String mobile) {
 		Matcher m = PATTERN_MOBILE.matcher(mobile);
 		if (m.matches()) {
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
 
 	/**
 	 * 设置字段值
-	 *
-	 * @param obj       对象
+	 * @param obj 对象
 	 * @param fieldName 字段名
-	 * @param value     值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValueIfExist(Object obj, String fieldName, Object value) throws UtilException {
@@ -84,7 +88,8 @@ public class HuToolUtil {
 			if (Map.class.isInstance(obj)) {
 				// 如果是map
 				((Map) obj).put(fieldName, value);
-			} else if (ReflectUtil.hasField(obj.getClass(), fieldName)) {
+			}
+			else if (ReflectUtil.hasField(obj.getClass(), fieldName)) {
 				ReflectUtil.setFieldValue(obj, fieldName, value);
 			}
 		}
@@ -92,8 +97,7 @@ public class HuToolUtil {
 
 	/**
 	 * 获取字段值
-	 *
-	 * @param obj       对象
+	 * @param obj 对象
 	 * @param fieldName 字段名
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
@@ -106,28 +110,28 @@ public class HuToolUtil {
 
 	/**
 	 * 格式化字符串 ",,,a,b,c，d,，, b e," ==》a,b,c,d,b,e
-	 *
 	 * @param string
 	 * @return
 	 */
 	public static List<String> convertStringSplitByDouToList(String string) {
 		if (StrUtil.isNotBlank(string)) {
 			return Arrays.asList(formatStringSplitByDou(string).split(","));
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	/**
 	 * 格式化字符串 ",,,a,b,c，d,，, b e," ==》a,b,c,d,b,e
-	 *
 	 * @param string
 	 * @return
 	 */
 	public static String formatStringSplitByDou(String string) {
 		if (StrUtil.isBlank(string)) {
 			return string;
-		} else {
+		}
+		else {
 			String regex = "[　\\s,， ]+";
 			return string.trim().replaceAll(regex, ",").replaceAll("^" + regex, "").replaceAll(regex + "$", "");
 		}
@@ -135,7 +139,6 @@ public class HuToolUtil {
 
 	/**
 	 * 组合路径和文件
-	 *
 	 * @param dir
 	 * @param fileName
 	 * @return
@@ -149,7 +152,6 @@ public class HuToolUtil {
 
 	/**
 	 * 组合路径和文件，返回文件格式
-	 *
 	 * @param dirs
 	 * @return
 	 */
@@ -159,21 +161,20 @@ public class HuToolUtil {
 
 	/**
 	 * 组合多个路径部分
-	 *
 	 * @param dirs
 	 * @return
 	 */
 	public static String joinDirs(String... dirs) {
 		if (ArrayUtil.isNotEmpty(dirs)) {
 			return joinDirs(Arrays.asList(dirs));
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	/**
 	 * 组合多个路径部分
-	 *
 	 * @param dirs
 	 * @return
 	 */
@@ -184,21 +185,22 @@ public class HuToolUtil {
 				ret = joinDir(ret, dirs.get(i));
 			}
 			return ret;
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	/**
 	 * 获取文件名扩展名（小写,不带点的）
-	 *
 	 * @param fileName :文件名
 	 * @return
 	 */
 	public static String getFileExtName(String fileName) {
 		if (fileName == null) {
 			return "";
-		} else {
+		}
+		else {
 			int lastIndex = fileName.lastIndexOf(".");
 			return (lastIndex == -1) ? "" : fileName.substring(lastIndex + 1).toLowerCase();
 		}
@@ -206,7 +208,6 @@ public class HuToolUtil {
 
 	/**
 	 * 执行命令
-	 *
 	 * @param command window:{"cmd.exe /c dir"}
 	 * @return
 	 * @throws Exception
@@ -224,17 +225,21 @@ public class HuToolUtil {
 				sb.append(new String(buffer, 0, cnt));
 			}
 			return sb.toString();
-		} catch (Throwable e) {
+		}
+		catch (Throwable e) {
 			e.printStackTrace();
 			return e.getMessage();
-		} finally {
+		}
+		finally {
 			if (is != null) {
 				try {
 					is.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
+
 }

@@ -19,7 +19,7 @@ public final class TreeUtil {
 	}
 
 	/**
-	 * @param idGetter  节点主键
+	 * @param idGetter 节点主键
 	 * @param pidGetter 父主键，根节点为 0 或 null
 	 * @param childrenGetter 子列表（须可修改，一般为 Lombok 生成的 {@code getChildren()}）
 	 */

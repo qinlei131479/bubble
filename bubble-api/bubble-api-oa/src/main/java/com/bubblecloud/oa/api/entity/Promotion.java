@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 晋升表，对应 eb_promotion 表。
+ * 晋升配置，对应 eb_promotion 表。
  *
  * @author qinlei
  * @date 2026/3/29 下午6:00

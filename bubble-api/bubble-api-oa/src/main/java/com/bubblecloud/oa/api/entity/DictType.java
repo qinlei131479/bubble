@@ -25,6 +25,7 @@ public class DictType extends Req<DictType> {
 	private static final long serialVersionUID = 1L;
 
 	@TableId(type = IdType.AUTO)
+	@Schema(description = "主键ID")
 	private Long id;
 
 	@Schema(description = "字典名称")
@@ -48,8 +49,10 @@ public class DictType extends Req<DictType> {
 	@Schema(description = "备注")
 	private String mark;
 
+	@Schema(description = "创建时间")
 	private LocalDateTime createdAt;
 
+	@Schema(description = "更新时间")
 	private LocalDateTime updatedAt;
 
 }

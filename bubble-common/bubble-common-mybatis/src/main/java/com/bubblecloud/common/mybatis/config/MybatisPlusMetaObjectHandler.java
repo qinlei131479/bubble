@@ -25,7 +25,6 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
 	/**
 	 * 插入时自动填充字段
-	 *
 	 * @param metaObject 元对象，用于操作实体类属性
 	 */
 	@Override
@@ -48,7 +47,6 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
 	/**
 	 * 更新时自动填充字段
-	 *
 	 * @param metaObject 元对象
 	 */
 	@Override
@@ -63,11 +61,10 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
 	/**
 	 * 填充值，先判断是否有手动设置，优先手动设置的值，例如：job必须手动设置
-	 *
-	 * @param fieldName  属性名
-	 * @param fieldVal   属性值
+	 * @param fieldName 属性名
+	 * @param fieldVal 属性值
 	 * @param metaObject MetaObject
-	 * @param isCover    是否覆盖原有值,避免更新操作手动入参
+	 * @param isCover 是否覆盖原有值,避免更新操作手动入参
 	 */
 	private static void fillValIfNullByName(String fieldName, Object fieldVal, MetaObject metaObject, boolean isCover) {
 		// 0. 如果填充值为空
@@ -94,7 +91,6 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
 	/**
 	 * 获取 spring security 当前的用户名
-	 *
 	 * @return 当前用户名
 	 */
 	private String getUserName() {

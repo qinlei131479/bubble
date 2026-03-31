@@ -15,9 +15,9 @@ import java.util.List;
  * @date 2020/3/26 下午2:57
  */
 public interface UpService<T> extends IService<T> {
+
 	/**
 	 * 检查字段重复 -- 创建模式
-	 *
 	 * @param req：请求参数
 	 * @param fieldAndNames：字段名称
 	 * @return
@@ -26,7 +26,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复 -- 创建模式
-	 *
 	 * @param req
 	 * @param eqNameList
 	 * @param fieldAndNames
@@ -36,7 +35,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复 -- 修改模式
-	 *
 	 * @param req
 	 * @param fieldAndNames
 	 * @return
@@ -45,7 +43,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复 -- 修改模式
-	 *
 	 * @param req
 	 * @param eqNameList
 	 * @param fieldAndNames
@@ -55,7 +52,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 检查字段重复（包含eq相等字段）
-	 *
 	 * @param req
 	 * @param isCreate
 	 * @param eqList
@@ -66,7 +62,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 分页查询
-	 *
 	 * @param page
 	 * @param req
 	 * @return
@@ -75,7 +70,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 列表查询，不支持排序和条数限制
-	 *
 	 * @param req：查询条件
 	 * @return
 	 */
@@ -83,7 +77,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 列表查询，支持排序和条数限制，不查询总数
-	 *
 	 * @param page：排序和条数限制
 	 * @param req：查询条件
 	 * @return
@@ -92,14 +85,13 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 修改（默认非自定义修改）
-	 *
 	 * @param req
 	 * @return
 	 */
 	R update(T req);
+
 	/**
 	 * 修改
-	 *
 	 * @param req
 	 * @return
 	 */
@@ -107,7 +99,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 修改
-	 *
 	 * @param mapper
 	 * @param req
 	 * @return
@@ -116,7 +107,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 添加
-	 *
 	 * @param req
 	 * @return
 	 */
@@ -124,7 +114,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 添加，返回创建对象
-	 *
 	 * @param mapper
 	 * @param req
 	 * @return
@@ -133,7 +122,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 添加，不返回创建对象，直接写入（不自动生成id）
-	 *
 	 * @param req
 	 * @return
 	 */
@@ -141,7 +129,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 添加，不返回创建对象
-	 *
 	 * @param mapper
 	 * @param req
 	 * @return
@@ -150,7 +137,6 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 删除
-	 *
 	 * @param req：请求参数
 	 * @return
 	 */
@@ -158,9 +144,9 @@ public interface UpService<T> extends IService<T> {
 
 	/**
 	 * 删除
-	 *
 	 * @param id
 	 * @return
 	 */
 	R deleteById(Long id);
+
 }

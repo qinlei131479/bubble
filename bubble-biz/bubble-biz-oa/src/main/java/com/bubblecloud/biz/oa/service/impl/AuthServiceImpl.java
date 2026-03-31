@@ -14,8 +14,11 @@ import com.bubblecloud.biz.oa.security.OaPhpJwtProperties;
 import com.bubblecloud.biz.oa.security.OaPhpJwtTokenService;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.AuthService;
+import com.bubblecloud.biz.oa.service.SmsVerifyService;
 import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.oa.api.dto.LoginDTO;
+import com.bubblecloud.oa.api.dto.PhoneLoginDTO;
+import com.bubblecloud.oa.api.dto.RegisterDTO;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.Enterprise;
 import com.bubblecloud.oa.api.entity.RankJob;
@@ -38,6 +41,7 @@ import org.springframework.util.StringUtils;
  * 兼容 PHP 的登录鉴权服务实现。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Service
 @RequiredArgsConstructor
@@ -65,6 +69,8 @@ public class AuthServiceImpl implements AuthService {
 
 	private final ObjectMapper objectMapper;
 
+	private final SmsVerifyService smsVerifyService;
+
 	@Override
 	public LoginVO login(LoginDTO dto) {
 		Admin admin = adminService.getByAccount(dto.getAccount());
@@ -78,7 +84,49 @@ public class AuthServiceImpl implements AuthService {
 		if (!ENCODER.matches(dto.getPassword(), dbPassword)) {
 			throw new IllegalArgumentException("密码错误");
 		}
+		return buildLoginVo(admin);
+	}
 
+	@Override
+	public LoginVO register(RegisterDTO dto) {
+		if (!dto.getPassword().equals(dto.getPasswordConfirm())) {
+			throw new IllegalArgumentException("两次密码不一致");
+		}
+		if (adminService.countByPhone(dto.getPhone()) > 0) {
+			throw new IllegalArgumentException("该手机号已注册");
+		}
+		if (!smsVerifyService.verifyCode(dto.getPhone(), dto.getVerificationCode())) {
+			throw new IllegalArgumentException("验证码错误或已过期");
+		}
+		Admin admin = adminService.createRegisteredUser(dto.getPhone(), ENCODER.encode(dto.getPassword()));
+		return buildLoginVo(admin);
+	}
+
+	@Override
+	public LoginVO phoneLogin(PhoneLoginDTO dto) {
+		if (!smsVerifyService.verifyCode(dto.getPhone(), dto.getVerificationCode())) {
+			throw new IllegalArgumentException("验证码错误或已过期");
+		}
+		Admin admin = adminService.ensureUserForPhoneLogin(dto.getPhone());
+		if (admin.getStatus() != null && admin.getStatus() == 0) {
+			throw new IllegalArgumentException("账号已被锁定");
+		}
+		return buildLoginVo(admin);
+	}
+
+	@Override
+	public LoginVO loginByPhone(String phone) {
+		Admin admin = adminService.getByAccount(phone);
+		if (admin == null) {
+			throw new IllegalArgumentException("账号不存在");
+		}
+		if (admin.getStatus() != null && admin.getStatus() == 0) {
+			throw new IllegalArgumentException("账号已被锁定");
+		}
+		return buildLoginVo(admin);
+	}
+
+	private LoginVO buildLoginVo(Admin admin) {
 		LoginVO vo = new LoginVO();
 		vo.setId(admin.getId());
 		vo.setAccount(admin.getAccount());
@@ -153,7 +201,8 @@ public class AuthServiceImpl implements AuthService {
 		try {
 			return objectMapper.readValue(raw, new TypeReference<List<Object>>() {
 			});
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
@@ -220,15 +269,15 @@ public class AuthServiceImpl implements AuthService {
 		String v = configValue(key, String.valueOf(def));
 		try {
 			return Integer.parseInt(v.trim());
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return def;
 		}
 	}
 
 	private String configValue(String key, String defaultVal) {
-		SystemConfig c = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getMenuName, key)
-				.last("LIMIT 1"));
+		SystemConfig c = systemConfigMapper
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
 		if (c == null || c.getValue() == null) {
 			return defaultVal;
 		}

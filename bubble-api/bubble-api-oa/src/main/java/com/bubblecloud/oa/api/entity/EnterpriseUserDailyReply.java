@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 汇报回复，对应 eb_enterprise_user_daily_reply。
+ * 工作汇报回复，对应 eb_enterprise_user_daily_reply 表。
  *
  * @author qinlei
  * @date 2026/3/29 20:30
@@ -26,21 +26,29 @@ public class EnterpriseUserDailyReply extends Req<EnterpriseUserDailyReply> {
 	private static final long serialVersionUID = 1L;
 
 	@TableId(type = IdType.AUTO)
+	@Schema(description = "主键ID")
 	private Long id;
 
+	@Schema(description = "父回复ID")
 	private Long pid;
 
+	@Schema(description = "汇报主记录ID")
 	@TableField("daily_id")
 	private Long dailyId;
 
+	@Schema(description = "回复人 UID")
 	private String uid;
 
+	@Schema(description = "回复内容")
 	private String content;
 
+	@Schema(description = "创建时间")
 	private LocalDateTime createdAt;
 
+	@Schema(description = "更新时间")
 	private LocalDateTime updatedAt;
 
+	@Schema(description = "删除时间")
 	@TableField("deleted_at")
 	private LocalDateTime deletedAt;
 

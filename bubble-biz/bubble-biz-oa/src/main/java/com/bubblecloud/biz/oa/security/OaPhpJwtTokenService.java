@@ -19,6 +19,9 @@ import org.springframework.util.StringUtils;
 
 /**
  * 兼容 PHP 的 HS256 JWT 令牌服务。
+ *
+ * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Component
 @RequiredArgsConstructor

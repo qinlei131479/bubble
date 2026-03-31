@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * PHP JWT 鉴权过滤器。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Component
 public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {
@@ -39,8 +40,8 @@ public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {
 				Long userId = Long.valueOf(String.valueOf(claims.get("sub")));
 				String account = claims.get("account") == null ? null : String.valueOf(claims.get("account"));
 				OaCurrentUser principal = new OaCurrentUser(userId, account);
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, null,
-						Collections.emptyList());
+				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal,
+						null, Collections.emptyList());
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 		}

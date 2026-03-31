@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 网盘（占位，待按 eb_enterprise_file 等表实现）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @RestController
 @RequestMapping("/ent/cloud")
@@ -22,7 +23,7 @@ public class CloudController {
 	@GetMapping("/space/page")
 	@Operation(summary = "网盘空间分页")
 	public PhpResponse<SimplePageVO> spacePage(@RequestParam(defaultValue = "1") Integer current,
-											   @RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return PhpResponse.ok(SimplePageVO.empty(current, size));
 	}
 

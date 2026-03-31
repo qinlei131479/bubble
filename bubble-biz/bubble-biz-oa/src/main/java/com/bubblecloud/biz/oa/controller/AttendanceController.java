@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Phase 5：考勤（占位）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,8 @@ public class AttendanceController {
 	}
 
 	/**
-	 * 与 PHP {@code ent/attendance/abnormal_date} 一致：可补卡异常日期下拉 {@code [{value,label},...]}。
+	 * 与 PHP {@code ent/attendance/abnormal_date} 一致：可补卡异常日期下拉
+	 * {@code [{value,label},...]}。
 	 */
 	@GetMapping("/abnormal_date")
 	@Operation(summary = "考勤异常日期列表")

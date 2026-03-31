@@ -23,7 +23,6 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	/**
 	 * 检查属性重复 -- 创建模式
-	 *
 	 * @param req
 	 * @param fieldAndNames：字段名称对，使用冒号分割
 	 * @return
@@ -35,7 +34,6 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	/**
 	 * 检查属性重复 -- 创建模式
-	 *
 	 * @param req：请求参数
 	 * @param fieldAndNames：字段名称对，使用冒号分割
 	 * @return
@@ -47,7 +45,6 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	/**
 	 * 检查属性重复 -- 修改模式
-	 *
 	 * @param req：请求参数
 	 * @param fieldAndNames：字段名称对，使用冒号分割
 	 * @return
@@ -59,7 +56,6 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	/**
 	 * 检查属性重复 -- 修改模式
-	 *
 	 * @param req：请求参数
 	 * @param fieldAndNames：字段名称对，使用冒号分割
 	 * @return
@@ -71,7 +67,6 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	/**
 	 * 检查字段重复（包含eq相等字段）
-	 *
 	 * @param req
 	 * @param eqNameList：使用冒号分割
 	 * @param fieldAndNames：字段名称对，使用冒号分割
@@ -99,7 +94,7 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 				}
 				long repeatCount = this.baseMapper.selectCount(queryWrapper);
 				if (repeatCount > 0) {
-//					throw R.failed(name).;
+					// throw R.failed(name).;
 				}
 			}
 		}
@@ -136,7 +131,8 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 	public R update(T req, boolean isCustom) {
 		if (isCustom) {
 			baseMapper.updateCustom(req);
-		} else {
+		}
+		else {
 			baseMapper.updateById(req);
 		}
 		return R.ok();
@@ -161,7 +157,6 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 
 	/**
 	 * 直接写入（不自动生成id）
-	 *
 	 * @param req
 	 */
 	@Override
@@ -185,4 +180,5 @@ public class UpServiceImpl<M extends UpMapper<T>, T extends Req> extends Service
 		baseMapper.deleteById(id);
 		return R.ok();
 	}
+
 }

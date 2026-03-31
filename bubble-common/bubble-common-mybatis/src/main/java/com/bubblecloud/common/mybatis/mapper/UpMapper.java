@@ -16,9 +16,9 @@ import java.util.List;
  */
 @Mapper
 public interface UpMapper<T extends Req> extends BaseMapper<T> {
+
 	/**
 	 * 分页查询
-	 * 
 	 * @param page：分页参数
 	 * @param req：请求参数
 	 * @return 返回分页数据
@@ -27,7 +27,6 @@ public interface UpMapper<T extends Req> extends BaseMapper<T> {
 
 	/**
 	 * 更新(使用自定义sql，id命名为updateCustom，避免与mysqlplus的命名冲突）
-	 *
 	 * @param req
 	 * @return
 	 */
@@ -35,7 +34,6 @@ public interface UpMapper<T extends Req> extends BaseMapper<T> {
 
 	/**
 	 * 更新逻辑删除的删除时间
-	 *
 	 * @param req
 	 * @return
 	 */
@@ -43,7 +41,6 @@ public interface UpMapper<T extends Req> extends BaseMapper<T> {
 
 	/**
 	 * 插入或更新
-	 *
 	 * @param req
 	 * @return
 	 */
@@ -51,7 +48,6 @@ public interface UpMapper<T extends Req> extends BaseMapper<T> {
 
 	/**
 	 * 查询列表，不支持排序和条数限制
-	 *
 	 * @param req：查询条件
 	 * @return
 	 */
@@ -59,10 +55,10 @@ public interface UpMapper<T extends Req> extends BaseMapper<T> {
 
 	/**
 	 * 列表查询，支持排序和条数限制，不查询总数
-	 *
 	 * @param page：排序和条数限制
 	 * @param req：查询条件
 	 * @return
 	 */
 	List<T> findList(Page page, @Param("query") T req);
+
 }

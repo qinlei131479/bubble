@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
  * eb_assess_score 聚合查询（SQL 见 classpath:/mapper/AssessScoreMapper.xml）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Mapper
 public interface AssessScoreMapper {

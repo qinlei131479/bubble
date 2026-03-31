@@ -38,8 +38,8 @@ public class EmployeeTrainServiceImpl implements EmployeeTrainService {
 	@Override
 	public EmployeeTrain getInfo(String type) {
 		validateType(type);
-		EmployeeTrain row = employeeTrainMapper.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class)
-				.eq(EmployeeTrain::getType, type));
+		EmployeeTrain row = employeeTrainMapper
+			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
 		if (row == null) {
 			row = new EmployeeTrain();
 			row.setType(type);
@@ -53,8 +53,8 @@ public class EmployeeTrainServiceImpl implements EmployeeTrainService {
 	public void updateTrain(String type, EmployeeTrainUpdateDTO dto) {
 		validateType(type);
 		String content = dto.getContent() == null ? "" : dto.getContent();
-		EmployeeTrain existing = employeeTrainMapper.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class)
-				.eq(EmployeeTrain::getType, type));
+		EmployeeTrain existing = employeeTrainMapper
+			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
 		if (existing == null) {
 			EmployeeTrain e = new EmployeeTrain();
 			e.setType(type);

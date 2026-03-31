@@ -11,7 +11,6 @@ public interface SecurityConstants {
 	 */
 	String ROLE = "ROLE_";
 
-
 	/**
 	 * 项目的license
 	 */

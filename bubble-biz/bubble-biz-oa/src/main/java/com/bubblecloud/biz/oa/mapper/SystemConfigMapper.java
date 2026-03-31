@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * eb_system_config 表 Mapper。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Mapper
 public interface SystemConfigMapper extends UpMapper<SystemConfig> {

@@ -8,6 +8,8 @@ import lombok.Data;
  * 兼容 PHP 前端的响应结构。
  *
  * @param <T> 数据类型
+ * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 public class PhpResponse<T> implements Serializable {

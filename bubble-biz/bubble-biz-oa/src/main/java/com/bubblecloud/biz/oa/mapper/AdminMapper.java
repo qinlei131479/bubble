@@ -12,6 +12,7 @@ import com.bubblecloud.oa.api.vo.company.CompanyUserListItemVO;
  * eb_admin 表 Mapper。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Mapper
 public interface AdminMapper extends UpMapper<Admin> {

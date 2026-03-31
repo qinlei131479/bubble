@@ -38,8 +38,7 @@ public class PromotionController {
 	@GetMapping
 	@Operation(summary = "晋升表列表")
 	public PhpResponse<SimplePageVO> index(@RequestParam(required = false) Integer status,
-			@RequestParam(defaultValue = "1") long current,
-			@RequestParam(defaultValue = "20") long size) {
+			@RequestParam(defaultValue = "1") long current, @RequestParam(defaultValue = "20") long size) {
 		Page<Promotion> page = new Page<>(current, size);
 		var q = Wrappers.lambdaQuery(Promotion.class).isNull(Promotion::getDeletedAt);
 		if (status != null) {

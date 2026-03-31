@@ -46,12 +46,12 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public List<FrameDepartmentTreeNodeVO> departmentTreeList(int isShow, int entid) {
 		List<Frame> rows = frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getIsShow, isShow)
-				.isNull(Frame::getDeletedAt)
-				.orderByDesc(Frame::getLevel)
-				.orderByDesc(Frame::getSort)
-				.orderByAsc(Frame::getId));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getIsShow, isShow)
+			.isNull(Frame::getDeletedAt)
+			.orderByDesc(Frame::getLevel)
+			.orderByDesc(Frame::getSort)
+			.orderByAsc(Frame::getId));
 		List<FrameDepartmentTreeNodeVO> flat = new ArrayList<>(rows.size());
 		for (Frame f : rows) {
 			FrameDepartmentTreeNodeVO n = new FrameDepartmentTreeNodeVO();
@@ -71,10 +71,10 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public List<FrameAuthTreeNodeVO> getTree(Long userId, int entid, boolean withRole, boolean isScope) {
 		List<Frame> rows = frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getIsShow, 1)
-				.isNull(Frame::getDeletedAt)
-				.orderByAsc(Frame::getId));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.orderByAsc(Frame::getId));
 		List<FrameAuthTreeNodeVO> flat = new ArrayList<>();
 		for (Frame f : rows) {
 			flat.add(toAuthNode(f, withRole));
@@ -93,15 +93,15 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public List<FrameUserTreeNodeVO> getUserTree(Long userId, int entid, boolean withRole, boolean leave) {
 		List<Frame> frames = frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getIsShow, 1)
-				.isNull(Frame::getDeletedAt)
-				.orderByDesc(Frame::getSort)
-				.orderByAsc(Frame::getId));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.orderByDesc(Frame::getSort)
+			.orderByAsc(Frame::getId));
 		List<FrameAssistUserRowVO> userRows = frameAssistMapper.selectUsersByEnt(entid);
 		Map<Long, List<FrameAssistUserRowVO>> usersByFrame = userRows.stream()
-				.filter(r -> r.getFrameId() != null)
-				.collect(Collectors.groupingBy(FrameAssistUserRowVO::getFrameId));
+			.filter(r -> r.getFrameId() != null)
+			.collect(Collectors.groupingBy(FrameAssistUserRowVO::getFrameId));
 		List<FrameUserTreeNodeVO> flat = new ArrayList<>();
 		for (Frame f : frames) {
 			List<FrameAssistUserRowVO> users = usersByFrame.getOrDefault(f.getId(), List.of());
@@ -163,9 +163,9 @@ public class FrameServiceImpl implements FrameService {
 		}
 		int entid = dto.getEntid() == null ? 1 : dto.getEntid();
 		Frame parent = frameMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getId, (long) pid)
-				.eq(Frame::getEntid, (long) entid)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getId, (long) pid)
+			.eq(Frame::getEntid, (long) entid)
+			.isNull(Frame::getDeletedAt));
 		if (parent == null) {
 			throw new IllegalArgumentException("上级部门不存在");
 		}
@@ -174,10 +174,10 @@ public class FrameServiceImpl implements FrameService {
 			throw new IllegalArgumentException("请填写部门名称");
 		}
 		long dup = frameMapper.selectCount(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getPid, pid)
-				.eq(Frame::getName, name)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getPid, pid)
+			.eq(Frame::getName, name)
+			.isNull(Frame::getDeletedAt));
 		if (dup > 0) {
 			throw new IllegalArgumentException("已存在相同部门，请勿重复创建");
 		}
@@ -205,9 +205,9 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public void updateDepartment(long id, int entid, FrameUpdateDTO dto) {
 		Frame existing = frameMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getId, id)
-				.eq(Frame::getEntid, (long) entid)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getId, id)
+			.eq(Frame::getEntid, (long) entid)
+			.isNull(Frame::getDeletedAt));
 		if (existing == null) {
 			throw new IllegalArgumentException("未找到相关部门信息");
 		}
@@ -226,18 +226,18 @@ public class FrameServiceImpl implements FrameService {
 		}
 		String name = dto.getName() == null ? existing.getName() : dto.getName().trim();
 		long dup = frameMapper.selectCount(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getPid, pid)
-				.eq(Frame::getName, name)
-				.ne(Frame::getId, id)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getPid, pid)
+			.eq(Frame::getName, name)
+			.ne(Frame::getId, id)
+			.isNull(Frame::getDeletedAt));
 		if (dup > 0) {
 			throw new IllegalArgumentException("已存在相同部门，请勿重复创建");
 		}
 		Frame parent = frameMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getId, (long) pid)
-				.eq(Frame::getEntid, (long) entid)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getId, (long) pid)
+			.eq(Frame::getEntid, (long) entid)
+			.isNull(Frame::getDeletedAt));
 		if (parent == null) {
 			throw new IllegalArgumentException("上级部门不存在");
 		}
@@ -256,9 +256,9 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public FrameDetailVO departmentInfo(long id, int entid) {
 		Frame f = frameMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getId, id)
-				.eq(Frame::getEntid, (long) entid)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getId, id)
+			.eq(Frame::getEntid, (long) entid)
+			.isNull(Frame::getDeletedAt));
 		if (f == null) {
 			throw new IllegalArgumentException("未找到相关部门信息");
 		}
@@ -268,9 +268,9 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public void deleteDepartment(long id, int entid) {
 		Frame f = frameMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getId, id)
-				.eq(Frame::getEntid, (long) entid)
-				.isNull(Frame::getDeletedAt));
+			.eq(Frame::getId, id)
+			.eq(Frame::getEntid, (long) entid)
+			.isNull(Frame::getDeletedAt));
 		if (f == null) {
 			throw new IllegalArgumentException("未找到相关部门信息");
 		}
@@ -288,10 +288,10 @@ public class FrameServiceImpl implements FrameService {
 	@Override
 	public List<FrameScopeItemVO> scopeFrames(Long userId, int entid) {
 		List<Frame> rows = frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getIsShow, 1)
-				.isNull(Frame::getDeletedAt)
-				.select(Frame::getId, Frame::getName));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.select(Frame::getId, Frame::getName));
 		List<FrameScopeItemVO> list = new ArrayList<>();
 		for (Frame f : rows) {
 			list.add(new FrameScopeItemVO(f.getId(), f.getName()));
@@ -301,11 +301,11 @@ public class FrameServiceImpl implements FrameService {
 
 	private List<FrameSelectTreeNodeVO> treeForSelect(int entid, long excludeId) {
 		List<Frame> list = frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.eq(Frame::getIsShow, 1)
-				.isNull(Frame::getDeletedAt)
-				.orderByDesc(Frame::getSort)
-				.orderByAsc(Frame::getId));
+			.eq(Frame::getEntid, (long) entid)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.orderByDesc(Frame::getSort)
+			.orderByAsc(Frame::getId));
 		List<Long> disabledIds = new ArrayList<>();
 		if (excludeId > 0) {
 			disabledIds.add(excludeId);
@@ -327,16 +327,19 @@ public class FrameServiceImpl implements FrameService {
 	}
 
 	private List<Long> descendantIds(long id, int entid) {
-		return frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
+		return frameMapper
+			.selectList(Wrappers.lambdaQuery(Frame.class)
 				.eq(Frame::getEntid, (long) entid)
 				.isNull(Frame::getDeletedAt)
-				.like(Frame::getPath, "/" + id + "/")).stream().map(Frame::getId).toList();
+				.like(Frame::getPath, "/" + id + "/"))
+			.stream()
+			.map(Frame::getId)
+			.toList();
 	}
 
 	private void arrangePaths(int entid) {
-		List<Frame> all = frameMapper.selectList(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entid)
-				.isNull(Frame::getDeletedAt));
+		List<Frame> all = frameMapper.selectList(
+				Wrappers.lambdaQuery(Frame.class).eq(Frame::getEntid, (long) entid).isNull(Frame::getDeletedAt));
 		Map<Long, Frame> byId = all.stream().collect(Collectors.toMap(Frame::getId, x -> x, (a, b) -> a));
 		for (Frame f : all) {
 			String path = computePathString(f, byId);

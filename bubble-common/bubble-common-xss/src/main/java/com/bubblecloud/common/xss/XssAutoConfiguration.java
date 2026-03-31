@@ -61,8 +61,7 @@ public class XssAutoConfiguration implements WebMvcConfigurer {
 	 * @return 自定义的Jackson2ObjectMapperBuilder
 	 */
 	@Bean
-	public Jackson2ObjectMapperBuilderCustomizer xssJacksonCustomizer(XssProperties properties,
-																	  XssCleaner xssCleaner) {
+	public Jackson2ObjectMapperBuilderCustomizer xssJacksonCustomizer(XssProperties properties, XssCleaner xssCleaner) {
 		return builder -> builder.deserializerByType(String.class, new JacksonXssClean(properties, xssCleaner));
 	}
 

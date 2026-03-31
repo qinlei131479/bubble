@@ -44,27 +44,24 @@ public class CompanyServiceImpl implements CompanyService {
 			throw new IllegalArgumentException("企业ID不能为空");
 		}
 		Enterprise ent = enterpriseMapper.selectOne(Wrappers.lambdaQuery(Enterprise.class)
-				.eq(Enterprise::getId, (long) entId)
-				.eq(Enterprise::getStatus, 1)
-				.isNull(Enterprise::getDeleteTime));
+			.eq(Enterprise::getId, (long) entId)
+			.eq(Enterprise::getStatus, 1)
+			.isNull(Enterprise::getDeleteTime));
 		if (ent == null) {
 			throw new IllegalArgumentException("企业不存在");
 		}
 		CompanyOwnerUserVO owner = null;
 		if (StringUtils.hasText(ent.getUid())) {
-			Admin admin = adminMapper.selectOne(Wrappers.lambdaQuery(Admin.class)
-					.eq(Admin::getUid, ent.getUid())
-					.isNull(Admin::getDeletedAt));
+			Admin admin = adminMapper.selectOne(
+					Wrappers.lambdaQuery(Admin.class).eq(Admin::getUid, ent.getUid()).isNull(Admin::getDeletedAt));
 			if (admin != null) {
 				owner = new CompanyOwnerUserVO(admin.getUid(), admin.getName());
 			}
 		}
-		long frameCount = frameMapper.selectCount(Wrappers.lambdaQuery(Frame.class)
-				.eq(Frame::getEntid, (long) entId)
-				.isNull(Frame::getDeletedAt));
-		long enterpriseCount = adminMapper.selectCount(Wrappers.lambdaQuery(Admin.class)
-				.eq(Admin::getStatus, 1)
-				.isNull(Admin::getDeletedAt));
+		long frameCount = frameMapper.selectCount(
+				Wrappers.lambdaQuery(Frame.class).eq(Frame::getEntid, (long) entId).isNull(Frame::getDeletedAt));
+		long enterpriseCount = adminMapper
+			.selectCount(Wrappers.lambdaQuery(Admin.class).eq(Admin::getStatus, 1).isNull(Admin::getDeletedAt));
 		CompanyEntInfoVO vo = new CompanyEntInfoVO();
 		vo.setId(ent.getId());
 		vo.setLogo(ent.getLogo());
@@ -135,11 +132,12 @@ public class CompanyServiceImpl implements CompanyService {
 		}
 		int rows = enterpriseMapper.update(null, uw);
 		if (rows > 0 && nameChanged) {
-			frameMapper.update(null, Wrappers.lambdaUpdate(Frame.class)
-					.eq(Frame::getEntid, (long) entId)
-					.eq(Frame::getPid, 0)
-					.isNull(Frame::getDeletedAt)
-					.set(Frame::getName, dto.getEnterpriseName()));
+			frameMapper.update(null,
+					Wrappers.lambdaUpdate(Frame.class)
+						.eq(Frame::getEntid, (long) entId)
+						.eq(Frame::getPid, 0)
+						.isNull(Frame::getDeletedAt)
+						.set(Frame::getName, dto.getEnterpriseName()));
 		}
 		return rows > 0;
 	}

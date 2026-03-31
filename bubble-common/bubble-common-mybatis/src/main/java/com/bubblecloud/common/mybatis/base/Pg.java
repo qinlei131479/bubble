@@ -26,7 +26,6 @@ public class Pg<T> extends Page<T> {
 
 	/**
 	 * 当排序为空的时候，增加默认排序
-	 *
 	 * @param item
 	 */
 	public void addOrderDefault(OrderItem... item) {
@@ -34,4 +33,5 @@ public class Pg<T> extends Page<T> {
 			this.addOrder(item);
 		}
 	}
+
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 绩效（占位，待按 eb_assess_scheme 等表实现）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @RestController
 @RequestMapping("/ent/assess")

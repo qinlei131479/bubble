@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  * OA 模块 JWT 安全链路。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Configuration
 @EnableConfigurationProperties(OaPhpJwtProperties.class)
@@ -21,21 +22,16 @@ public class OaPhpJwtSecurityConfig {
 	@Bean
 	@Order(0)
 	public SecurityFilterChain oaPhpJwtSecurityFilterChain(HttpSecurity http,
-														   OaPhpJwtAuthenticationFilter phpJwtAuthenticationFilter) throws Exception {
+			OaPhpJwtAuthenticationFilter phpJwtAuthenticationFilter) throws Exception {
 		http.securityMatcher("/ent/**", "/oa/**")
-				.csrf(AbstractHttpConfigurer::disable)
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers(
-								"/ent/user/login",
-								"/ent/user/register",
-								"/ent/user/phone_login",
-								"/ent/user/scan_key",
-								"/ent/user/scan_status",
-								"/ent/common/captcha",
-								"/ent/common/site")
-						.permitAll()
-						.anyRequest()
-						.authenticated())
-				.addFilterBefore(phpJwtAuthenticationFilter, BasicAuthenticationFilter.class);
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/ent/user/login", "/ent/user/register", "/ent/user/phone_login", "/ent/user/scan_key",
+						"/ent/user/scan_status", "/ent/common/captcha", "/ent/common/site")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
+			.addFilterBefore(phpJwtAuthenticationFilter, BasicAuthenticationFilter.class);
 		return http.build();
 	}
 

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
  * 简易分页（兼容 PHP 列表分页占位与 MyBatis-Page）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @NoArgsConstructor

@@ -111,5 +111,4 @@ public class CustomResourceServerConfiguration {
 		return source;
 	}
 
-
 }

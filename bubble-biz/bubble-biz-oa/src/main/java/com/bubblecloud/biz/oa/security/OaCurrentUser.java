@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * OA 当前用户凭证。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @NoArgsConstructor

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Phase 6：审批（占位）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,8 @@ public class ApproveController {
 	}
 
 	/**
-	 * 与 PHP {@code ent/approve/holiday_type/select} 一致：{@code [{value,label,duration_type},...]}。
+	 * 与 PHP {@code ent/approve/holiday_type/select}
+	 * 一致：{@code [{value,label,duration_type},...]}。
 	 */
 	@GetMapping("/holiday_type/select")
 	@Operation(summary = "假期类型下拉")

@@ -8,6 +8,7 @@ import lombok.Data;
  * 用户菜单查询参数。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @Schema(description = "用户菜单查询")

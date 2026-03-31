@@ -36,10 +36,8 @@ public class CompanySalaryController {
 	@GetMapping
 	@Operation(summary = "调薪记录列表")
 	public PhpResponse<SimplePageVO> index(@RequestParam(defaultValue = "1") int entid,
-			@RequestParam(required = false) Integer cardId,
-			@RequestParam(required = false) Integer linkId,
-			@RequestParam(required = false) Long id,
-			@RequestParam(defaultValue = "1") long current,
+			@RequestParam(required = false) Integer cardId, @RequestParam(required = false) Integer linkId,
+			@RequestParam(required = false) Long id, @RequestParam(defaultValue = "1") long current,
 			@RequestParam(defaultValue = "20") long size) {
 		Page<EnterpriseUserSalary> page = new Page<>(current, size);
 		Page<EnterpriseUserSalary> r = companySalaryService.pageSalary(entid, cardId, linkId, id, page);

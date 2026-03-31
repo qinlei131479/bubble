@@ -13,6 +13,9 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 企业信息，对应 eb_enterprise 表。
+ *
+ * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

@@ -49,7 +49,7 @@ public class CustomSentinelInvocationHandler implements InvocationHandler {
 	private Map<Method, Method> fallbackMethodMap;
 
 	CustomSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch,
-									FallbackFactory<?> fallbackFactory) {
+			FallbackFactory<?> fallbackFactory) {
 		this.target = checkNotNull(target, "target");
 		this.dispatch = checkNotNull(dispatch, "dispatch");
 		this.fallbackFactory = fallbackFactory;

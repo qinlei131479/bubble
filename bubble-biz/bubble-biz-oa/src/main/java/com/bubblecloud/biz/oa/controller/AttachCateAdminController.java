@@ -1,0 +1,33 @@
+package com.bubblecloud.biz.oa.controller;
+
+import com.bubblecloud.biz.oa.service.AttachCateAdminService;
+import com.bubblecloud.biz.oa.support.PhpResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 附件分类（对齐 PHP {@code ent/system/attach_cate}，eb_category.type=systemAttach）。
+ *
+ * @author qinlei
+ * @date 2026/3/30
+ */
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/ent/system/attach_cate")
+@Tag(name = "附件分类")
+public class AttachCateAdminController {
+
+	private final AttachCateAdminService attachCateAdminService;
+
+	@GetMapping
+	@Operation(summary = "附件分类列表")
+	public PhpResponse<?> index(@RequestParam(defaultValue = "0") int entid) {
+		return PhpResponse.ok(attachCateAdminService.listByEntid(entid));
+	}
+
+}

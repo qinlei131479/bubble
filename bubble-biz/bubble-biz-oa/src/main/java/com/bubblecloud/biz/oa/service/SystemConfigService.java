@@ -9,12 +9,12 @@ import com.bubblecloud.oa.api.vo.ConfigVO;
  * eb_system_config 系统配置服务。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 public interface SystemConfigService extends UpService<SystemConfig> {
 
 	/**
 	 * 按类型读取配置为键值 VO。
-	 *
 	 * @param dto 查询条件
 	 * @return 配置 VO
 	 */

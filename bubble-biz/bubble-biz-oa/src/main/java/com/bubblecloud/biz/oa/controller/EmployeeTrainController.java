@@ -41,7 +41,8 @@ public class EmployeeTrainController {
 
 	@PutMapping("/{type}")
 	@Operation(summary = "更新培训内容")
-	public PhpResponse<String> update(@PathVariable String type, @RequestBody(required = false) EmployeeTrainUpdateDTO dto) {
+	public PhpResponse<String> update(@PathVariable String type,
+			@RequestBody(required = false) EmployeeTrainUpdateDTO dto) {
 		if (dto == null) {
 			dto = new EmployeeTrainUpdateDTO();
 		}

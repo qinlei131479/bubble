@@ -31,7 +31,8 @@ import java.util.Map;
  * @see BeanClassLoaderAware
  * @see EnvironmentAware
  */
-public class CustomFeignClientsRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLoaderAware, EnvironmentAware {
+public class CustomFeignClientsRegistrar
+		implements ImportBeanDefinitionRegistrar, BeanClassLoaderAware, EnvironmentAware {
 
 	private final static String BASE_URL = "http://127.0.0.1:${server.port}${server.servlet.context-path}";
 

@@ -17,8 +17,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 系统菜单，对应 eb_system_menus 表。
- * JSON 序列化使用蛇形命名以兼容 PHP 前端。
+ * 系统菜单，对应 eb_system_menus 表（JSON 蛇形命名以兼容 PHP 前端）。
+ *
+ * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

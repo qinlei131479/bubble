@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * eb_rank_job 表 Mapper。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Mapper
 public interface RankJobMapper extends UpMapper<RankJob> {

@@ -4,6 +4,9 @@ import lombok.Data;
 
 /**
  * 用户部门关联查询行（对应 PHP FrameAssistService::getUserFrames）。
+ *
+ * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 public class FrameAssistView {

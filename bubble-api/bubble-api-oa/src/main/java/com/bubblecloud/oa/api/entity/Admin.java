@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 员工账号，对应 eb_admin 表。
+ *
+ * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

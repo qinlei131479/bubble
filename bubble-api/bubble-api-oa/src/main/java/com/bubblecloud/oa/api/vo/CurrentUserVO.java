@@ -7,6 +7,7 @@ import lombok.Data;
  * 当前登录用户信息。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Data
 @Schema(description = "当前登录用户")

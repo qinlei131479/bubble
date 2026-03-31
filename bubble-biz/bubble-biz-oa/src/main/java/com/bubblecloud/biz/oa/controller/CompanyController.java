@@ -47,7 +47,8 @@ public class CompanyController {
 
 	@PutMapping("/info")
 	@Operation(summary = "修改当前企业详情")
-	public PhpResponse<String> updateEnt(@RequestParam(defaultValue = "1") int entid, @RequestBody CompanyUpdateDTO dto) {
+	public PhpResponse<String> updateEnt(@RequestParam(defaultValue = "1") int entid,
+			@RequestBody CompanyUpdateDTO dto) {
 		if (companyService.updateEnt(entid, dto)) {
 			return PhpResponse.ok("common.update.succ");
 		}

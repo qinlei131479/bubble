@@ -99,10 +99,10 @@ public class CompanySalaryServiceImpl implements CompanySalaryService {
 	@Override
 	public List<EnterpriseUserSalary> lastByCardId(int cardId) {
 		return enterpriseUserSalaryMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
-				.eq(EnterpriseUserSalary::getCardId, cardId)
-				.orderByDesc(EnterpriseUserSalary::getTakeDate)
-				.orderByDesc(EnterpriseUserSalary::getId)
-				.last("LIMIT 1"));
+			.eq(EnterpriseUserSalary::getCardId, cardId)
+			.orderByDesc(EnterpriseUserSalary::getTakeDate)
+			.orderByDesc(EnterpriseUserSalary::getId)
+			.last("LIMIT 1"));
 	}
 
 }

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * 系统配置键值对（序列化为扁平 JSON，兼容 PHP 前端）。
  *
  * @author qinlei
+ * @date 2026/3/30 18:00
  */
 @Schema(description = "系统配置键值")
 public class ConfigVO {

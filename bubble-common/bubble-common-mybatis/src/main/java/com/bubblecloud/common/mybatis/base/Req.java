@@ -17,17 +17,21 @@ public class Req<T> extends Model<Req<T>> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@GroupSequence({Create.class, Update.class})
+	@GroupSequence({ Create.class, Update.class })
 	public interface CreateUpdate {
+
 	}
 
 	public interface Create {
+
 	}
 
 	public interface Update {
+
 	}
 
 	public interface Delete {
+
 	}
 
 }
