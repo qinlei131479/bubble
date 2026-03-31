@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.RolesAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,95 +39,95 @@ public class RolesAdminController {
 
 	@GetMapping
 	@Operation(summary = "角色列表")
-	public PhpResponse<List<EnterpriseRole>> index(@RequestParam(required = false) String role_name,
+	public R<List<EnterpriseRole>> list(@RequestParam(required = false) String role_name,
 			@RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(rolesAdminService.listRoles(role_name, entid));
+		return R.phpOk(rolesAdminService.listRoles(role_name, entid));
 	}
 
 	@PostMapping
 	@Operation(summary = "保存角色")
-	public PhpResponse<String> store(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> create(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
 		try {
 			rolesAdminService.saveRole(entid, body);
-			return PhpResponse.ok("common.insert.succ");
+			return R.phpOk("common.insert.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改角色")
-	public PhpResponse<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
 			@RequestBody JsonNode body) {
 		try {
 			rolesAdminService.updateRole(id, entid, body);
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/{id}/status")
 	@Operation(summary = "启用/禁用角色")
-	public PhpResponse<String> show(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> show(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
 			@RequestParam int status) {
 		try {
 			rolesAdminService.changeRoleStatus(entid, id, status);
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除角色")
-	public PhpResponse<String> delete(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<String> removeById(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
 		try {
 			rolesAdminService.deleteRole(id, entid);
-			return PhpResponse.ok("删除成功");
+			return R.phpOk("删除成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@GetMapping("/user/{id}")
 	@Operation(summary = "角色成员")
-	public PhpResponse<?> getRoleUser(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<?> getRoleUser(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
 		try {
-			return PhpResponse.ok(rolesAdminService.getRoleUsers(id, entid));
+			return R.phpOk(rolesAdminService.getRoleUsers(id, entid));
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@GetMapping("/role/{uid}")
 	@Operation(summary = "用户角色与菜单树")
-	public PhpResponse<JsonNode> getUserRole(@PathVariable long uid, @RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(rolesAdminService.getUserRoleData(entid, uid));
+	public R<JsonNode> getUserRole(@PathVariable long uid, @RequestParam(defaultValue = "1") int entid) {
+		return R.phpOk(rolesAdminService.getUserRoleData(entid, uid));
 	}
 
 	@PostMapping("/user")
 	@Operation(summary = "修改用户角色")
-	public PhpResponse<String> updateUserRole(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> updateUserRole(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
 		long userId = body.has("user_id") ? body.get("user_id").asLong() : 0L;
 		JsonNode roleIds = body.get("role_id");
 		try {
 			rolesAdminService.changeUserRole(entid, userId, roleIds);
-			return PhpResponse.ok("修改成功");
+			return R.phpOk("修改成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/add_user")
 	@Operation(summary = "角色添加成员")
-	public PhpResponse<String> addUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> addUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
 		List<Integer> userIds = new java.util.ArrayList<>();
 		if (body.has("user_id") && body.get("user_id").isArray()) {
@@ -137,56 +137,56 @@ public class RolesAdminController {
 		}
 		try {
 			rolesAdminService.addRoleUsers(entid, roleId, userIds);
-			return PhpResponse.ok("添加成员成功");
+			return R.phpOk("添加成员成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/show_user")
 	@Operation(summary = "成员状态")
-	public PhpResponse<String> showUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> showUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
 		int uid = body.has("uid") ? body.get("uid").asInt() : 0;
 		int status = body.has("status") ? body.get("status").asInt() : 1;
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
 		try {
 			rolesAdminService.changeRoleUserStatus(uid, entid, roleId, status);
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@DeleteMapping("/del_user")
 	@Operation(summary = "移除成员")
-	public PhpResponse<String> deleteUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> deleteUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
 		int uid = body.has("uid") ? body.get("uid").asInt() : 0;
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
 		try {
 			rolesAdminService.delRoleUser(uid, entid, roleId);
-			return PhpResponse.ok("删除成功");
+			return R.phpOk("删除成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/pwd")
 	@Operation(summary = "修改用户密码")
-	public PhpResponse<String> updateUserPassword(@RequestBody JsonNode body) {
+	public R<String> updateUserPassword(@RequestBody JsonNode body) {
 		String password = body.has("password") ? body.get("password").asText() : "";
 		String uid = body.has("uid") ? body.get("uid").asText() : "";
 		if (StrUtil.isBlank(password) || StrUtil.isBlank(uid)) {
-			return PhpResponse.failed("参数错误");
+			return R.phpFailed("参数错误");
 		}
 		try {
 			adminService.updatePasswordByUid(uid, password);
-			return PhpResponse.ok("修改成功");
+			return R.phpOk("修改成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 

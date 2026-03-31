@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.service.AttachCateAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class AttachCateAdminController {
 
 	@GetMapping
 	@Operation(summary = "附件分类列表")
-	public PhpResponse<?> index(@RequestParam(defaultValue = "0") int entid) {
-		return PhpResponse.ok(attachCateAdminService.listByEntid(entid));
+	public R<?> list(@RequestParam(defaultValue = "0") int entid) {
+		return R.phpOk(attachCateAdminService.listByEntid(entid));
 	}
 
 }

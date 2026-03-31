@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.bubblecloud.biz.oa.security.OaSecurityUtil;
 import com.bubblecloud.biz.oa.service.FormAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,127 +37,127 @@ public class FormAdminController {
 
 	@GetMapping("/cate")
 	@Operation(summary = "表单分组与字段列表")
-	public PhpResponse<?> index(@RequestParam String types) {
+	public R<?> list(@RequestParam String types) {
 		if (StrUtil.isBlank(types)) {
-			return PhpResponse.failed("common.empty.attrs");
+			return R.phpFailed("common.empty.attrs");
 		}
 		try {
-			return PhpResponse.ok(formAdminService.listByTypes(Integer.parseInt(types.trim())));
+			return R.phpOk(formAdminService.listByTypes(Integer.parseInt(types.trim())));
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/cate/{types}")
 	@Operation(summary = "新增分组")
-	public PhpResponse<Map<String, Long>> store(@PathVariable int types, @RequestBody JsonNode body) {
+	public R<Map<String, Long>> create(@PathVariable int types, @RequestBody JsonNode body) {
 		try {
 			String title = text(body, "title");
 			Integer sort = intOrNull(body, "sort");
 			int status = body.has("status") ? body.get("status").asInt(1) : 1;
 			long id = formAdminService.saveCate(types, title, sort, status);
-			return PhpResponse.ok(Map.of("id", id));
+			return R.phpOk(Map.of("id", id));
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PutMapping("/cate/{id}")
 	@Operation(summary = "修改分组")
-	public PhpResponse<String> update(@PathVariable long id, @RequestBody JsonNode body) {
+	public R<String> update(@PathVariable long id, @RequestBody JsonNode body) {
 		try {
 			String title = text(body, "title");
 			Integer sort = intOrNull(body, "sort");
 			int status = body.has("status") ? body.get("status").asInt(1) : 1;
 			formAdminService.updateCate(id, title, sort, status);
-			return PhpResponse.ok("common.operation.succ");
+			return R.phpOk("common.operation.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@DeleteMapping("/cate/{id}")
 	@Operation(summary = "删除分组")
-	public PhpResponse<String> destroy(@PathVariable long id) {
+	public R<String> removeById(@PathVariable long id) {
 		try {
 			formAdminService.deleteCate(id);
-			return PhpResponse.ok("common.delete.succ");
+			return R.phpOk("common.delete.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@GetMapping("/cate/{id}")
 	@Operation(summary = "修改分组显示状态（PHP 的 show）")
-	public PhpResponse<String> show(@PathVariable long id, @RequestParam int status) {
+	public R<String> show(@PathVariable long id, @RequestParam int status) {
 		try {
 			formAdminService.updateCateStatus(id, status);
-			return PhpResponse.ok("common.operation.succ");
+			return R.phpOk("common.operation.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PostMapping("/data/{types}")
 	@Operation(summary = "保存表单字段")
-	public PhpResponse<String> storeData(@PathVariable int types, @RequestBody JsonNode body) {
+	public R<String> createData(@PathVariable int types, @RequestBody JsonNode body) {
 		try {
 			JsonNode data = body.get("data");
 			if (ObjectUtil.isNull(data)) {
 				data = body;
 			}
 			formAdminService.saveFormData(types, data);
-			return PhpResponse.ok("common.operation.succ");
+			return R.phpOk("common.operation.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PutMapping("/data/move/{types}")
 	@Operation(summary = "字段移动分组")
-	public PhpResponse<String> move(@PathVariable int types, @RequestBody JsonNode body) {
+	public R<String> move(@PathVariable int types, @RequestBody JsonNode body) {
 		try {
 			long id = body.has("id") ? body.get("id").asLong() : 0L;
 			int cateId = body.has("cate_id") ? body.get("cate_id").asInt() : 0;
 			formAdminService.moveFormData(types, id, cateId);
-			return PhpResponse.ok("common.operation.succ");
+			return R.phpOk("common.operation.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@GetMapping("/data/fields/{customType}")
 	@Operation(summary = "业务员自定义字段列表")
-	public PhpResponse<JsonNode> getSalesmanCustom(@PathVariable int customType) {
+	public R<JsonNode> getSalesmanCustom(@PathVariable int customType) {
 		Long uid = OaSecurityUtil.currentUserId();
 		if (ObjectUtil.isNull(uid)) {
-			return PhpResponse.failed("未登录");
+			return R.phpFailed("未登录");
 		}
-		return PhpResponse.ok(formAdminService.getSalesmanCustomFields(uid, customType));
+		return R.phpOk(formAdminService.getSalesmanCustomFields(uid, customType));
 	}
 
 	@PutMapping("/data/fields/{customType}")
 	@Operation(summary = "保存业务员自定义字段")
-	public PhpResponse<String> saveSalesmanCustom(@PathVariable int customType, @RequestBody JsonNode body) {
+	public R<String> saveSalesmanCustom(@PathVariable int customType, @RequestBody JsonNode body) {
 		Long uid = OaSecurityUtil.currentUserId();
 		if (ObjectUtil.isNull(uid)) {
-			return PhpResponse.failed("未登录");
+			return R.phpFailed("未登录");
 		}
 		try {
 			String selectType = body.has("select_type") ? body.get("select_type").asText() : "";
 			JsonNode data = body.get("data");
 			formAdminService.saveSalesmanCustomFields(uid, customType, selectType, data);
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 

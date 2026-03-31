@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.DictDataMapper;
 import com.bubblecloud.biz.oa.service.DictDataService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
@@ -28,41 +27,19 @@ import cn.hutool.core.util.StrUtil;
 public class DictDataServiceImpl extends UpServiceImpl<DictDataMapper, DictData> implements DictDataService {
 
 	@Override
-	public Page<DictData> pageDictData(long current, long size, String name, String types, Integer typeId,
-			Integer status) {
-		var q = Wrappers.lambdaQuery(DictData.class);
-		if (StrUtil.isNotBlank(name)) {
-			q.like(DictData::getName, name);
-		}
-		if (StrUtil.isNotBlank(types)) {
-			q.eq(DictData::getTypeName, types);
-		}
-		if (ObjectUtil.isNotNull(typeId)) {
-			q.eq(DictData::getTypeId, typeId);
-		}
-		if (ObjectUtil.isNotNull(status)) {
-			q.eq(DictData::getStatus, status);
-		}
-		q.orderByDesc(DictData::getSort).orderByDesc(DictData::getId);
-		return this.page(new Page<>(current, size), q);
-	}
-
-	@Override
 	public List<DictDataTreeNodeVO> treeDictData(DictDataTreeQueryDTO query) {
 		var q = Wrappers.lambdaQuery(DictData.class);
-		if (ObjectUtil.isNotNull(query)) {
-			if (ObjectUtil.isNotNull(query.getTypeId())) {
-				q.eq(DictData::getTypeId, query.getTypeId());
-			}
-			if (StrUtil.isNotBlank(query.getTypes())) {
-				q.eq(DictData::getTypeName, query.getTypes());
-			}
-			if (StrUtil.isNotBlank(query.getName())) {
-				q.like(DictData::getName, query.getName());
-			}
-			if (ObjectUtil.isNotNull(query.getStatus())) {
-				q.eq(DictData::getStatus, query.getStatus());
-			}
+		if (ObjectUtil.isNotNull(query.getTypeId())) {
+			q.eq(DictData::getTypeId, query.getTypeId());
+		}
+		if (StrUtil.isNotBlank(query.getTypes())) {
+			q.eq(DictData::getTypeName, query.getTypes());
+		}
+		if (StrUtil.isNotBlank(query.getName())) {
+			q.like(DictData::getName, query.getName());
+		}
+		if (ObjectUtil.isNotNull(query.getStatus())) {
+			q.eq(DictData::getStatus, query.getStatus());
 		}
 		q.orderByAsc(DictData::getSort).orderByAsc(DictData::getId);
 		List<DictData> flat = this.list(q);

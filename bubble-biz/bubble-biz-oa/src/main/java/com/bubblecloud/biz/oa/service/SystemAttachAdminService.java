@@ -1,6 +1,5 @@
 package com.bubblecloud.biz.oa.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.SystemAttach;
 
@@ -11,13 +10,5 @@ import com.bubblecloud.oa.api.entity.SystemAttach;
  * @date 2026/3/31
  */
 public interface SystemAttachAdminService extends UpService<SystemAttach> {
-
-	/**
-	 * 附件分页列表。
-	 * @param entid 企业 ID
-	 * @param page 页码（与 PHP 一致）
-	 * @param limit 每页条数
-	 */
-	Page<SystemAttach> pageList(int entid, int page, int limit);
 
 }

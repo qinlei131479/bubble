@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.service.QuickCateAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Category;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,42 +32,42 @@ public class QuickCateAdminController {
 
 	@GetMapping
 	@Operation(summary = "分类列表")
-	public PhpResponse<?> index(@RequestParam(defaultValue = "0") int entid) {
-		return PhpResponse.ok(quickCateAdminService.list(entid));
+	public R<?> list(@RequestParam(defaultValue = "0") int entid) {
+		return R.phpOk(quickCateAdminService.list(entid));
 	}
 
 	@GetMapping("/create")
 	@Operation(summary = "创建表单占位")
-	public PhpResponse<String> create() {
-		return PhpResponse.ok("ok");
+	public R<String> createForm() {
+		return R.phpOk("ok");
 	}
 
 	@PostMapping
 	@Operation(summary = "新增分类")
-	public PhpResponse<String> store(@RequestBody Category body) {
+	public R<String> create(@RequestBody Category body) {
 		quickCateAdminService.saveCate(body);
-		return PhpResponse.ok("common.insert.succ");
+		return R.phpOk("common.insert.succ");
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
-	public PhpResponse<Category> edit(@PathVariable long id) {
-		return PhpResponse.ok(quickCateAdminService.getCate(id));
+	public R<Category> details(@PathVariable long id) {
+		return R.phpOk(quickCateAdminService.getCate(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "保存修改")
-	public PhpResponse<String> update(@PathVariable long id, @RequestBody Category body) {
+	public R<String> update(@PathVariable long id, @RequestBody Category body) {
 		body.setId(id);
 		quickCateAdminService.updateCate(body);
-		return PhpResponse.ok("common.update.succ");
+		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除分类")
-	public PhpResponse<String> destroy(@PathVariable long id) {
+	public R<String> removeById(@PathVariable long id) {
 		quickCateAdminService.deleteCate(id);
-		return PhpResponse.ok("common.delete.succ");
+		return R.phpOk("common.delete.succ");
 	}
 
 }

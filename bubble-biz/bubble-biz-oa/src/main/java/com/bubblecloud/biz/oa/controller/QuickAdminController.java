@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.service.QuickAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.SystemQuick;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,52 +30,52 @@ public class QuickAdminController {
 
 	private final QuickAdminService quickAdminService;
 
-	@GetMapping
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "分页列表")
-	public PhpResponse<?> index(@RequestParam(required = false) Integer cid,
-			@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") int page,
+	public R<?> page(@RequestParam(required = false) Integer cid,
+			@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") int pageNum,
 			@RequestParam(defaultValue = "20") int limit) {
-		return PhpResponse.ok(quickAdminService.page(cid, name, page, limit));
+		return R.phpOk(quickAdminService.page(cid, name, pageNum, limit));
 	}
 
 	@GetMapping("/create")
 	@Operation(summary = "创建占位")
-	public PhpResponse<String> create(@RequestParam(required = false) String cid) {
-		return PhpResponse.ok("ok");
+	public R<String> createForm(@RequestParam(required = false) String cid) {
+		return R.phpOk("ok");
 	}
 
 	@PostMapping
 	@Operation(summary = "新增")
-	public PhpResponse<String> store(@RequestBody SystemQuick body) {
+	public R<String> create(@RequestBody SystemQuick body) {
 		quickAdminService.saveQuick(body);
-		return PhpResponse.ok("common.insert.succ");
+		return R.phpOk("common.insert.succ");
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
-	public PhpResponse<SystemQuick> edit(@PathVariable int id) {
-		return PhpResponse.ok(quickAdminService.getQuick(id));
+	public R<SystemQuick> details(@PathVariable int id) {
+		return R.phpOk(quickAdminService.getQuick(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改保存")
-	public PhpResponse<String> update(@PathVariable int id, @RequestBody SystemQuick body) {
+	public R<String> update(@PathVariable int id, @RequestBody SystemQuick body) {
 		body.setId(id);
 		quickAdminService.updateQuick(body);
-		return PhpResponse.ok("common.update.succ");
+		return R.phpOk("common.update.succ");
 	}
 
 	@GetMapping("/{id}")
 	@Operation(summary = "显示/隐藏占位（PHP show）")
-	public PhpResponse<String> show(@PathVariable int id) {
-		return PhpResponse.ok("ok");
+	public R<String> show(@PathVariable int id) {
+		return R.phpOk("ok");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
-	public PhpResponse<String> destroy(@PathVariable int id) {
+	public R<String> removeById(@PathVariable int id) {
 		quickAdminService.deleteQuick(id);
-		return PhpResponse.ok("common.delete.succ");
+		return R.phpOk("common.delete.succ");
 	}
 
 }

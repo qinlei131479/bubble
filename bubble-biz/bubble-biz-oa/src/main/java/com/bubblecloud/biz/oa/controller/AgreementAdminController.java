@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.service.AgreementAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Agreement;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,23 +30,23 @@ public class AgreementAdminController {
 
 	@GetMapping
 	@Operation(summary = "协议列表")
-	public PhpResponse<?> index(@RequestParam(required = false) String title,
-								@RequestParam(required = false) String ident) {
-		return PhpResponse.ok(agreementAdminService.list(title, ident));
+	public R<?> list(@RequestParam(required = false) String title,
+			@RequestParam(required = false) String ident) {
+		return R.phpOk(agreementAdminService.list(title, ident));
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "协议详情")
-	public PhpResponse<Agreement> detail(@PathVariable Long id) {
-		return PhpResponse.ok(agreementAdminService.getById(id));
+	public R<Agreement> details(@PathVariable Long id) {
+		return R.phpOk(agreementAdminService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "保存协议")
-	public PhpResponse<String> update(@PathVariable Long id, @RequestBody Agreement body) {
+	public R<String> update(@PathVariable Long id, @RequestBody Agreement body) {
 		body.setId(id);
 		agreementAdminService.update(body);
-		return PhpResponse.ok("common.update.succ");
+		return R.phpOk("common.update.succ");
 	}
 
 }

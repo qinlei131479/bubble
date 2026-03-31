@@ -2,7 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.CompanySalaryService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.CompanySalarySaveDTO;
 import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
@@ -34,61 +34,61 @@ public class CompanySalaryController {
 
 	private final CompanySalaryService companySalaryService;
 
-	@GetMapping
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "调薪记录列表")
-	public PhpResponse<SimplePageVO> index(@RequestParam(defaultValue = "1") int entid,
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") int entid,
 			@RequestParam(required = false) Integer cardId, @RequestParam(required = false) Integer linkId,
 			@RequestParam(required = false) Long id, @RequestParam(defaultValue = "1") long current,
 			@RequestParam(defaultValue = "20") long size) {
-		Page<EnterpriseUserSalary> page = new Page<>(current, size);
-		Page<EnterpriseUserSalary> r = companySalaryService.pageSalary(entid, cardId, linkId, id, page);
-		return PhpResponse.ok(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
+		Page<EnterpriseUserSalary> mpPage = new Page<>(current, size);
+		Page<EnterpriseUserSalary> r = companySalaryService.pageSalary(entid, cardId, linkId, id, mpPage);
+		return R.phpOk(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取调薪记录")
-	public PhpResponse<EnterpriseUserSalary> edit(@PathVariable long id) {
+	public R<EnterpriseUserSalary> details(@PathVariable long id) {
 		EnterpriseUserSalary e = companySalaryService.getForEdit(id);
 		if (ObjectUtil.isNull(e)) {
-			return PhpResponse.failed("缺少必要参数");
+			return R.phpFailed("缺少必要参数");
 		}
-		return PhpResponse.ok(e);
+		return R.phpOk(e);
 	}
 
 	@PostMapping
 	@Operation(summary = "保存调薪记录")
-	public PhpResponse<String> store(@RequestBody CompanySalarySaveDTO dto) {
+	public R<String> create(@RequestBody CompanySalarySaveDTO dto) {
 		if (companySalaryService.saveSalary(dto)) {
-			return PhpResponse.ok("common.insert.succ");
+			return R.phpOk("common.insert.succ");
 		}
-		return PhpResponse.failed("common.insert.fail");
+		return R.phpFailed("common.insert.fail");
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改调薪记录")
-	public PhpResponse<String> update(@PathVariable long id, @RequestBody CompanySalarySaveDTO dto) {
+	public R<String> update(@PathVariable long id, @RequestBody CompanySalarySaveDTO dto) {
 		if (companySalaryService.updateSalary(id, dto)) {
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
-		return PhpResponse.failed("common.update.fail");
+		return R.phpFailed("common.update.fail");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除调薪记录")
-	public PhpResponse<String> destroy(@PathVariable long id) {
+	public R<String> removeById(@PathVariable long id) {
 		if (companySalaryService.removeSalary(id)) {
-			return PhpResponse.ok("common.delete.succ");
+			return R.phpOk("common.delete.succ");
 		}
-		return PhpResponse.failed("common.delete.fail");
+		return R.phpFailed("common.delete.fail");
 	}
 
 	@GetMapping("/last/{card_id}")
 	@Operation(summary = "调薪最近记录")
-	public PhpResponse<java.util.List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") int cardId) {
+	public R<java.util.List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") int cardId) {
 		if (cardId <= 0) {
-			return PhpResponse.failed("缺少必要参数");
+			return R.phpFailed("缺少必要参数");
 		}
-		return PhpResponse.ok(companySalaryService.lastByCardId(cardId));
+		return R.phpOk(companySalaryService.lastByCardId(cardId));
 	}
 
 }

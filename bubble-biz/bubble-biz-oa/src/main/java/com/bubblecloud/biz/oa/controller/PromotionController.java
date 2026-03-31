@@ -2,13 +2,15 @@ package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.PromotionService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.PromotionSaveDTO;
 import com.bubblecloud.oa.api.entity.Promotion;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,41 +37,43 @@ public class PromotionController {
 
 	private final PromotionService promotionService;
 
-	@GetMapping
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "晋升表列表")
-	public PhpResponse<SimplePageVO> index(@RequestParam(required = false) Integer status,
-			@RequestParam(defaultValue = "1") long current, @RequestParam(defaultValue = "20") long size) {
-		Page<Promotion> r = promotionService.pagePromotions(current, size, status);
-		return PhpResponse.ok(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
+	public R<SimplePageVO> page(@ParameterObject Pg<Promotion> pg,
+			@RequestParam(required = false) Integer status) {
+		Promotion query = new Promotion();
+		query.setStatus(status);
+		Page<Promotion> r = promotionService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
 	}
 
 	@PostMapping
 	@Operation(summary = "晋升表保存")
-	public PhpResponse<String> store(@RequestBody PromotionSaveDTO dto) {
+	public R<String> create(@RequestBody PromotionSaveDTO dto) {
 		Promotion p = new Promotion();
 		p.setName(dto.getName());
 		p.setSort(ObjectUtil.isNull(dto.getSort()) ? 0 : dto.getSort());
 		p.setStatus(1);
 		promotionService.save(p);
-		return PhpResponse.ok("common.insert.succ");
+		return R.phpOk("common.insert.succ");
 	}
 
 	@GetMapping("/{id}")
 	@Operation(summary = "晋升表状态/详情")
-	public PhpResponse<Promotion> show(@PathVariable long id) {
+	public R<Promotion> details(@PathVariable long id) {
 		Promotion p = promotionService.getById(id);
 		if (ObjectUtil.isNull(p) || ObjectUtil.isNotNull(p.getDeletedAt())) {
-			return PhpResponse.failed("common.operation.noExists");
+			return R.phpFailed("common.operation.noExists");
 		}
-		return PhpResponse.ok(p);
+		return R.phpOk(p);
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "晋升表修改")
-	public PhpResponse<String> update(@PathVariable long id, @RequestBody PromotionSaveDTO dto) {
+	public R<String> update(@PathVariable long id, @RequestBody PromotionSaveDTO dto) {
 		Promotion existing = promotionService.getById(id);
 		if (ObjectUtil.isNull(existing) || ObjectUtil.isNotNull(existing.getDeletedAt())) {
-			return PhpResponse.failed("common.operation.noExists");
+			return R.phpFailed("common.operation.noExists");
 		}
 		if (StrUtil.isNotBlank(dto.getName())) {
 			existing.setName(dto.getName());
@@ -78,18 +82,18 @@ public class PromotionController {
 			existing.setSort(dto.getSort());
 		}
 		promotionService.updateById(existing);
-		return PhpResponse.ok("common.update.succ");
+		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "晋升表删除（软删）")
-	public PhpResponse<String> destroy(@PathVariable long id) {
+	public R<String> removeById(@PathVariable long id) {
 		Promotion existing = promotionService.getById(id);
 		if (ObjectUtil.isNull(existing) || ObjectUtil.isNotNull(existing.getDeletedAt())) {
-			return PhpResponse.failed("common.operation.noExists");
+			return R.phpFailed("common.operation.noExists");
 		}
 		promotionService.removeById(id);
-		return PhpResponse.ok("common.delete.succ");
+		return R.phpOk("common.delete.succ");
 	}
 
 }

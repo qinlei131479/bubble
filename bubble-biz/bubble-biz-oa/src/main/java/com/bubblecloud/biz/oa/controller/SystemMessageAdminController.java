@@ -2,7 +2,8 @@ package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.SystemMessageAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.Message;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,18 +28,25 @@ public class SystemMessageAdminController {
 
 	private final SystemMessageAdminService systemMessageAdminService;
 
-	@GetMapping("/list")
+	@GetMapping(value = { "/list", "/page" })
 	@Operation(summary = "消息列表")
-	public PhpResponse<Page<Message>> index(@RequestParam(required = false) Integer cate_id,
+	public R<Page<Message>> page(@RequestParam(required = false) Integer cate_id,
 			@RequestParam(required = false) String title, @RequestParam(defaultValue = "1") int entid,
-			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int limit) {
-		return PhpResponse.ok(systemMessageAdminService.pageList(cate_id, title, entid, page, limit));
+			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
+		Pg<Message> pg = new Pg<>();
+		pg.setCurrent(pageNum);
+		pg.setSize(limit);
+		Message query = new Message();
+		query.setEntid(entid);
+		query.setCateId(cate_id);
+		query.setTitle(title);
+		return R.phpOk(systemMessageAdminService.findPg(pg, query));
 	}
 
 	@GetMapping("/find/{id}")
 	@Operation(summary = "消息详情")
-	public PhpResponse<Message> find(@PathVariable long id) {
-		return PhpResponse.ok(systemMessageAdminService.getById(id));
+	public R<Message> details(@PathVariable long id) {
+		return R.phpOk(systemMessageAdminService.getById(id));
 	}
 
 }

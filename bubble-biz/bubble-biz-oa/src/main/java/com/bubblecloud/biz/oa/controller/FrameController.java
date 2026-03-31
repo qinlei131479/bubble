@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.bubblecloud.biz.oa.security.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.FrameService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.FrameSaveDTO;
 import com.bubblecloud.oa.api.dto.FrameUpdateDTO;
 import com.bubblecloud.oa.api.vo.frame.FrameAdminBriefVO;
@@ -46,88 +46,88 @@ public class FrameController {
 
 	@GetMapping
 	@Operation(summary = "部门树列表")
-	public PhpResponse<List<FrameDepartmentTreeNodeVO>> index(@RequestParam(defaultValue = "1") int is_show,
+	public R<List<FrameDepartmentTreeNodeVO>> list(@RequestParam(defaultValue = "1") int is_show,
 			@RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(frameService.departmentTreeList(is_show, entid));
+		return R.phpOk(frameService.departmentTreeList(is_show, entid));
 	}
 
 	@GetMapping("/tree")
 	@Operation(summary = "权限/范围用部门树")
-	public PhpResponse<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") int role,
+	public R<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") int role,
 			@RequestParam(defaultValue = "0") int scope, @RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
-			return PhpResponse.failed("未登录");
+			return R.phpFailed("未登录");
 		}
-		return PhpResponse.ok(frameService.getTree(uid, entid, role == 1, scope == 1));
+		return R.phpOk(frameService.getTree(uid, entid, role == 1, scope == 1));
 	}
 
 	@GetMapping("/user")
 	@Operation(summary = "部门人员树")
-	public PhpResponse<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") int role,
+	public R<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") int role,
 			@RequestParam(defaultValue = "0") int leave, @RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
-			return PhpResponse.failed("未登录");
+			return R.phpFailed("未登录");
 		}
-		return PhpResponse.ok(frameService.getUserTree(uid, entid, role == 1, leave == 1));
+		return R.phpOk(frameService.getUserTree(uid, entid, role == 1, leave == 1));
 	}
 
 	@GetMapping("/create")
 	@Operation(summary = "新增部门表单")
-	public PhpResponse<FrameFormDataVO> create(@RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(frameService.getFormData(entid, 0));
+	public R<FrameFormDataVO> createForm(@RequestParam(defaultValue = "1") int entid) {
+		return R.phpOk(frameService.getFormData(entid, 0));
 	}
 
 	@PostMapping
 	@Operation(summary = "保存部门")
-	public PhpResponse<String> store(@RequestBody FrameSaveDTO dto) {
+	public R<String> create(@RequestBody FrameSaveDTO dto) {
 		frameService.createDepartment(dto);
-		return PhpResponse.ok("保存成功");
+		return R.phpOk("保存成功");
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑部门表单")
-	public PhpResponse<FrameFormDataVO> edit(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(frameService.getFormData(entid, id));
+	public R<FrameFormDataVO> details(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+		return R.phpOk(frameService.getFormData(entid, id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "更新部门")
-	public PhpResponse<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
 			@RequestBody FrameUpdateDTO dto) {
 		frameService.updateDepartment(id, entid, dto);
-		return PhpResponse.ok("修改成功");
+		return R.phpOk("修改成功");
 	}
 
 	@GetMapping("/{id}/info")
 	@Operation(summary = "部门详情")
-	public PhpResponse<FrameDetailVO> info(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(frameService.departmentInfo(id, entid));
+	public R<FrameDetailVO> info(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+		return R.phpOk(frameService.departmentInfo(id, entid));
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除部门")
-	public PhpResponse<String> destroy(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<String> removeById(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
 		frameService.deleteDepartment(id, entid);
-		return PhpResponse.ok("删除成功");
+		return R.phpOk("删除成功");
 	}
 
 	@GetMapping("/users/{frameId}")
 	@Operation(summary = "部门负责人/成员")
-	public PhpResponse<List<FrameAdminBriefVO>> frameUsers(@PathVariable int frameId,
+	public R<List<FrameAdminBriefVO>> frameUsers(@PathVariable int frameId,
 			@RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(frameService.getFrameUsers(frameId, entid));
+		return R.phpOk(frameService.getFrameUsers(frameId, entid));
 	}
 
 	@GetMapping("/scope")
 	@Operation(summary = "管理范围部门")
-	public PhpResponse<List<FrameScopeItemVO>> scope(@RequestParam(defaultValue = "1") int entid) {
+	public R<List<FrameScopeItemVO>> scope(@RequestParam(defaultValue = "1") int entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
-			return PhpResponse.failed("未登录");
+			return R.phpFailed("未登录");
 		}
-		return PhpResponse.ok(frameService.scopeFrames(uid, entid));
+		return R.phpOk(frameService.scopeFrames(uid, entid));
 	}
 
 	private static Long currentUserId() {

@@ -2,7 +2,8 @@ package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.SystemAttachAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.SystemAttach;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,11 +27,16 @@ public class SystemAttachAdminController {
 
 	private final SystemAttachAdminService systemAttachAdminService;
 
-	@GetMapping
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "附件分页")
-	public PhpResponse<Page<SystemAttach>> index(@RequestParam(defaultValue = "1") int entid,
-			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int limit) {
-		return PhpResponse.ok(systemAttachAdminService.pageList(entid, page, limit));
+	public R<Page<SystemAttach>> page(@RequestParam(defaultValue = "1") int entid,
+			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
+		Pg<SystemAttach> pg = new Pg<>();
+		pg.setCurrent(pageNum);
+		pg.setSize(limit);
+		SystemAttach query = new SystemAttach();
+		query.setEntid(entid);
+		return R.phpOk(systemAttachAdminService.findPg(pg, query));
 	}
 
 }

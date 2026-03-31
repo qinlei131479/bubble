@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.AgreementMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.Agreement">
+		SELECT t.*
+		FROM eb_agreement t
+		<where>
+			<if test="query.title != null and query.title != ''">
+				AND t.title LIKE CONCAT('%', #{query.title}, '%')
+			</if>
+			<if test="query.ident != null and query.ident != ''">
+				AND t.ident = #{query.ident}
+			</if>
+		</where>
+		ORDER BY t.id ASC
+	</select>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.SystemAttachMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.SystemAttach">
+		SELECT t.*
+		FROM eb_system_attach t
+		<where>
+			AND t.entid = #{query.entid}
+		</where>
+		ORDER BY t.id DESC
+	</select>
+
+</mapper>

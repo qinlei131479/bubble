@@ -2,7 +2,8 @@ package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.SystemLogAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.EnterpriseLog;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,14 +27,21 @@ public class SystemLogAdminController {
 
 	private final SystemLogAdminService systemLogAdminService;
 
-	@GetMapping
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "日志分页")
-	public PhpResponse<Page<EnterpriseLog>> index(@RequestParam(required = false) String user_name,
+	public R<Page<EnterpriseLog>> page(@RequestParam(required = false) String user_name,
 			@RequestParam(required = false) String path, @RequestParam(required = false) String event_name,
-			@RequestParam(defaultValue = "1") int entid, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "1") int entid, @RequestParam(defaultValue = "1") int pageNum,
 			@RequestParam(defaultValue = "20") int limit) {
-		return PhpResponse
-			.ok(systemLogAdminService.pageList(user_name, path, event_name, entid, page, limit));
+		Pg<EnterpriseLog> pg = new Pg<>();
+		pg.setCurrent(pageNum);
+		pg.setSize(limit);
+		EnterpriseLog query = new EnterpriseLog();
+		query.setEntid(entid);
+		query.setUserName(user_name);
+		query.setPath(path);
+		query.setEventName(event_name);
+		return R.phpOk(systemLogAdminService.findPg(pg, query));
 	}
 
 }

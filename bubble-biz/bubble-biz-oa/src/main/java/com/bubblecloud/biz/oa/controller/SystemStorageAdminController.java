@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Map;
 
 import com.bubblecloud.biz.oa.service.SystemStorageAdminService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,113 +35,113 @@ public class SystemStorageAdminController {
 
 	@GetMapping("/index")
 	@Operation(summary = "云存储列表")
-	public PhpResponse<?> index(@RequestParam(required = false) Integer type) {
-		return PhpResponse.ok(systemStorageAdminService.list(type));
+	public R<?> list(@RequestParam(required = false) Integer type) {
+		return R.phpOk(systemStorageAdminService.list(type));
 	}
 
 	@GetMapping("/create/{type}")
 	@Operation(summary = "创建表单占位")
-	public PhpResponse<String> create(@PathVariable int type) {
-		return PhpResponse.ok("ok");
+	public R<String> createForm(@PathVariable int type) {
+		return R.phpOk("ok");
 	}
 
 	@GetMapping("/form/{type}")
 	@Operation(summary = "配置表单占位")
-	public PhpResponse<String> form(@PathVariable int type) {
-		return PhpResponse.ok("ok");
+	public R<String> form(@PathVariable int type) {
+		return R.phpOk("ok");
 	}
 
 	@GetMapping("/config")
 	@Operation(summary = "当前上传方式")
-	public PhpResponse<Map<String, Integer>> getConfig() {
-		return PhpResponse.ok(Map.of("type", systemStorageAdminService.getUploadType()));
+	public R<Map<String, Integer>> getConfig() {
+		return R.phpOk(Map.of("type", systemStorageAdminService.getUploadType()));
 	}
 
 	@PostMapping("/config")
 	@Operation(summary = "保存 access 等（占位写入扩展表）")
-	public PhpResponse<String> saveConfig(@RequestBody JsonNode body) {
-		return PhpResponse.ok("保存成功");
+	public R<String> saveConfig(@RequestBody JsonNode body) {
+		return R.phpOk("保存成功");
 	}
 
 	@GetMapping("/sync/{type}")
 	@Operation(summary = "同步云存储（占位）")
-	public PhpResponse<String> sync(@PathVariable int type) {
-		return PhpResponse.ok("同步成功");
+	public R<String> sync(@PathVariable int type) {
+		return R.phpOk("同步成功");
 	}
 
 	@PostMapping("/{type}")
 	@Operation(summary = "保存云存储")
-	public PhpResponse<String> save(@PathVariable int type, @RequestBody JsonNode body) {
+	public R<String> create(@PathVariable int type, @RequestBody JsonNode body) {
 		String accessKey = text(body, "accessKey");
 		String name = text(body, "name");
 		String region = text(body, "region");
 		String acl = text(body, "acl");
 		systemStorageAdminService.saveStorage(type, accessKey, name, region, acl);
-		return PhpResponse.ok("添加成功");
+		return R.phpOk("添加成功");
 	}
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "启用该存储")
-	public PhpResponse<String> status(@PathVariable int id) {
+	public R<String> status(@PathVariable int id) {
 		try {
 			systemStorageAdminService.setActiveStatus(id);
-			return PhpResponse.ok("修改成功");
+			return R.phpOk("修改成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@GetMapping("/domain/{id}")
 	@Operation(summary = "域名表单占位")
-	public PhpResponse<String> getUpdateDomainForm(@PathVariable int id) {
-		return PhpResponse.ok("ok");
+	public R<String> getUpdateDomainForm(@PathVariable int id) {
+		return R.phpOk("ok");
 	}
 
 	@GetMapping("/method")
 	@Operation(summary = "详细配置项占位")
-	public PhpResponse<String> getStorageConfig() {
-		return PhpResponse.ok("ok");
+	public R<String> getStorageConfig() {
+		return R.phpOk("ok");
 	}
 
 	@PostMapping("/domain/{id}")
 	@Operation(summary = "修改域名")
-	public PhpResponse<String> updateDomain(@PathVariable int id, @RequestBody JsonNode body) {
+	public R<String> updateDomain(@PathVariable int id, @RequestBody JsonNode body) {
 		String domain = text(body, "domain");
 		String cdn = text(body, "cdn");
 		try {
 			systemStorageAdminService.updateDomain(id, domain, cdn);
-			return PhpResponse.ok("修改成功");
+			return R.phpOk("修改成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
-	public PhpResponse<String> delete(@PathVariable int id) {
+	public R<String> removeById(@PathVariable int id) {
 		systemStorageAdminService.deleteStorage(id);
-		return PhpResponse.ok("删除成功");
+		return R.phpOk("删除成功");
 	}
 
 	@PutMapping("/save_type/{type}")
 	@Operation(summary = "切换存储方式")
-	public PhpResponse<String> uploadType(@PathVariable int type) {
+	public R<String> uploadType(@PathVariable int type) {
 		try {
 			systemStorageAdminService.setUploadType(type);
-			return PhpResponse.ok(type != 1 ? "切换云存储成功,请检查是否开启使用了存储空间" : "切换本地存储成功");
+			return R.phpOk(type != 1 ? "切换云存储成功,请检查是否开启使用了存储空间" : "切换本地存储成功");
 		}
 		catch (IllegalArgumentException ex) {
-			return PhpResponse.failed(ex.getMessage());
+			return R.phpFailed(ex.getMessage());
 		}
 	}
 
 	@PutMapping("/save_basic")
 	@Operation(summary = "保存云存储详细配置")
-	public PhpResponse<String> updateConfig(@RequestBody JsonNode body) {
+	public R<String> updateConfig(@RequestBody JsonNode body) {
 		systemStorageAdminService.saveBasicConfig(body);
-		return PhpResponse.ok("保存成功");
+		return R.phpOk("保存成功");
 	}
 
 	private static String text(JsonNode n, String field) {

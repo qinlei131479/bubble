@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.List;
 
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.ScheduleIndexQueryDTO;
 import com.bubblecloud.oa.api.dto.ScheduleStatusUpdateDTO;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
@@ -38,29 +38,29 @@ public class ScheduleController {
 
 	@GetMapping("/page")
 	@Operation(summary = "日程分页（占位）")
-	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
 			@RequestParam(defaultValue = "20") Integer size) {
-		return PhpResponse.ok(SimplePageVO.empty(current, size));
+		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
 	@GetMapping("/types")
 	@Operation(summary = "日程类型列表")
-	public PhpResponse<List<ScheduleTypeVO>> types() {
-		return PhpResponse.ok(scheduleApiService.typeList());
+	public R<List<ScheduleTypeVO>> types() {
+		return R.phpOk(scheduleApiService.typeList());
 	}
 
 	@PostMapping("/index")
 	@Operation(summary = "日程列表")
-	public PhpResponse<List<ScheduleRecordVO>> index(@RequestBody(required = false) ScheduleIndexQueryDTO body) {
-		return PhpResponse.ok(scheduleApiService.scheduleIndex(ObjectUtil.isNotNull(body) ? body : new ScheduleIndexQueryDTO()));
+	public R<List<ScheduleRecordVO>> list(@RequestBody(required = false) ScheduleIndexQueryDTO body) {
+		return R.phpOk(scheduleApiService.scheduleIndex(ObjectUtil.isNotNull(body) ? body : new ScheduleIndexQueryDTO()));
 	}
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "修改日程状态")
-	public PhpResponse<String> status(@PathVariable long id,
+	public R<String> status(@PathVariable long id,
 			@RequestBody(required = false) ScheduleStatusUpdateDTO body) {
 		scheduleApiService.updateStatus(id, ObjectUtil.isNotNull(body) ? body : new ScheduleStatusUpdateDTO());
-		return PhpResponse.ok("ok");
+		return R.phpOk("ok");
 	}
 
 }
