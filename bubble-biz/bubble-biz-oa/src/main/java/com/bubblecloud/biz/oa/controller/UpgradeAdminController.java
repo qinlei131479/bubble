@@ -1,6 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -28,34 +28,34 @@ public class UpgradeAdminController {
 
 	@GetMapping("/status")
 	@Operation(summary = "升级状态")
-	public PhpResponse<JsonNode> status() {
+	public R<JsonNode> status() {
 		ObjectNode n = objectMapper.createObjectNode();
 		n.put("enabled", false);
-		return PhpResponse.ok(n);
+		return R.phpOk(n);
 	}
 
 	@GetMapping("/agreement")
 	@Operation(summary = "升级协议占位")
-	public PhpResponse<String> agreement() {
-		return PhpResponse.ok("");
+	public R<String> agreement() {
+		return R.phpOk("");
 	}
 
 	@GetMapping("/list")
 	@Operation(summary = "可升级列表")
-	public PhpResponse<?> list() {
-		return PhpResponse.ok(java.util.List.of());
+	public R<?> list() {
+		return R.phpOk(java.util.List.of());
 	}
 
 	@GetMapping("/key")
 	@Operation(summary = "升级包数据占位")
-	public PhpResponse<String> enableData() {
-		return PhpResponse.failed("暂无升级数据");
+	public R<String> enableData() {
+		return R.phpFailed("暂无升级数据");
 	}
 
 	@PostMapping("/start")
 	@Operation(summary = "开始升级占位")
-	public PhpResponse<String> start() {
-		return PhpResponse.failed("未接入升级服务");
+	public R<String> start() {
+		return R.phpFailed("未接入升级服务");
 	}
 
 }

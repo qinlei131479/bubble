@@ -43,10 +43,9 @@ public class CompanyUserController {
 
 	@GetMapping("/list")
 	@Operation(summary = "组织架构人员列表")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") int entid,
-			@RequestParam(required = false) String pid, @RequestParam(required = false) String name,
-			@RequestParam(defaultValue = "1") Integer status, @RequestParam(defaultValue = "1") int current,
-			@RequestParam(defaultValue = "20") int size) {
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") int entid, @RequestParam(required = false) String pid,
+			@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
+			@RequestParam(defaultValue = "1") int current, @RequestParam(defaultValue = "20") int size) {
 		return R.phpOk(companyUserService.listCompanyUsers(entid, pid, name, status, current, size));
 	}
 
@@ -91,8 +90,7 @@ public class CompanyUserController {
 
 	@GetMapping("/userFrame")
 	@Operation(summary = "获取用户部门信息")
-	public R<UserFrameBriefVO> userFrame(Authentication authentication,
-			@RequestParam(defaultValue = "1") int entid) {
+	public R<UserFrameBriefVO> userFrame(Authentication authentication, @RequestParam(defaultValue = "1") int entid) {
 		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return R.phpFailed("未登录");
 		}

@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Map;
 
 import com.bubblecloud.biz.oa.service.CompanyService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.CompanyUpdateDTO;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.company.CompanyEntInfoVO;
@@ -36,43 +36,41 @@ public class CompanyController {
 
 	@GetMapping("/info")
 	@Operation(summary = "当前企业详情")
-	public PhpResponse<CompanyEntInfoVO> entInfo(@RequestParam(defaultValue = "1") int entid) {
+	public R<CompanyEntInfoVO> entInfo(@RequestParam(defaultValue = "1") int entid) {
 		try {
-			return PhpResponse.ok(companyService.getEntAndUserInfo(entid));
+			return R.phpOk(companyService.getEntAndUserInfo(entid));
 		}
 		catch (IllegalArgumentException e) {
-			return PhpResponse.failed(e.getMessage());
+			return R.phpFailed(e.getMessage());
 		}
 	}
 
 	@PutMapping("/info")
 	@Operation(summary = "修改当前企业详情")
-	public PhpResponse<String> updateEnt(@RequestParam(defaultValue = "1") int entid,
-			@RequestBody CompanyUpdateDTO dto) {
+	public R<String> updateEnt(@RequestParam(defaultValue = "1") int entid, @RequestBody CompanyUpdateDTO dto) {
 		if (companyService.updateEnt(entid, dto)) {
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
-		return PhpResponse.failed("common.update.fail");
+		return R.phpFailed("common.update.fail");
 	}
 
 	@GetMapping("/quantity/{type}")
 	@Operation(summary = "获取统计数量")
-	public PhpResponse<CompanyQuantityVO> quantity(@PathVariable String type,
-			@RequestParam(defaultValue = "1") int entid) {
-		return PhpResponse.ok(companyService.getQuantity(type, entid));
+	public R<CompanyQuantityVO> quantity(@PathVariable String type, @RequestParam(defaultValue = "1") int entid) {
+		return R.phpOk(companyService.getQuantity(type, entid));
 	}
 
 	@GetMapping("/user-card/page")
 	@Operation(summary = "员工档案分页（占位）")
-	public PhpResponse<SimplePageVO> userCardPage(@RequestParam(defaultValue = "1") Integer current,
+	public R<SimplePageVO> userCardPage(@RequestParam(defaultValue = "1") Integer current,
 			@RequestParam(defaultValue = "20") Integer size) {
-		return PhpResponse.ok(SimplePageVO.empty(current, size));
+		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
 	@GetMapping("/message")
 	@Operation(summary = "消息中心列表（工作台系统通知）")
-	public PhpResponse<CompanyMessageListVO> messageList(@RequestParam Map<String, String> query) {
-		return PhpResponse.ok(new CompanyMessageListVO());
+	public R<CompanyMessageListVO> messageList(@RequestParam Map<String, String> query) {
+		return R.phpOk(new CompanyMessageListVO());
 	}
 
 }

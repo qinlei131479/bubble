@@ -1,6 +1,8 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +55,8 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 	@Override
 	public SimplePageVO listCompanyUsers(int entid, String pid, String name, Integer status, int current, int size) {
 		Page<CompanyUserListItemVO> p = new Page<>(current, size);
-		Page<CompanyUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name, ObjectUtil.isNull(status) ? 1 : status);
+		Page<CompanyUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name,
+				ObjectUtil.isNull(status) ? 1 : status);
 		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
 	}
 
@@ -77,8 +80,8 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 		int computeMode = 1;
 		SystemConfig cfg = systemConfigMapper
 			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, "assess_compute_mode"));
-		if (ObjectUtil.isNotNull(cfg) && ObjectUtil.isNotNull(cfg.getValue()) && !cfg.getValue().isEmpty() && !"1".equals(cfg.getValue())
-				&& !"true".equalsIgnoreCase(cfg.getValue())) {
+		if (ObjectUtil.isNotNull(cfg) && ObjectUtil.isNotNull(cfg.getValue()) && !cfg.getValue().isEmpty()
+				&& !"1".equals(cfg.getValue()) && !"true".equalsIgnoreCase(cfg.getValue())) {
 			computeMode = 0;
 		}
 		CompanyUserProfileVO vo = new CompanyUserProfileVO();
@@ -215,6 +218,18 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 			return copy;
 		}
 		return null;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Admin req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Admin req) {
+		return super.update(req);
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.CategoryMapper;
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Service;
  * @date 2026/3/31
  */
 @Service
-public class AttachCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category> implements AttachCateAdminService {
+public class AttachCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category>
+		implements AttachCateAdminService {
 
 	private static final String TYPE_ATTACH = "systemAttach";
 
@@ -26,6 +29,18 @@ public class AttachCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Ca
 			.eq(Category::getType, TYPE_ATTACH)
 			.eq(Category::getEntid, entid)
 			.orderByDesc(Category::getSort));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Category req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Category req) {
+		return super.update(req);
 	}
 
 }

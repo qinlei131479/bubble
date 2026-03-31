@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
@@ -151,6 +153,18 @@ public class CompanyServiceImpl extends UpServiceImpl<EnterpriseMapper, Enterpri
 			case "inviter_review" -> new CompanyQuantityVO(userEnterpriseApplyMapper.countInviterReview(entId));
 			default -> new CompanyQuantityVO(0L);
 		};
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Enterprise req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Enterprise req) {
+		return super.update(req);
 	}
 
 }

@@ -11,6 +11,8 @@ import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
 import org.springframework.stereotype.Service;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 企业消息列表。
@@ -71,6 +73,18 @@ public class MessageServiceImpl extends UpServiceImpl<EnterpriseMessageNoticeMap
 		}
 		row.setIsRead(isRead);
 		this.updateById(row);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(EnterpriseMessageNotice req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(EnterpriseMessageNotice req) {
+		return super.update(req);
 	}
 
 }

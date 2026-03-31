@@ -1,6 +1,6 @@
 package com.bubblecloud.biz.oa.handler;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,25 +17,25 @@ import cn.hutool.core.util.ObjectUtil;
 public class OaExceptionHandler {
 
 	@ExceptionHandler(IllegalArgumentException.class)
-	public PhpResponse<Void> handleIllegalArgumentException(IllegalArgumentException ex) {
-		return PhpResponse.failed(ex.getMessage());
+	public R<Void> handleIllegalArgumentException(IllegalArgumentException ex) {
+		return R.phpFailed(ex.getMessage());
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public PhpResponse<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+	public R<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 		String msg = ObjectUtil.isNull(ex.getBindingResult().getFieldError()) ? "参数错误"
 				: ex.getBindingResult().getFieldError().getDefaultMessage();
-		return PhpResponse.failed(msg);
+		return R.phpFailed(msg);
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
-	public PhpResponse<Void> handleConstraintViolationException(ConstraintViolationException ex) {
-		return PhpResponse.failed(ex.getMessage());
+	public R<Void> handleConstraintViolationException(ConstraintViolationException ex) {
+		return R.phpFailed(ex.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)
-	public PhpResponse<Void> handleException(Exception ex) {
-		return PhpResponse.failed(ex.getMessage());
+	public R<Void> handleException(Exception ex) {
+		return R.phpFailed(ex.getMessage());
 	}
 
 }

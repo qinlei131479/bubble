@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Collections;
 import java.util.List;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.placeholder.HolidayTypeOptionVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +28,9 @@ public class ApproveController {
 
 	@GetMapping("/page")
 	@Operation(summary = "审批配置分页")
-	public PhpResponse<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
 			@RequestParam(defaultValue = "20") Integer size) {
-		return PhpResponse.ok(SimplePageVO.empty(current, size));
+		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
 	/**
@@ -39,8 +39,8 @@ public class ApproveController {
 	 */
 	@GetMapping("/holiday_type/select")
 	@Operation(summary = "假期类型下拉")
-	public PhpResponse<List<HolidayTypeOptionVO>> holidayTypeSelect() {
-		return PhpResponse.ok(Collections.emptyList());
+	public R<List<HolidayTypeOptionVO>> holidayTypeSelect() {
+		return R.phpOk(Collections.emptyList());
 	}
 
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -76,6 +78,18 @@ public class DictDataServiceImpl extends UpServiceImpl<DictDataMapper, DictData>
 			n.setChildren(ch);
 		}
 		return n;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(DictData req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(DictData req) {
+		return super.update(req);
 	}
 
 }

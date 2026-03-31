@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.service.EmployeeTrainService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.EmployeeTrainUpdateDTO;
 import com.bubblecloud.oa.api.entity.EmployeeTrain;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,28 +31,27 @@ public class EmployeeTrainController {
 
 	@GetMapping("/{type}")
 	@Operation(summary = "员工培训详情")
-	public PhpResponse<EmployeeTrain> info(@PathVariable String type) {
+	public R<EmployeeTrain> info(@PathVariable String type) {
 		try {
-			return PhpResponse.ok(employeeTrainService.getInfo(type));
+			return R.phpOk(employeeTrainService.getInfo(type));
 		}
 		catch (IllegalArgumentException e) {
-			return PhpResponse.failed(e.getMessage());
+			return R.phpFailed(e.getMessage());
 		}
 	}
 
 	@PutMapping("/{type}")
 	@Operation(summary = "更新培训内容")
-	public PhpResponse<String> update(@PathVariable String type,
-			@RequestBody(required = false) EmployeeTrainUpdateDTO dto) {
+	public R<String> update(@PathVariable String type, @RequestBody(required = false) EmployeeTrainUpdateDTO dto) {
 		if (ObjectUtil.isNull(dto)) {
 			dto = new EmployeeTrainUpdateDTO();
 		}
 		try {
 			employeeTrainService.updateTrain(type, dto);
-			return PhpResponse.ok("common.operation.succ");
+			return R.phpOk("common.operation.succ");
 		}
 		catch (IllegalArgumentException e) {
-			return PhpResponse.failed(e.getMessage());
+			return R.phpFailed(e.getMessage());
 		}
 	}
 

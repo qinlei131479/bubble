@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
@@ -26,7 +28,8 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig> implements ConfigAdminService {
+public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig>
+		implements ConfigAdminService {
 
 	private static final String CAT_WORK_BENCH = "work_bench";
 
@@ -100,7 +103,8 @@ public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, Sy
 		SystemConfig sw = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getConfigKey, "firewall_switch")
 			.last("LIMIT 1"));
-		vo.setFirewallSwitch(ObjectUtil.isNotNull(sw) && ObjectUtil.isNotNull(sw.getValue()) ? parseIntSafe(sw.getValue(), 0) : 0);
+		vo.setFirewallSwitch(
+				ObjectUtil.isNotNull(sw) && ObjectUtil.isNotNull(sw.getValue()) ? parseIntSafe(sw.getValue(), 0) : 0);
 		SystemConfig fc = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getConfigKey, "firewall_content")
 			.last("LIMIT 1"));
@@ -191,6 +195,18 @@ public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, Sy
 		catch (Exception e) {
 			return def;
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemConfig req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemConfig req) {
+		return super.update(req);
 	}
 
 }

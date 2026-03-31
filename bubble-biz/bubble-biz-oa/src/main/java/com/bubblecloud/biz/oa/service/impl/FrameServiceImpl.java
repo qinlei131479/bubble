@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
@@ -412,6 +414,18 @@ public class FrameServiceImpl extends UpServiceImpl<FrameMapper, Frame> implemen
 		vo.setIsShow(f.getIsShow());
 		vo.setLevel(f.getLevel());
 		return vo;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Frame req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Frame req) {
+		return super.update(req);
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.security.SecureRandom;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
@@ -78,6 +80,18 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 		admin.setPassword(ENCODER.encode(rawPassword));
 		admin.setIsInit(0);
 		this.updateById(admin);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Admin req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Admin req) {
+		return super.update(req);
 	}
 
 }

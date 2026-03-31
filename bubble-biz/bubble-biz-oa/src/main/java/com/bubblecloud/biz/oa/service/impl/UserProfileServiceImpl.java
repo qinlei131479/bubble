@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 当前用户资料与简历。
@@ -272,6 +274,18 @@ public class UserProfileServiceImpl extends UpServiceImpl<AdminInfoMapper, Admin
 		catch (NumberFormatException e) {
 			return null;
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(AdminInfo req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(AdminInfo req) {
+		return super.update(req);
 	}
 
 }

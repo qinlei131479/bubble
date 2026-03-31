@@ -2,7 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Map;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.notice.NoticeBoardListVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,11 +24,11 @@ public class NoticeBoardController {
 
 	@GetMapping("/list")
 	@Operation(summary = "通知公告列表")
-	public PhpResponse<NoticeBoardListVO> list(@RequestParam Map<String, String> query) {
+	public R<NoticeBoardListVO> list(@RequestParam Map<String, String> query) {
 		NoticeBoardListVO vo = new NoticeBoardListVO();
 		vo.setList(java.util.Collections.emptyList());
 		vo.setCount(0);
-		return PhpResponse.ok(vo);
+		return R.phpOk(vo);
 	}
 
 }

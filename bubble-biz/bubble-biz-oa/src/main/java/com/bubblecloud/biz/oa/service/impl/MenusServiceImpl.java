@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
@@ -219,6 +221,18 @@ public class MenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMen
 				return null;
 			}
 		}).filter(Objects::nonNull).toList();
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemMenus req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemMenus req) {
+		return super.update(req);
 	}
 
 }

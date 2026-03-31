@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Collections;
 import java.util.List;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.placeholder.LabelValueOptionVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +28,9 @@ public class AttendanceController {
 
 	@GetMapping("/group/page")
 	@Operation(summary = "考勤组分页")
-	public PhpResponse<SimplePageVO> groupPage(@RequestParam(defaultValue = "1") Integer current,
+	public R<SimplePageVO> groupPage(@RequestParam(defaultValue = "1") Integer current,
 			@RequestParam(defaultValue = "20") Integer size) {
-		return PhpResponse.ok(SimplePageVO.empty(current, size));
+		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
 	/**
@@ -39,8 +39,8 @@ public class AttendanceController {
 	 */
 	@GetMapping("/abnormal_date")
 	@Operation(summary = "考勤异常日期列表")
-	public PhpResponse<List<LabelValueOptionVO>> abnormalDate() {
-		return PhpResponse.ok(Collections.emptyList());
+	public R<List<LabelValueOptionVO>> abnormalDate() {
+		return R.phpOk(Collections.emptyList());
 	}
 
 }

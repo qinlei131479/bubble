@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EmployeeTrainMapper;
@@ -63,6 +65,18 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 			existing.setContent(content);
 			baseMapper.updateById(existing);
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(EmployeeTrain req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(EmployeeTrain req) {
+		return super.update(req);
 	}
 
 }

@@ -18,7 +18,6 @@ public interface AuthService extends UpService<Admin> {
 
 	/**
 	 * 账号密码登录。
-	 *
 	 * @param dto 登录参数
 	 * @return 登录结果
 	 */
@@ -41,7 +40,6 @@ public interface AuthService extends UpService<Admin> {
 
 	/**
 	 * 当前登录用户会话信息（与 PHP AdminService::loginInfo 一致）。
-	 *
 	 * @param userId 用户主键 eb_admin.id
 	 * @return 用户信息，不存在返回 null
 	 */
@@ -49,9 +47,8 @@ public interface AuthService extends UpService<Admin> {
 
 	/**
 	 * 修改密码（与 PHP AdminService::password 一致）。
-	 *
-	 * @param userId      当前登录用户 id
-	 * @param phone       手机号（需与账号一致）
+	 * @param userId 当前登录用户 id
+	 * @param phone 手机号（需与账号一致）
 	 * @param newPassword 新密码
 	 */
 	void updatePassword(Long userId, String phone, String newPassword);

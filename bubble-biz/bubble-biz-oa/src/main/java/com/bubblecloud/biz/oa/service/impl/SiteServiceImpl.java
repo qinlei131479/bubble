@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
@@ -42,8 +44,8 @@ public class SiteServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemCon
 		List<SystemConfig> configs = baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class));
 		Map<String, String> configMap = configs.stream()
 			.filter(c -> ObjectUtil.isNotNull(c.getConfigKey()))
-			.collect(Collectors.toMap(SystemConfig::getConfigKey, c -> ObjectUtil.isNull(c.getValue()) ? "" : c.getValue(),
-					(a, b) -> b, LinkedHashMap::new));
+			.collect(Collectors.toMap(SystemConfig::getConfigKey,
+					c -> ObjectUtil.isNull(c.getValue()) ? "" : c.getValue(), (a, b) -> b, LinkedHashMap::new));
 
 		Enterprise ent = enterpriseMapper
 			.selectOne(Wrappers.lambdaQuery(Enterprise.class).eq(Enterprise::getId, 1L).eq(Enterprise::getStatus, 1));
@@ -134,6 +136,18 @@ public class SiteServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemCon
 			})
 			.filter(Objects::nonNull)
 			.toList();
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemConfig req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemConfig req) {
+		return super.update(req);
 	}
 
 }

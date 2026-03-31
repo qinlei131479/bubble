@@ -39,7 +39,8 @@ public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {
 			Map<String, Object> claims = tokenService.parseAndValidate(token);
 			if (ObjectUtil.isNotNull(claims) && ObjectUtil.isNotNull(claims.get("sub"))) {
 				Long userId = Long.valueOf(String.valueOf(claims.get("sub")));
-				String account = ObjectUtil.isNull(claims.get("account")) ? null : String.valueOf(claims.get("account"));
+				String account = ObjectUtil.isNull(claims.get("account")) ? null
+						: String.valueOf(claims.get("account"));
 				OaCurrentUser principal = new OaCurrentUser(userId, account);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal,
 						null, Collections.emptyList());

@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import com.bubblecloud.biz.oa.security.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.MenusService;
 import com.bubblecloud.biz.oa.service.UserProfileService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.CheckPwdDTO;
 import com.bubblecloud.oa.api.dto.MenusQueryDTO;
 import com.bubblecloud.oa.api.dto.UserJoinDTO;
@@ -44,13 +44,14 @@ public class UserController {
 
 	@GetMapping("/menus")
 	@Operation(summary = "获取当前用户菜单")
-	public PhpResponse<MenusVO> menus(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+	public R<MenusVO> menus(Authentication authentication) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
 		MenusQueryDTO dto = new MenusQueryDTO();
 		dto.setUserId(currentUser.getId());
-		return PhpResponse.ok(menusService.menus(dto));
+		return R.phpOk(menusService.menus(dto));
 	}
 
 	/**
@@ -58,8 +59,8 @@ public class UserController {
 	 */
 	@PutMapping("/user/join")
 	@Operation(summary = "处理企业邀请")
-	public PhpResponse<String> userJoin(@RequestBody(required = false) UserJoinDTO body) {
-		return PhpResponse.ok("ok");
+	public R<String> userJoin(@RequestBody(required = false) UserJoinDTO body) {
+		return R.phpOk("ok");
 	}
 
 	/**
@@ -68,67 +69,71 @@ public class UserController {
 	 */
 	@GetMapping("/account_info")
 	@Operation(summary = "获取当前用户账号资料（含邮箱扩展）")
-	public PhpResponse<UserSelfInfoVO> accountInfo(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+	public R<UserSelfInfoVO> accountInfo(Authentication authentication) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
 		UserSelfInfoVO vo = userProfileService.getSelfInfo(currentUser.getId());
-		return ObjectUtil.isNull(vo) ? PhpResponse.failed("用户不存在") : PhpResponse.ok(vo);
+		return ObjectUtil.isNull(vo) ? R.phpFailed("用户不存在") : R.phpOk(vo);
 	}
 
 	@PutMapping("/account_info")
 	@Operation(summary = "修改当前用户账号资料")
-	public PhpResponse<String> updateAccountInfo(Authentication authentication,
+	public R<String> updateAccountInfo(Authentication authentication,
 			@RequestBody(required = false) UserSelfUpdateDTO dto) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
 		if (ObjectUtil.isNull(dto)) {
 			// 兼容 PHP empty body
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
 		try {
 			userProfileService.updateSelf(currentUser.getId(), dto);
-			return PhpResponse.ok("common.update.succ");
+			return R.phpOk("common.update.succ");
 		}
 		catch (IllegalArgumentException e) {
-			return PhpResponse.failed(e.getMessage());
+			return R.phpFailed(e.getMessage());
 		}
 	}
 
 	@PostMapping("/checkpwd")
 	@Operation(summary = "验证密码规范")
-	public PhpResponse<String> checkPwd(@RequestBody @Valid CheckPwdDTO dto) {
+	public R<String> checkPwd(@RequestBody @Valid CheckPwdDTO dto) {
 		try {
 			userProfileService.checkPwd(dto);
-			return PhpResponse.ok("验证成功");
+			return R.phpOk("验证成功");
 		}
 		catch (IllegalArgumentException e) {
-			return PhpResponse.failed(e.getMessage());
+			return R.phpFailed(e.getMessage());
 		}
 	}
 
 	@GetMapping("/resume")
 	@Operation(summary = "获取个人简历")
-	public PhpResponse<UserResumeDetailVO> resume(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+	public R<UserResumeDetailVO> resume(Authentication authentication) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
-		return PhpResponse.ok(userProfileService.getResume(currentUser.getId()));
+		return R.phpOk(userProfileService.getResume(currentUser.getId()));
 	}
 
 	@PutMapping("/resume_save")
 	@Operation(summary = "保存个人简历")
-	public PhpResponse<String> resumeSave(Authentication authentication, @RequestBody UserResumeSaveDTO dto) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+	public R<String> resumeSave(Authentication authentication, @RequestBody UserResumeSaveDTO dto) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
 		try {
 			userProfileService.saveResume(currentUser.getId(), dto);
-			return PhpResponse.ok("保存成功");
+			return R.phpOk("保存成功");
 		}
 		catch (IllegalArgumentException e) {
-			return PhpResponse.failed(e.getMessage());
+			return R.phpFailed(e.getMessage());
 		}
 	}
 

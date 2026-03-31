@@ -1,6 +1,8 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
@@ -41,6 +43,18 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			.eq(SystemConfig::getConfigKey, "registration_open")
 			.last("LIMIT 1"), false);
 		return ObjectUtil.isNotNull(reg) && ("1".equals(reg.getValue()) || "true".equalsIgnoreCase(reg.getValue()));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemConfig req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemConfig req) {
+		return super.update(req);
 	}
 
 }

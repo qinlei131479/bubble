@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
@@ -39,7 +41,8 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, EnterpriseRole> implements RolesAdminService {
+public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, EnterpriseRole>
+		implements RolesAdminService {
 
 	private final EnterpriseRoleUserMapper enterpriseRoleUserMapper;
 
@@ -130,8 +133,8 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 		if (ObjectUtil.isNull(r)) {
 			throw new IllegalArgumentException("未找到可删除的角色");
 		}
-		enterpriseRoleUserMapper.delete(
-				Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, id));
+		enterpriseRoleUserMapper
+			.delete(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, id));
 		getBaseMapper().deleteById(id);
 	}
 
@@ -371,6 +374,18 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 			role.setUserCount((int) cnt);
 			getBaseMapper().updateById(role);
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(EnterpriseRole req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(EnterpriseRole req) {
+		return super.update(req);
 	}
 
 }

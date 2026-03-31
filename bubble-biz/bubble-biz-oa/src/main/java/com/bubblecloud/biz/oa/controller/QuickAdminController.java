@@ -32,9 +32,8 @@ public class QuickAdminController {
 
 	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "分页列表")
-	public R<?> page(@RequestParam(required = false) Integer cid,
-			@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") int pageNum,
-			@RequestParam(defaultValue = "20") int limit) {
+	public R<?> page(@RequestParam(required = false) Integer cid, @RequestParam(required = false) String name,
+			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
 		return R.phpOk(quickAdminService.page(cid, name, pageNum, limit));
 	}
 

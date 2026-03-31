@@ -86,8 +86,7 @@ public class MenusAdminController {
 
 	@PostMapping("/not_save")
 	@Operation(summary = "未保存权限占位")
-	public R<com.fasterxml.jackson.databind.JsonNode> getNotSaveMenus(
-			@RequestParam(defaultValue = "1") int entid) {
+	public R<com.fasterxml.jackson.databind.JsonNode> getNotSaveMenus(@RequestParam(defaultValue = "1") int entid) {
 		return R.phpOk(menusAdminService.getNotSaveMenus(entid));
 	}
 

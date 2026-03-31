@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.List;
 
 import com.bubblecloud.biz.oa.service.ClientRuleService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.config.ClientRuleApproveSaveDTO;
 import com.bubblecloud.oa.api.vo.config.ClientRuleApproveConfigVO;
 import com.bubblecloud.oa.api.vo.config.ConfigCateItemVO;
@@ -35,40 +35,40 @@ public class ClientRuleController {
 
 	@GetMapping("/cate")
 	@Operation(summary = "客户规则分类列表")
-	public PhpResponse<List<ConfigCateItemVO>> cateList() {
-		return PhpResponse.ok(clientRuleService.listClientRuleCates());
+	public R<List<ConfigCateItemVO>> cateList() {
+		return R.phpOk(clientRuleService.listClientRuleCates());
 	}
 
 	@GetMapping({ "/approve", "/approve/{form}" })
 	@Operation(summary = "获取客户审批规则")
-	public PhpResponse<ClientRuleApproveConfigVO> getApproveConfig(@PathVariable(required = false) Integer form) {
-		return PhpResponse.ok(clientRuleService.getApproveConfig(form));
+	public R<ClientRuleApproveConfigVO> getApproveConfig(@PathVariable(required = false) Integer form) {
+		return R.phpOk(clientRuleService.getApproveConfig(form));
 	}
 
 	@PutMapping("/approve")
 	@Operation(summary = "保存客户审批规则")
-	public PhpResponse<String> setApproveConfig(@RequestBody ClientRuleApproveSaveDTO dto) {
+	public R<String> setApproveConfig(@RequestBody ClientRuleApproveSaveDTO dto) {
 		clientRuleService.saveApproveConfig(dto);
-		return PhpResponse.ok("保存成功");
+		return R.phpOk("保存成功");
 	}
 
 	@GetMapping("/{category}")
 	@Operation(summary = "按分类读取配置为 JSON 对象")
-	public PhpResponse<JsonNode> getConfig(@PathVariable String category) {
+	public R<JsonNode> getConfig(@PathVariable String category) {
 		if (StrUtil.isBlank(category)) {
-			return PhpResponse.failed("common.empty.attrs");
+			return R.phpFailed("common.empty.attrs");
 		}
-		return PhpResponse.ok(clientRuleService.getConfigByCategory(category));
+		return R.phpOk(clientRuleService.getConfigByCategory(category));
 	}
 
 	@PutMapping("/{category}")
 	@Operation(summary = "按分类保存配置")
-	public PhpResponse<String> setConfig(@PathVariable String category, @RequestBody JsonNode body) {
+	public R<String> setConfig(@PathVariable String category, @RequestBody JsonNode body) {
 		if (StrUtil.isBlank(category)) {
-			return PhpResponse.failed("common.empty.attrs");
+			return R.phpFailed("common.empty.attrs");
 		}
 		clientRuleService.saveConfigByCategory(category, body);
-		return PhpResponse.ok("保存成功");
+		return R.phpOk("保存成功");
 	}
 
 }

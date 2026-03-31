@@ -3,6 +3,8 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
@@ -98,6 +100,18 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 		root.set("ent", objectMapper.createArrayNode());
 		root.set("uni", objectMapper.createArrayNode());
 		return root;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemMenus req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemMenus req) {
+		return super.update(req);
 	}
 
 }

@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Collections;
 import java.util.List;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.placeholder.DailyReportMemberVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,8 +27,8 @@ public class DailyController {
 	 */
 	@GetMapping("/report_member")
 	@Operation(summary = "默认汇报人")
-	public PhpResponse<List<DailyReportMemberVO>> reportMember() {
-		return PhpResponse.ok(Collections.emptyList());
+	public R<List<DailyReportMemberVO>> reportMember() {
+		return R.phpOk(Collections.emptyList());
 	}
 
 }

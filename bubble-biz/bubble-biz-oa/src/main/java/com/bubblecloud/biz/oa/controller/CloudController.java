@@ -1,6 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,9 +22,9 @@ public class CloudController {
 
 	@GetMapping("/space/page")
 	@Operation(summary = "网盘空间分页")
-	public PhpResponse<SimplePageVO> spacePage(@RequestParam(defaultValue = "1") Integer current,
+	public R<SimplePageVO> spacePage(@RequestParam(defaultValue = "1") Integer current,
 			@RequestParam(defaultValue = "20") Integer size) {
-		return PhpResponse.ok(SimplePageVO.empty(current, size));
+		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
 }

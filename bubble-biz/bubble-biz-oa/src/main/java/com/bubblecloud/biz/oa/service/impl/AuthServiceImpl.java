@@ -3,6 +3,8 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
@@ -299,6 +301,18 @@ public class AuthServiceImpl extends UpServiceImpl<AdminMapper, Admin> implement
 			return "$2a$" + hash.substring(4);
 		}
 		return hash;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Admin req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Admin req) {
+		return super.update(req);
 	}
 
 }

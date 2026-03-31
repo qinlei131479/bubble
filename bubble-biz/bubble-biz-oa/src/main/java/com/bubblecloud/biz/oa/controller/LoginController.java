@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import com.bubblecloud.biz.oa.security.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.AuthService;
 import com.bubblecloud.biz.oa.service.ScanLoginService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.LoginDTO;
 import com.bubblecloud.oa.api.dto.PhoneLoginDTO;
 import com.bubblecloud.oa.api.dto.RegisterDTO;
@@ -44,58 +44,60 @@ public class LoginController {
 
 	@PostMapping("/login")
 	@Operation(summary = "账号密码登录")
-	public PhpResponse<LoginVO> login(@RequestBody @Valid LoginDTO dto) {
-		return PhpResponse.ok(authService.login(dto));
+	public R<LoginVO> login(@RequestBody @Valid LoginDTO dto) {
+		return R.phpOk(authService.login(dto));
 	}
 
 	@GetMapping("/info")
 	@Operation(summary = "当前登录用户信息（PHP：userInfo + enterprise）")
-	public PhpResponse<LoginInfoVO> info(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+	public R<LoginInfoVO> info(Authentication authentication) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
 		LoginInfoVO data = authService.loginInfo(currentUser.getId());
-		return ObjectUtil.isNull(data) ? PhpResponse.failed("用户不存在") : PhpResponse.ok(data);
+		return ObjectUtil.isNull(data) ? R.phpFailed("用户不存在") : R.phpOk(data);
 	}
 
 	@GetMapping("/logout")
 	@Operation(summary = "退出登录")
-	public PhpResponse<Boolean> logout() {
-		return PhpResponse.ok(Boolean.TRUE);
+	public R<Boolean> logout() {
+		return R.phpOk(Boolean.TRUE);
 	}
 
 	@PutMapping({ "/savePassword", "/common/savePassword" })
 	@Operation(summary = "修改密码（与 PHP ent/user/savePassword 一致）")
-	public PhpResponse<String> savePassword(Authentication authentication, @RequestBody @Valid SavePasswordDTO dto) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return PhpResponse.failed("未登录");
+	public R<String> savePassword(Authentication authentication, @RequestBody @Valid SavePasswordDTO dto) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
 		}
 		authService.updatePassword(currentUser.getId(), dto.getPhone(), dto.getPassword());
-		return PhpResponse.ok("ok");
+		return R.phpOk("ok");
 	}
 
 	@PostMapping("/register")
 	@Operation(summary = "用户注册（短信验证码 + 密码）")
-	public PhpResponse<LoginVO> register(@RequestBody @Valid RegisterDTO dto) {
-		return PhpResponse.ok(authService.register(dto));
+	public R<LoginVO> register(@RequestBody @Valid RegisterDTO dto) {
+		return R.phpOk(authService.register(dto));
 	}
 
 	@PostMapping("/phone_login")
 	@Operation(summary = "短信验证码登录（无账号则自动注册）")
-	public PhpResponse<LoginVO> phoneLogin(@RequestBody @Valid PhoneLoginDTO dto) {
-		return PhpResponse.ok(authService.phoneLogin(dto));
+	public R<LoginVO> phoneLogin(@RequestBody @Valid PhoneLoginDTO dto) {
+		return R.phpOk(authService.phoneLogin(dto));
 	}
 
 	@GetMapping("/scan_key")
 	@Operation(summary = "获取扫码登录 key")
-	public PhpResponse<ScanKeyVO> scanKey() {
-		return PhpResponse.ok(scanLoginService.createScanKey());
+	public R<ScanKeyVO> scanKey() {
+		return R.phpOk(scanLoginService.createScanKey());
 	}
 
 	@PostMapping("/scan_status")
 	@Operation(summary = "轮询扫码状态")
-	public PhpResponse<ScanStatusResultVO> scanStatus(@RequestBody @Valid ScanStatusDTO dto) {
-		return PhpResponse.ok(scanLoginService.pollStatus(dto.getKey()));
+	public R<ScanStatusResultVO> scanStatus(@RequestBody @Valid ScanStatusDTO dto) {
+		return R.phpOk(scanLoginService.pollStatus(dto.getKey()));
 	}
 
 }

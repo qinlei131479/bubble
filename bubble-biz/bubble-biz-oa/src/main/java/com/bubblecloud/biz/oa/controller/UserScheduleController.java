@@ -3,7 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.List;
 
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
-import com.bubblecloud.biz.oa.support.PhpResponse;
+import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.UserScheduleQueryDTO;
 import com.bubblecloud.oa.api.vo.schedule.UserScheduleDayWrapperVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,8 +30,8 @@ public class UserScheduleController {
 
 	@GetMapping
 	@Operation(summary = "日历待办列表")
-	public PhpResponse<List<UserScheduleDayWrapperVO>> list(@ModelAttribute UserScheduleQueryDTO query) {
-		return PhpResponse.ok(scheduleApiService.userScheduleList(query));
+	public R<List<UserScheduleDayWrapperVO>> list(@ModelAttribute UserScheduleQueryDTO query) {
+		return R.phpOk(scheduleApiService.userScheduleList(query));
 	}
 
 }

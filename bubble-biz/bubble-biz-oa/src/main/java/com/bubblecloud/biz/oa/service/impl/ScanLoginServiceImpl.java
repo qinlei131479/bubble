@@ -3,6 +3,8 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
@@ -92,6 +94,18 @@ public class ScanLoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> impl
 			return;
 		}
 		stringRedisTemplate.opsForValue().set(redisKey, String.valueOf(userId), TTL_SECONDS, TimeUnit.SECONDS);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Admin req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Admin req) {
+		return super.update(req);
 	}
 
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EnterpriseUserDailyMapper;
@@ -150,13 +152,12 @@ public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMappe
 		YearMonth ym = YearMonth.parse(yearMonth);
 		LocalDateTime start = ym.atDay(1).atStartOfDay();
 		LocalDateTime end = ym.plusMonths(1).atDay(1).atStartOfDay();
-		List<EnterpriseUserDaily> rows = baseMapper
-			.selectList(Wrappers.lambdaQuery(EnterpriseUserDaily.class)
-				.eq(EnterpriseUserDaily::getUid, uid)
-				.eq(EnterpriseUserDaily::getEntid, (long) entid)
-				.ge(EnterpriseUserDaily::getCreatedAt, start)
-				.lt(EnterpriseUserDaily::getCreatedAt, end)
-				.orderByAsc(EnterpriseUserDaily::getCreatedAt));
+		List<EnterpriseUserDaily> rows = baseMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserDaily.class)
+			.eq(EnterpriseUserDaily::getUid, uid)
+			.eq(EnterpriseUserDaily::getEntid, (long) entid)
+			.ge(EnterpriseUserDaily::getCreatedAt, start)
+			.lt(EnterpriseUserDaily::getCreatedAt, end)
+			.orderByAsc(EnterpriseUserDaily::getCreatedAt));
 		Map<Integer, WorkbenchDailyDayVO> map = new LinkedHashMap<>();
 		for (EnterpriseUserDaily d : rows) {
 			if (ObjectUtil.isNull(d.getCreatedAt())) {
@@ -187,6 +188,18 @@ public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMappe
 		}
 		q.orderByDesc(UserPending::getId);
 		return userPendingMapper.selectList(q);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(EnterpriseUserDaily req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(EnterpriseUserDaily req) {
+		return super.update(req);
 	}
 
 }

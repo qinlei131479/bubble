@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
@@ -171,6 +173,18 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 			row.setValue(value);
 			systemConfigMapper.updateById(row);
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemStorage req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemStorage req) {
+		return super.update(req);
 	}
 
 }

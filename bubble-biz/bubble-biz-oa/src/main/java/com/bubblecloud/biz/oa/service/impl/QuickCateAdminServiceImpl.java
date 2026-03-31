@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.CategoryMapper;
@@ -18,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2026/3/30
  */
 @Service
-public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category> implements QuickCateAdminService {
+public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category>
+		implements QuickCateAdminService {
 
 	private static final String TYPE_QUICK = "quickConfig";
 
@@ -58,6 +61,18 @@ public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Cat
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteCate(long id) {
 		baseMapper.deleteById(id);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Category req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Category req) {
+		return super.update(req);
 	}
 
 }

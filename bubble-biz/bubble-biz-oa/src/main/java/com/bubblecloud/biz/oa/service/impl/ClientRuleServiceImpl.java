@@ -3,6 +3,8 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
@@ -28,7 +30,8 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class ClientRuleServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig> implements ClientRuleService {
+public class ClientRuleServiceImpl extends UpServiceImpl<SystemConfigMapper, SystemConfig>
+		implements ClientRuleService {
 
 	private final ObjectMapper objectMapper;
 
@@ -169,6 +172,18 @@ public class ClientRuleServiceImpl extends UpServiceImpl<SystemConfigMapper, Sys
 			n.setInputType("input");
 			baseMapper.insert(n);
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(SystemConfig req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(SystemConfig req) {
+		return super.update(req);
 	}
 
 }

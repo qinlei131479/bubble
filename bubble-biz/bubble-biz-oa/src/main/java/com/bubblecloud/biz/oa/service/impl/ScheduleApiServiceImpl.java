@@ -2,6 +2,8 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bubblecloud.biz.oa.mapper.ScheduleMapper;
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
@@ -52,6 +54,18 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		List<UserScheduleDayWrapperVO> outer = new ArrayList<>();
 		outer.add(new UserScheduleDayWrapperVO());
 		return outer;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Schedule req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Schedule req) {
+		return super.update(req);
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.List;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,6 +103,18 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 			.orderByDesc(EnterpriseUserSalary::getTakeDate)
 			.orderByDesc(EnterpriseUserSalary::getId)
 			.last("LIMIT 1"));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(EnterpriseUserSalary req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(EnterpriseUserSalary req) {
+		return super.update(req);
 	}
 
 }

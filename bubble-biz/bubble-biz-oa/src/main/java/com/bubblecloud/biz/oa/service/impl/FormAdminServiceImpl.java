@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.form.FormProtectedKeys;
@@ -422,6 +424,18 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 			n.setUpdatedAt(now);
 			salesmanCustomFieldMapper.insert(n);
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(FormData req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(FormData req) {
+		return super.update(req);
 	}
 
 }

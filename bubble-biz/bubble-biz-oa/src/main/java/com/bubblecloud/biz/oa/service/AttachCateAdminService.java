@@ -15,7 +15,6 @@ public interface AttachCateAdminService extends UpService<Category> {
 
 	/**
 	 * 按企业查询附件分类列表。
-	 *
 	 * @param entid 企业 ID
 	 * @return 分类列表
 	 */

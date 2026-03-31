@@ -1,6 +1,5 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.PromotionService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -20,11 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
- * 晋升表（对齐 PHP {@code ent/company/promotions}）。
+ * 晋升表（对齐 PHP {@code ent/company/promotions}）。业务见 {@link PromotionService}。
  *
  * @author qinlei
  * @date 2026/3/29 下午6:30
@@ -39,60 +36,34 @@ public class PromotionController {
 
 	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "晋升表列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<Promotion> pg,
-			@RequestParam(required = false) Integer status) {
-		Promotion query = new Promotion();
-		query.setStatus(status);
-		Page<Promotion> r = promotionService.findPg(pg, query);
-		return R.phpOk(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
+	public R<SimplePageVO> page(@ParameterObject Pg<Promotion> pg, @RequestParam(required = false) Integer status) {
+		return R.phpOk(promotionService.pagePromotion(pg, status));
 	}
 
 	@PostMapping
 	@Operation(summary = "晋升表保存")
 	public R<String> create(@RequestBody PromotionSaveDTO dto) {
-		Promotion p = new Promotion();
-		p.setName(dto.getName());
-		p.setSort(ObjectUtil.isNull(dto.getSort()) ? 0 : dto.getSort());
-		p.setStatus(1);
-		promotionService.save(p);
+		promotionService.createPromotion(dto);
 		return R.phpOk("common.insert.succ");
 	}
 
 	@GetMapping("/{id}")
 	@Operation(summary = "晋升表状态/详情")
 	public R<Promotion> details(@PathVariable long id) {
-		Promotion p = promotionService.getById(id);
-		if (ObjectUtil.isNull(p) || ObjectUtil.isNotNull(p.getDeletedAt())) {
-			return R.phpFailed("common.operation.noExists");
-		}
-		return R.phpOk(p);
+		return R.phpOk(promotionService.getPromotionDetail(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "晋升表修改")
 	public R<String> update(@PathVariable long id, @RequestBody PromotionSaveDTO dto) {
-		Promotion existing = promotionService.getById(id);
-		if (ObjectUtil.isNull(existing) || ObjectUtil.isNotNull(existing.getDeletedAt())) {
-			return R.phpFailed("common.operation.noExists");
-		}
-		if (StrUtil.isNotBlank(dto.getName())) {
-			existing.setName(dto.getName());
-		}
-		if (ObjectUtil.isNotNull(dto.getSort())) {
-			existing.setSort(dto.getSort());
-		}
-		promotionService.updateById(existing);
+		promotionService.updatePromotion(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "晋升表删除（软删）")
 	public R<String> removeById(@PathVariable long id) {
-		Promotion existing = promotionService.getById(id);
-		if (ObjectUtil.isNull(existing) || ObjectUtil.isNotNull(existing.getDeletedAt())) {
-			return R.phpFailed("common.operation.noExists");
-		}
-		promotionService.removeById(id);
+		promotionService.removePromotion(id);
 		return R.phpOk("common.delete.succ");
 	}
 
