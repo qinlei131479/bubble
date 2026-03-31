@@ -58,6 +58,19 @@ bubble-visual-{feature}  → 可视化管理服务
 
 - 版本由 `bubble-common-bom` 管理，业务模块勿硬编码；Web 用 Undertow；Feign 用 OkHttp
 
+## 工具类选用顺序（`bubble-biz-oa` 及推荐全后端）
+
+**优先级**：**HuTool（`cn.hutool`）** → **`bubble-common-core` 等工程内封装**（如 `HuToolUtil`）→ **`org.springframework.util`**（仅在前两者无等价能力时使用）。
+
+| 场景 | 推荐 | 避免 |
+|------|------|------|
+| 字符串是否非空（原 `StringUtils.hasText`） | `cn.hutool.core.util.StrUtil`：`StrUtil.isNotBlank` / `StrUtil.isBlank` | `org.springframework.util.StringUtils.hasText` |
+| 对象是否为 `null`、是否非 `null` | `cn.hutool.core.util.ObjectUtil`：`ObjectUtil.isNull` / `ObjectUtil.isNotNull` | 裸写 `== null` / `!= null` |
+| 包装数字「有值且非 0」（如 `x != null && x != 0`） | `ObjectUtil.defaultIfNull(x, 0) != 0` 或与语义一致的 `NumberUtil` | 冗长的 `!= null && != 0` 链（易重复求值） |
+| 默认值、判空集合等 | 优先 HuTool `ObjectUtil` / `CollUtil` / `NumberUtil` 等与场景匹配的 API | Spring `CollectionUtils` 等，除非 HuTool 无对应方法 |
+
+- 新增或修改 `bubble-biz/bubble-biz-oa` 代码时按上表执行；历史代码可随需求逐步对齐。
+
 ---
 
 ## bubble-biz-oa（迁移）
@@ -82,8 +95,23 @@ bubble-visual-{feature}  → 可视化管理服务
 - **禁止**注入 Mapper、在 Controller 写 `Wrappers.lambdaQuery`；经 `XxxService` → Mapper/XML
 - **风格**：可参考 `bubble-biz-agi` 的 `AgentConfigsController`；**优先级**：PHP 路由与字段 > Java 通用写法
 - OA 对外兼容优先 `PhpResponse<T>`，勿为对齐 AGI 改 PHP 路径
-- **分页**：PHP 的 `current`/`size` 等与 `Pg` 不一致时在 **Service** 装配 `Page`/`Pg` 与默认排序；Controller 只传参
+- **分页**：PHP 的 `current`/`size`/`page`/`limit` 等与 `Pg` 不一致时在 **Controller** 装配 `Pg`（`setCurrent`/`setSize`）或 `@ParameterObject Pg`，再调 `findPg`；**ServiceImpl** 按需重写 `findPg`；对应 **`XxxMapper.xml` 必须实现带分页的 `findPg` SQL**（动态条件写在 XML）
 - 权限 `@HasPermission`，写操作可 `@SysLog`
+
+#### CRUD 方法命名（`bubble-biz-oa` 推荐与 `bubble-biz-agi` 对齐）
+
+| 语义 | Java 方法名 | 典型映射（可按 PHP 再并列 `value = {"", "/page"}` 等） |
+|------|-------------|--------------------------------------------------------|
+| 分页列表 | `page` | `@GetMapping({ "", "/page" })` + `UpService.findPg(Pg, Req 实体)` |
+| 按 id 详情 | `details` | `@GetMapping("/{id}")` 或 `/{id}/edit`；**单表**可直接 `getById` |
+| 新增 | `create` | `@PostMapping` + `save`/`create`（基类） |
+| 修改 | `update` | `@PutMapping` + `UpService.update(req)` 或 `update(req, isCustom)` |
+| 按 id 删除 | `removeById` | `@DeleteMapping("/{id}")` + `removeById`/`remove` |
+
+- **GET 新增表单占位**（PHP 常配 `/create`）：方法名用 **`createForm`**，避免与 **`create`（POST 新增）** 同名。
+- **非分页列表**（树、全量）：方法名用业务语义，如 **`list`**、**`workbench`** 等，**不要**占用 `page`。
+- **其它业务接口**（状态切换、树、导出等）在 Controller 中**另起方法**；能复用 **`UpService`/`findPg`/`getById`** 的优先复用。
+- **自定义更新 SQL**：在 **`XxxServiceImpl`** 中调用 **`update(T req, boolean isCustom)`**，`isCustom == true` 时走 **`XxxMapper.xml` 的 `updateCustom`**（见 `UpServiceImpl`）。
 
 ---
 
