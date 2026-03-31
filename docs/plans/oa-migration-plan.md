@@ -42,7 +42,7 @@
 1. **功能对齐不新增** — 只复刻 PHP 已有能力
 2. **前端不动** — Vue2 + Element UI 保持原样，API 路径和响应格式完全兼容
 3. **数据库不迁移** — 直连同一 MySQL 实例，实体用 `@TableName("eb_xxx")` 映射
-4. **响应格式兼容** — OA 接口使用 `PhpResponse`（`status`/`msg`/`data`），非 `R<T>`
+4. **响应格式兼容** — OA 接口使用 `R.phpOk`/`R.phpFailed`（与 PHP `status`/`msg`/`data` 对齐，见 `R` 的 JSON `status`/`code`）
 5. **禁止占位桩** — 每阶段实施的接口必须实现真实业务逻辑，不允许 `SimplePageVO.empty`
 
 ### 1.5 技术映射表
@@ -886,7 +886,7 @@
 
 | 风险 | 影响 | 缓解策略 |
 |------|------|---------|
-| 前端 API 响应格式不兼容 | 前端页面报错/白屏 | 严格使用 `PhpResponse` 包装；每阶段完成后做 API 响应对比测试 |
+| 前端 API 响应格式不兼容 | 前端页面报错/白屏 | 严格使用 `R.phpOk`/`R.phpFailed`；每阶段完成后做 API 响应对比测试 |
 | 低代码平台复杂度超预期 | 阶段 8 工期超出 | 预留 buffer；先实现核心 CRUD 再扩展高级功能 |
 | 考勤算法逻辑复杂 | 打卡/加班/迟到计算错误 | 仔细梳理 PHP Service 层逻辑；编写单元测试覆盖边界场景 |
 | JWT 兼容过渡期问题 | 新旧系统 Token 不互通 | 保持 `OaPhpJwtTokenService` 桥接；灰度期间两套并存 |
