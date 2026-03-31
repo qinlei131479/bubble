@@ -52,6 +52,7 @@ bubble-visual-{feature} → 可视化管理工具服务
 - 继承 `BaseEntity`（含 createBy/createTime/updateBy/updateTime/delFlag 自动填充）
 - MyBatis-Plus `MybatisPlusMetaObjectHandler` 自动处理审计字段
 - JSON 数组字段使用 `JsonStringArrayTypeHandler` / `JsonLongArrayTypeHandler`
+- **OA 模块例外**：`bubble-api-oa` 中迁移表实体继承 `com.bubblecloud.common.mybatis.base.Req<T>`，与 `eb_*` 表字段对齐，不适用本条的 `BaseEntity`；类注释与 `@Schema` 见 **`java-class-javadoc.mdc`** 中 `Admin.java` 约定。
 
 ## 统一返回
 
@@ -75,6 +76,14 @@ bubble-visual-{feature} → 可视化管理工具服务
 - **数据访问**：禁止在业务代码中使用 `JdbcTemplate` 直接拼 SQL 访问 OA 库表；统一使用 `XxxMapper` + `classpath:/mapper/*.xml`，并优先使用 MyBatis-Plus 提供的 `lambdaQuery` / `UpService` 封装方法。
 - **PHP 兼容响应**：对外兼容前端的包装类为 `com.bubblecloud.biz.oa.support.PhpResponse`（`status` / `msg` / `data`），与网关/微服务默认的 `R<T>` 区分使用场景。
 - **阶段化实施**：OA 迁移按 11 阶段执行（详见 `docs/plans/oa-migration-plan.md`），每阶段要求全部接口实现真实业务逻辑，**禁止新增 `SimplePageVO.empty` 或固定空返回值的占位桩**。已有占位桩应在对应阶段实施时替换为真实实现。
+
+### bubble-biz-oa Controller 分层与接口风格
+
+- **Controller 禁止调用 Mapper（强制）**：`Controller` **不得**注入 `XxxMapper`，不得在 Controller 中编写 `Wrappers.lambdaQuery(...)` / 自定义 SQL 拼装。数据访问必须经 **`XxxService` / `XxxServiceImpl`**，由 Service 调用 Mapper 或 XML。若需纯查询封装，放在 Service 或 `repository` 包，由 Service 对外暴露。
+- **接口风格参考（PHP 契约为先）**：编写方式可参考 `bubble-biz-agi` 的 `AgentConfigsController`（仅注入 Service、`@Operation` 文档、分页在 Service 内处理并设默认排序）。**优先级**：**PHP 路由、请求/响应字段、分页参数名** 与现有前端/Laravel 行为一致 > 本项目 Java 通用写法（如 `R<T>`、`Pg` 的 query 名）。
+- **OA 与 AGI 的差异**：OA 对外兼容接口优先使用 `PhpResponse<T>`（`status` / `msg` / `data`），**不要**为对齐 AGI 而修改 PHP 路径或 query 名称。
+- **分页**：若 PHP 使用 `current`/`size` 等与 `Pg` 字段不一致，在 **Service** 内将请求参数装配为 `Page`/`Pg`（或项目统一分页模型），并设置与 PHP 一致的默认排序（参考 `Pg.addOrderDefault` + `OrderItem` 的思路）；Controller 仅接收参数并委托 Service，**保持 PHP 形参**。
+- **权限与日志**：需要权限时可用 `@HasPermission`（以 PHP/网关实际鉴权策略为准）；写操作可配合 `@SysLog`，与 AGI 一致。
 
 ## 类文件头 Javadoc
 
