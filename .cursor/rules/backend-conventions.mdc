@@ -1,5 +1,5 @@
 ---
-description: Java 后端规范：Spring Cloud 分层与注解、OA 迁移（含 UpService/UpMapper）、REST 与依赖；类 Javadoc、OA 实体与 Admin.java 对齐
+description: Java 后端规范：Spring Cloud 分层与注解、OA 迁移（含 UpService/UpMapper）、REST 与依赖；类 Javadoc、OA 实体与 Admin.java 对齐；Controller/ServiceImpl CRUD 书写模板
 globs: "**/*.java"
 alwaysApply: true
 ---
@@ -10,6 +10,8 @@ alwaysApply: true
 
 - Spring Java Format（`spring-javaformat-maven-plugin 0.0.47`），`mvn spring-javaformat:apply`
 - 缩进：Tab、宽 4、续行 8（`.editorconfig`），UTF-8
+
+---
 
 ## 模块分层
 
@@ -22,21 +24,23 @@ bubble-visual-{feature}  → 可视化管理服务
 
 ## 新增模块
 
-1. 父 POM `<modules>` 注册  
-2. `bubble-common-bom` 版本管理  
-3. 可部署服务：`application.yml` + `logback-spring.xml` + `Dockerfile`  
-4. 启动类：`@EnableDoc("模块名")` + `@EnableCustomFeignClients` + `@EnableCustomResourceServer`  
+1. 父 POM `<modules>` 注册
+2. `bubble-common-bom` 版本管理
+3. 可部署服务：`application.yml` + `logback-spring.xml` + `Dockerfile`
+4. 启动类：`@EnableDoc("模块名")` + `@EnableCustomFeignClients` + `@EnableCustomResourceServer`
 5. Nacos：`{spring.application.name}-{profile}.yml`
 
 ## 自动配置
 
-- Boot 3：`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`  
+- Boot 3：`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`
 - Feign：`META-INF/spring/org.springframework.cloud.openfeign.FeignClient.imports`
+
+---
 
 ## 关键注解
 
 | 注解 | 用途 | 模块 |
-|------|------|------|
+|---|---|---|
 | `@EnableCustomResourceServer` | OAuth2 资源服务器 | common-security |
 | `@EnableCustomFeignClients` | Feign 扫描 | common-feign |
 | `@EnableDoc("name")` | SpringDoc | common-swagger |
@@ -45,86 +49,259 @@ bubble-visual-{feature}  → 可视化管理服务
 | `@SysLog("描述")` | 操作日志 | common-log |
 | `@HasPermission` | 方法权限 | common-security |
 
+---
+
 ## 实体
 
 - 一般继承 `BaseEntity`（审计字段由 `MybatisPlusMetaObjectHandler` 填充）；JSON 数组用 `JsonStringArrayTypeHandler` / `JsonLongArrayTypeHandler`
 - **OA（`bubble-api-oa`）**：迁移表实体继承 `Req<T>`，与 `eb_*` 对齐，**不**用 `BaseEntity`；类 Javadoc、`@Schema`、字段注释见下文 **OA 实体与 `Admin.java`**
+
+---
 
 ## 统一返回
 
 - `R<T>`；成功 `R.ok(data)`，失败 `R.failed(msg)` 或 `R.failed(ErrorCodes.XXX)`；错误码与 `i18n/messages` 配套
 - **OA（`bubble-biz-oa`）**：与 PHP 前端对齐时使用 `R.phpOk(data)` / `R.phpFailed(msg)`（`msg` 成功侧为 `ok`，载荷在 `data`）；JSON 中额外包含只读 `status`（200/400），与 `code`（0/1）并行，**勿**再使用已移除的 `PhpResponse`
 
+---
+
 ## 依赖
 
 - 版本由 `bubble-common-bom` 管理，业务模块勿硬编码；Web 用 Undertow；Feign 用 OkHttp
+
+---
 
 ## 工具类选用顺序（`bubble-biz-oa` 及推荐全后端）
 
 **优先级**：**HuTool（`cn.hutool`）** → **`bubble-common-core` 等工程内封装**（如 `HuToolUtil`）→ **`org.springframework.util`**（仅在前两者无等价能力时使用）。
 
 | 场景 | 推荐 | 避免 |
-|------|------|------|
-| 字符串是否非空（原 `StringUtils.hasText`） | `cn.hutool.core.util.StrUtil`：`StrUtil.isNotBlank` / `StrUtil.isBlank` | `org.springframework.util.StringUtils.hasText` |
-| 对象是否为 `null`、是否非 `null` | `cn.hutool.core.util.ObjectUtil`：`ObjectUtil.isNull` / `ObjectUtil.isNotNull` | 裸写 `== null` / `!= null` |
-| 包装数字「有值且非 0」（如 `x != null && x != 0`） | `ObjectUtil.defaultIfNull(x, 0) != 0` 或与语义一致的 `NumberUtil` | 冗长的 `!= null && != 0` 链（易重复求值） |
-| 默认值、判空集合等 | 优先 HuTool `ObjectUtil` / `CollUtil` / `NumberUtil` 等与场景匹配的 API | Spring `CollectionUtils` 等，除非 HuTool 无对应方法 |
+|---|---|---|
+| 字符串是否非空 | `StrUtil.isNotBlank` / `StrUtil.isBlank` | `StringUtils.hasText` |
+| 对象是否为 `null`、非 `null` | `ObjectUtil.isNull` / `ObjectUtil.isNotNull` | 裸写 `== null` / `!= null` |
+| 包装数字「有值且非 0」 | `ObjectUtil.defaultIfNull(x, 0) != 0` 或 `NumberUtil` | 冗长 `!= null && != 0` 链 |
+| 默认值、判空集合等 | `ObjectUtil` / `CollUtil` / `NumberUtil` 等与场景匹配的 HuTool API | Spring `CollectionUtils` 等，除非 HuTool 无对应方法 |
 
-- 新增或修改 `bubble-biz/bubble-biz-oa` 代码时按上表执行；历史代码可随需求逐步对齐。
+- 新增或修改 `bubble-biz/bubble-biz-oa` 代码时按上表执行；历史代码随需求逐步对齐。
 
 ---
 
-## bubble-biz-oa（迁移）
+## bubble-biz-oa（OA 迁移规范）
+
+### 基本约束
 
 - **命名**：与 `eb_*` 表一致，无 `Oa` 前缀（如 `eb_admin` → `Admin` / `AdminMapper` / `AdminService`）
 - **禁止**无表空壳 `Bootstrap`/`Facade`；能力落在对应 `XxxService`
 - **禁止**业务层 `Map<String, Object>`（入参、出参、Mapper 行）；用 `bubble-api-oa` 的 DTO/VO/实体或行视图。**例外**：JWT、第三方 SDK、内部解析；PHP 扁平动态 JSON 用 `JsonNode`/`ObjectNode`，勿用 `Map` 作动态表单；键值列表用 `List<XxxItemVO>`
 - **SQL**：自定义 SQL 写在 `bubble-biz-oa/.../mapper/XxxMapper.xml`；接口上**禁止** `@Select`/`@Update` 等（BaseMapper/lambda 无 XML 的 CRUD 除外）
 - **Service**：入参 `*DTO`，返回 `*VO` 或已有实体；禁止 `JdbcTemplate` 直查 OA 表
-- **对外兼容**：统一 `com.bubblecloud.common.core.util.R<T>`（`R.phpOk`/`R.phpFailed` + 序列化 `status`/`code`/`msg`/`data`）
+- **对外兼容**：统一 `com.bubblecloud.common.core.util.R<T>`（`R.phpOk`/`R.phpFailed`）
 - **阶段**：见 `docs/plans/oa-migration-plan.md`；**禁止**新增 `SimplePageVO.empty` 类占位桩
+
+---
 
 ### Service 与 Mapper（`UpService` / `UpMapper`）
 
-- **`XxxService`**：必须 `extends UpService<实体>`（实体与表/`eb_*` 一一对应，泛型随业务而变，勿写死为某一表名）
-- **`XxxServiceImpl`**：必须 `extends UpServiceImpl<XxxMapper, 实体> implements XxxService`（参考 `AdminService` / `AdminServiceImpl`）
-- **`XxxMapper`**：必须 `extends UpMapper<实体>`，并加 `@Mapper`（参考 `AdminInfoMapper`）
-- **方法扩展**：优先使用 `UpService`、`UpMapper` 已有通用方法（含 lambda 条件封装）；仅在基类无法满足时再新增接口方法或 `XxxMapper.xml` 自定义 SQL
+- **`XxxService`**：必须 `extends UpService<实体>`
+- **`XxxServiceImpl`**：必须 `extends UpServiceImpl<XxxMapper, 实体> implements XxxService`
+- **`XxxMapper`**：必须 `extends UpMapper<实体>`，并加 `@Mapper`
+- **方法扩展**：优先使用 `UpService`、`UpMapper` 已有通用方法；仅在基类无法满足时再新增接口方法或 `XxxMapper.xml` 自定义 SQL
 
-### Controller
+---
 
-- **禁止**注入 Mapper、在 Controller 写 `Wrappers.lambdaQuery`；经 `XxxService` → Mapper/XML
-- **风格**：可参考 `bubble-biz-agi` 的 `AgentConfigsController`；**优先级**：PHP 路由与字段 > Java 通用写法
-- **OA**：Controller 只做路由、参数绑定、调用 `XxxService`，**不写业务分支**（校验、聚合、异常语义在 `XxxServiceImpl`）；返回 `R.phpOk` / `R.phpFailed` 或依赖全局异常转为 `R.phpFailed`；勿为对齐 AGI 改 PHP 路径
-- **分页**：PHP 的 `current`/`size`/`page`/`limit` 等与 `Pg` 不一致时在 **Controller** 装配 `Pg`（`setCurrent`/`setSize`）或 `@ParameterObject Pg`，再调 `findPg`；**ServiceImpl** 按需重写 `findPg`；对应 **`XxxMapper.xml` 必须实现带分页的 `findPg` SQL**（动态条件写在 XML）
-- 权限 `@HasPermission`，写操作可 `@SysLog`
+### Controller 总体规则
 
-#### CRUD 方法命名（`bubble-biz-oa` 推荐与 `bubble-biz-agi` 对齐）
+- **禁止**在 Controller 注入 Mapper、**禁止**在 Controller 内写 `Wrappers.lambdaQuery`；所有数据访问经 `XxxService` → Mapper/XML
+- Controller 只做：路由映射、参数绑定、DTO→实体转换、调用 Service、组装返回值
+- 业务分支（校验、聚合、异常语义）在 `XxxServiceImpl` 中实现，**不写**进 Controller
+- 返回统一使用 `R.phpOk(...)` / `R.phpFailed(...)`，**勿**与网关 `R.ok` 混用
+- 权限用 `@HasPermission`，写操作可加 `@SysLog("描述")`
+- **同一资源禁止**重复注册相同 `@XxxMapping` 路径+方法，会导致映射歧义或启动失败
+- **PHP 路由优先级 > Java 通用写法**；勿为对齐 AGI 改 PHP 路径
 
-| 语义 | Java 方法名 | 典型映射（可按 PHP 再并列 `value = {"", "/page"}` 等） |
-|------|-------------|--------------------------------------------------------|
-| 分页列表 | `page` | `@GetMapping({ "", "/page" })` + `UpService.findPg(Pg, Req 实体)` |
-| 按 id 详情 | `details` | `@GetMapping("/{id}")` 或 `/{id}/edit`；**单表**可直接 `getById` |
-| 新增 | `create` | `@PostMapping` + `save`/`create`（基类） |
-| 修改 | `update` | `@PutMapping` + `UpService.update(req)` 或 `update(req, isCustom)` |
-| 按 id 删除 | `removeById` | `@DeleteMapping("/{id}")` + `removeById`/`remove` |
+#### 参数类型规范（重要）
 
-- **GET 新增表单占位**（PHP 常配 `/create`）：方法名用 **`createForm`**，避免与 **`create`（POST 新增）** 同名。
-- **非分页列表**（树、全量）：方法名用业务语义，如 **`list`**、**`workbench`** 等，**不要**占用 `page`。
-- **其它业务接口**（状态切换、树、导出等）在 Controller 中**另起方法**；能复用 **`UpService`/`findPg`/`getById`** 的优先复用。
-- **自定义更新 SQL**：在 **`XxxServiceImpl`** 中调用 **`update(T req, boolean isCustom)`**，`isCustom == true` 时走 **`XxxMapper.xml` 的 `updateCustom`**（见 `UpServiceImpl`）。
+- **路径变量、请求参数中的 ID 及所有数值类型，必须使用包装类型，禁用原始类型**
+  - ✅ `@PathVariable Long id`、`@RequestParam Integer status`、`@RequestParam(required = false) Long entid`
+  - ❌ `@PathVariable long id`、`@RequestParam int status`
+- 包装类型（`Long`、`Integer`、`Boolean` 等）可为 `null`，避免基本类型默认值引发的隐式逻辑错误
 
-#### OA 增删改查书写模板与事务（`bubble-biz-oa`）
+---
 
-- **Controller 模板**：以 **`AgreementAdminController`** 为准对齐 PHP 路由习惯——**`GET`** 列表、`GET /{id}/edit` 详情、**`POST`** 调用 `UpService.create`（新增）、**`PUT /{id}`** 在入参上 `setId` 后调用 `UpService.update`（修改）、**`DELETE /{id}`** 调用 `removeBatchByIds`/`removeById` 等删除；成功返回统一 **`R.phpOk(...)`**（勿与网关 `R.ok` 混用，除非明确非 OA 接口）。
-- **同一资源禁止**重复注册相同 **`@XxxMapping` 路径+方法**（例如两个 `PUT /{id}`）**，** 会导致映射歧义或启动失败。
-- **`XxxServiceImpl` 事务**：对继承 **`UpService`** 的 **新增、修改** 写操作，**必须**在实现类中 **重写** **`create(T req)`、`update(T req)`**，在重写方法上标注 **`@Transactional(rollbackFor = Exception.class)`**，再 **`return super.xxx(...)`**；**禁止**仅依赖基类默认而无事务的「隐式」写操作（便于 Code Review 与一致行为）。删除、查询类方法（如 `deleteById`、`removeBatchByIds`、`list`、`findPg`）**不**强制在实现类重写并加事务（可按业务需要自行加）。
+### Controller CRUD 书写模板（以 `AssessPlanController` 为基准）
+
+#### 1. 分页列表
+
+```java
+@GetMapping({"", "/page"})
+@Operation(summary = "xxx列表")
+public R<SimplePageVO> page(@ParameterObject Pg<XxxEntity> pg, @ParameterObject XxxEntity query) {
+    Page<XxxEntity> res = xxxService.findPg(pg, query);
+    return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
+}
+```
+
+- 使用 `@ParameterObject Pg<实体>` 接收分页参数，调 `findPg`
+- 业务逻辑复杂（多表关联、动态条件）时，在 `XxxServiceImpl` 重写 `findPg`，对应 `XxxMapper.xml` 实现 SQL
+- PHP 的 `current`/`size`/`page`/`limit` 与 `Pg` 不一致时，在 Controller 装配 `pg.setCurrent`/`pg.setSize`
+
+#### 2. 详情查询
+
+```java
+@GetMapping("/{id}/edit")
+@Operation(summary = "获取xxx详情")
+public R<XxxEntity> details(@PathVariable Long id) {
+    return R.phpOk(xxxService.getById(id));
+}
+```
+
+- 简单单表查询直接调 `getById`，**不需要**在 ServiceImpl 新增方法
+- 业务复杂（联表、数据聚合）时，在 ServiceImpl 新增方法，Controller 调该方法
+
+#### 3. 新增
+
+```java
+@PostMapping
+@Operation(summary = "创建xxx")
+public R<String> create(@RequestBody XxxSaveDTO dto) {
+    XxxEntity obj = PojoConvertUtil.convertPojo(dto, XxxEntity.class);
+    // 按需在此处理 DTO 中特殊字段（如集合转字符串）
+    xxxService.create(obj);
+    return R.phpOk("common.insert.succ");
+}
+```
+
+- Controller 负责 DTO → 实体转换（`PojoConvertUtil.convertPojo`）及特殊字段处理
+- 调 `xxxService.create(obj)`，返回 `R.phpOk("common.insert.succ")`
+- **ServiceImpl 必须重写 `create`**，加 `@Transactional(rollbackFor = Exception.class)`（见下文）
+
+#### 4. 修改
+
+```java
+@PutMapping("/{id}")
+@Operation(summary = "修改xxx")
+public R<String> update(@PathVariable Long id, @RequestBody XxxSaveDTO dto) {
+    XxxEntity obj = PojoConvertUtil.convertPojo(dto, XxxEntity.class);
+    obj.setId(id);
+    // 按需在此处理 DTO 中特殊字段
+    xxxService.update(obj);
+    return R.phpOk("common.update.succ");
+}
+```
+
+- Controller 将路径 `id` 通过 `obj.setId(id)` 注入实体，再调 Service
+- **ServiceImpl 必须重写 `update`**，加 `@Transactional(rollbackFor = Exception.class)`（见下文）
+
+#### 5. 删除
+
+```java
+@DeleteMapping("/{id}")
+@Operation(summary = "删除xxx")
+public R<String> removeById(@PathVariable Long id) {
+    xxxService.removeById(id);
+    return R.phpOk("common.delete.succ");
+}
+```
+
+- 简单业务直接调 `xxxService.removeById(id)`，**不需要**在 ServiceImpl 重写
+- 业务复杂（级联删除、状态检查）时，在 ServiceImpl 新增或重写方法，Controller 调该方法
+
+#### 6. 非分页列表查询（简单条件）
+
+```java
+@GetMapping("/enabled")
+@Operation(summary = "已启用xxx列表")
+public R<List<XxxEntity>> enabledList(@RequestParam(required = false) Long entid) {
+    List<XxxEntity> list = xxxService.list(Wrappers.lambdaQuery(XxxEntity.class)
+            .eq(ObjectUtil.isNotNull(entid), XxxEntity::getEntid, entid)
+            .eq(XxxEntity::getStatus, 1)
+            .isNull(XxxEntity::getDeletedAt)
+            .orderByDesc(XxxEntity::getId));
+    return R.phpOk(list);
+}
+```
+
+- **简单条件查询**（单表、无聚合）：允许在 Controller 直接调 `xxxService.list(Wrappers.lambdaQuery(...))`
+- **复杂查询**（多表关联、业务聚合）：在 ServiceImpl 新增方法，Controller 仅调方法
+
+#### 7. 其他业务接口（按需扩展）
+
+```java
+@GetMapping("/users/{id}")
+@Operation(summary = "计划选中人员列表")
+public R<List<String>> planUsers(@PathVariable Long id) {
+    XxxEntity detail = xxxService.getById(id);
+    if (ObjectUtil.isNull(detail) || StrUtil.isBlank(detail.getUserIds())) {
+        return R.phpOk(Collections.emptyList());
+    }
+    return R.phpOk(Collections.singletonList(detail.getUserIds()));
+}
+```
+
+- 其他业务接口依据复杂度判断：简单逻辑在 Controller 内处理，复杂逻辑抽到 ServiceImpl
+
+---
+
+### CRUD 方法命名规范
+
+| 语义 | Java 方法名 | HTTP 映射 |
+|---|---|---|
+| 分页列表 | `page` | `@GetMapping({"", "/page"})` |
+| 详情 | `details` | `@GetMapping("/{id}/edit")` 或 `@GetMapping("/{id}")` |
+| 新增 | `create` | `@PostMapping` |
+| 修改 | `update` | `@PutMapping("/{id}")` |
+| 按 id 删除 | `removeById` | `@DeleteMapping("/{id}")` |
+| GET 新增表单占位 | `createForm` | `@GetMapping("/create")`（避免与 POST `create` 同名） |
+| 非分页全量列表 | 业务语义（如 `list`、`enabledList`、`workbench`） | `@GetMapping("/xxx")` |
+
+---
+
+### ServiceImpl 书写模板（以 `AssessPlanServiceImpl` 为基准）
+
+```java
+@Service
+public class XxxServiceImpl extends UpServiceImpl<XxxMapper, XxxEntity> implements XxxService {
+
+    private static final String NOT_EXISTS = "common.operation.noExists";
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public R create(XxxEntity dto) {
+        // 设置默认值、字段预处理
+        dto.setStatus(ObjectUtil.defaultIfNull(dto.getStatus(), 1));
+        return super.create(dto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public R update(XxxEntity dto) {
+        XxxEntity existing = getById(dto.getId());
+        if (ObjectUtil.isNull(existing)) {
+            throw new IllegalArgumentException(NOT_EXISTS);
+        }
+        // 按需合并字段到 existing 或直接更新 dto
+        return super.update(dto);
+    }
+}
+```
+
+#### ServiceImpl 事务规范
+
+- 新增（`create`）、修改（`update`）**必须**在 ServiceImpl 重写并标注 `@Transactional(rollbackFor = Exception.class)`，再调 `super.create(dto)` / `super.update(dto)`
+- **禁止**仅依赖基类默认、不重写、无事务的「隐式」写操作
+- 删除（`removeById`、`removeBatchByIds`）、查询（`list`、`findPg`、`getById`）**不**强制重写加事务，按业务需要自行决定
+- **自定义更新 SQL**：调 `update(T req, boolean isCustom)`，`isCustom == true` 时走 `XxxMapper.xml` 的 `updateCustom`
+
+#### ServiceImpl 复杂业务扩展
+
+- 业务逻辑复杂时（多表关联、数据聚合、条件分支）在 ServiceImpl 新增方法，方法签名在 `XxxService` 接口声明
+- 优先复用 `UpService`、`UpMapper` 已有通用方法；仅在基类无法满足时新增接口方法或 `XxxMapper.xml` 自定义 SQL
 
 ---
 
 ## 类 Javadoc（全模块 Java）
 
-每个**顶层类型**（`class` / `interface` / `enum` / `record`）声明**正上方**须有 Javadoc：首行**中文**简述类型职责，勿空；并含：
+每个**顶层类型**（`class` / `interface` / `enum` / `record`）声明**正上方**须有 Javadoc：
 
 ```java
 /**
@@ -138,7 +315,9 @@ bubble-visual-{feature}  → 可视化管理服务
 - **@author**：仓库 `git config user.name`，否则 `--global`；全无则用 `Unknown`，勿编造
 - **@date**：**创建该文件时**的时间，勿抄旧文件；格式任选：`2026/3/28 下午2:57` 或 `2026/3/28 14:57`
 - **范围**：**新建**文件（及同文件新增的第二顶层类型）必写；仅改旧文件不强制补（除非用户要求批量统一）
-- **`bubble-api-oa` / `bubble-biz-oa`**：每个 `.java` 第一个顶层类型的 Javadoc **必须同时**含 `@author` 与 `@date`；批量补历史可共用同一 `@date`，新建仍用创建时刻
+- **`bubble-api-oa` / `bubble-biz-oa`**：每个 `.java` 第一个顶层类型的 Javadoc **必须同时**含 `@author` 与 `@date`
+
+---
 
 ## OA 实体与 `Admin.java`（`bubble-api-oa` MyBatis-Plus 实体）
 
