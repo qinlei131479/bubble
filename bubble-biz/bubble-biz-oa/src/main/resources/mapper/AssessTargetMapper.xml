@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.AssessTargetMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.AssessTarget">
+		SELECT t.*
+		FROM eb_assess_target t
+		<where>
+			AND t.deleted_at IS NULL
+			<if test="query.entid != null">
+				AND t.entid = #{query.entid}
+			</if>
+			<if test="query.cateId != null">
+				AND t.cate_id = #{query.cateId}
+			</if>
+			<if test="query.types != null and query.types != ''">
+				AND t.types = #{query.types}
+			</if>
+			<if test="query.status != null">
+				AND t.status = #{query.status}
+			</if>
+		</where>
+		ORDER BY t.sort ASC, t.id ASC
+	</select>
+
+</mapper>
