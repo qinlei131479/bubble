@@ -16,4 +16,6 @@ public class EmployeeTrainUpdateDTO {
 	@Schema(description = "HTML 内容")
 	private String content;
 
+	@Schema(description = "类型")
+	private String type;
 }

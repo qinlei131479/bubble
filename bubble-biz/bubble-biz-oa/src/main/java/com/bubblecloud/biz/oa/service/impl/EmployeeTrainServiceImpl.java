@@ -3,13 +3,11 @@ package com.bubblecloud.biz.oa.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bubblecloud.common.core.util.R;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EmployeeTrainMapper;
 import com.bubblecloud.biz.oa.service.EmployeeTrainService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
-import com.bubblecloud.oa.api.dto.EmployeeTrainUpdateDTO;
 import com.bubblecloud.oa.api.entity.EmployeeTrain;
 import cn.hutool.core.util.ObjectUtil;
 
@@ -39,7 +37,7 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 	public EmployeeTrain getInfo(String type) {
 		validateType(type);
 		EmployeeTrain row = baseMapper
-			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
+				.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
 		if (ObjectUtil.isNull(row)) {
 			row = new EmployeeTrain();
 			row.setType(type);
@@ -48,24 +46,6 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 		return row;
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateTrain(String type, EmployeeTrainUpdateDTO dto) {
-		validateType(type);
-		String content = ObjectUtil.isNull(dto.getContent()) ? "" : dto.getContent();
-		EmployeeTrain existing = baseMapper
-			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
-		if (ObjectUtil.isNull(existing)) {
-			EmployeeTrain e = new EmployeeTrain();
-			e.setType(type);
-			e.setContent(content);
-			baseMapper.insert(e);
-		}
-		else {
-			existing.setContent(content);
-			baseMapper.updateById(existing);
-		}
-	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -76,7 +56,20 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public R update(EmployeeTrain req) {
-		return super.update(req);
+		validateType(req.getType());
+		String content = ObjectUtil.isNull(req.getContent()) ? "" : req.getContent();
+		EmployeeTrain existing = baseMapper
+				.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, req.getType()));
+		if (ObjectUtil.isNull(existing)) {
+			EmployeeTrain e = new EmployeeTrain();
+			e.setType(req.getType());
+			e.setContent(content);
+			baseMapper.insert(e);
+		} else {
+			existing.setContent(content);
+			baseMapper.updateById(existing);
+		}
+		return R.ok();
 	}
 
 }

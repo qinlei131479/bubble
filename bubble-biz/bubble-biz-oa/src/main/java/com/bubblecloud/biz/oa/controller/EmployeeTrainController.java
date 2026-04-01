@@ -32,27 +32,15 @@ public class EmployeeTrainController {
 	@GetMapping("/{type}")
 	@Operation(summary = "员工培训详情")
 	public R<EmployeeTrain> info(@PathVariable String type) {
-		try {
-			return R.phpOk(employeeTrainService.getInfo(type));
-		}
-		catch (IllegalArgumentException e) {
-			return R.phpFailed(e.getMessage());
-		}
+		return R.phpOk(employeeTrainService.getInfo(type));
 	}
 
 	@PutMapping("/{type}")
 	@Operation(summary = "更新培训内容")
-	public R<String> update(@PathVariable String type, @RequestBody(required = false) EmployeeTrainUpdateDTO dto) {
-		if (ObjectUtil.isNull(dto)) {
-			dto = new EmployeeTrainUpdateDTO();
-		}
-		try {
-			employeeTrainService.updateTrain(type, dto);
-			return R.phpOk("common.operation.succ");
-		}
-		catch (IllegalArgumentException e) {
-			return R.phpFailed(e.getMessage());
-		}
+	public R<String> update(@PathVariable String type, @RequestBody EmployeeTrain dto) {
+		dto.setType(type);
+		employeeTrainService.update(dto);
+		return R.phpOk("common.operation.succ");
 	}
 
 }

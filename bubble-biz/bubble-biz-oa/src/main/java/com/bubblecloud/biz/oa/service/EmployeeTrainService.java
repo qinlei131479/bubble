@@ -14,6 +14,4 @@ public interface EmployeeTrainService extends UpService<EmployeeTrain> {
 
 	EmployeeTrain getInfo(String type);
 
-	void updateTrain(String type, EmployeeTrainUpdateDTO dto);
-
 }

@@ -42,7 +42,7 @@ public class AssessController {
 
 	private final AssessService assessService;
 
-	@GetMapping({ "", "/page" })
+	@GetMapping({"", "/page"})
 	@Operation(summary = "绩效考核列表（个人）")
 	public R<SimplePageVO> page(@ParameterObject Pg<Assess> pg, @ParameterObject Assess query) {
 		return R.phpOk(assessService.pageAssess(pg, query));
@@ -66,17 +66,10 @@ public class AssessController {
 		return R.phpOk(assessService.getAssessDetail(id));
 	}
 
-	@PostMapping("/create")
+	@PostMapping({"/create", "/target"})
 	@Operation(summary = "创建绩效考核")
 	public R<String> create(@RequestBody AssessSaveDTO dto) {
 		assessService.createAssess(dto);
-		return R.phpOk("common.insert.succ");
-	}
-
-	@PostMapping("/target")
-	@Operation(summary = "创建绩效考核模板")
-	public R<String> createWithTemplate(@RequestBody AssessSaveDTO dto) {
-		assessService.createAssessWithTemplate(dto);
 		return R.phpOk("common.insert.succ");
 	}
 
@@ -155,7 +148,7 @@ public class AssessController {
 	@DeleteMapping("/delete/{id}")
 	@Operation(summary = "绩效删除")
 	public R<String> delete(@PathVariable long id) {
-		assessService.deleteAssess(id);
+		assessService.deleteById(id);
 		return R.phpOk("common.delete.succ");
 	}
 
@@ -175,14 +168,14 @@ public class AssessController {
 	@GetMapping("/abnormal")
 	@Operation(summary = "绩效未创建列表")
 	public R<List<Assess>> abnormal(@RequestParam(required = false) Long entid,
-			@RequestParam(required = false) Long planId) {
+									@RequestParam(required = false) Long planId) {
 		return R.phpOk(assessService.abnormalList(entid, planId));
 	}
 
 	@GetMapping("/is_abnormal")
 	@Operation(summary = "绩效是否存在未创建")
 	public R<Boolean> isAbnormal(@RequestParam(required = false) Long entid,
-			@RequestParam(required = false) Long planId) {
+								 @RequestParam(required = false) Long planId) {
 		return R.phpOk(assessService.isAbnormal(entid, planId));
 	}
 

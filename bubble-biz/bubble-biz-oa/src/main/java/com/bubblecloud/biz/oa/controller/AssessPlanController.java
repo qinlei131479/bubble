@@ -1,8 +1,17 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.bubblecloud.biz.oa.service.AssessPlanService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.AssessPlanSaveDTO;
@@ -36,49 +45,71 @@ public class AssessPlanController {
 
 	private final AssessPlanService assessPlanService;
 
-	@GetMapping({ "", "/page" })
+	@GetMapping({"", "/page"})
 	@Operation(summary = "考核计划列表")
 	public R<SimplePageVO> page(@ParameterObject Pg<AssessPlan> pg, @ParameterObject AssessPlan query) {
-		return R.phpOk(assessPlanService.pagePlan(pg, query));
-	}
-
-	@PostMapping
-	@Operation(summary = "创建考核计划")
-	public R<String> create(@RequestBody AssessPlanSaveDTO dto) {
-		assessPlanService.createPlan(dto);
-		return R.phpOk("common.insert.succ");
+		Page<AssessPlan> res = assessPlanService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取考核计划详情")
-	public R<AssessPlan> details(@PathVariable long id) {
+	public R<AssessPlan> details(@PathVariable Long id) {
 		return R.phpOk(assessPlanService.getById(id));
+	}
+
+
+	@PostMapping
+	@Operation(summary = "创建考核计划")
+	public R<String> create(@RequestBody AssessPlanSaveDTO dto) {
+		AssessPlan obj = PojoConvertUtil.convertPojo(dto, AssessPlan.class);
+		if (CollUtil.isNotEmpty(dto.getUserIds())) {
+			obj.setUserIds(dto.getUserIds().stream()
+					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
+		}
+		assessPlanService.create(obj);
+		return R.phpOk("common.insert.succ");
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改考核计划")
-	public R<String> update(@PathVariable long id, @RequestBody AssessPlanSaveDTO dto) {
-		assessPlanService.updatePlan(id, dto);
+	public R<String> update(@PathVariable Long id, @RequestBody AssessPlanSaveDTO dto) {
+		AssessPlan obj = PojoConvertUtil.convertPojo(dto, AssessPlan.class);
+		obj.setId(id);
+		if (CollUtil.isNotEmpty(dto.getUserIds())) {
+			obj.setUserIds(dto.getUserIds().stream()
+					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
+		}
+		assessPlanService.update(obj);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除考核计划")
-	public R<String> removeById(@PathVariable long id) {
-		assessPlanService.removePlan(id);
+	public R<String> removeById(@PathVariable Long id) {
+		assessPlanService.removeById(id);
 		return R.phpOk("common.delete.succ");
 	}
 
 	@GetMapping("/enabled")
 	@Operation(summary = "已启用周期列表")
 	public R<List<AssessPlan>> enabledPlans(@RequestParam(required = false) Long entid) {
-		return R.phpOk(assessPlanService.enabledPlans(entid));
+		List<AssessPlan> list = assessPlanService.list(Wrappers.lambdaQuery(AssessPlan.class)
+				.eq(ObjectUtil.isNotNull(entid), AssessPlan::getEntid, entid)
+				.eq(AssessPlan::getStatus, 1)
+				.isNull(AssessPlan::getDeletedAt)
+				.orderByDesc(AssessPlan::getId));
+		return R.phpOk(list);
 	}
 
 	@GetMapping("/users/{id}")
 	@Operation(summary = "计划选中人员列表")
-	public R<List<Object>> planUsers(@PathVariable long id) {
-		return R.phpOk(assessPlanService.planUsers(id));
+	public R<List<String>> planUsers(@PathVariable Long id) {
+		AssessPlan detail = assessPlanService.getById(id);
+		if (ObjectUtil.isNull(detail) || StrUtil.isBlank(detail.getUserIds())) {
+			return R.phpOk(Collections.emptyList());
+		}
+		return R.phpOk(Collections.singletonList(detail.getUserIds()));
 	}
 
 }
