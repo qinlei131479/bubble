@@ -23,7 +23,6 @@ config/secrets.*
 *.jsonl
 *.parquet
 data/
-docs/
 models/
 **/public/images/
 *.mp4
