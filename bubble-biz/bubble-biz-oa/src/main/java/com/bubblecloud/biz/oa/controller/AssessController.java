@@ -62,7 +62,7 @@ public class AssessController {
 
 	@GetMapping("/info/{id}")
 	@Operation(summary = "获取绩效考核详情")
-	public R<AssessDetailVO> info(@PathVariable long id) {
+	public R<AssessDetailVO> info(@PathVariable Long id) {
 		return R.phpOk(assessService.getAssessDetail(id));
 	}
 
@@ -75,42 +75,42 @@ public class AssessController {
 
 	@PostMapping("/update/{id}")
 	@Operation(summary = "修改绩效考核")
-	public R<String> update(@PathVariable long id, @RequestBody AssessSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody AssessSaveDTO dto) {
 		assessService.updateAssess(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@PutMapping("/self_eval/{id}")
 	@Operation(summary = "绩效考核自评")
-	public R<String> selfEval(@PathVariable long id, @RequestBody AssessEvalDTO dto) {
+	public R<String> selfEval(@PathVariable Long id, @RequestBody AssessEvalDTO dto) {
 		assessService.selfEval(id, dto);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@PutMapping("/superior_eval/{id}")
 	@Operation(summary = "上级评价")
-	public R<String> superiorEval(@PathVariable long id, @RequestBody AssessEvalDTO dto) {
+	public R<String> superiorEval(@PathVariable Long id, @RequestBody AssessEvalDTO dto) {
 		assessService.superiorEval(id, dto);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@PutMapping("/examine_eval/{id}")
 	@Operation(summary = "上上级审核")
-	public R<String> examineEval(@PathVariable long id, @RequestBody AssessEvalDTO dto) {
+	public R<String> examineEval(@PathVariable Long id, @RequestBody AssessEvalDTO dto) {
 		assessService.examineEval(id, dto);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@GetMapping("/show/{id}")
 	@Operation(summary = "启用/停用绩效考核")
-	public R<String> show(@PathVariable long id) {
+	public R<String> show(@PathVariable Long id) {
 		assessService.enableAssess(id);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@GetMapping("/explain/{id}")
 	@Operation(summary = "获取绩效其他信息")
-	public R<AssessDetailVO> explain(@PathVariable long id) {
+	public R<AssessDetailVO> explain(@PathVariable Long id) {
 		return R.phpOk(assessService.getAssessDetail(id));
 	}
 
@@ -135,19 +135,19 @@ public class AssessController {
 
 	@GetMapping("/score/{id}")
 	@Operation(summary = "绩效评分记录")
-	public R<List<Object>> scoreRecord(@PathVariable long id) {
+	public R<List<Object>> scoreRecord(@PathVariable Long id) {
 		return R.phpOk(assessService.scoreRecord(id));
 	}
 
 	@GetMapping("/del_form/{id}")
 	@Operation(summary = "绩效删除表单")
-	public R<AssessDetailVO> deleteForm(@PathVariable long id) {
+	public R<AssessDetailVO> deleteForm(@PathVariable Long id) {
 		return R.phpOk(assessService.getAssessDetail(id));
 	}
 
 	@DeleteMapping("/delete/{id}")
 	@Operation(summary = "绩效删除")
-	public R<String> delete(@PathVariable long id) {
+	public R<String> delete(@PathVariable Long id) {
 		assessService.deleteById(id);
 		return R.phpOk("common.delete.succ");
 	}
@@ -160,7 +160,7 @@ public class AssessController {
 
 	@PostMapping("/appeal/{id}")
 	@Operation(summary = "绩效申诉/驳回")
-	public R<String> appeal(@PathVariable long id, @RequestBody AssessAppealDTO dto) {
+	public R<String> appeal(@PathVariable Long id, @RequestBody AssessAppealDTO dto) {
 		assessService.appealOrReject(id, dto);
 		return R.phpOk("common.operation.succ");
 	}

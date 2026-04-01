@@ -49,20 +49,20 @@ public class PromotionController {
 
 	@GetMapping("/{id}")
 	@Operation(summary = "晋升表状态/详情")
-	public R<Promotion> details(@PathVariable long id) {
+	public R<Promotion> details(@PathVariable Long id) {
 		return R.phpOk(promotionService.getPromotionDetail(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "晋升表修改")
-	public R<String> update(@PathVariable long id, @RequestBody PromotionSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody PromotionSaveDTO dto) {
 		promotionService.updatePromotion(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "晋升表删除（软删）")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		promotionService.removePromotion(id);
 		return R.phpOk("common.delete.succ");
 	}

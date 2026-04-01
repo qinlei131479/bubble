@@ -51,7 +51,7 @@ public class FormAdminController {
 
 	@PostMapping("/cate/{types}")
 	@Operation(summary = "新增分组")
-	public R<Map<String, Long>> create(@PathVariable int types, @RequestBody JsonNode body) {
+	public R<Map<String, Long>> create(@PathVariable Integer types, @RequestBody JsonNode body) {
 		try {
 			String title = text(body, "title");
 			Integer sort = intOrNull(body, "sort");
@@ -66,7 +66,7 @@ public class FormAdminController {
 
 	@PutMapping("/cate/{id}")
 	@Operation(summary = "修改分组")
-	public R<String> update(@PathVariable long id, @RequestBody JsonNode body) {
+	public R<String> update(@PathVariable Long id, @RequestBody JsonNode body) {
 		try {
 			String title = text(body, "title");
 			Integer sort = intOrNull(body, "sort");
@@ -81,7 +81,7 @@ public class FormAdminController {
 
 	@DeleteMapping("/cate/{id}")
 	@Operation(summary = "删除分组")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		try {
 			formAdminService.deleteCate(id);
 			return R.phpOk("common.delete.succ");
@@ -93,7 +93,7 @@ public class FormAdminController {
 
 	@GetMapping("/cate/{id}")
 	@Operation(summary = "修改分组显示状态（PHP 的 show）")
-	public R<String> show(@PathVariable long id, @RequestParam int status) {
+	public R<String> show(@PathVariable Long id, @RequestParam Integer status) {
 		try {
 			formAdminService.updateCateStatus(id, status);
 			return R.phpOk("common.operation.succ");
@@ -105,7 +105,7 @@ public class FormAdminController {
 
 	@PostMapping("/data/{types}")
 	@Operation(summary = "保存表单字段")
-	public R<String> createData(@PathVariable int types, @RequestBody JsonNode body) {
+	public R<String> createData(@PathVariable Integer types, @RequestBody JsonNode body) {
 		try {
 			JsonNode data = body.get("data");
 			if (ObjectUtil.isNull(data)) {
@@ -121,7 +121,7 @@ public class FormAdminController {
 
 	@PutMapping("/data/move/{types}")
 	@Operation(summary = "字段移动分组")
-	public R<String> move(@PathVariable int types, @RequestBody JsonNode body) {
+	public R<String> move(@PathVariable Integer types, @RequestBody JsonNode body) {
 		try {
 			long id = body.has("id") ? body.get("id").asLong() : 0L;
 			int cateId = body.has("cate_id") ? body.get("cate_id").asInt() : 0;
@@ -135,7 +135,7 @@ public class FormAdminController {
 
 	@GetMapping("/data/fields/{customType}")
 	@Operation(summary = "业务员自定义字段列表")
-	public R<JsonNode> getSalesmanCustom(@PathVariable int customType) {
+	public R<JsonNode> getSalesmanCustom(@PathVariable Integer customType) {
 		Long uid = OaSecurityUtil.currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");
@@ -145,7 +145,7 @@ public class FormAdminController {
 
 	@PutMapping("/data/fields/{customType}")
 	@Operation(summary = "保存业务员自定义字段")
-	public R<String> saveSalesmanCustom(@PathVariable int customType, @RequestBody JsonNode body) {
+	public R<String> saveSalesmanCustom(@PathVariable Integer customType, @RequestBody JsonNode body) {
 		Long uid = OaSecurityUtil.currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");

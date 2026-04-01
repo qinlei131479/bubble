@@ -54,20 +54,20 @@ public class AssessTargetController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取绩效指标详情")
-	public R<AssessTarget> details(@PathVariable long id) {
+	public R<AssessTarget> details(@PathVariable Long id) {
 		return R.phpOk(assessTargetService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改绩效指标")
-	public R<String> update(@PathVariable long id, @RequestBody AssessTargetSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody AssessTargetSaveDTO dto) {
 		assessTargetService.updateTarget(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除绩效指标")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		assessTargetService.removeTarget(id);
 		return R.phpOk("common.delete.succ");
 	}

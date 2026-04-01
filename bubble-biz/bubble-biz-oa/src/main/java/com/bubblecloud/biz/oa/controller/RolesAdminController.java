@@ -40,13 +40,13 @@ public class RolesAdminController {
 	@GetMapping
 	@Operation(summary = "角色列表")
 	public R<List<EnterpriseRole>> list(@RequestParam(required = false) String role_name,
-			@RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(rolesAdminService.listRoles(role_name, entid));
 	}
 
 	@PostMapping
 	@Operation(summary = "保存角色")
-	public R<String> create(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> create(@RequestParam(defaultValue = "1") Integer entid, @RequestBody JsonNode body) {
 		try {
 			rolesAdminService.saveRole(entid, body);
 			return R.phpOk("common.insert.succ");
@@ -58,7 +58,7 @@ public class RolesAdminController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改角色")
-	public R<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
 			@RequestBody JsonNode body) {
 		try {
 			rolesAdminService.updateRole(id, entid, body);
@@ -71,8 +71,8 @@ public class RolesAdminController {
 
 	@PostMapping("/{id}/status")
 	@Operation(summary = "启用/禁用角色")
-	public R<String> show(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
-			@RequestParam int status) {
+	public R<String> show(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
+			@RequestParam Integer status) {
 		try {
 			rolesAdminService.changeRoleStatus(entid, id, status);
 			return R.phpOk("common.update.succ");
@@ -84,7 +84,7 @@ public class RolesAdminController {
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除角色")
-	public R<String> removeById(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<String> removeById(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		try {
 			rolesAdminService.deleteRole(id, entid);
 			return R.phpOk("删除成功");
@@ -96,7 +96,7 @@ public class RolesAdminController {
 
 	@GetMapping("/user/{id}")
 	@Operation(summary = "角色成员")
-	public R<?> getRoleUser(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<?> getRoleUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		try {
 			return R.phpOk(rolesAdminService.getRoleUsers(id, entid));
 		}
@@ -107,13 +107,13 @@ public class RolesAdminController {
 
 	@GetMapping("/role/{uid}")
 	@Operation(summary = "用户角色与菜单树")
-	public R<JsonNode> getUserRole(@PathVariable long uid, @RequestParam(defaultValue = "1") int entid) {
+	public R<JsonNode> getUserRole(@PathVariable Long uid, @RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(rolesAdminService.getUserRoleData(entid, uid));
 	}
 
 	@PostMapping("/user")
 	@Operation(summary = "修改用户角色")
-	public R<String> updateUserRole(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> updateUserRole(@RequestParam(defaultValue = "1") Integer entid, @RequestBody JsonNode body) {
 		long userId = body.has("user_id") ? body.get("user_id").asLong() : 0L;
 		JsonNode roleIds = body.get("role_id");
 		try {
@@ -127,7 +127,7 @@ public class RolesAdminController {
 
 	@PostMapping("/add_user")
 	@Operation(summary = "角色添加成员")
-	public R<String> addUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> addUser(@RequestParam(defaultValue = "1") Integer entid, @RequestBody JsonNode body) {
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
 		List<Integer> userIds = new java.util.ArrayList<>();
 		if (body.has("user_id") && body.get("user_id").isArray()) {
@@ -146,7 +146,7 @@ public class RolesAdminController {
 
 	@PostMapping("/show_user")
 	@Operation(summary = "成员状态")
-	public R<String> showUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> showUser(@RequestParam(defaultValue = "1") Integer entid, @RequestBody JsonNode body) {
 		int uid = body.has("uid") ? body.get("uid").asInt() : 0;
 		int status = body.has("status") ? body.get("status").asInt() : 1;
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
@@ -161,7 +161,7 @@ public class RolesAdminController {
 
 	@DeleteMapping("/del_user")
 	@Operation(summary = "移除成员")
-	public R<String> deleteUser(@RequestParam(defaultValue = "1") int entid, @RequestBody JsonNode body) {
+	public R<String> deleteUser(@RequestParam(defaultValue = "1") Integer entid, @RequestBody JsonNode body) {
 		int uid = body.has("uid") ? body.get("uid").asInt() : 0;
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
 		try {

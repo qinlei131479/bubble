@@ -51,33 +51,33 @@ public class HayGroupController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取评估组详情")
-	public R<HayGroup> details(@PathVariable long id) {
+	public R<HayGroup> details(@PathVariable Long id) {
 		return R.phpOk(hayGroupService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改海氏评估组")
-	public R<String> update(@PathVariable long id, @RequestBody HayGroupSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody HayGroupSaveDTO dto) {
 		hayGroupService.updateHayGroup(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除海氏评估组")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		hayGroupService.removeHayGroup(id);
 		return R.phpOk("common.delete.succ");
 	}
 
 	@GetMapping("/data/{group_id}")
 	@Operation(summary = "评估表数据列表")
-	public R<List<HayGroupData>> dataList(@PathVariable("group_id") long groupId) {
+	public R<List<HayGroupData>> dataList(@PathVariable("group_id") Long groupId) {
 		return R.phpOk(hayGroupService.dataList(groupId));
 	}
 
 	@GetMapping("/history/{group_id}")
 	@Operation(summary = "评估表历史记录")
-	public R<List<HayGroupData>> historyList(@PathVariable("group_id") long groupId) {
+	public R<List<HayGroupData>> historyList(@PathVariable("group_id") Long groupId) {
 		return R.phpOk(hayGroupService.historyList(groupId));
 	}
 

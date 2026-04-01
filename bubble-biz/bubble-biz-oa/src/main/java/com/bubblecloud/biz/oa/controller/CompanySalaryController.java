@@ -36,10 +36,10 @@ public class CompanySalaryController {
 
 	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "调薪记录列表")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") int entid,
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer entid,
 			@RequestParam(required = false) Integer cardId, @RequestParam(required = false) Integer linkId,
-			@RequestParam(required = false) Long id, @RequestParam(defaultValue = "1") long current,
-			@RequestParam(defaultValue = "20") long size) {
+			@RequestParam(required = false) Long id, @RequestParam(defaultValue = "1") Long current,
+			@RequestParam(defaultValue = "20") Long size) {
 		Page<EnterpriseUserSalary> mpPage = new Page<>(current, size);
 		Page<EnterpriseUserSalary> r = companySalaryService.pageSalary(entid, cardId, linkId, id, mpPage);
 		return R.phpOk(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
@@ -47,7 +47,7 @@ public class CompanySalaryController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取调薪记录")
-	public R<EnterpriseUserSalary> details(@PathVariable long id) {
+	public R<EnterpriseUserSalary> details(@PathVariable Long id) {
 		EnterpriseUserSalary e = companySalaryService.getForEdit(id);
 		if (ObjectUtil.isNull(e)) {
 			return R.phpFailed("缺少必要参数");
@@ -66,7 +66,7 @@ public class CompanySalaryController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改调薪记录")
-	public R<String> update(@PathVariable long id, @RequestBody CompanySalarySaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody CompanySalarySaveDTO dto) {
 		if (companySalaryService.updateSalary(id, dto)) {
 			return R.phpOk("common.update.succ");
 		}
@@ -75,7 +75,7 @@ public class CompanySalaryController {
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除调薪记录")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		if (companySalaryService.removeSalary(id)) {
 			return R.phpOk("common.delete.succ");
 		}
@@ -84,7 +84,7 @@ public class CompanySalaryController {
 
 	@GetMapping("/last/{card_id}")
 	@Operation(summary = "调薪最近记录")
-	public R<java.util.List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") int cardId) {
+	public R<java.util.List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") Integer cardId) {
 		if (cardId <= 0) {
 			return R.phpFailed("缺少必要参数");
 		}

@@ -46,15 +46,15 @@ public class FrameController {
 
 	@GetMapping
 	@Operation(summary = "部门树列表")
-	public R<List<FrameDepartmentTreeNodeVO>> list(@RequestParam(defaultValue = "1") int is_show,
-			@RequestParam(defaultValue = "1") int entid) {
+	public R<List<FrameDepartmentTreeNodeVO>> list(@RequestParam(defaultValue = "1") Integer is_show,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.departmentTreeList(is_show, entid));
 	}
 
 	@GetMapping("/tree")
 	@Operation(summary = "权限/范围用部门树")
-	public R<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") int role,
-			@RequestParam(defaultValue = "0") int scope, @RequestParam(defaultValue = "1") int entid) {
+	public R<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") Integer role,
+			@RequestParam(defaultValue = "0") Integer scope, @RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");
@@ -64,8 +64,8 @@ public class FrameController {
 
 	@GetMapping("/user")
 	@Operation(summary = "部门人员树")
-	public R<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") int role,
-			@RequestParam(defaultValue = "0") int leave, @RequestParam(defaultValue = "1") int entid) {
+	public R<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") Integer role,
+			@RequestParam(defaultValue = "0") Integer leave, @RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");
@@ -75,7 +75,7 @@ public class FrameController {
 
 	@GetMapping("/create")
 	@Operation(summary = "新增部门表单")
-	public R<FrameFormDataVO> createForm(@RequestParam(defaultValue = "1") int entid) {
+	public R<FrameFormDataVO> createForm(@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.getFormData(entid, 0));
 	}
 
@@ -88,13 +88,13 @@ public class FrameController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑部门表单")
-	public R<FrameFormDataVO> details(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<FrameFormDataVO> details(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.getFormData(entid, id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "更新部门")
-	public R<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
 			@RequestBody FrameUpdateDTO dto) {
 		frameService.updateDepartment(id, entid, dto);
 		return R.phpOk("修改成功");
@@ -102,27 +102,27 @@ public class FrameController {
 
 	@GetMapping("/{id}/info")
 	@Operation(summary = "部门详情")
-	public R<FrameDetailVO> info(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<FrameDetailVO> info(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.departmentInfo(id, entid));
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除部门")
-	public R<String> removeById(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<String> removeById(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		frameService.deleteDepartment(id, entid);
 		return R.phpOk("删除成功");
 	}
 
 	@GetMapping("/users/{frameId}")
 	@Operation(summary = "部门负责人/成员")
-	public R<List<FrameAdminBriefVO>> frameUsers(@PathVariable int frameId,
-			@RequestParam(defaultValue = "1") int entid) {
+	public R<List<FrameAdminBriefVO>> frameUsers(@PathVariable Integer frameId,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.getFrameUsers(frameId, entid));
 	}
 
 	@GetMapping("/scope")
 	@Operation(summary = "管理范围部门")
-	public R<List<FrameScopeItemVO>> scope(@RequestParam(defaultValue = "1") int entid) {
+	public R<List<FrameScopeItemVO>> scope(@RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");

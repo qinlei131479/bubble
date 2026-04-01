@@ -55,20 +55,20 @@ public class AssessTargetCateController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取指标分类详情")
-	public R<AssessTargetCategory> details(@PathVariable long id) {
+	public R<AssessTargetCategory> details(@PathVariable Long id) {
 		return R.phpOk(assessTargetCategoryService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改指标分类")
-	public R<String> update(@PathVariable long id, @RequestBody AssessTargetCateSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody AssessTargetCateSaveDTO dto) {
 		assessTargetCategoryService.updateTargetCate(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除指标分类")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		assessTargetCategoryService.removeTargetCate(id);
 		return R.phpOk("common.delete.succ");
 	}

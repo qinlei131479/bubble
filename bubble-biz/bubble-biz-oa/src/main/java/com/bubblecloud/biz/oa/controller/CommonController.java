@@ -98,7 +98,7 @@ public class CommonController {
 
 	@PutMapping("/message/{id}/{isRead}")
 	@Operation(summary = "修改消息已读状态")
-	public R<String> updateMessage(Authentication authentication, @PathVariable long id, @PathVariable int isRead) {
+	public R<String> updateMessage(Authentication authentication, @PathVariable Long id, @PathVariable Integer isRead) {
 		commonService.updateMessageRead(authentication, id, isRead);
 		return R.phpOk("common.update.succ");
 	}

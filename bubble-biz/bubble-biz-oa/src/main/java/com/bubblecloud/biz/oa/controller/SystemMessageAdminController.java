@@ -31,8 +31,8 @@ public class SystemMessageAdminController {
 	@GetMapping(value = { "/list", "/page" })
 	@Operation(summary = "消息列表")
 	public R<Page<Message>> page(@RequestParam(required = false) Integer cate_id,
-			@RequestParam(required = false) String title, @RequestParam(defaultValue = "1") int entid,
-			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
+			@RequestParam(required = false) String title, @RequestParam(defaultValue = "1") Integer entid,
+			@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "20") Integer limit) {
 		Pg<Message> pg = new Pg<>();
 		pg.setCurrent(pageNum);
 		pg.setSize(limit);
@@ -45,7 +45,7 @@ public class SystemMessageAdminController {
 
 	@GetMapping("/find/{id}")
 	@Operation(summary = "消息详情")
-	public R<Message> details(@PathVariable long id) {
+	public R<Message> details(@PathVariable Long id) {
 		return R.phpOk(systemMessageAdminService.getById(id));
 	}
 

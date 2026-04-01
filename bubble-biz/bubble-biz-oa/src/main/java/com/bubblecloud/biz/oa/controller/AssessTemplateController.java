@@ -49,34 +49,34 @@ public class AssessTemplateController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取考核模板详情")
-	public R<AssessTemplate> details(@PathVariable long id) {
+	public R<AssessTemplate> details(@PathVariable Long id) {
 		return R.phpOk(assessTemplateService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改考核模板")
-	public R<String> update(@PathVariable long id, @RequestBody AssessTemplateSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody AssessTemplateSaveDTO dto) {
 		assessTemplateService.updateTemplate(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除考核模板")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		assessTemplateService.removeTemplate(id);
 		return R.phpOk("common.delete.succ");
 	}
 
 	@PostMapping("/favorite/{id}")
 	@Operation(summary = "收藏/取消收藏模板")
-	public R<String> toggleFavorite(@PathVariable long id) {
+	public R<String> toggleFavorite(@PathVariable Long id) {
 		assessTemplateService.toggleFavorite(id);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@PostMapping("/cover/{id}")
 	@Operation(summary = "设置模板封面")
-	public R<String> setCover(@PathVariable long id, @RequestParam String cover) {
+	public R<String> setCover(@PathVariable Long id, @RequestParam String cover) {
 		assessTemplateService.setCover(id, cover);
 		return R.phpOk("common.operation.succ");
 	}

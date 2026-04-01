@@ -50,34 +50,34 @@ public class PromotionDataController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取晋升数据项详情")
-	public R<PromotionData> details(@PathVariable long id) {
+	public R<PromotionData> details(@PathVariable Long id) {
 		return R.phpOk(promotionDataService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改晋升数据项")
-	public R<String> update(@PathVariable long id, @RequestBody PromotionDataSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody PromotionDataSaveDTO dto) {
 		promotionDataService.updatePromotionData(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除晋升数据项")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		promotionDataService.removePromotionData(id);
 		return R.phpOk("common.delete.succ");
 	}
 
 	@PostMapping("/standard/{id}")
 	@Operation(summary = "标准修改")
-	public R<String> updateStandard(@PathVariable long id, @RequestBody PromotionDataStandardDTO dto) {
+	public R<String> updateStandard(@PathVariable Long id, @RequestBody PromotionDataStandardDTO dto) {
 		promotionDataService.updateStandard(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@PostMapping("/sort/{pid}")
 	@Operation(summary = "数据项排序")
-	public R<String> sort(@PathVariable long pid, @RequestBody PromotionDataSortDTO dto) {
+	public R<String> sort(@PathVariable Long pid, @RequestBody PromotionDataSortDTO dto) {
 		promotionDataService.sortPromotionData(pid, dto);
 		return R.phpOk("common.operation.succ");
 	}

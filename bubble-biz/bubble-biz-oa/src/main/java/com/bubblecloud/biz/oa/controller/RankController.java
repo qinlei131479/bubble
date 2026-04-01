@@ -54,20 +54,20 @@ public class RankController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取职级详情")
-	public R<Rank> details(@PathVariable long id) {
+	public R<Rank> details(@PathVariable Long id) {
 		return R.phpOk(rankService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改职级")
-	public R<String> update(@PathVariable long id, @RequestBody RankSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody RankSaveDTO dto) {
 		rankService.updateRank(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除职级")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		rankService.removeRank(id);
 		return R.phpOk("common.delete.succ");
 	}

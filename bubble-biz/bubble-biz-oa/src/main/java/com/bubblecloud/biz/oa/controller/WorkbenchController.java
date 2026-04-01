@@ -85,7 +85,7 @@ public class WorkbenchController {
 
 	@GetMapping("/statistics/{types}")
 	@Operation(summary = "业绩统计卡片")
-	public R<List<WorkbenchStatisticCardVO>> statistics(@PathVariable int types) {
+	public R<List<WorkbenchStatisticCardVO>> statistics(@PathVariable Integer types) {
 		return R.phpOk(workbenchService.getStatistics(types));
 	}
 

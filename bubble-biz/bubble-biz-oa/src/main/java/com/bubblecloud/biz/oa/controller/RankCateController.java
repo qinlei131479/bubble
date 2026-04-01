@@ -48,20 +48,20 @@ public class RankCateController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取职级体系分类详情")
-	public R<RankCategory> details(@PathVariable long id) {
+	public R<RankCategory> details(@PathVariable Long id) {
 		return R.phpOk(rankCategoryService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改职级体系分类")
-	public R<String> update(@PathVariable long id, @RequestBody RankCateSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody RankCateSaveDTO dto) {
 		rankCategoryService.updateRankCate(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除职级体系分类")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		rankCategoryService.removeRankCate(id);
 		return R.phpOk("common.delete.succ");
 	}

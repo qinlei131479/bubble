@@ -32,7 +32,7 @@ public class QuickCateAdminController {
 
 	@GetMapping
 	@Operation(summary = "分类列表")
-	public R<?> list(@RequestParam(defaultValue = "0") int entid) {
+	public R<?> list(@RequestParam(defaultValue = "0") Integer entid) {
 		return R.phpOk(quickCateAdminService.list(entid));
 	}
 
@@ -51,13 +51,13 @@ public class QuickCateAdminController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
-	public R<Category> details(@PathVariable long id) {
+	public R<Category> details(@PathVariable Long id) {
 		return R.phpOk(quickCateAdminService.getCate(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "保存修改")
-	public R<String> update(@PathVariable long id, @RequestBody Category body) {
+	public R<String> update(@PathVariable Long id, @RequestBody Category body) {
 		body.setId(id);
 		quickCateAdminService.updateCate(body);
 		return R.phpOk("common.update.succ");
@@ -65,7 +65,7 @@ public class QuickCateAdminController {
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除分类")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		quickCateAdminService.deleteCate(id);
 		return R.phpOk("common.delete.succ");
 	}

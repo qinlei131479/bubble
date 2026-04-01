@@ -33,7 +33,7 @@ public class QuickAdminController {
 	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "分页列表")
 	public R<?> page(@RequestParam(required = false) Integer cid, @RequestParam(required = false) String name,
-			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
+			@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "20") Integer limit) {
 		return R.phpOk(quickAdminService.page(cid, name, pageNum, limit));
 	}
 
@@ -52,13 +52,13 @@ public class QuickAdminController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
-	public R<SystemQuick> details(@PathVariable int id) {
+	public R<SystemQuick> details(@PathVariable Integer id) {
 		return R.phpOk(quickAdminService.getQuick(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改保存")
-	public R<String> update(@PathVariable int id, @RequestBody SystemQuick body) {
+	public R<String> update(@PathVariable Integer id, @RequestBody SystemQuick body) {
 		body.setId(id);
 		quickAdminService.updateQuick(body);
 		return R.phpOk("common.update.succ");
@@ -66,13 +66,13 @@ public class QuickAdminController {
 
 	@GetMapping("/{id}")
 	@Operation(summary = "显示/隐藏占位（PHP show）")
-	public R<String> show(@PathVariable int id) {
+	public R<String> show(@PathVariable Integer id) {
 		return R.phpOk("ok");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
-	public R<String> removeById(@PathVariable int id) {
+	public R<String> removeById(@PathVariable Integer id) {
 		quickAdminService.deleteQuick(id);
 		return R.phpOk("common.delete.succ");
 	}

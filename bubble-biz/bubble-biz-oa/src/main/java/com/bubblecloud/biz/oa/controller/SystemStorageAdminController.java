@@ -41,13 +41,13 @@ public class SystemStorageAdminController {
 
 	@GetMapping("/create/{type}")
 	@Operation(summary = "创建表单占位")
-	public R<String> createForm(@PathVariable int type) {
+	public R<String> createForm(@PathVariable Integer type) {
 		return R.phpOk("ok");
 	}
 
 	@GetMapping("/form/{type}")
 	@Operation(summary = "配置表单占位")
-	public R<String> form(@PathVariable int type) {
+	public R<String> form(@PathVariable Integer type) {
 		return R.phpOk("ok");
 	}
 
@@ -65,13 +65,13 @@ public class SystemStorageAdminController {
 
 	@GetMapping("/sync/{type}")
 	@Operation(summary = "同步云存储（占位）")
-	public R<String> sync(@PathVariable int type) {
+	public R<String> sync(@PathVariable Integer type) {
 		return R.phpOk("同步成功");
 	}
 
 	@PostMapping("/{type}")
 	@Operation(summary = "保存云存储")
-	public R<String> create(@PathVariable int type, @RequestBody JsonNode body) {
+	public R<String> create(@PathVariable Integer type, @RequestBody JsonNode body) {
 		String accessKey = text(body, "accessKey");
 		String name = text(body, "name");
 		String region = text(body, "region");
@@ -82,7 +82,7 @@ public class SystemStorageAdminController {
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "启用该存储")
-	public R<String> status(@PathVariable int id) {
+	public R<String> status(@PathVariable Integer id) {
 		try {
 			systemStorageAdminService.setActiveStatus(id);
 			return R.phpOk("修改成功");
@@ -94,7 +94,7 @@ public class SystemStorageAdminController {
 
 	@GetMapping("/domain/{id}")
 	@Operation(summary = "域名表单占位")
-	public R<String> getUpdateDomainForm(@PathVariable int id) {
+	public R<String> getUpdateDomainForm(@PathVariable Integer id) {
 		return R.phpOk("ok");
 	}
 
@@ -106,7 +106,7 @@ public class SystemStorageAdminController {
 
 	@PostMapping("/domain/{id}")
 	@Operation(summary = "修改域名")
-	public R<String> updateDomain(@PathVariable int id, @RequestBody JsonNode body) {
+	public R<String> updateDomain(@PathVariable Integer id, @RequestBody JsonNode body) {
 		String domain = text(body, "domain");
 		String cdn = text(body, "cdn");
 		try {
@@ -120,14 +120,14 @@ public class SystemStorageAdminController {
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
-	public R<String> removeById(@PathVariable int id) {
+	public R<String> removeById(@PathVariable Integer id) {
 		systemStorageAdminService.deleteStorage(id);
 		return R.phpOk("删除成功");
 	}
 
 	@PutMapping("/save_type/{type}")
 	@Operation(summary = "切换存储方式")
-	public R<String> uploadType(@PathVariable int type) {
+	public R<String> uploadType(@PathVariable Integer type) {
 		try {
 			systemStorageAdminService.setUploadType(type);
 			return R.phpOk(type != 1 ? "切换云存储成功,请检查是否开启使用了存储空间" : "切换本地存储成功");

@@ -37,19 +37,19 @@ public class MenusAdminController {
 	@GetMapping
 	@Operation(summary = "企业菜单树")
 	public R<List<MenuAdminTreeNodeVO>> list(@RequestParam(required = false) String menu_name,
-			@RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(menusAdminService.listMenuTree(menu_name, entid));
 	}
 
 	@GetMapping("/tree")
 	@Operation(summary = "菜单树（PHP getTree）")
-	public R<List<MenuAdminTreeNodeVO>> getTree(@RequestParam(defaultValue = "1") int entid) {
+	public R<List<MenuAdminTreeNodeVO>> getTree(@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(menusAdminService.listMenuTree(null, entid));
 	}
 
 	@PostMapping
 	@Operation(summary = "新增菜单")
-	public R<String> create(@RequestParam(defaultValue = "1") int entid, @RequestBody SystemMenus body) {
+	public R<String> create(@RequestParam(defaultValue = "1") Integer entid, @RequestBody SystemMenus body) {
 		body.setEntid(entid);
 		menusAdminService.saveMenu(body);
 		return R.phpOk("添加成功");
@@ -57,7 +57,7 @@ public class MenusAdminController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改菜单")
-	public R<String> update(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
 			@RequestBody SystemMenus body) {
 		body.setId(id);
 		body.setEntid(entid);
@@ -67,7 +67,7 @@ public class MenusAdminController {
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除菜单")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		try {
 			menusAdminService.deleteMenu(id);
 			return R.phpOk("删除成功");
@@ -79,14 +79,14 @@ public class MenusAdminController {
 
 	@PostMapping("/{id}/is_show")
 	@Operation(summary = "显示/隐藏")
-	public R<String> show(@PathVariable long id, @RequestParam int is_show) {
+	public R<String> show(@PathVariable Long id, @RequestParam Integer is_show) {
 		menusAdminService.updateIsShow(id, is_show);
 		return R.phpOk("common.update.succ");
 	}
 
 	@PostMapping("/not_save")
 	@Operation(summary = "未保存权限占位")
-	public R<com.fasterxml.jackson.databind.JsonNode> getNotSaveMenus(@RequestParam(defaultValue = "1") int entid) {
+	public R<com.fasterxml.jackson.databind.JsonNode> getNotSaveMenus(@RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(menusAdminService.getNotSaveMenus(entid));
 	}
 

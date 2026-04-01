@@ -43,15 +43,15 @@ public class CompanyUserController {
 
 	@GetMapping("/list")
 	@Operation(summary = "组织架构人员列表")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") int entid, @RequestParam(required = false) String pid,
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer entid, @RequestParam(required = false) String pid,
 			@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
-			@RequestParam(defaultValue = "1") int current, @RequestParam(defaultValue = "20") int size) {
+			@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(companyUserService.listCompanyUsers(entid, pid, name, status, current, size));
 	}
 
 	@GetMapping("/card/{id}")
 	@Operation(summary = "组织架构成员信息")
-	public R<CompanyUserCardVO> editUser(@PathVariable long id, @RequestParam(defaultValue = "1") int entid) {
+	public R<CompanyUserCardVO> editUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		try {
 			return R.phpOk(companyUserService.getCardEdit(id, entid));
 		}
@@ -62,7 +62,7 @@ public class CompanyUserController {
 
 	@PutMapping("/card/{id}")
 	@Operation(summary = "修改组织架构成员")
-	public R<String> updateUser(@PathVariable long id, @RequestParam(defaultValue = "1") int entid,
+	public R<String> updateUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
 			@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
 		try {
 			companyUserService.updateCompanyUserCard(id, entid, dto);
@@ -76,7 +76,7 @@ public class CompanyUserController {
 	@GetMapping("/userInfo")
 	@Operation(summary = "获取用户关联企业详情")
 	public R<CompanyUserProfileVO> userInfo(Authentication authentication,
-			@RequestParam(defaultValue = "1") int entid) {
+			@RequestParam(defaultValue = "1") Integer entid) {
 		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return R.phpFailed("未登录");
 		}
@@ -90,7 +90,7 @@ public class CompanyUserController {
 
 	@GetMapping("/userFrame")
 	@Operation(summary = "获取用户部门信息")
-	public R<UserFrameBriefVO> userFrame(Authentication authentication, @RequestParam(defaultValue = "1") int entid) {
+	public R<UserFrameBriefVO> userFrame(Authentication authentication, @RequestParam(defaultValue = "1") Integer entid) {
 		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return R.phpFailed("未登录");
 		}
@@ -104,16 +104,16 @@ public class CompanyUserController {
 
 	@GetMapping("/add_book/tree")
 	@Operation(summary = "通讯录部门树")
-	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") int entid,
+	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") Integer entid,
 			@RequestParam(required = false) String name) {
 		return R.phpOk(companyUserService.addressBookTree(entid, name));
 	}
 
 	@GetMapping("/add_book/list")
 	@Operation(summary = "通讯录用户列表")
-	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") int entid,
+	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") Integer entid,
 			@RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
-			@RequestParam(defaultValue = "1") int current, @RequestParam(defaultValue = "20") int size) {
+			@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(companyUserService.addressBook(entid, name, status, current, size));
 	}
 

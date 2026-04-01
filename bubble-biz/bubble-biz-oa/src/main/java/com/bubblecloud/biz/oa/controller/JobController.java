@@ -58,27 +58,27 @@ public class JobController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取岗位详情")
-	public R<RankJob> details(@PathVariable long id) {
+	public R<RankJob> details(@PathVariable Long id) {
 		return R.phpOk(rankJobService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改岗位")
-	public R<String> update(@PathVariable long id, @RequestBody JobSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody JobSaveDTO dto) {
 		rankJobService.updateJob(id, dto);
 		return R.phpOk("common.update.succ");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除岗位")
-	public R<String> removeById(@PathVariable long id) {
+	public R<String> removeById(@PathVariable Long id) {
 		rankJobService.removeJob(id);
 		return R.phpOk("common.delete.succ");
 	}
 
 	@PutMapping("/show/{id}/{status}")
 	@Operation(summary = "修改岗位状态")
-	public R<String> updateStatus(@PathVariable long id, @PathVariable int status) {
+	public R<String> updateStatus(@PathVariable Long id, @PathVariable Integer status) {
 		rankJobService.updateJobStatus(id, status);
 		return R.phpOk("common.operation.succ");
 	}
@@ -97,13 +97,13 @@ public class JobController {
 
 	@GetMapping("/subordinate/{id}")
 	@Operation(summary = "获取下级职责详情")
-	public R<RankJob> subordinateDetail(@PathVariable long id) {
+	public R<RankJob> subordinateDetail(@PathVariable Long id) {
 		return R.phpOk(rankJobService.getSubordinateDetail(id));
 	}
 
 	@PutMapping("/subordinate/{id}")
 	@Operation(summary = "修改下级职责")
-	public R<String> updateSubordinate(@PathVariable long id, @RequestBody JobSubordinateUpdateDTO dto) {
+	public R<String> updateSubordinate(@PathVariable Long id, @RequestBody JobSubordinateUpdateDTO dto) {
 		rankJobService.updateSubordinate(id, dto);
 		return R.phpOk("common.update.succ");
 	}

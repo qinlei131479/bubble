@@ -31,7 +31,7 @@ public class ClientController {
 
 	@GetMapping("/remind/info/{id}")
 	@Operation(summary = "付款提醒详情（工作台待办）")
-	public R<ClientRemindInfoVO> remindInfo(@PathVariable long id) {
+	public R<ClientRemindInfoVO> remindInfo(@PathVariable Long id) {
 		ClientRemindInfoVO vo = new ClientRemindInfoVO();
 		vo.setId(id);
 		vo.setEid(0);

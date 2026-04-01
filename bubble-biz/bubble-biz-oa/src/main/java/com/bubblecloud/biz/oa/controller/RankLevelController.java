@@ -53,13 +53,13 @@ public class RankLevelController {
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取职位等级详情")
-	public R<RankLevel> details(@PathVariable long id) {
+	public R<RankLevel> details(@PathVariable Long id) {
 		return R.phpOk(rankLevelService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改职位等级")
-	public R<String> update(@PathVariable long id, @RequestBody RankLevelSaveDTO dto) {
+	public R<String> update(@PathVariable Long id, @RequestBody RankLevelSaveDTO dto) {
 		rankLevelService.updateRankLevel(id, dto);
 		return R.phpOk("common.update.succ");
 	}
@@ -73,22 +73,22 @@ public class RankLevelController {
 
 	@PutMapping("/relation/{id}")
 	@Operation(summary = "修改职位等级关联职级")
-	public R<String> relateRank(@PathVariable long id, @RequestParam Long rankId) {
+	public R<String> relateRank(@PathVariable Long id, @RequestParam Long rankId) {
 		rankLevelService.relateRank(id, rankId);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@DeleteMapping("/relation/{id}")
 	@Operation(summary = "删除关联职级")
-	public R<String> removeRelation(@PathVariable long id) {
+	public R<String> removeRelation(@PathVariable Long id) {
 		rankLevelService.removeRelateRank(id);
 		return R.phpOk("common.delete.succ");
 	}
 
 	@GetMapping("/rank/{cate_id}")
 	@Operation(summary = "获取未关联职级列表")
-	public R<List<Rank>> unrelatedRanks(@PathVariable("cate_id") long cateId,
-			@RequestParam(required = false, defaultValue = "0") long entid) {
+	public R<List<Rank>> unrelatedRanks(@PathVariable("cate_id") Long cateId,
+			@RequestParam(required = false, defaultValue = "0") Long entid) {
 		return R.phpOk(rankLevelService.unrelatedRanks(cateId, entid));
 	}
 

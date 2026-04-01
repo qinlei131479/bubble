@@ -58,7 +58,7 @@ public class ScheduleController {
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "修改日程状态")
-	public R<String> status(@PathVariable long id, @RequestBody(required = false) ScheduleStatusUpdateDTO body) {
+	public R<String> status(@PathVariable Long id, @RequestBody(required = false) ScheduleStatusUpdateDTO body) {
 		scheduleApiService.updateStatus(id, ObjectUtil.isNotNull(body) ? body : new ScheduleStatusUpdateDTO());
 		return R.phpOk("ok");
 	}
