@@ -44,7 +44,7 @@ public class RankJobController {
 
 	@GetMapping({"", "/page"})
 	@Operation(summary = "岗位列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<RankJob> pg, @ParameterObject RankJob query) {
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject RankJob query) {
 		Page<RankJob> res = rankJobService.findPg(pg, query);
 		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}

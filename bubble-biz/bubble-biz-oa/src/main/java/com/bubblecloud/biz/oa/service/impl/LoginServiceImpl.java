@@ -2,20 +2,23 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.bubblecloud.biz.oa.mapper.*;
 import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.oa.api.dto.FrameAssistView;
+import com.bubblecloud.oa.api.entity.RankJob;
 import com.bubblecloud.oa.api.vo.ScanKeyVO;
 import com.bubblecloud.oa.api.vo.ScanStatusResultVO;
+import com.bubblecloud.oa.api.vo.auth.*;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.bubblecloud.biz.oa.mapper.AdminMapper;
-import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
-import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
-import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
 import com.bubblecloud.biz.oa.constant.config.OaPhpJwtProperties;
 import com.bubblecloud.biz.oa.util.OaPhpJwtTokenUtil;
 import com.bubblecloud.biz.oa.service.AdminService;
@@ -30,13 +33,13 @@ import com.bubblecloud.oa.api.entity.Enterprise;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.LoginInfoVO;
 import com.bubblecloud.oa.api.vo.LoginVO;
-import com.bubblecloud.oa.api.vo.auth.EnterpriseLoginVO;
-import com.bubblecloud.oa.api.vo.auth.LoginUserInfoPayloadVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 兼容 PHP 的登录鉴权服务实现。
@@ -49,6 +52,10 @@ import cn.hutool.core.util.StrUtil;
 public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements LoginService {
 
 	private static final Long DEFAULT_ENTID = 1L;
+
+	private static final String KEY_PREFIX = "oa:scan:key:";
+
+	private static final int TTL_SECONDS = 180;
 
 	private static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
@@ -66,11 +73,13 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 
 	private final SmsVerifyService smsVerifyService;
 
-	private static final String KEY_PREFIX = "oa:scan:key:";
+	private final FrameAssistMapper frameAssistMapper;
 
-	private static final int TTL_SECONDS = 180;
+	private final RankJobMapper rankJobMapper;
 
 	private final StringRedisTemplate stringRedisTemplate;
+
+	private final ObjectMapper objectMapper;
 
 	@Override
 	public LoginVO login(LoginDTO dto) {
@@ -169,7 +178,81 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 	}
 
 	private LoginUserInfoPayloadVO buildUserInfo(Admin admin) {
-		return PojoConvertUtil.convertPojo(admin, LoginUserInfoPayloadVO.class);
+		LoginUserInfoPayloadVO vo = new LoginUserInfoPayloadVO();
+		vo.setId(admin.getId());
+		vo.setUid(admin.getUid());
+		vo.setAccount(admin.getAccount());
+		vo.setAvatar(admin.getAvatar());
+		vo.setName(admin.getName());
+		vo.setPhone(admin.getPhone());
+		vo.setIsAdmin(admin.getIsAdmin());
+		vo.setUniOnline(admin.getUniOnline());
+		vo.setClientId(admin.getClientId());
+		vo.setScanKey(admin.getScanKey());
+		vo.setLastIp(admin.getLastIp());
+		vo.setLoginCount(admin.getLoginCount());
+		vo.setStatus(admin.getStatus());
+		vo.setIsInit(admin.getIsInit());
+		vo.setLanguage(admin.getLanguage());
+		vo.setMark(admin.getMark());
+		vo.setCreatedAt(admin.getCreatedAt());
+		vo.setUpdatedAt(admin.getUpdatedAt());
+		vo.setRoles(parseRoles(admin.getRoles()));
+		vo.setFrames(buildFrameRows(admin.getId()));
+		vo.setJob(copyRankJob(admin.getJob()));
+		vo.setRealName(admin.getName());
+		return vo;
+	}
+
+	private List<Object> parseRoles(String raw) {
+		if (StrUtil.isBlank(raw)) {
+			return Collections.emptyList();
+		}
+		try {
+			return objectMapper.readValue(raw, new TypeReference<List<Object>>() {
+			});
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+
+	private List<FrameAssistLoginRowVO> buildFrameRows(Long userId) {
+		List<FrameAssistView> rows = frameAssistMapper.selectUserFrames(userId, DEFAULT_ENTID);
+		List<FrameAssistLoginRowVO> frames = new ArrayList<>();
+		for (FrameAssistView v : rows) {
+			FrameAssistLoginRowVO row = new FrameAssistLoginRowVO();
+			row.setId(v.getId());
+			row.setEntid(v.getEntid());
+			row.setFrameId(v.getFrameId());
+			row.setUserId(v.getUserId());
+			row.setIsMastart(v.getIsMastart());
+			row.setIsAdmin(v.getIsAdmin());
+			row.setSuperiorUid(v.getSuperiorUid());
+			String frameName = ObjectUtil.isNotNull(v.getFrameName()) ? v.getFrameName() : "";
+			row.setFrame(new FrameNameRefVO(v.getFrameId(), frameName));
+			frames.add(row);
+		}
+		return frames;
+	}
+
+	private RankJobLoginVO copyRankJob(Integer jobId) {
+		if (ObjectUtil.isNull(jobId) || jobId == 0) {
+			return null;
+		}
+		RankJob job = rankJobMapper.selectById(jobId.longValue());
+		if (ObjectUtil.isNull(job)) {
+			return null;
+		}
+		RankJobLoginVO vo = new RankJobLoginVO();
+		vo.setId(job.getId());
+		vo.setEntid(job.getEntid());
+		vo.setName(job.getName());
+		vo.setDescribe(job.getDescribe());
+		vo.setDuty(job.getDuty());
+		vo.setStatus(job.getStatus());
+		vo.setCreatedAt(job.getCreatedAt());
+		vo.setUpdatedAt(job.getUpdatedAt());
+		return vo;
 	}
 
 	private EnterpriseLoginVO buildEnterprise() {

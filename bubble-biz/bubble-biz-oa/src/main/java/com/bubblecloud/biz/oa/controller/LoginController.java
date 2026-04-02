@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.LoginService;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,7 +48,11 @@ public class LoginController {
 
 	@GetMapping("/info")
 	@Operation(summary = "当前登录用户信息（PHP：userInfo + enterprise）")
-	public R<LoginInfoVO> info() {
+	public R<LoginInfoVO> info(Authentication authentication) {
+		if (ObjectUtil.isNull(authentication)
+				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
+			return R.phpFailed("未登录");
+		}
 		LoginInfoVO data = loginService.loginInfo(OaSecurityUtil.currentUserId());
 		return ObjectUtil.isNull(data) ? R.phpFailed("用户不存在") : R.phpOk(data);
 	}

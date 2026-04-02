@@ -170,7 +170,7 @@ public class MenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMen
 		}
 		List<SystemMenus> tree = new ArrayList<>();
 		for (SystemMenus node : nodeMap.values()) {
-			Integer pid = node.getPid();
+			Long pid = node.getPid();
 			Long pidLong = ObjectUtil.isNull(pid) ? null : pid.longValue();
 			if (ObjectUtil.isNotNull(pidLong) && nodeMap.containsKey(pidLong)) {
 				SystemMenus parent = nodeMap.get(pidLong);
