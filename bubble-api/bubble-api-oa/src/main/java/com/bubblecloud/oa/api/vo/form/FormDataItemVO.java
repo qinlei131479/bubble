@@ -29,7 +29,7 @@ public class FormDataItemVO {
 	private String inputType;
 
 	@Schema(description = "分组ID")
-	private Integer cateId;
+	private Long cateId;
 
 	@Schema(description = "是否允许删除 0 否 1 是")
 	private Integer enableDelete;

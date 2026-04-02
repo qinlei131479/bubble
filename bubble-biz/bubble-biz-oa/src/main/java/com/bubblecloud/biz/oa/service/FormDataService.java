@@ -13,21 +13,15 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface FormAdminService extends UpService<FormData> {
+public interface FormDataService extends UpService<FormData> {
 
 	List<FormCateListItemVO> listByTypes(Integer types);
 
-	Long saveCate(Integer types, String title, Integer sort, Integer status);
-
-	void updateCate(Long id, String title, Integer sort, Integer status);
-
-	void deleteCate(Long id);
-
-	void updateCateStatus(Long id, Integer status);
+	void updateStatus(Long id, Integer status);
 
 	void saveFormData(Integer types, JsonNode body);
 
-	void moveFormData(Integer types, Long formDataId, Integer targetCateId);
+	void moveFormData(Integer types, Long formDataId, Long targetCateId);
 
 	JsonNode getSalesmanCustomFields(Long adminId, Integer customType);
 

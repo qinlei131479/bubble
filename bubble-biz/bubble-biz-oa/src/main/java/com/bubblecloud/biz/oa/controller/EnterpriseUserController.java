@@ -42,7 +42,7 @@ public class EnterpriseUserController {
 
 	@GetMapping("/list")
 	@Operation(summary = "组织架构人员列表")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer entid, @RequestParam(required = false) String pid,
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Long entid, @RequestParam(required = false) String pid,
 								@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
 								@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(enterpriseUserService.listEnterpriseUsers(entid, pid, name, status, current, size));
@@ -50,13 +50,13 @@ public class EnterpriseUserController {
 
 	@GetMapping("/card/{id}")
 	@Operation(summary = "组织架构成员信息")
-	public R<EnterpriseUserCardVO> editUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<EnterpriseUserCardVO> editUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseUserService.getCardEdit(id, entid));
 	}
 
 	@PutMapping("/card/{id}")
 	@Operation(summary = "修改组织架构成员")
-	public R<String> updateUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
+	public R<String> updateUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
 								@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
 		enterpriseUserService.updateEnterpriseUserCard(id, entid, dto);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
@@ -64,26 +64,26 @@ public class EnterpriseUserController {
 
 	@GetMapping("/userInfo")
 	@Operation(summary = "获取用户关联企业详情")
-	public R<EnterpriseUserProfileVO> userInfo(@RequestParam(defaultValue = "1") Integer entid) {
+	public R<EnterpriseUserProfileVO> userInfo(@RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseUserService.userInfo(OaSecurityUtil.currentUserId(), entid));
 	}
 
 	@GetMapping("/userFrame")
 	@Operation(summary = "获取用户部门信息")
-	public R<UserFrameBriefVO> userFrame(@RequestParam(defaultValue = "1") Integer entid) {
+	public R<UserFrameBriefVO> userFrame(@RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseUserService.userFrame(OaSecurityUtil.currentUserId(), entid));
 	}
 
 	@GetMapping("/add_book/tree")
 	@Operation(summary = "通讯录部门树")
-	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") Integer entid,
+	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") Long entid,
 														   @RequestParam(required = false) String name) {
 		return R.phpOk(enterpriseUserService.addressBookTree(entid, name));
 	}
 
 	@GetMapping("/add_book/list")
 	@Operation(summary = "通讯录用户列表")
-	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") Integer entid,
+	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") Long entid,
 									   @RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
 									   @RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(enterpriseUserService.addressBook(entid, name, status, current, size));

@@ -20,7 +20,7 @@ public class FrameAuthTreeNodeVO {
 	private Object id;
 
 	@Schema(description = "父级 ID")
-	private Integer pid;
+	private Long pid;
 
 	private Long entid;
 

@@ -2,8 +2,10 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.HayGroupService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.HayGroupSaveDTO;
@@ -37,16 +39,18 @@ public class HayGroupController {
 
 	private final HayGroupService hayGroupService;
 
-	@GetMapping({ "", "/page" })
+	@GetMapping({"", "/page"})
 	@Operation(summary = "海氏评估组列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<HayGroup> pg, @ParameterObject HayGroup query) {
-		return R.phpOk(hayGroupService.pageHayGroup(pg, query));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject HayGroup query) {
+		Page<HayGroup> res = hayGroupService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@PostMapping
 	@Operation(summary = "创建海氏评估组")
 	public R<String> create(@RequestBody HayGroupSaveDTO dto) {
-		hayGroupService.createHayGroup(dto);
+		HayGroup obj = PojoConvertUtil.convertPojo(dto, HayGroup.class);
+		hayGroupService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -59,14 +63,16 @@ public class HayGroupController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改海氏评估组")
 	public R<String> update(@PathVariable Long id, @RequestBody HayGroupSaveDTO dto) {
-		hayGroupService.updateHayGroup(id, dto);
+		HayGroup obj = PojoConvertUtil.convertPojo(dto, HayGroup.class);
+		obj.setId(id);
+		hayGroupService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除海氏评估组")
 	public R<String> removeById(@PathVariable Long id) {
-		hayGroupService.removeHayGroup(id);
+		hayGroupService.deleteById(id);
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 

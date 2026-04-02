@@ -19,10 +19,10 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface FrameAssistMapper extends UpMapper<FrameAssist> {
 
-	List<FrameAssistView> selectUserFrames(@Param("userId") Long userId, @Param("entid") Integer entid);
+	List<FrameAssistView> selectUserFrames(@Param("userId") Long userId, @Param("entid") Long entId);
 
-	List<FrameAdminBriefVO> selectFrameUsers(@Param("frameId") int frameId, @Param("entid") int entid);
+	List<FrameAdminBriefVO> selectFrameUsers(@Param("frameId") int frameId, @Param("entid") Long entId);
 
-	List<FrameAssistUserRowVO> selectUsersByEnt(@Param("entid") int entid);
+	List<FrameAssistUserRowVO> selectUsersByEnt(@Param("entid") Long entId);
 
 }

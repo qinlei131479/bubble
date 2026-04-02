@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,30 +27,30 @@ public class FrameAssistWriteServiceImpl extends UpServiceImpl<FrameAssistMapper
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setUserFrames(Integer entid, Long userId, List<Integer> frameIds, Integer masterFrameId, boolean isAdmin,
-			Long superiorUid, List<Integer> manageFrameIds) {
+	public void setUserFrames(Long entId, Long userId, List<Integer> frameIds, Integer masterFrameId, boolean isAdmin,
+							  Long superiorUid, List<Integer> manageFrameIds) {
 		LocalDateTime now = LocalDateTime.now();
 		List<Integer> manage = ObjectUtil.isNull(manageFrameIds) ? List.of() : manageFrameIds;
 
 		baseMapper.update(null,
 				Wrappers.lambdaUpdate(FrameAssist.class)
-					.set(FrameAssist::getDeletedAt, now)
-					.eq(FrameAssist::getEntid, entid)
-					.eq(FrameAssist::getUserId, userId)
-					.notIn(FrameAssist::getFrameId, frameIds)
-					.isNull(FrameAssist::getDeletedAt));
+						.set(FrameAssist::getDeletedAt, now)
+						.eq(FrameAssist::getEntid, entId)
+						.eq(FrameAssist::getUserId, userId)
+						.notIn(FrameAssist::getFrameId, frameIds)
+						.isNull(FrameAssist::getDeletedAt));
 
 		for (Integer fid : frameIds) {
 			int isMastart = (ObjectUtil.isNotNull(fid) && fid.equals(masterFrameId)) ? 1 : 0;
 			int isFrameAdmin = (isAdmin && ObjectUtil.isNotNull(fid) && manage.contains(fid)) ? 1 : 0;
 			FrameAssist exist = baseMapper.selectOne(Wrappers.lambdaQuery(FrameAssist.class)
-				.eq(FrameAssist::getEntid, entid)
-				.eq(FrameAssist::getUserId, userId)
-				.eq(FrameAssist::getFrameId, fid)
-				.last("LIMIT 1"));
+					.eq(FrameAssist::getEntid, entId)
+					.eq(FrameAssist::getUserId, userId)
+					.eq(FrameAssist::getFrameId, fid)
+					.last("LIMIT 1"));
 			if (ObjectUtil.isNull(exist)) {
 				FrameAssist fa = new FrameAssist();
-				fa.setEntid(entid);
+				fa.setEntid(entId);
 				fa.setFrameId(fid);
 				fa.setUserId(userId);
 				fa.setIsMastart(isMastart);
@@ -58,8 +59,7 @@ public class FrameAssistWriteServiceImpl extends UpServiceImpl<FrameAssistMapper
 				fa.setCreatedAt(now);
 				fa.setUpdatedAt(now);
 				baseMapper.insert(fa);
-			}
-			else {
+			} else {
 				exist.setDeletedAt(null);
 				exist.setIsMastart(isMastart);
 				exist.setIsAdmin(isFrameAdmin);

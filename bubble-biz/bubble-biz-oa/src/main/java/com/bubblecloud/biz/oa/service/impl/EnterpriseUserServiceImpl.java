@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.List;
+
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,33 +53,33 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 	private final FrameAssistWriteService frameAssistWriteService;
 
 	@Override
-	public SimplePageVO listEnterpriseUsers(Integer entid, String pid, String name, Integer status, Integer current, Integer size) {
+	public SimplePageVO listEnterpriseUsers(Long entId, String pid, String name, Integer status, Integer current, Integer size) {
 		Page<EnterpriseUserListItemVO> p = new Page<>(current, size);
-		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name,
+		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entId, name,
 				ObjectUtil.isNull(status) ? 1 : status);
 		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
 	}
 
 	@Override
-	public SimplePageVO addressBook(Integer entid, String name, Integer status, Integer current, Integer size) {
+	public SimplePageVO addressBook(Long entId, String name, Integer status, Integer current, Integer size) {
 		Page<EnterpriseUserListItemVO> p = new Page<>(current, size);
-		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name, status);
+		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entId, name, status);
 		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
 	}
 
 	@Override
-	public EnterpriseUserProfileVO userInfo(Long adminId, Integer entid) {
+	public EnterpriseUserProfileVO userInfo(Long adminId, Long entId) {
 		Admin admin = baseMapper.selectById(adminId);
 		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("未找到用户信息");
 		}
-		Integer max = assessScoreMapper.selectMaxScoreByEntid(entid.longValue());
+		Integer max = assessScoreMapper.selectMaxScoreByEntid(entId);
 		if (ObjectUtil.isNull(max)) {
 			max = 0;
 		}
 		int computeMode = 1;
 		SystemConfig cfg = systemConfigMapper
-			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, "assess_compute_mode"));
+				.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, "assess_compute_mode"));
 		if (ObjectUtil.isNotNull(cfg) && ObjectUtil.isNotNull(cfg.getValue()) && !cfg.getValue().isEmpty()
 				&& !"1".equals(cfg.getValue()) && !"true".equalsIgnoreCase(cfg.getValue())) {
 			computeMode = 0;
@@ -92,7 +93,7 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		vo.setJob(admin.getJob());
 		vo.setStatus(admin.getStatus());
 		vo.setAccount(admin.getAccount());
-		vo.setEntIds(List.of(entid));
+		vo.setEntIds(List.of(entId));
 		vo.setJobId(admin.getJob());
 		vo.setMaxScore(max);
 		vo.setComputeMode(computeMode);
@@ -100,8 +101,8 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 	}
 
 	@Override
-	public UserFrameBriefVO userFrame(Long adminId, Integer entid) {
-		List<FrameAssistView> frames = frameAssistMapper.selectUserFrames(adminId, entid);
+	public UserFrameBriefVO userFrame(Long adminId, Long entId) {
+		List<FrameAssistView> frames = frameAssistMapper.selectUserFrames(adminId, entId);
 		if (frames.isEmpty()) {
 			throw new IllegalArgumentException("未找到用户部门信息");
 		}
@@ -109,13 +110,13 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		UserFrameBriefVO vo = new UserFrameBriefVO();
 		vo.setId(ObjectUtil.isNull(v.getFrameId()) ? null : v.getFrameId().longValue());
 		vo.setName(v.getFrameName());
-		vo.setEntid(entid.longValue());
+		vo.setEntid(entId);
 		return vo;
 	}
 
 	@Override
-	public List<FrameDepartmentTreeNodeVO> addressBookTree(Integer entid, String name) {
-		List<FrameDepartmentTreeNodeVO> tree = frameService.departmentTreeList(1, entid);
+	public List<FrameDepartmentTreeNodeVO> addressBookTree(Long entId, String name) {
+		List<FrameDepartmentTreeNodeVO> tree = frameService.departmentTreeList(1, entId);
 		if (StrUtil.isBlank(name)) {
 			return tree;
 		}
@@ -123,7 +124,7 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 	}
 
 	private static List<FrameDepartmentTreeNodeVO> filterTreeByName(List<FrameDepartmentTreeNodeVO> nodes,
-			String keyword) {
+																	String keyword) {
 		if (ObjectUtil.isNull(nodes) || nodes.isEmpty()) {
 			return List.of();
 		}
@@ -131,8 +132,8 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 	}
 
 	@Override
-	public EnterpriseUserCardVO getCardEdit(Long targetAdminId, Integer entid) {
-		if (frameAssistMapper.selectUserFrames(targetAdminId, entid).isEmpty()) {
+	public EnterpriseUserCardVO getCardEdit(Long targetAdminId, Long entId) {
+		if (frameAssistMapper.selectUserFrames(targetAdminId, entId).isEmpty()) {
 			throw new IllegalArgumentException("企业用户信息不存在");
 		}
 		Admin admin = baseMapper.selectById(targetAdminId);
@@ -151,7 +152,7 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateEnterpriseUserCard(Long targetAdminId, Integer entid, EnterpriseUserCardUpdateDTO dto) {
+	public void updateEnterpriseUserCard(Long targetAdminId, Long entId, EnterpriseUserCardUpdateDTO dto) {
 		if (ObjectUtil.isNull(dto.getFrameId()) || dto.getFrameId().isEmpty()) {
 			throw new IllegalArgumentException("必须选择一个部门");
 		}
@@ -171,9 +172,9 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		}
 		if (StrUtil.isNotBlank(dto.getPhone())) {
 			long cnt = baseMapper.selectCount(Wrappers.lambdaQuery(Admin.class)
-				.eq(Admin::getPhone, dto.getPhone())
-				.ne(Admin::getId, targetAdminId)
-				.isNull(Admin::getDeletedAt));
+					.eq(Admin::getPhone, dto.getPhone())
+					.ne(Admin::getId, targetAdminId)
+					.isNull(Admin::getDeletedAt));
 			if (cnt > 0) {
 				throw new IllegalArgumentException("该手机号已存在");
 			}
@@ -187,15 +188,14 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		if (StrUtil.isNotBlank(dto.getPosition())) {
 			try {
 				target.setJob(Integer.parseInt(dto.getPosition().trim()));
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				// 保持原岗位
 			}
 		}
 		baseMapper.updateById(target);
 
 		long sup = ObjectUtil.isNull(dto.getSuperiorUid()) ? 0L : dto.getSuperiorUid();
-		frameAssistWriteService.setUserFrames(entid, targetAdminId, dto.getFrameId(), dto.getMastartId(), isAdmin, sup,
+		frameAssistWriteService.setUserFrames(entId, targetAdminId, dto.getFrameId(), dto.getMastartId(), isAdmin, sup,
 				ObjectUtil.isNull(dto.getManageFrames()) ? List.of() : dto.getManageFrames());
 	}
 

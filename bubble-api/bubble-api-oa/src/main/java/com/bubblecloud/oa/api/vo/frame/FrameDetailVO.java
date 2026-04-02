@@ -19,9 +19,9 @@ public class FrameDetailVO {
 
 	private Long entid;
 
-	private Integer pid;
+	private Long pid;
 
-	private Integer roleId;
+	private Long roleId;
 
 	private String name;
 

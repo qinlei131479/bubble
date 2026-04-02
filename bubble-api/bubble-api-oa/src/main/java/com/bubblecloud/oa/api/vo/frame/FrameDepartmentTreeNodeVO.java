@@ -17,7 +17,7 @@ import lombok.Data;
 public class FrameDepartmentTreeNodeVO {
 
 	@Schema(description = "父级 ID")
-	private Integer pid;
+	private Long pid;
 
 	@Schema(description = "层级路径")
 	private String path;

@@ -17,7 +17,7 @@ import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserListItemVO;
 @Mapper
 public interface AdminMapper extends UpMapper<Admin> {
 
-	Page<EnterpriseUserListItemVO> selectEntUserList(Page<EnterpriseUserListItemVO> page, @Param("entid") int entid,
+	Page<EnterpriseUserListItemVO> selectEntUserList(Page<EnterpriseUserListItemVO> page, @Param("entid") Long entid,
                                                      @Param("name") String name, @Param("status") Integer status);
 
 }

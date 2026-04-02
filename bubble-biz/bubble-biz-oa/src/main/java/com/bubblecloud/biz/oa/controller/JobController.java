@@ -2,8 +2,12 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankJobService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.JobSaveDTO;
@@ -38,10 +42,11 @@ public class JobController {
 
 	private final RankJobService rankJobService;
 
-	@GetMapping({ "", "/page" })
+	@GetMapping({"", "/page"})
 	@Operation(summary = "岗位列表")
 	public R<SimplePageVO> page(@ParameterObject Pg<RankJob> pg, @ParameterObject RankJob query) {
-		return R.phpOk(rankJobService.pageJob(pg, query));
+		Page<RankJob> res = rankJobService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@GetMapping("/create")
@@ -53,7 +58,8 @@ public class JobController {
 	@PostMapping
 	@Operation(summary = "创建岗位")
 	public R<String> create(@RequestBody JobSaveDTO dto) {
-		rankJobService.createJob(dto);
+		RankJob obj = PojoConvertUtil.convertPojo(dto, RankJob.class);
+		rankJobService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -66,14 +72,16 @@ public class JobController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改岗位")
 	public R<String> update(@PathVariable Long id, @RequestBody JobSaveDTO dto) {
-		rankJobService.updateJob(id, dto);
+		RankJob obj = PojoConvertUtil.convertPojo(dto, RankJob.class);
+		obj.setId(id);
+		rankJobService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除岗位")
 	public R<String> removeById(@PathVariable Long id) {
-		rankJobService.removeJob(id);
+		rankJobService.deleteById(id);
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
@@ -87,19 +95,23 @@ public class JobController {
 	@GetMapping("/select")
 	@Operation(summary = "岗位下拉列表")
 	public R<List<RankJob>> select(@RequestParam(required = false) Long entid) {
-		return R.phpOk(rankJobService.selectList(entid));
+		return R.phpOk(rankJobService.list(Wrappers.lambdaQuery(RankJob.class)
+				.eq(ObjectUtil.isNotNull(entid), RankJob::getEntid, entid)
+				.eq(RankJob::getStatus, 1)
+				.orderByAsc(RankJob::getId)));
 	}
 
 	@GetMapping("/subordinate")
 	@Operation(summary = "下级岗位职责列表")
-	public R<SimplePageVO> subordinate(@ParameterObject Pg<RankJob> pg, @ParameterObject RankJob query) {
-		return R.phpOk(rankJobService.pageJob(pg, query));
+	public R<SimplePageVO> subordinate(@ParameterObject Pg pg, @ParameterObject RankJob query) {
+		Page<RankJob> res = rankJobService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@GetMapping("/subordinate/{id}")
 	@Operation(summary = "获取下级职责详情")
 	public R<RankJob> subordinateDetail(@PathVariable Long id) {
-		return R.phpOk(rankJobService.getSubordinateDetail(id));
+		return R.phpOk(rankJobService.getById(id));
 	}
 
 	@PutMapping("/subordinate/{id}")

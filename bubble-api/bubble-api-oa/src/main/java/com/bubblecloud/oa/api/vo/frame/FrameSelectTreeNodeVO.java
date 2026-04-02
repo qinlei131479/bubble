@@ -20,7 +20,7 @@ public class FrameSelectTreeNodeVO {
 
 	private String label;
 
-	private Integer pid;
+	private Long pid;
 
 	private Boolean disabled;
 

@@ -29,7 +29,7 @@ public class FrameAssist extends Req<FrameAssist> {
 	private Long id;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 	@Schema(description = "部门ID（enterprise_frame）")
 	private Integer frameId;

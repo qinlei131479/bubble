@@ -35,10 +35,10 @@ public class Frame extends Req<Frame> {
 	private Long entid;
 
 	@Schema(description = "父级部门ID")
-	private Integer pid;
+	private Long pid;
 
 	@Schema(description = "关联角色ID")
-	private Integer roleId;
+	private Long roleId;
 
 	@Schema(description = "部门名称")
 	private String name;

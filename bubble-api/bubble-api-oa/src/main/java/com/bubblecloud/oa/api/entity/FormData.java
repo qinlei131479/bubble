@@ -50,7 +50,7 @@ public class FormData extends Req<FormData> {
 
 	@Schema(description = "分组ID")
 	@TableField("cate_id")
-	private Integer cateId;
+	private Long cateId;
 
 	@Schema(description = "选项参数")
 	private String param;

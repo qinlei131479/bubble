@@ -41,7 +41,7 @@ public class EnterpriseUserProfileVO {
 	private String account;
 
 	@JsonProperty("entIds")
-	private List<Integer> entIds;
+	private List<Long> entIds;
 
 	@JsonProperty("job_id")
 	private Integer jobId;

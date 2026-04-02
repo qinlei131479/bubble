@@ -13,7 +13,7 @@ import com.bubblecloud.oa.api.entity.FrameAssist;
  */
 public interface FrameAssistWriteService extends UpService<FrameAssist> {
 
-	void setUserFrames(Integer entid, Long userId, List<Integer> frameIds, Integer masterFrameId, boolean isAdmin,
-			Long superiorUid, List<Integer> manageFrameIds);
+	void setUserFrames(Long entId, Long userId, List<Integer> frameIds, Integer masterFrameId, boolean isAdmin,
+					   Long superiorUid, List<Integer> manageFrameIds);
 
 }

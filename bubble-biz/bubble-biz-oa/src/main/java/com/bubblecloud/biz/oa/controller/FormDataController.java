@@ -3,9 +3,12 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Map;
 
 import com.bubblecloud.biz.oa.constant.OaConstants;
+import com.bubblecloud.biz.oa.service.FormCategoryService;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
-import com.bubblecloud.biz.oa.service.FormAdminService;
+import com.bubblecloud.biz.oa.service.FormDataService;
 import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.oa.api.entity.FormCategory;
+import com.bubblecloud.oa.api.entity.FormData;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,76 +35,53 @@ import cn.hutool.core.util.StrUtil;
 @RequiredArgsConstructor
 @RequestMapping("/ent/config/form")
 @Tag(name = "自定义表单配置")
-public class FormAdminController {
+public class FormDataController {
 
-	private final FormAdminService formAdminService;
+	private final FormDataService formDataService;
+	private final FormCategoryService formCategoryService;
 
 	@GetMapping("/cate")
 	@Operation(summary = "表单分组与字段列表")
 	public R<?> list(@RequestParam String types) {
-		if (StrUtil.isBlank(types)) {
-			return R.phpFailed("common.empty.attrs");
-		}
-		try {
-			return R.phpOk(formAdminService.listByTypes(Integer.parseInt(types.trim())));
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+		return R.phpOk(formDataService.listByTypes(Integer.parseInt(types)));
 	}
 
 	@PostMapping("/cate/{types}")
 	@Operation(summary = "新增分组")
 	public R<Map<String, Long>> create(@PathVariable Integer types, @RequestBody JsonNode body) {
-		try {
-			String title = text(body, "title");
-			Integer sort = intOrNull(body, "sort");
-			int status = body.has("status") ? body.get("status").asInt(1) : 1;
-			long id = formAdminService.saveCate(types, title, sort, status);
-			return R.phpOk(Map.of("id", id));
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+		FormCategory req = new FormCategory();
+		req.setTypes(types);
+		req.setTitle(text(body, "title"));
+		req.setSort(intOrNull(body, "sort"));
+		req.setStatus(body.has("status") ? body.get("status").asInt(1) : 1);
+		formCategoryService.create(req);
+		return R.phpOk(Map.of("id", 0L));
 	}
 
 	@PutMapping("/cate/{id}")
 	@Operation(summary = "修改分组")
 	public R<String> update(@PathVariable Long id, @RequestBody JsonNode body) {
-		try {
-			String title = text(body, "title");
-			Integer sort = intOrNull(body, "sort");
-			int status = body.has("status") ? body.get("status").asInt(1) : 1;
-			formAdminService.updateCate(id, title, sort, status);
-			return R.phpOk(OaConstants.OPT_SUCC);
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+		FormCategory req = new FormCategory();
+		req.setId(id);
+		req.setTitle(text(body, "title"));
+		req.setSort(intOrNull(body, "sort"));
+		req.setStatus(body.has("status") ? body.get("status").asInt(1) : 1);
+		formCategoryService.update(req);
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@DeleteMapping("/cate/{id}")
 	@Operation(summary = "删除分组")
 	public R<String> removeById(@PathVariable Long id) {
-		try {
-			formAdminService.deleteCate(id);
-			return R.phpOk(OaConstants.DELETE_SUCC);
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+		formDataService.deleteById(id);
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@GetMapping("/cate/{id}")
 	@Operation(summary = "修改分组显示状态（PHP 的 show）")
-	public R<String> show(@PathVariable Long id, @RequestParam Integer status) {
-		try {
-			formAdminService.updateCateStatus(id, status);
-			return R.phpOk(OaConstants.OPT_SUCC);
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+	public R<String> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
+		formDataService.updateStatus(id, status);
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@PostMapping("/data/{types}")
@@ -112,10 +92,9 @@ public class FormAdminController {
 			if (ObjectUtil.isNull(data)) {
 				data = body;
 			}
-			formAdminService.saveFormData(types, data);
+			formDataService.saveFormData(types, data);
 			return R.phpOk(OaConstants.OPT_SUCC);
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
 		}
 	}
@@ -124,12 +103,11 @@ public class FormAdminController {
 	@Operation(summary = "字段移动分组")
 	public R<String> move(@PathVariable Integer types, @RequestBody JsonNode body) {
 		try {
-			long id = body.has("id") ? body.get("id").asLong() : 0L;
-			int cateId = body.has("cate_id") ? body.get("cate_id").asInt() : 0;
-			formAdminService.moveFormData(types, id, cateId);
+			Long id = body.has("id") ? body.get("id").asLong() : 0L;
+			Long cateId = body.has("cate_id") ? body.get("cate_id").asLong() : 0;
+			formDataService.moveFormData(types, id, cateId);
 			return R.phpOk(OaConstants.OPT_SUCC);
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
 		}
 	}
@@ -138,28 +116,17 @@ public class FormAdminController {
 	@Operation(summary = "业务员自定义字段列表")
 	public R<JsonNode> getSalesmanCustom(@PathVariable Integer customType) {
 		Long uid = OaSecurityUtil.currentUserId();
-		if (ObjectUtil.isNull(uid)) {
-			return R.phpFailed("未登录");
-		}
-		return R.phpOk(formAdminService.getSalesmanCustomFields(uid, customType));
+		return R.phpOk(formDataService.getSalesmanCustomFields(uid, customType));
 	}
 
 	@PutMapping("/data/fields/{customType}")
 	@Operation(summary = "保存业务员自定义字段")
 	public R<String> saveSalesmanCustom(@PathVariable Integer customType, @RequestBody JsonNode body) {
 		Long uid = OaSecurityUtil.currentUserId();
-		if (ObjectUtil.isNull(uid)) {
-			return R.phpFailed("未登录");
-		}
-		try {
-			String selectType = body.has("select_type") ? body.get("select_type").asText() : "";
-			JsonNode data = body.get("data");
-			formAdminService.saveSalesmanCustomFields(uid, customType, selectType, data);
-			return R.phpOk(OaConstants.UPDATE_SUCC);
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+		String selectType = body.has("select_type") ? body.get("select_type").asText() : "";
+		JsonNode data = body.get("data");
+		formDataService.saveSalesmanCustomFields(uid, customType, selectType, data);
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	private static String text(JsonNode n, String field) {

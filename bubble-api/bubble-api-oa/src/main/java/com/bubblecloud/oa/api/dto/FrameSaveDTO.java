@@ -28,9 +28,9 @@ public class FrameSaveDTO {
 	private Integer sort;
 
 	@Schema(description = "角色ID")
-	private Integer roleId;
+	private Long roleId;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 }

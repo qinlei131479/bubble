@@ -7,6 +7,8 @@ import com.bubblecloud.oa.api.dto.PhoneLoginDTO;
 import com.bubblecloud.oa.api.dto.RegisterDTO;
 import com.bubblecloud.oa.api.vo.LoginInfoVO;
 import com.bubblecloud.oa.api.vo.LoginVO;
+import com.bubblecloud.oa.api.vo.ScanKeyVO;
+import com.bubblecloud.oa.api.vo.ScanStatusResultVO;
 
 /**
  * 兼容 PHP 的登录鉴权服务。
@@ -14,7 +16,7 @@ import com.bubblecloud.oa.api.vo.LoginVO;
  * @author qinlei
  * @date 2026/3/30 18:00
  */
-public interface AuthService extends UpService<Admin> {
+public interface LoginService extends UpService<Admin> {
 
 	/**
 	 * 账号密码登录。
@@ -53,4 +55,8 @@ public interface AuthService extends UpService<Admin> {
 	 */
 	void updatePassword(Long userId, String phone, String newPassword);
 
+
+	ScanKeyVO createScanKey();
+
+	ScanStatusResultVO pollStatus(String key);
 }
