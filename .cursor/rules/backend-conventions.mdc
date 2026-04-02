@@ -141,7 +141,7 @@ public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject XxxEntity q
 }
 ```
 
-- 使用 `@ParameterObject Pg<实体>` 接收分页参数，调 `findPg`
+- 使用 `@ParameterObject Pg` 接收分页参数，调 `findPg`
 - 业务逻辑复杂（多表关联、动态条件）时，在 `XxxServiceImpl` 重写 `findPg`，对应 `XxxMapper.xml` 实现 SQL
 - PHP 的 `current`/`size`/`page`/`limit` 与 `Pg` 不一致时，在 Controller 装配 `pg.setCurrent`/`pg.setSize`
 
