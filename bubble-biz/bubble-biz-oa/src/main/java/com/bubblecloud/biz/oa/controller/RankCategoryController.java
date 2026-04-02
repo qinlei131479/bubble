@@ -1,7 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankCategoryService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.RankCateSaveDTO;
@@ -30,20 +32,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/ent/rank_cate")
 @Tag(name = "职级体系分类")
-public class RankCateController {
+public class RankCategoryController {
 
 	private final RankCategoryService rankCategoryService;
 
 	@GetMapping({ "", "/page" })
 	@Operation(summary = "职级体系分类列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<RankCategory> pg, @ParameterObject RankCategory query) {
-		return R.phpOk(rankCategoryService.pageRankCate(pg, query));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject RankCategory query) {
+		Page<RankCategory> res = rankCategoryService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@PostMapping
 	@Operation(summary = "创建职级体系分类")
 	public R<String> create(@RequestBody RankCateSaveDTO dto) {
-		rankCategoryService.createRankCate(dto);
+		RankCategory obj = PojoConvertUtil.convertPojo(dto, RankCategory.class);
+		rankCategoryService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -56,14 +60,16 @@ public class RankCateController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改职级体系分类")
 	public R<String> update(@PathVariable Long id, @RequestBody RankCateSaveDTO dto) {
-		rankCategoryService.updateRankCate(id, dto);
+		RankCategory obj = PojoConvertUtil.convertPojo(dto, RankCategory.class);
+		obj.setId(id);
+		rankCategoryService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除职级体系分类")
 	public R<String> removeById(@PathVariable Long id) {
-		rankCategoryService.removeRankCate(id);
+		rankCategoryService.deleteById(id);
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 

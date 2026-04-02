@@ -3,6 +3,8 @@ package com.bubblecloud.oa.api.dto.hr;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 晋升数据项标准修改 DTO。
  *
@@ -16,4 +18,6 @@ public class PromotionDataStandardDTO {
 	@Schema(description = "标准值")
 	private String standard;
 
+	@Schema(description = "排序后的ID列表（从前到后对应 sort 1,2,3...）")
+	private List<Long> ids;
 }

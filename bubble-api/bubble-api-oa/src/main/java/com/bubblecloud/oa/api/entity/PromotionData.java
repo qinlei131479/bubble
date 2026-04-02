@@ -1,11 +1,9 @@
 package com.bubblecloud.oa.api.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.bubblecloud.common.mybatis.base.Req;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -57,4 +55,7 @@ public class PromotionData extends Req<PromotionData> {
 	@TableLogic
 	private LocalDateTime deletedAt;
 
+	@TableField(exist = false)
+	@Schema(description = "排序后的ID列表（从前到后对应 sort 1,2,3...）")
+	private List<Long> ids;
 }

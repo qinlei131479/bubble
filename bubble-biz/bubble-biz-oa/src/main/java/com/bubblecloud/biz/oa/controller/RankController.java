@@ -1,7 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.RankSaveDTO;
@@ -36,8 +38,9 @@ public class RankController {
 
 	@GetMapping({ "", "/page" })
 	@Operation(summary = "职级列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<Rank> pg, @ParameterObject Rank query) {
-		return R.phpOk(rankService.pageRank(pg, query));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject Rank query) {
+		Page<Rank> res = rankService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@GetMapping("/create")
@@ -49,7 +52,8 @@ public class RankController {
 	@PostMapping
 	@Operation(summary = "创建职级")
 	public R<String> create(@RequestBody RankSaveDTO dto) {
-		rankService.createRank(dto);
+		Rank obj = PojoConvertUtil.convertPojo(dto, Rank.class);
+		rankService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -62,14 +66,16 @@ public class RankController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改职级")
 	public R<String> update(@PathVariable Long id, @RequestBody RankSaveDTO dto) {
-		rankService.updateRank(id, dto);
+		Rank obj = PojoConvertUtil.convertPojo(dto, Rank.class);
+		obj.setId(id);
+		rankService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除职级")
 	public R<String> removeById(@PathVariable Long id) {
-		rankService.removeRank(id);
+		rankService.deleteById(id);
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 

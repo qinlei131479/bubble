@@ -2,8 +2,10 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankLevelService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.RankLevelBatchUpdateDTO;
@@ -41,14 +43,16 @@ public class RankLevelController {
 
 	@GetMapping({ "", "/page" })
 	@Operation(summary = "职位等级列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<RankLevel> pg, @ParameterObject RankLevel query) {
-		return R.phpOk(rankLevelService.pageRankLevel(pg, query));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject RankLevel query) {
+		Page<RankLevel> res = rankLevelService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@PostMapping
 	@Operation(summary = "创建职位等级")
 	public R<String> create(@RequestBody RankLevelSaveDTO dto) {
-		rankLevelService.createRankLevel(dto);
+		RankLevel obj = PojoConvertUtil.convertPojo(dto, RankLevel.class);
+		rankLevelService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -61,7 +65,9 @@ public class RankLevelController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改职位等级")
 	public R<String> update(@PathVariable Long id, @RequestBody RankLevelSaveDTO dto) {
-		rankLevelService.updateRankLevel(id, dto);
+		RankLevel obj = PojoConvertUtil.convertPojo(dto, RankLevel.class);
+		obj.setId(id);
+		rankLevelService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
@@ -82,7 +88,7 @@ public class RankLevelController {
 	@DeleteMapping("/relation/{id}")
 	@Operation(summary = "删除关联职级")
 	public R<String> removeRelation(@PathVariable Long id) {
-		rankLevelService.removeRelateRank(id);
+		rankLevelService.deleteById(id);
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 

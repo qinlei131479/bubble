@@ -1,10 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
-import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.service.UpService;
-import com.bubblecloud.oa.api.dto.hr.RankSaveDTO;
 import com.bubblecloud.oa.api.entity.Rank;
-import com.bubblecloud.oa.api.vo.SimplePageVO;
 
 /**
  * 职级服务。
@@ -13,13 +10,5 @@ import com.bubblecloud.oa.api.vo.SimplePageVO;
  * @date 2026/4/1 14:00
  */
 public interface RankService extends UpService<Rank> {
-
-	SimplePageVO pageRank(Pg<Rank> pg, Rank query);
-
-	void createRank(RankSaveDTO dto);
-
-	void updateRank(Long id, RankSaveDTO dto);
-
-	void removeRank(Long id);
 
 }
