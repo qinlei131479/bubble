@@ -91,16 +91,16 @@ public class CommonController {
 
 	@GetMapping("/message")
 	@Operation(summary = "消息列表（工作台角标）")
-	public R<CommonMessageVO> message(Authentication authentication, @RequestParam(defaultValue = "1") Integer page,
-			@RequestParam(defaultValue = "20") Integer limit, @RequestParam(required = false) String cate_id,
-			@RequestParam(required = false) String title) {
-		return R.phpOk(commonService.messageList(authentication, page, limit, cate_id, title));
+	public R<CommonMessageVO> message(@RequestParam(defaultValue = "1") Integer page,
+									  @RequestParam(defaultValue = "20") Integer limit, @RequestParam(required = false) String cate_id,
+									  @RequestParam(required = false) String title) {
+		return R.phpOk(commonService.messageList(page, limit, cate_id, title));
 	}
 
 	@PutMapping("/message/{id}/{isRead}")
 	@Operation(summary = "修改消息已读状态")
-	public R<String> updateMessage(Authentication authentication, @PathVariable Long id, @PathVariable Integer isRead) {
-		commonService.updateMessageRead(authentication, id, isRead);
+	public R<String> updateMessage(@PathVariable Long id, @PathVariable Integer isRead) {
+		commonService.updateMessageRead(id, isRead);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 

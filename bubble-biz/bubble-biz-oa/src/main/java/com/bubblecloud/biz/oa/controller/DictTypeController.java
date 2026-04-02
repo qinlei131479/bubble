@@ -5,6 +5,7 @@ import java.util.Set;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.DictTypeService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.DictType;
@@ -43,9 +44,9 @@ public class DictTypeController {
 
 	private final DictTypeService dictTypeService;
 
-	@GetMapping(value = { "", "/page" })
+	@GetMapping(value = {"", "/page"})
 	@Operation(summary = "字典类型分页列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<DictType> pg, DictType query) {
+	public R<SimplePageVO> page(@ParameterObject Pg pg, DictType query) {
 		Page<DictType> r = dictTypeService.findPg(pg, query);
 		return R.phpOk(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
 	}
@@ -62,24 +63,18 @@ public class DictTypeController {
 
 	@PostMapping
 	@Operation(summary = "新增字典")
-	public R<DictTypeStoreResultVO> create(@RequestBody DictType body) {
-		dictTypeService.save(body);
-		return R.phpOk(new DictTypeStoreResultVO(body.getId()));
+	public R<DictTypeStoreResultVO> create(@RequestBody DictType dto) {
+		dictTypeService.create(dto);
+		return R.phpOk(new DictTypeStoreResultVO(dto.getId()));
 	}
 
 	@GetMapping("/{id}")
 	@Operation(summary = "显示/隐藏字典（status 查询参数）")
 	public R<String> updateStatus(@PathVariable Long id, @RequestParam Integer status) {
-		if (ObjectUtil.isNull(id) || id <= 0) {
-			return R.phpFailed("缺少ID");
-		}
-		if (ObjectUtil.isNull(status)) {
-			return R.phpFailed("缺少状态");
-		}
 		DictType u = new DictType();
 		u.setId(id);
 		u.setStatus(status);
-		dictTypeService.updateById(u);
+		dictTypeService.update(u);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
@@ -91,9 +86,9 @@ public class DictTypeController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改字典")
-	public R<String> update(@PathVariable Long id, @RequestBody DictType body) {
-		body.setId(id);
-		dictTypeService.updateById(body);
+	public R<String> update(@PathVariable Long id, @RequestBody DictType req) {
+		req.setId(id);
+		dictTypeService.update(req);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
@@ -114,19 +109,12 @@ public class DictTypeController {
 	@GetMapping("/info/{id}")
 	@Operation(summary = "字典详情（含是否可删标记）")
 	public R<DictTypeInfoVO> info(@PathVariable Long id) {
-		DictType row = dictTypeService.getById(id);
-		if (ObjectUtil.isNull(row)) {
+		DictType obj = dictTypeService.getById(id);
+		if (ObjectUtil.isNull(obj)) {
 			return R.phpFailed("数据不存在");
 		}
-		DictTypeInfoVO vo = new DictTypeInfoVO();
-		vo.setId(row.getId());
-		vo.setName(row.getName());
-		vo.setIdent(row.getIdent());
-		vo.setLinkType(row.getLinkType());
-		vo.setLevel(row.getLevel());
-		vo.setStatus(row.getStatus());
-		vo.setMark(row.getMark());
-		vo.setCanDelete(ObjectUtil.isNotNull(row.getIdent()) && CAN_DELETE_IDENTS.contains(row.getIdent()));
+		DictTypeInfoVO vo = PojoConvertUtil.convertPojo(obj, DictTypeInfoVO.class);
+		vo.setCanDelete(ObjectUtil.isNotNull(obj.getIdent()) && CAN_DELETE_IDENTS.contains(obj.getIdent()));
 		return R.phpOk(vo);
 	}
 

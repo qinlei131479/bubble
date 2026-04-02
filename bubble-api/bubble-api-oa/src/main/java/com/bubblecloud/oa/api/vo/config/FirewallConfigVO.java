@@ -19,7 +19,7 @@ import lombok.Data;
 public class FirewallConfigVO {
 
 	@Schema(description = "防火墙开关")
-	private int firewallSwitch;
+	private Integer firewallSwitch;
 
 	@Schema(description = "防火墙正则规则列表")
 	private List<String> firewallContent;

@@ -1,12 +1,12 @@
 package com.bubblecloud.biz.oa.service.impl;
 
-import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.CommonService;
 import com.bubblecloud.biz.oa.service.MessageService;
 import com.bubblecloud.biz.oa.service.SiteService;
 import com.bubblecloud.biz.oa.service.SmsVerifyService;
 import com.bubblecloud.biz.oa.service.SystemConfigService;
+import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.dto.SmsVerifySendDTO;
 import com.bubblecloud.oa.api.entity.Admin;
@@ -77,8 +77,7 @@ public class CommonServiceImpl implements CommonService {
 				if (ObjectUtil.isNotNull(a) && ObjectUtil.isNotNull(a.getStatus()) && a.getStatus() == 0) {
 					throw new IllegalArgumentException("该手机号已被锁定");
 				}
-			}
-			else {
+			} else {
 				if (!systemConfigService.isRegistrationOpen()) {
 					throw new IllegalArgumentException("短信发送失败，未注册的手机号");
 				}
@@ -88,20 +87,19 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	public CommonMessageVO messageList(Authentication authentication, Integer page, Integer limit, String cateId,
-			String title) {
-		OaCurrentUser currentUser = requireOaUser(authentication);
-		Admin admin = requireAdmin(currentUser.getId());
-		return messageService.getMessageList(currentUser.getId(), admin.getUid(), 1, page, limit,
+	public CommonMessageVO messageList(Integer page, Integer limit, String cateId, String title) {
+		Long userId = OaSecurityUtil.currentUserId();
+		Admin admin = requireAdmin(userId);
+		return messageService.getMessageList(userId, admin.getUid(), 1, page, limit,
 				ObjectUtil.isNull(cateId) ? "" : cateId, ObjectUtil.isNull(title) ? "" : title);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateMessageRead(Authentication authentication, Long messageId, Integer isRead) {
-		OaCurrentUser currentUser = requireOaUser(authentication);
-		Admin admin = requireAdmin(currentUser.getId());
-		messageService.updateMessageRead(currentUser.getId(), admin.getUid(), messageId, isRead);
+	public void updateMessageRead(Long messageId, Integer isRead) {
+		Long userId = OaSecurityUtil.currentUserId();
+		Admin admin = requireAdmin(userId);
+		messageService.updateMessageRead(userId, admin.getUid(), messageId, isRead);
 	}
 
 	@Override
@@ -109,12 +107,6 @@ public class CommonServiceImpl implements CommonService {
 		return new CommonVersionVO("3.9.2", 48, "oa");
 	}
 
-	private static OaCurrentUser requireOaUser(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
-			throw new IllegalArgumentException("未登录");
-		}
-		return u;
-	}
 
 	private Admin requireAdmin(long adminId) {
 		Admin admin = adminService.getById(adminId);

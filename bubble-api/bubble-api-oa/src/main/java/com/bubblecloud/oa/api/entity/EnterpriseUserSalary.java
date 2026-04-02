@@ -32,11 +32,11 @@ public class EnterpriseUserSalary extends Req<EnterpriseUserSalary> {
 	private Long id;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 	@Schema(description = "员工档案 card_id")
 	@TableField("card_id")
-	private Integer cardId;
+	private Long cardId;
 
 	@Schema(description = "变更金额")
 	private BigDecimal total;

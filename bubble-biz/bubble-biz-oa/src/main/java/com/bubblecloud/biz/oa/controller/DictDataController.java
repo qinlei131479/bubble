@@ -40,11 +40,11 @@ public class DictDataController {
 
 	private final DictDataService dictDataService;
 
-	@GetMapping(value = { "", "/page" })
+	@GetMapping(value = {"", "/page"})
 	@Operation(summary = "字典数据分页")
 	public R<SimplePageVO> page(@ParameterObject Pg<DictData> pg, @RequestParam(required = false) String name,
-			@RequestParam(required = false) String types, @RequestParam(required = false) Integer type_id,
-			@RequestParam(required = false) Integer status) {
+								@RequestParam(required = false) String types, @RequestParam(required = false) Integer type_id,
+								@RequestParam(required = false) Integer status) {
 		DictData query = new DictData();
 		query.setName(name);
 		query.setTypeName(types);
@@ -65,9 +65,9 @@ public class DictDataController {
 
 	@PostMapping
 	@Operation(summary = "保存字典数据")
-	public R<DictTypeStoreResultVO> create(@RequestBody DictData body) {
-		dictDataService.save(body);
-		return R.phpOk(new DictTypeStoreResultVO(body.getId()));
+	public R<DictTypeStoreResultVO> create(@RequestBody DictData req) {
+		dictDataService.save(req);
+		return R.phpOk(new DictTypeStoreResultVO(req.getId()));
 	}
 
 	@GetMapping("/{id}")
@@ -76,7 +76,7 @@ public class DictDataController {
 		DictData u = new DictData();
 		u.setId(id);
 		u.setStatus(status);
-		dictDataService.updateById(u);
+		dictDataService.update(u);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
@@ -88,9 +88,9 @@ public class DictDataController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改字典数据")
-	public R<String> update(@PathVariable Long id, @RequestBody DictData body) {
-		body.setId(id);
-		dictDataService.updateById(body);
+	public R<String> update(@PathVariable Long id, @RequestBody DictData req) {
+		req.setId(id);
+		dictDataService.update(req);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 

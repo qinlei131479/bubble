@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.RankMapper;
 import com.bubblecloud.biz.oa.service.RankService;
 import com.bubblecloud.common.core.util.R;
@@ -89,7 +90,7 @@ public class RankServiceImpl extends UpServiceImpl<RankMapper, Rank> implements 
 
 	private void assertExists(Rank entity) {
 		if (ObjectUtil.isNull(entity) || ObjectUtil.isNotNull(entity.getDeletedAt())) {
-			throw new IllegalArgumentException(NOT_EXISTS);
+			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 	}
 

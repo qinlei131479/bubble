@@ -34,13 +34,12 @@ public interface CommonService {
 	 */
 	void sendVerifySms(SmsVerifySendDTO dto);
 
-	CommonMessageVO messageList(Authentication authentication, Integer page, Integer limit, String cateId,
-			String title);
+	CommonMessageVO messageList(Integer page, Integer limit, String cateId, String title);
 
 	/**
 	 * 更新消息已读；未登录或用户不存在抛出 {@link IllegalArgumentException}。
 	 */
-	void updateMessageRead(Authentication authentication, Long messageId, Integer isRead);
+	void updateMessageRead(Long messageId, Integer isRead);
 
 	CommonVersionVO version();
 
