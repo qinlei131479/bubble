@@ -32,9 +32,9 @@ public class AttachCateAdminController {
 	@Operation(summary = "附件分类列表")
 	public R<?> list(@RequestParam(defaultValue = "0") int entid) {
 		return R.phpOk(attachCateAdminService.list(Wrappers.lambdaQuery(Category.class)
-				.eq(Category::getType, TYPE_ATTACH)
-				.eq(Category::getEntid, entid)
-				.orderByDesc(Category::getSort)));
+			.eq(Category::getType, TYPE_ATTACH)
+			.eq(Category::getEntid, entid)
+			.orderByDesc(Category::getSort)));
 	}
 
 }

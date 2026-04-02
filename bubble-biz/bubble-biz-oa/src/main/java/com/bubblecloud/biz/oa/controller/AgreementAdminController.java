@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
  * 用户协议（对齐 PHP {@code ent/system/treaty}）。增删改查路由与调用方式以本类为 OA 模板。
  *

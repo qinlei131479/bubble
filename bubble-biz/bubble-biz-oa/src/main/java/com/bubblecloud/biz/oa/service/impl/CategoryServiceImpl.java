@@ -19,18 +19,17 @@ import org.springframework.stereotype.Service;
  * @date 2026/3/30
  */
 @Service
-public class CategoryServiceImpl extends UpServiceImpl<CategoryMapper, Category>
-		implements CategoryService {
+public class CategoryServiceImpl extends UpServiceImpl<CategoryMapper, Category> implements CategoryService {
 
 	private static final String TYPE_QUICK = "quickConfig";
 
 	@Override
 	public List<Category> list(Long entId) {
 		return baseMapper.selectList(Wrappers.lambdaQuery(Category.class)
-				.eq(Category::getType, TYPE_QUICK)
-				.eq(Category::getEntid, entId)
-				.orderByDesc(Category::getSort)
-				.orderByAsc(Category::getId));
+			.eq(Category::getType, TYPE_QUICK)
+			.eq(Category::getEntid, entId)
+			.orderByDesc(Category::getSort)
+			.orderByAsc(Category::getId));
 	}
 
 	@Override

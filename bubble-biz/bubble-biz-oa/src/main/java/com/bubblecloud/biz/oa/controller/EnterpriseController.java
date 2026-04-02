@@ -40,7 +40,7 @@ public class EnterpriseController {
 	@GetMapping("/user-card/page")
 	@Operation(summary = "员工档案分页（占位）")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-								@RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
@@ -64,7 +64,6 @@ public class EnterpriseController {
 	public R<EnterpriseQuantityVO> quantity(@PathVariable String type, @RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseService.getQuantity(type, entid));
 	}
-
 
 	@GetMapping("/message")
 	@Operation(summary = "消息中心列表（工作台系统通知）")

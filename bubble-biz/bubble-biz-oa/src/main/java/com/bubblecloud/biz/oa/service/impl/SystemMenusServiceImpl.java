@@ -29,15 +29,16 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class SystemMenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMenus> implements SystemMenusService {
+public class SystemMenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMenus>
+		implements SystemMenusService {
 
 	private final ObjectMapper objectMapper;
 
 	@Override
 	public List<SystemMenusTreeNodeVO> listMenuTree(String menuName, Long entId) {
 		var q = Wrappers.lambdaQuery(SystemMenus.class)
-				.eq(SystemMenus::getEntid, entId)
-				.isNull(SystemMenus::getDeletedAt);
+			.eq(SystemMenus::getEntid, entId)
+			.isNull(SystemMenus::getDeletedAt);
 		if (StrUtil.isNotBlank(menuName)) {
 			q.like(SystemMenus::getMenuName, menuName);
 		}

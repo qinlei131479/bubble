@@ -63,9 +63,9 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 	@Override
 	public List<FormCateListItemVO> listByTypes(Integer types) {
 		List<FormCategory> cates = formCategoryMapper.selectList(Wrappers.lambdaQuery(FormCategory.class)
-				.eq(FormCategory::getTypes, types)
-				.orderByDesc(FormCategory::getSort)
-				.orderByAsc(FormCategory::getId));
+			.eq(FormCategory::getTypes, types)
+			.orderByDesc(FormCategory::getSort)
+			.orderByAsc(FormCategory::getId));
 		Set<String> protectedKeys = new HashSet<>();
 		for (String k : defaultProtectedKeys(types)) {
 			protectedKeys.add(k);
@@ -79,8 +79,8 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 			vo.setTypes(c.getTypes());
 			vo.setStatus(c.getStatus());
 			List<FormData> rows = baseMapper.selectList(Wrappers.lambdaQuery(FormData.class)
-					.eq(FormData::getCateId, c.getId().intValue())
-					.orderByDesc(FormData::getSort));
+				.eq(FormData::getCateId, c.getId().intValue())
+				.orderByDesc(FormData::getSort));
 			List<FormDataItemVO> data = new ArrayList<>();
 			for (FormData fd : rows) {
 				FormDataItemVO item = PojoConvertUtil.convertPojo(fd, FormDataItemVO.class);
@@ -130,10 +130,10 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 			throw new IllegalArgumentException("data 格式错误");
 		}
 		List<Integer> cateIds = formCategoryMapper
-				.selectList(Wrappers.lambdaQuery(FormCategory.class).eq(FormCategory::getTypes, types))
-				.stream()
-				.map(c -> c.getId().intValue())
-				.collect(Collectors.toList());
+			.selectList(Wrappers.lambdaQuery(FormCategory.class).eq(FormCategory::getTypes, types))
+			.stream()
+			.map(c -> c.getId().intValue())
+			.collect(Collectors.toList());
 		Set<Integer> cateIdSet = new HashSet<>(cateIds);
 		for (JsonNode group : body) {
 			if (!group.hasNonNull("cate_id")) {
@@ -152,9 +152,9 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 				continue;
 			}
 			Map<Long, Long> remaining = baseMapper
-					.selectList(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, cateId))
-					.stream()
-					.collect(Collectors.toMap(FormData::getId, FormData::getId));
+				.selectList(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, cateId))
+				.stream()
+				.collect(Collectors.toMap(FormData::getId, FormData::getId));
 			int num = dataArr.size();
 			for (JsonNode form : dataArr) {
 				if (ObjectUtil.isNull(form) || form.isNull()) {
@@ -166,7 +166,8 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 					row.setId(rawId);
 					row.setUpdatedAt(LocalDateTime.now());
 					baseMapper.updateById(row);
-				} else {
+				}
+				else {
 					row.setCreatedAt(LocalDateTime.now());
 					row.setUpdatedAt(LocalDateTime.now());
 					baseMapper.insert(row);
@@ -175,8 +176,8 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 			}
 			if (!remaining.isEmpty()) {
 				baseMapper.delete(Wrappers.lambdaQuery(FormData.class)
-						.eq(FormData::getCateId, cateId)
-						.in(FormData::getId, remaining.keySet()));
+					.eq(FormData::getCateId, cateId)
+					.in(FormData::getId, remaining.keySet()));
 			}
 		}
 	}
@@ -258,7 +259,8 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 				sb.append(String.format("%02x", b));
 			}
 			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
+		}
+		catch (NoSuchAlgorithmException e) {
 			throw new IllegalStateException(e);
 		}
 	}
@@ -267,10 +269,10 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 	@Transactional(rollbackFor = Exception.class)
 	public void moveFormData(Integer types, Long formDataId, Long targetCateId) {
 		List<Integer> cateIds = formCategoryMapper
-				.selectList(Wrappers.lambdaQuery(FormCategory.class).eq(FormCategory::getTypes, types))
-				.stream()
-				.map(c -> c.getId().intValue())
-				.toList();
+			.selectList(Wrappers.lambdaQuery(FormCategory.class).eq(FormCategory::getTypes, types))
+			.stream()
+			.map(c -> c.getId().intValue())
+			.toList();
 		if (!cateIds.contains(targetCateId)) {
 			throw new IllegalArgumentException("分组数据异常");
 		}
@@ -318,8 +320,8 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 
 	private ArrayNode readFieldListArray(Long adminId, String compositeType) {
 		SalesmanCustomField row = salesmanCustomFieldMapper.selectOne(Wrappers.lambdaQuery(SalesmanCustomField.class)
-				.eq(SalesmanCustomField::getUid, adminId.intValue())
-				.eq(SalesmanCustomField::getCustomType, compositeType));
+			.eq(SalesmanCustomField::getUid, adminId.intValue())
+			.eq(SalesmanCustomField::getCustomType, compositeType));
 		if (ObjectUtil.isNull(row) || StrUtil.isBlank(row.getFieldList())) {
 			return objectMapper.createArrayNode();
 		}
@@ -328,7 +330,8 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 			if (parsed.isArray()) {
 				return (ArrayNode) parsed;
 			}
-		} catch (Exception ignored) {
+		}
+		catch (Exception ignored) {
 		}
 		return objectMapper.createArrayNode();
 	}
@@ -356,15 +359,16 @@ public class FormDataServiceImpl extends UpServiceImpl<FormDataMapper, FormData>
 		uniq.forEach(arr::add);
 		String json = arr.toString();
 		SalesmanCustomField existing = salesmanCustomFieldMapper
-				.selectOne(Wrappers.lambdaQuery(SalesmanCustomField.class)
-						.eq(SalesmanCustomField::getUid, adminId.intValue())
-						.eq(SalesmanCustomField::getCustomType, composite));
+			.selectOne(Wrappers.lambdaQuery(SalesmanCustomField.class)
+				.eq(SalesmanCustomField::getUid, adminId.intValue())
+				.eq(SalesmanCustomField::getCustomType, composite));
 		LocalDateTime now = LocalDateTime.now();
 		if (ObjectUtil.isNotNull(existing)) {
 			existing.setFieldList(json);
 			existing.setUpdatedAt(now);
 			salesmanCustomFieldMapper.updateById(existing);
-		} else {
+		}
+		else {
 			SalesmanCustomField n = new SalesmanCustomField();
 			n.setUid(adminId.intValue());
 			n.setCustomType(composite);

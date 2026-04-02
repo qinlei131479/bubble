@@ -35,11 +35,10 @@ public class SystemQuickController {
 
 	private final SystemQuickService systemQuickService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "分页列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject SystemQuick query,
-								@RequestParam(defaultValue = "1") Integer pageNum,
-								@RequestParam(defaultValue = "20") Integer limit) {
+			@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "20") Integer limit) {
 		pg.setCurrent(pageNum);
 		pg.setSize(limit);
 		Page<SystemQuick> res = systemQuickService.findPg(pg, query);

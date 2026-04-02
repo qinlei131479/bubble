@@ -38,7 +38,7 @@ public class SystemMenusController {
 	@GetMapping
 	@Operation(summary = "企业菜单树")
 	public R<List<SystemMenusTreeNodeVO>> list(@RequestParam(required = false) String menu_name,
-											   @RequestParam(defaultValue = "1") Long entid) {
+			@RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(systemMenusService.listMenuTree(menu_name, entid));
 	}
 
@@ -59,7 +59,7 @@ public class SystemMenusController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改菜单")
 	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
-							@RequestBody SystemMenus req) {
+			@RequestBody SystemMenus req) {
 		req.setId(id);
 		req.setEntid(entid);
 		systemMenusService.update(req);

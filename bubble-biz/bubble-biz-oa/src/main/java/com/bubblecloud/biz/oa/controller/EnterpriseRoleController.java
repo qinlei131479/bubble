@@ -41,7 +41,7 @@ public class EnterpriseRoleController {
 	@GetMapping
 	@Operation(summary = "角色列表")
 	public R<List<EnterpriseRole>> list(@RequestParam(required = false) String role_name,
-										@RequestParam(defaultValue = "1") Long entid) {
+			@RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseRoleService.listRoles(role_name, entid));
 	}
 
@@ -55,7 +55,7 @@ public class EnterpriseRoleController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改角色")
 	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
-							@RequestBody JsonNode body) {
+			@RequestBody JsonNode body) {
 		enterpriseRoleService.updateRole(id, entid, body);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
@@ -63,7 +63,7 @@ public class EnterpriseRoleController {
 	@PostMapping("/{id}/status")
 	@Operation(summary = "启用/禁用角色")
 	public R<String> show(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
-						  @RequestParam Integer status) {
+			@RequestParam Integer status) {
 		enterpriseRoleService.changeRoleStatus(entid, id, status);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}

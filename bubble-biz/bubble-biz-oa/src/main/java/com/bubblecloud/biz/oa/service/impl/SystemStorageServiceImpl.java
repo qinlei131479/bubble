@@ -62,15 +62,15 @@ public class SystemStorageServiceImpl extends UpServiceImpl<SystemStorageMapper,
 	@Transactional(rollbackFor = Exception.class)
 	public void setUploadType(Integer type) {
 		long active = baseMapper.selectCount(Wrappers.lambdaQuery(SystemStorage.class)
-				.eq(SystemStorage::getType, type)
-				.eq(SystemStorage::getStatus, 1)
-				.eq(SystemStorage::getIsDelete, 0));
+			.eq(SystemStorage::getType, type)
+			.eq(SystemStorage::getStatus, 1)
+			.eq(SystemStorage::getIsDelete, 0));
 		if (active == 0 && type != 1) {
 			throw new IllegalArgumentException("没有正在使用的存储空间");
 		}
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getConfigKey, "upload_type")
-				.eq(SystemConfig::getEntid, 0));
+			.eq(SystemConfig::getConfigKey, "upload_type")
+			.eq(SystemConfig::getEntid, 0));
 		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(String.valueOf(type));
 			systemConfigMapper.updateById(row);
@@ -80,14 +80,15 @@ public class SystemStorageServiceImpl extends UpServiceImpl<SystemStorageMapper,
 	@Override
 	public Integer getUploadType() {
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getConfigKey, "upload_type")
-				.eq(SystemConfig::getEntid, 0));
+			.eq(SystemConfig::getConfigKey, "upload_type")
+			.eq(SystemConfig::getEntid, 0));
 		if (ObjectUtil.isNull(row) || ObjectUtil.isNull(row.getValue())) {
 			return 1;
 		}
 		try {
 			return Integer.parseInt(row.getValue().trim());
-		} catch (NumberFormatException ex) {
+		}
+		catch (NumberFormatException ex) {
 			return 1;
 		}
 	}
@@ -103,8 +104,8 @@ public class SystemStorageServiceImpl extends UpServiceImpl<SystemStorageMapper,
 
 	private void upsertConfig(String key, String value) {
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getConfigKey, key)
-				.eq(SystemConfig::getEntid, 0));
+			.eq(SystemConfig::getConfigKey, key)
+			.eq(SystemConfig::getEntid, 0));
 		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(value);
 			systemConfigMapper.updateById(row);

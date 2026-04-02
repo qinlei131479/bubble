@@ -23,7 +23,7 @@ public class FinanceController {
 	@GetMapping("/bill/page")
 	@Operation(summary = "账单分页")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-								@RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 

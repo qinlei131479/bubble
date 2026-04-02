@@ -2,6 +2,7 @@ package com.bubblecloud.oa.api.entity;
 
 import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bubblecloud.common.mybatis.base.Req;
@@ -32,6 +33,10 @@ public class AdminInfo extends Req<AdminInfo> {
 
 	@Schema(description = "邮箱")
 	private String email;
+
+	@Schema(description = "入职时间")
+	@TableField("work_time")
+	private String workTime;
 
 	@Schema(description = "创建时间")
 	private LocalDateTime createdAt;

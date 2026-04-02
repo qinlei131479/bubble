@@ -53,7 +53,8 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 	private final FrameAssistWriteService frameAssistWriteService;
 
 	@Override
-	public SimplePageVO listEnterpriseUsers(Long entId, String pid, String name, Integer status, Integer current, Integer size) {
+	public SimplePageVO listEnterpriseUsers(Long entId, String pid, String name, Integer status, Integer current,
+			Integer size) {
 		Page<EnterpriseUserListItemVO> p = new Page<>(current, size);
 		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entId, name,
 				ObjectUtil.isNull(status) ? 1 : status);
@@ -79,7 +80,7 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		}
 		int computeMode = 1;
 		SystemConfig cfg = systemConfigMapper
-				.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, "assess_compute_mode"));
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, "assess_compute_mode"));
 		if (ObjectUtil.isNotNull(cfg) && ObjectUtil.isNotNull(cfg.getValue()) && !cfg.getValue().isEmpty()
 				&& !"1".equals(cfg.getValue()) && !"true".equalsIgnoreCase(cfg.getValue())) {
 			computeMode = 0;
@@ -124,7 +125,7 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 	}
 
 	private static List<FrameDepartmentTreeNodeVO> filterTreeByName(List<FrameDepartmentTreeNodeVO> nodes,
-																	String keyword) {
+			String keyword) {
 		if (ObjectUtil.isNull(nodes) || nodes.isEmpty()) {
 			return List.of();
 		}
@@ -172,9 +173,9 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		}
 		if (StrUtil.isNotBlank(dto.getPhone())) {
 			long cnt = baseMapper.selectCount(Wrappers.lambdaQuery(Admin.class)
-					.eq(Admin::getPhone, dto.getPhone())
-					.ne(Admin::getId, targetAdminId)
-					.isNull(Admin::getDeletedAt));
+				.eq(Admin::getPhone, dto.getPhone())
+				.ne(Admin::getId, targetAdminId)
+				.isNull(Admin::getDeletedAt));
 			if (cnt > 0) {
 				throw new IllegalArgumentException("该手机号已存在");
 			}
@@ -188,7 +189,8 @@ public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin>
 		if (StrUtil.isNotBlank(dto.getPosition())) {
 			try {
 				target.setJob(Integer.parseInt(dto.getPosition().trim()));
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				// 保持原岗位
 			}
 		}

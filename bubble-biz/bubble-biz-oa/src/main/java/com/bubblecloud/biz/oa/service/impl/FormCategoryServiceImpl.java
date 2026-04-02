@@ -18,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class FormCategoryServiceImpl extends UpServiceImpl<FormCategoryMapper, FormCategory> implements FormCategoryService {
+public class FormCategoryServiceImpl extends UpServiceImpl<FormCategoryMapper, FormCategory>
+		implements FormCategoryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

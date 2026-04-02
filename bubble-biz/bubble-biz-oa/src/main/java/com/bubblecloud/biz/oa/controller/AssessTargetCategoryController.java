@@ -36,7 +36,7 @@ public class AssessTargetCategoryController {
 
 	private final AssessTargetCategoryService assessTargetCategoryService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "指标分类列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessTargetCategory query) {
 		Page<AssessTargetCategory> res = assessTargetCategoryService.findPg(pg, query);

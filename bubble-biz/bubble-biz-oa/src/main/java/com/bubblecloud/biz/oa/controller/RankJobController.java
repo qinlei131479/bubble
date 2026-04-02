@@ -42,7 +42,7 @@ public class RankJobController {
 
 	private final RankJobService rankJobService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "岗位列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject RankJob query) {
 		Page<RankJob> res = rankJobService.findPg(pg, query);
@@ -96,9 +96,9 @@ public class RankJobController {
 	@Operation(summary = "岗位下拉列表")
 	public R<List<RankJob>> select(@RequestParam(required = false) Long entid) {
 		return R.phpOk(rankJobService.list(Wrappers.lambdaQuery(RankJob.class)
-				.eq(ObjectUtil.isNotNull(entid), RankJob::getEntid, entid)
-				.eq(RankJob::getStatus, 1)
-				.orderByAsc(RankJob::getId)));
+			.eq(ObjectUtil.isNotNull(entid), RankJob::getEntid, entid)
+			.eq(RankJob::getStatus, 1)
+			.orderByAsc(RankJob::getId)));
 	}
 
 	@GetMapping("/subordinate")

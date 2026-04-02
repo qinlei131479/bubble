@@ -43,7 +43,7 @@ public class ClientRuleController {
 		return R.phpOk(list);
 	}
 
-	@GetMapping({"/approve", "/approve/{form}"})
+	@GetMapping({ "/approve", "/approve/{form}" })
 	@Operation(summary = "获取客户审批规则")
 	public R<ClientRuleApproveConfigVO> getApproveConfig(@PathVariable(required = false) Integer form) {
 		return R.phpOk(systemConfigService.getApproveConfig(form));

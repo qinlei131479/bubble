@@ -39,7 +39,7 @@ public class EnterpriseUserSalaryController {
 
 	private final EnterpriseUserSalaryService enterpriseUserSalaryService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "调薪记录列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject EnterpriseUserSalary query) {
 		Page<EnterpriseUserSalary> r = enterpriseUserSalaryService.findPg(pg, query);
@@ -81,10 +81,10 @@ public class EnterpriseUserSalaryController {
 	@Operation(summary = "调薪最近记录")
 	public R<List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") Integer cardId) {
 		return R.phpOk(enterpriseUserSalaryService.list(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
-				.eq(EnterpriseUserSalary::getCardId, cardId)
-				.orderByDesc(EnterpriseUserSalary::getTakeDate)
-				.orderByDesc(EnterpriseUserSalary::getId)
-				.last("LIMIT 1")));
+			.eq(EnterpriseUserSalary::getCardId, cardId)
+			.orderByDesc(EnterpriseUserSalary::getTakeDate)
+			.orderByDesc(EnterpriseUserSalary::getId)
+			.last("LIMIT 1")));
 	}
 
 }

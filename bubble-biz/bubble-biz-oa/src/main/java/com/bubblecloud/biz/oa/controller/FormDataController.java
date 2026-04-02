@@ -38,6 +38,7 @@ import cn.hutool.core.util.StrUtil;
 public class FormDataController {
 
 	private final FormDataService formDataService;
+
 	private final FormCategoryService formCategoryService;
 
 	@GetMapping("/cate")
@@ -94,7 +95,8 @@ public class FormDataController {
 			}
 			formDataService.saveFormData(types, data);
 			return R.phpOk(OaConstants.OPT_SUCC);
-		} catch (IllegalArgumentException ex) {
+		}
+		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
 		}
 	}
@@ -107,7 +109,8 @@ public class FormDataController {
 			Long cateId = body.has("cate_id") ? body.get("cate_id").asLong() : 0;
 			formDataService.moveFormData(types, id, cateId);
 			return R.phpOk(OaConstants.OPT_SUCC);
-		} catch (IllegalArgumentException ex) {
+		}
+		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
 		}
 	}

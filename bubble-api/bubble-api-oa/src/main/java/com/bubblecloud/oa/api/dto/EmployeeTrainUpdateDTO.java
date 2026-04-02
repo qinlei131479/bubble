@@ -18,4 +18,5 @@ public class EmployeeTrainUpdateDTO {
 
 	@Schema(description = "类型")
 	private String type;
+
 }

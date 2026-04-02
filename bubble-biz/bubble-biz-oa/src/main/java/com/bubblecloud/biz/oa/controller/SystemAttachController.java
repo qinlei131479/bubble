@@ -28,11 +28,10 @@ public class SystemAttachController {
 
 	private final SystemAttachAdminService systemAttachAdminService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "附件分页")
 	public R<Page<SystemAttach>> page(@ParameterObject Pg pg, @ParameterObject SystemAttach query,
-									  @RequestParam(defaultValue = "1") int pageNum,
-									  @RequestParam(defaultValue = "20") int limit) {
+			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
 		pg.setCurrent(pageNum);
 		pg.setSize(limit);
 		return R.phpOk(systemAttachAdminService.findPg(pg, query));

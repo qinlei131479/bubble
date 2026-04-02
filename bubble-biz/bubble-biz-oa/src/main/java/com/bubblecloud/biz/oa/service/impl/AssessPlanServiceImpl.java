@@ -1,6 +1,5 @@
 package com.bubblecloud.biz.oa.service.impl;
 
-
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.AssessPlanMapper;
 import com.bubblecloud.biz.oa.service.AssessPlanService;
@@ -40,6 +39,5 @@ public class AssessPlanServiceImpl extends UpServiceImpl<AssessPlanMapper, Asses
 		}
 		return super.update(existing);
 	}
-
 
 }

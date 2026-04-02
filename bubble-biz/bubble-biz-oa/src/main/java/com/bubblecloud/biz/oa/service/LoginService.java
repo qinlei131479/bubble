@@ -55,8 +55,8 @@ public interface LoginService extends UpService<Admin> {
 	 */
 	void updatePassword(Long userId, String phone, String newPassword);
 
-
 	ScanKeyVO createScanKey();
 
 	ScanStatusResultVO pollStatus(String key);
+
 }

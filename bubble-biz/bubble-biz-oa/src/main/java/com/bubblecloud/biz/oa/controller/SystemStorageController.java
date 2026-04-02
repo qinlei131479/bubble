@@ -39,8 +39,8 @@ public class SystemStorageController {
 	@Operation(summary = "云存储列表")
 	public R<?> list(@RequestParam(required = false) Integer type) {
 		return R.phpOk(systemStorageService.list(Wrappers.lambdaQuery(SystemStorage.class)
-				.eq(SystemStorage::getIsDelete, 0)
-				.orderByDesc(SystemStorage::getId)));
+			.eq(SystemStorage::getIsDelete, 0)
+			.orderByDesc(SystemStorage::getId)));
 	}
 
 	@GetMapping("/create/{type}")
@@ -129,7 +129,8 @@ public class SystemStorageController {
 		try {
 			systemStorageService.setUploadType(type);
 			return R.phpOk(type != 1 ? "切换云存储成功,请检查是否开启使用了存储空间" : "切换本地存储成功");
-		} catch (IllegalArgumentException ex) {
+		}
+		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
 		}
 	}

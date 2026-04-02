@@ -21,21 +21,22 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2026/3/30 18:00
  */
 @Service
-public class EnterpriseMessageNoticeServiceImpl extends UpServiceImpl<EnterpriseMessageNoticeMapper, EnterpriseMessageNotice>
+public class EnterpriseMessageNoticeServiceImpl
+		extends UpServiceImpl<EnterpriseMessageNoticeMapper, EnterpriseMessageNotice>
 		implements EnterpriseMessageNoticeService {
 
 	@Override
 	public CommonMessageVO getMessageList(Long adminId, String uid, Long entId, Integer page, Integer limit,
-										  String cateId, String title) {
+			String cateId, String title) {
 		LambdaQueryWrapper<EnterpriseMessageNotice> q = Wrappers.lambdaQuery(EnterpriseMessageNotice.class);
-		q.and(w -> w.eq(EnterpriseMessageNotice::getEntid, entId)
-				.or().eq(EnterpriseMessageNotice::getEntid, 0L));
+		q.and(w -> w.eq(EnterpriseMessageNotice::getEntid, entId).or().eq(EnterpriseMessageNotice::getEntid, 0L));
 		String idStr = String.valueOf(adminId);
 		q.and(w -> w.eq(EnterpriseMessageNotice::getToUid, uid).or().eq(EnterpriseMessageNotice::getToUid, idStr));
 		if (StrUtil.isNotBlank(cateId) && !"0".equals(cateId)) {
 			try {
 				q.eq(EnterpriseMessageNotice::getCateId, Integer.parseInt(cateId.trim()));
-			} catch (NumberFormatException ignored) {
+			}
+			catch (NumberFormatException ignored) {
 				// 忽略非法 cate_id
 			}
 		}

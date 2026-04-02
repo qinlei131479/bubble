@@ -17,9 +17,8 @@ public interface EnterpriseRoleService extends UpService<EnterpriseRole> {
 
 	/**
 	 * 角色列表（筛选）。
-	 *
 	 * @param roleName 角色名模糊（可选）
-	 * @param entId    企业 ID
+	 * @param entId 企业 ID
 	 */
 	List<EnterpriseRole> listRoles(String roleName, Long entId);
 

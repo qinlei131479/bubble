@@ -29,16 +29,16 @@ public class HayGroupServiceImpl extends UpServiceImpl<HayGroupMapper, HayGroup>
 
 	@Override
 	public List<HayGroupData> dataList(Long groupId) {
-		return hayGroupDataMapper.selectList(
-				Wrappers.lambdaQuery(HayGroupData.class).eq(HayGroupData::getGroupId, groupId)
-						.orderByDesc(HayGroupData::getId));
+		return hayGroupDataMapper.selectList(Wrappers.lambdaQuery(HayGroupData.class)
+			.eq(HayGroupData::getGroupId, groupId)
+			.orderByDesc(HayGroupData::getId));
 	}
 
 	@Override
 	public List<HayGroupData> historyList(Long groupId) {
-		return hayGroupDataMapper.selectList(
-				Wrappers.lambdaQuery(HayGroupData.class).eq(HayGroupData::getGroupId, groupId)
-						.orderByDesc(HayGroupData::getAssessTime));
+		return hayGroupDataMapper.selectList(Wrappers.lambdaQuery(HayGroupData.class)
+			.eq(HayGroupData::getGroupId, groupId)
+			.orderByDesc(HayGroupData::getAssessTime));
 	}
 
 	@Override

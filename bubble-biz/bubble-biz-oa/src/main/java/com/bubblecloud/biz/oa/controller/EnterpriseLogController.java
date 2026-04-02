@@ -29,11 +29,10 @@ public class EnterpriseLogController {
 
 	private final EnterpriseLogService enterpriseLogService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "日志分页")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject EnterpriseLog query,
-								@RequestParam(defaultValue = "1") int pageNum,
-								@RequestParam(defaultValue = "20") int limit) {
+			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
 		pg.setCurrent(pageNum);
 		pg.setSize(limit);
 		Page<EnterpriseLog> res = enterpriseLogService.findPg(pg, query);

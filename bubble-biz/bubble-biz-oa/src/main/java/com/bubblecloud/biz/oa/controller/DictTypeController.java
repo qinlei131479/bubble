@@ -44,7 +44,7 @@ public class DictTypeController {
 
 	private final DictTypeService dictTypeService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "字典类型分页列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, DictType query) {
 		Page<DictType> r = dictTypeService.findPg(pg, query);

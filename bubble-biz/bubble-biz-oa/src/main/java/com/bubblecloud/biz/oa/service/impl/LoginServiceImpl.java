@@ -211,7 +211,8 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 		try {
 			return objectMapper.readValue(raw, new TypeReference<List<Object>>() {
 			});
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
@@ -278,14 +279,15 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 		String v = configValue(key, String.valueOf(def));
 		try {
 			return Integer.parseInt(v.trim());
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return def;
 		}
 	}
 
 	private String configValue(String key, String defaultVal) {
 		SystemConfig c = systemConfigMapper
-				.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
 		if (ObjectUtil.isNull(c) || ObjectUtil.isNull(c.getValue())) {
 			return defaultVal;
 		}
@@ -318,14 +320,13 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 		return super.update(req);
 	}
 
-
 	@Override
 	public ScanKeyVO createScanKey() {
 		String key = java.util.UUID.randomUUID().toString().replace("-", "");
 		stringRedisTemplate.opsForValue().set(KEY_PREFIX + key, "0", TTL_SECONDS, TimeUnit.SECONDS);
 		String expireTime = LocalDateTime.now()
-				.plusSeconds(TTL_SECONDS)
-				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+			.plusSeconds(TTL_SECONDS)
+			.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		return new ScanKeyVO(key, expireTime);
 	}
 
@@ -338,9 +339,9 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 			return vo;
 		}
 		Admin byScan = baseMapper.selectOne(Wrappers.lambdaQuery(Admin.class)
-				.eq(Admin::getScanKey, key)
-				.isNull(Admin::getDeletedAt)
-				.last("LIMIT 1"));
+			.eq(Admin::getScanKey, key)
+			.isNull(Admin::getDeletedAt)
+			.last("LIMIT 1"));
 		if (ObjectUtil.isNotNull(byScan) && StrUtil.isNotBlank(byScan.getPhone())) {
 			baseMapper.update(null,
 					Wrappers.lambdaUpdate(Admin.class).eq(Admin::getId, byScan.getId()).set(Admin::getScanKey, ""));
@@ -366,4 +367,5 @@ public class LoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 		vo.setMsg("未扫码");
 		return vo;
 	}
+
 }

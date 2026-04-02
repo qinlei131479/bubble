@@ -22,7 +22,6 @@ import cn.hutool.core.util.ObjectUtil;
 public class PromotionDataServiceImpl extends UpServiceImpl<PromotionDataMapper, PromotionData>
 		implements PromotionDataService {
 
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateStandard(PromotionData dto) {

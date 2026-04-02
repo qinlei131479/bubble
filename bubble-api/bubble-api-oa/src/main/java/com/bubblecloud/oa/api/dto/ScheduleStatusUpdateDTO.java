@@ -18,7 +18,7 @@ import lombok.Data;
 public class ScheduleStatusUpdateDTO {
 
 	@Schema(description = "日程实例ID")
-    private Long id;
+	private Long id;
 
 	@Schema(description = "状态：0 待定 1 接受 2 拒绝 3 完成")
 	private Integer status;

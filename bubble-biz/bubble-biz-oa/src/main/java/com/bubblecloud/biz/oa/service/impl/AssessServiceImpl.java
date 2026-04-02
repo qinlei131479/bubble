@@ -42,7 +42,6 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	private final AssessScoreMapper assessScoreMapper;
 
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void selfEval(Long id, AssessEvalDTO dto) {
@@ -101,18 +100,17 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	@Override
 	public List<Object> scoreRecord(Long id) {
-		List<AssessScore> scores = assessScoreMapper.selectList(
-				Wrappers.lambdaQuery(AssessScore.class).eq(AssessScore::getUserId, id)
-						.orderByAsc(AssessScore::getLevel));
+		List<AssessScore> scores = assessScoreMapper.selectList(Wrappers.lambdaQuery(AssessScore.class)
+			.eq(AssessScore::getUserId, id)
+			.orderByAsc(AssessScore::getLevel));
 		return new ArrayList<>(scores);
 	}
 
-
 	@Override
 	public List<Object> deleteRecord(Long entid) {
-		List<Assess> deleted = baseMapper.selectList(
-				Wrappers.lambdaQuery(Assess.class).eq(ObjectUtil.isNotNull(entid), Assess::getEntid, entid)
-						.isNotNull(Assess::getDeletedAt));
+		List<Assess> deleted = baseMapper.selectList(Wrappers.lambdaQuery(Assess.class)
+			.eq(ObjectUtil.isNotNull(entid), Assess::getEntid, entid)
+			.isNotNull(Assess::getDeletedAt));
 		return new ArrayList<>(deleted);
 	}
 
@@ -130,11 +128,13 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 			assessAppealMapper.insert(appeal);
 			assess.setIsAppeal(1);
 			assess.setStatus(4);
-		} else {
+		}
+		else {
 			// 驳回或通过
-			AssessAppeal appeal = assessAppealMapper.selectOne(
-					Wrappers.lambdaQuery(AssessAppeal.class).eq(AssessAppeal::getAssessId, id)
-							.eq(AssessAppeal::getResult, 0).last("LIMIT 1"));
+			AssessAppeal appeal = assessAppealMapper.selectOne(Wrappers.lambdaQuery(AssessAppeal.class)
+				.eq(AssessAppeal::getAssessId, id)
+				.eq(AssessAppeal::getResult, 0)
+				.last("LIMIT 1"));
 			if (ObjectUtil.isNotNull(appeal)) {
 				appeal.setResult(dto.getResult());
 				appeal.setOpinion(dto.getOpinion());
@@ -166,9 +166,9 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 			return Collections.emptyList();
 		}
 		return baseMapper.selectList(Wrappers.lambdaQuery(Assess.class)
-				.in(Assess::getUserId, abnormalIds)
-				.eq(Assess::getEntid, entid)
-				.isNull(Assess::getDeletedAt));
+			.in(Assess::getUserId, abnormalIds)
+			.eq(Assess::getEntid, entid)
+			.isNull(Assess::getDeletedAt));
 	}
 
 	@Override
@@ -187,7 +187,6 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 	public R update(Assess req) {
 		return super.update(req);
 	}
-
 
 	private void assertExists(Assess entity) {
 		if (ObjectUtil.isNull(entity) || ObjectUtil.isNotNull(entity.getDeletedAt())) {

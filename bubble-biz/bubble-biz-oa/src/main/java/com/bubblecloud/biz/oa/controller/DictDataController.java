@@ -40,11 +40,11 @@ public class DictDataController {
 
 	private final DictDataService dictDataService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "字典数据分页")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @RequestParam(required = false) String name,
-								@RequestParam(required = false) String types, @RequestParam(required = false) Integer type_id,
-								@RequestParam(required = false) Integer status) {
+			@RequestParam(required = false) String types, @RequestParam(required = false) Integer type_id,
+			@RequestParam(required = false) Integer status) {
 		DictData query = new DictData();
 		query.setName(name);
 		query.setTypeName(types);

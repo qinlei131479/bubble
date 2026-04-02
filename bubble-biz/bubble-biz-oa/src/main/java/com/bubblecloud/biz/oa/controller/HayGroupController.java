@@ -39,7 +39,7 @@ public class HayGroupController {
 
 	private final HayGroupService hayGroupService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "海氏评估组列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject HayGroup query) {
 		Page<HayGroup> res = hayGroupService.findPg(pg, query);

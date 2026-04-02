@@ -46,7 +46,7 @@ public class AssessPlanController {
 
 	private final AssessPlanService assessPlanService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "考核计划列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessPlan query) {
 		Page<AssessPlan> res = assessPlanService.findPg(pg, query);
@@ -59,14 +59,12 @@ public class AssessPlanController {
 		return R.phpOk(assessPlanService.getById(id));
 	}
 
-
 	@PostMapping
 	@Operation(summary = "创建考核计划")
 	public R<String> create(@RequestBody AssessPlanSaveDTO dto) {
 		AssessPlan obj = PojoConvertUtil.convertPojo(dto, AssessPlan.class);
 		if (CollUtil.isNotEmpty(dto.getUserIds())) {
-			obj.setUserIds(dto.getUserIds().stream()
-					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
+			obj.setUserIds(dto.getUserIds().stream().map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
 		}
 		assessPlanService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
@@ -78,8 +76,7 @@ public class AssessPlanController {
 		AssessPlan obj = PojoConvertUtil.convertPojo(dto, AssessPlan.class);
 		obj.setId(id);
 		if (CollUtil.isNotEmpty(dto.getUserIds())) {
-			obj.setUserIds(dto.getUserIds().stream()
-					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
+			obj.setUserIds(dto.getUserIds().stream().map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
 		}
 		assessPlanService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
@@ -96,10 +93,10 @@ public class AssessPlanController {
 	@Operation(summary = "已启用周期列表")
 	public R<List<AssessPlan>> enabled(@RequestParam(required = false) Long entid) {
 		List<AssessPlan> list = assessPlanService.list(Wrappers.lambdaQuery(AssessPlan.class)
-				.eq(ObjectUtil.isNotNull(entid), AssessPlan::getEntid, entid)
-				.eq(AssessPlan::getStatus, 1)
-				.isNull(AssessPlan::getDeletedAt)
-				.orderByDesc(AssessPlan::getId));
+			.eq(ObjectUtil.isNotNull(entid), AssessPlan::getEntid, entid)
+			.eq(AssessPlan::getStatus, 1)
+			.isNull(AssessPlan::getDeletedAt)
+			.orderByDesc(AssessPlan::getId));
 		return R.phpOk(list);
 	}
 

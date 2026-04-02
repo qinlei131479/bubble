@@ -99,7 +99,8 @@ public class EnterpriseUserDailyController {
 		if (StrUtil.isBlank(time)) {
 			YearMonth now = YearMonth.now();
 			ym = now.getYear() + "-" + String.format("%02d", now.getMonthValue());
-		} else {
+		}
+		else {
 			if (!time.matches("\\d{4}-\\d{1,2}")) {
 				return R.phpFailed("时间段格式错误");
 			}

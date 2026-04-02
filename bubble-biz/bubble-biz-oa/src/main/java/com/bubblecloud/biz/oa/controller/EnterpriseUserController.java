@@ -42,9 +42,10 @@ public class EnterpriseUserController {
 
 	@GetMapping("/list")
 	@Operation(summary = "组织架构人员列表")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Long entid, @RequestParam(required = false) String pid,
-								@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
-								@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Long entid,
+			@RequestParam(required = false) String pid, @RequestParam(required = false) String name,
+			@RequestParam(defaultValue = "1") Integer status, @RequestParam(defaultValue = "1") Integer current,
+			@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(enterpriseUserService.listEnterpriseUsers(entid, pid, name, status, current, size));
 	}
 
@@ -57,7 +58,7 @@ public class EnterpriseUserController {
 	@PutMapping("/card/{id}")
 	@Operation(summary = "修改组织架构成员")
 	public R<String> updateUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
-								@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
+			@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
 		enterpriseUserService.updateEnterpriseUserCard(id, entid, dto);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
@@ -77,15 +78,15 @@ public class EnterpriseUserController {
 	@GetMapping("/add_book/tree")
 	@Operation(summary = "通讯录部门树")
 	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") Long entid,
-														   @RequestParam(required = false) String name) {
+			@RequestParam(required = false) String name) {
 		return R.phpOk(enterpriseUserService.addressBookTree(entid, name));
 	}
 
 	@GetMapping("/add_book/list")
 	@Operation(summary = "通讯录用户列表")
 	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") Long entid,
-									   @RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
-									   @RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
+			@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(enterpriseUserService.addressBook(entid, name, status, current, size));
 	}
 

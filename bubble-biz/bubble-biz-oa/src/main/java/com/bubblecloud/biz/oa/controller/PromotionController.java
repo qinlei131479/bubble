@@ -36,7 +36,7 @@ public class PromotionController {
 
 	private final PromotionService promotionService;
 
-	@GetMapping(value = {"", "/page"})
+	@GetMapping(value = { "", "/page" })
 	@Operation(summary = "晋升表列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject Promotion query) {
 		Page<Promotion> res = promotionService.findPg(pg, query);

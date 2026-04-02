@@ -73,5 +73,4 @@ public class RankLevelServiceImpl extends UpServiceImpl<RankLevelMapper, RankLev
 		return super.update(req);
 	}
 
-
 }

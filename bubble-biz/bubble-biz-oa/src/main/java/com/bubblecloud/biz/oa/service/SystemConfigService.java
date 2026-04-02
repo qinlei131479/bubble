@@ -21,7 +21,6 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 
 	/**
 	 * 按类型读取配置为键值 VO。
-	 *
 	 * @param dto 查询条件
 	 * @return 配置 VO
 	 */
@@ -31,7 +30,6 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 	 * 是否开放注册（registration_open）。
 	 */
 	boolean isRegistrationOpen();
-
 
 	/**
 	 * 客户审批开关配置。
@@ -52,8 +50,6 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 	 * 按分类保存配置（请求体为 JSON 对象）。
 	 */
 	void saveConfigByCategory(String category, JsonNode body);
-
-
 
 	/**
 	 * 工作台配置行（企业维度，category=work_bench）。

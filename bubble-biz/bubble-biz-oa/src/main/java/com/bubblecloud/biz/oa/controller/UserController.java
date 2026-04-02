@@ -94,10 +94,10 @@ public class UserController {
 		return R.phpOk("保存成功");
 	}
 
-
 	@GetMapping("/schedule")
 	@Operation(summary = "用户-日历待办列表")
 	public R<List<UserScheduleDayWrapperVO>> schedule(@ModelAttribute UserScheduleQueryDTO query) {
 		return R.phpOk(scheduleApiService.userScheduleList(query));
 	}
+
 }

@@ -32,5 +32,4 @@ public class PromotionServiceImpl extends UpServiceImpl<PromotionMapper, Promoti
 		return super.update(req);
 	}
 
-
 }

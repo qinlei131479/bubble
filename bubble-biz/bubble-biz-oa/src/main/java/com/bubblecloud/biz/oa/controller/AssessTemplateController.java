@@ -40,7 +40,7 @@ public class AssessTemplateController {
 
 	private final AssessTemplateService assessTemplateService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "考核模板列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessTemplate query) {
 		Page<AssessTemplate> res = assessTemplateService.findPg(pg, query);
@@ -52,8 +52,8 @@ public class AssessTemplateController {
 	public R<String> create(@RequestBody AssessTemplateSaveDTO dto) {
 		AssessTemplate obj = PojoConvertUtil.convertPojo(dto, AssessTemplate.class);
 		if (CollUtil.isNotEmpty(dto.getTargetIds())) {
-			obj.setTargetIds(dto.getTargetIds().stream()
-					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
+			obj.setTargetIds(
+					dto.getTargetIds().stream().map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
 		}
 		assessTemplateService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
@@ -70,8 +70,8 @@ public class AssessTemplateController {
 	public R<String> update(@PathVariable Long id, @RequestBody AssessTemplateSaveDTO dto) {
 		AssessTemplate obj = PojoConvertUtil.convertPojo(dto, AssessTemplate.class);
 		if (CollUtil.isNotEmpty(dto.getTargetIds())) {
-			obj.setTargetIds(dto.getTargetIds().stream()
-					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
+			obj.setTargetIds(
+					dto.getTargetIds().stream().map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
 		}
 		obj.setId(id);
 		assessTemplateService.update(obj);

@@ -42,9 +42,9 @@ public class EnterpriseServiceImpl extends UpServiceImpl<EnterpriseMapper, Enter
 	@Override
 	public EnterpriseEntInfoVO getEntAndUserInfo(Long entId) {
 		Enterprise ent = this.getOne(Wrappers.lambdaQuery(Enterprise.class)
-				.eq(Enterprise::getId, entId)
-				.eq(Enterprise::getStatus, 1)
-				.isNull(Enterprise::getDeleteTime));
+			.eq(Enterprise::getId, entId)
+			.eq(Enterprise::getStatus, 1)
+			.isNull(Enterprise::getDeleteTime));
 		if (ObjectUtil.isNull(ent)) {
 			throw new IllegalArgumentException("企业不存在");
 		}
@@ -59,7 +59,7 @@ public class EnterpriseServiceImpl extends UpServiceImpl<EnterpriseMapper, Enter
 		long frameCount = frameMapper.selectCount(
 				Wrappers.lambdaQuery(Frame.class).eq(Frame::getEntid, entId.longValue()).isNull(Frame::getDeletedAt));
 		long enterpriseCount = adminMapper
-				.selectCount(Wrappers.lambdaQuery(Admin.class).eq(Admin::getStatus, 1).isNull(Admin::getDeletedAt));
+			.selectCount(Wrappers.lambdaQuery(Admin.class).eq(Admin::getStatus, 1).isNull(Admin::getDeletedAt));
 		EnterpriseEntInfoVO vo = PojoConvertUtil.convertPojo(ent, EnterpriseEntInfoVO.class);
 		vo.setEnterpriseName(ent.getName());
 		vo.setEnterpriseNameEn(ent.getEnterpriseNameEn());
@@ -93,10 +93,10 @@ public class EnterpriseServiceImpl extends UpServiceImpl<EnterpriseMapper, Enter
 		if (update > 0) {
 			frameMapper.update(null,
 					Wrappers.lambdaUpdate(Frame.class)
-							.eq(Frame::getEntid, req.getId())
-							.eq(Frame::getPid, 0)
-							.isNull(Frame::getDeletedAt)
-							.set(Frame::getName, req.getName()));
+						.eq(Frame::getEntid, req.getId())
+						.eq(Frame::getPid, 0)
+						.isNull(Frame::getDeletedAt)
+						.set(Frame::getName, req.getName()));
 		}
 		return R.ok();
 	}

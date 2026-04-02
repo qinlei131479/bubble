@@ -38,7 +38,6 @@ public class AssessTemplateServiceImpl extends UpServiceImpl<AssessTemplateMappe
 		return super.update(req);
 	}
 
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void toggleFavorite(Long id) {
@@ -61,6 +60,5 @@ public class AssessTemplateServiceImpl extends UpServiceImpl<AssessTemplateMappe
 		existing.setCover(cover);
 		super.update(existing);
 	}
-
 
 }

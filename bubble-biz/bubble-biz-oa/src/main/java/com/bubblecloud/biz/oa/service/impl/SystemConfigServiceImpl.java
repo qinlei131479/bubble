@@ -48,7 +48,7 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	@Override
 	public ConfigVO config(ConfigQueryDTO dto) {
 		List<SystemConfig> list = this
-				.list(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getCategory, dto.getType()));
+			.list(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getCategory, dto.getType()));
 		ConfigVO vo = new ConfigVO();
 		for (SystemConfig c : list) {
 			if (ObjectUtil.isNotNull(c.getConfigKey())) {
@@ -61,11 +61,10 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	@Override
 	public boolean isRegistrationOpen() {
 		SystemConfig reg = this.getOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getConfigKey, "registration_open")
-				.last("LIMIT 1"), false);
+			.eq(SystemConfig::getConfigKey, "registration_open")
+			.last("LIMIT 1"), false);
 		return ObjectUtil.isNotNull(reg) && ("1".equals(reg.getValue()) || "true".equalsIgnoreCase(reg.getValue()));
 	}
-
 
 	@Override
 	@SuppressWarnings("unused")
@@ -104,8 +103,8 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			return objectMapper.createObjectNode();
 		}
 		List<SystemConfig> rows = baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getCategory, category)
-				.eq(SystemConfig::getEntid, 0));
+			.eq(SystemConfig::getCategory, category)
+			.eq(SystemConfig::getEntid, 0));
 		ObjectNode out = objectMapper.createObjectNode();
 		for (SystemConfig r : rows) {
 			if (ObjectUtil.isNotNull(r.getConfigKey())) {
@@ -127,16 +126,17 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			}
 			String val = jsonNodeToString(e.getValue());
 			SystemConfig row = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-					.eq(SystemConfig::getConfigKey, k)
-					.eq(SystemConfig::getEntid, 0)
-					.last("LIMIT 1"));
+				.eq(SystemConfig::getConfigKey, k)
+				.eq(SystemConfig::getEntid, 0)
+				.last("LIMIT 1"));
 			if (ObjectUtil.isNotNull(row)) {
 				row.setValue(val);
 				if (!Objects.equals(category, row.getCategory())) {
 					row.setCategory(category);
 				}
 				baseMapper.updateById(row);
-			} else {
+			}
+			else {
 				SystemConfig n = new SystemConfig();
 				n.setCategory(category);
 				n.setConfigKey(k);
@@ -164,24 +164,26 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 
 	private int loadIntConfig(String key, int def) {
 		SystemConfig row = baseMapper
-				.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
 		if (ObjectUtil.isNull(row) || ObjectUtil.isNull(row.getValue())) {
 			return def;
 		}
 		try {
 			return Integer.parseInt(row.getValue().trim());
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return def;
 		}
 	}
 
 	private void upsertConfigKey(String key, String value) {
 		SystemConfig row = baseMapper
-				.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
 		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(value);
 			baseMapper.updateById(row);
-		} else {
+		}
+		else {
 			SystemConfig n = new SystemConfig();
 			n.setConfigKey(key);
 			n.setKeyName(key);
@@ -206,7 +208,6 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 		return super.update(req);
 	}
 
-
 	/**
 	 * 企业配置
 	 **/
@@ -214,11 +215,11 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	@Override
 	public List<SystemConfig> listWorkBenchConfigs(Integer entid) {
 		return baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getCategory, CAT_WORK_BENCH)
-				.eq(SystemConfig::getEntid, entid)
-				.eq(SystemConfig::getIsShow, 1)
-				.orderByAsc(SystemConfig::getSort)
-				.orderByAsc(SystemConfig::getId));
+			.eq(SystemConfig::getCategory, CAT_WORK_BENCH)
+			.eq(SystemConfig::getEntid, entid)
+			.eq(SystemConfig::getIsShow, 1)
+			.orderByAsc(SystemConfig::getSort)
+			.orderByAsc(SystemConfig::getId));
 	}
 
 	@Override
@@ -232,10 +233,10 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			String val = jsonNodeToString(valNode);
 			baseMapper.update(null,
 					Wrappers.lambdaUpdate(SystemConfig.class)
-							.eq(SystemConfig::getCategory, CAT_WORK_BENCH)
-							.eq(SystemConfig::getEntid, entid)
-							.eq(SystemConfig::getConfigKey, key)
-							.set(SystemConfig::getValue, val));
+						.eq(SystemConfig::getCategory, CAT_WORK_BENCH)
+						.eq(SystemConfig::getEntid, entid)
+						.eq(SystemConfig::getConfigKey, key)
+						.set(SystemConfig::getValue, val));
 		});
 	}
 
@@ -245,10 +246,10 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			return List.of();
 		}
 		return baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getCategory, category)
-				.eq(SystemConfig::getEntid, 0)
-				.orderByAsc(SystemConfig::getSort)
-				.orderByAsc(SystemConfig::getId));
+			.eq(SystemConfig::getCategory, category)
+			.eq(SystemConfig::getEntid, 0)
+			.orderByAsc(SystemConfig::getSort)
+			.orderByAsc(SystemConfig::getId));
 	}
 
 	@Override
@@ -257,7 +258,7 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			return;
 		}
 		List<SystemConfig> rows = baseMapper
-				.selectList(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getCategory, category));
+			.selectList(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getCategory, category));
 		body.fields().forEachRemaining(e -> {
 			String k = e.getKey();
 			String val = jsonNodeToString(e.getValue());
@@ -275,18 +276,19 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	public FirewallConfigVO getFirewallConfig() {
 		FirewallConfigVO vo = new FirewallConfigVO();
 		SystemConfig sw = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getConfigKey, "firewall_switch")
-				.last("LIMIT 1"));
+			.eq(SystemConfig::getConfigKey, "firewall_switch")
+			.last("LIMIT 1"));
 		vo.setFirewallSwitch(NumberUtil.parseInt(sw.getValue(), 0));
 		SystemConfig fc = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
-				.eq(SystemConfig::getConfigKey, "firewall_content")
-				.last("LIMIT 1"));
+			.eq(SystemConfig::getConfigKey, "firewall_content")
+			.last("LIMIT 1"));
 		List<String> rules = new ArrayList<>();
 		if (ObjectUtil.isNotNull(fc) && StrUtil.isNotBlank(fc.getValue())) {
 			try {
 				rules = objectMapper.readValue(fc.getValue(),
 						objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
-			} catch (Exception ignored) {
+			}
+			catch (Exception ignored) {
 				rules = new ArrayList<>();
 			}
 		}
@@ -303,7 +305,8 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 				}
 				try {
 					java.util.regex.Pattern.compile(pattern);
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					throw new IllegalArgumentException("防火墙配置格式错误,必须为正则表达式");
 				}
 			}
@@ -312,7 +315,8 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 		String json;
 		try {
 			json = objectMapper.writeValueAsString(ObjectUtil.isNull(firewallContent) ? List.of() : firewallContent);
-		} catch (JsonProcessingException e) {
+		}
+		catch (JsonProcessingException e) {
 			json = "[]";
 		}
 		upsertFirewallRow("firewall_content", "防火墙设置", json, CAT_FIREWALL);
@@ -320,11 +324,12 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 
 	private void upsertFirewallRow(String key, String keyName, String value, String category) {
 		SystemConfig row = getBaseMapper()
-				.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
+			.selectOne(Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
 		if (ObjectUtil.isNotNull(row)) {
 			row.setValue(value);
 			getBaseMapper().updateById(row);
-		} else {
+		}
+		else {
 			SystemConfig n = new SystemConfig();
 			n.setCategory(category);
 			n.setConfigKey(key);

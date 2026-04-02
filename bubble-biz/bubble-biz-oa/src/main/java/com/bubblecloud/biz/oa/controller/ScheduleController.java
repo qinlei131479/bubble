@@ -39,7 +39,7 @@ public class ScheduleController {
 	@GetMapping("/page")
 	@Operation(summary = "日程分页（占位）")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-								@RequestParam(defaultValue = "20") Integer size) {
+			@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 

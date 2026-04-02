@@ -39,5 +39,4 @@ public class AssessTargetServiceImpl extends UpServiceImpl<AssessTargetMapper, A
 		return super.update(req);
 	}
 
-
 }

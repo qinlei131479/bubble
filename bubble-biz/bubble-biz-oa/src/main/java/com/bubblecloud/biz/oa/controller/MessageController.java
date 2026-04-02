@@ -30,11 +30,10 @@ public class MessageController {
 
 	private final MessageService messageService;
 
-	@GetMapping(value = {"/list", "/page"})
+	@GetMapping(value = { "/list", "/page" })
 	@Operation(summary = "消息列表")
 	public R<Page<Message>> page(@ParameterObject Pg pg, @ParameterObject Message query,
-								 @RequestParam(defaultValue = "1") Integer pageNum,
-								 @RequestParam(defaultValue = "20") Integer limit) {
+			@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "20") Integer limit) {
 		pg.setCurrent(pageNum);
 		pg.setSize(limit);
 		return R.phpOk(messageService.findPg(pg, query));

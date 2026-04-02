@@ -20,4 +20,5 @@ public class PromotionDataStandardDTO {
 
 	@Schema(description = "排序后的ID列表（从前到后对应 sort 1,2,3...）")
 	private List<Long> ids;
+
 }

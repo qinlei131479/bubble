@@ -63,7 +63,7 @@ public class LoginController {
 		return R.phpOk(Boolean.TRUE);
 	}
 
-	@PutMapping({"/savePassword", "/common/savePassword"})
+	@PutMapping({ "/savePassword", "/common/savePassword" })
 	@Operation(summary = "修改密码（与 PHP ent/user/savePassword 一致）")
 	public R<String> savePassword(@RequestBody @Valid SavePasswordDTO dto) {
 		loginService.updatePassword(OaSecurityUtil.currentUserId(), dto.getPhone(), dto.getPassword());

@@ -19,7 +19,8 @@ import java.util.List;
  */
 public interface EnterpriseUserService extends UpService<Admin> {
 
-	SimplePageVO listEnterpriseUsers(Long entId, String pid, String name, Integer status, Integer current, Integer size);
+	SimplePageVO listEnterpriseUsers(Long entId, String pid, String name, Integer status, Integer current,
+			Integer size);
 
 	SimplePageVO addressBook(Long entId, String name, Integer status, Integer current, Integer size);
 

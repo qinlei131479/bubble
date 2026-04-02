@@ -92,8 +92,8 @@ public class CommonController {
 	@GetMapping("/message")
 	@Operation(summary = "消息列表（工作台角标）")
 	public R<CommonMessageVO> message(@RequestParam(defaultValue = "1") Integer page,
-									  @RequestParam(defaultValue = "20") Integer limit, @RequestParam(required = false) String cate_id,
-									  @RequestParam(required = false) String title) {
+			@RequestParam(defaultValue = "20") Integer limit, @RequestParam(required = false) String cate_id,
+			@RequestParam(required = false) String title) {
 		return R.phpOk(commonService.messageList(page, limit, cate_id, title));
 	}
 

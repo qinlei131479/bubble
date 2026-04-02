@@ -37,7 +37,7 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 	public EmployeeTrain getInfo(String type) {
 		validateType(type);
 		EmployeeTrain row = baseMapper
-				.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
+			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
 		if (ObjectUtil.isNull(row)) {
 			row = new EmployeeTrain();
 			row.setType(type);
@@ -45,7 +45,6 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 		}
 		return row;
 	}
-
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -59,13 +58,14 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 		validateType(req.getType());
 		String content = ObjectUtil.isNull(req.getContent()) ? "" : req.getContent();
 		EmployeeTrain existing = baseMapper
-				.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, req.getType()));
+			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, req.getType()));
 		if (ObjectUtil.isNull(existing)) {
 			EmployeeTrain e = new EmployeeTrain();
 			e.setType(req.getType());
 			e.setContent(content);
 			baseMapper.insert(e);
-		} else {
+		}
+		else {
 			existing.setContent(content);
 			baseMapper.updateById(existing);
 		}

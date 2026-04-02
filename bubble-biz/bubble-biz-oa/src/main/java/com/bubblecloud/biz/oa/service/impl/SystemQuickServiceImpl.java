@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
  * @date 2026/3/30
  */
 @Service
-public class SystemQuickServiceImpl extends UpServiceImpl<SystemQuickMapper, SystemQuick> implements SystemQuickService {
+public class SystemQuickServiceImpl extends UpServiceImpl<SystemQuickMapper, SystemQuick>
+		implements SystemQuickService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

@@ -44,7 +44,7 @@ public class AssessController {
 
 	private final AssessService assessService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "绩效考核列表（个人）")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject Assess query) {
 		Page<Assess> res = assessService.findPg(pg, query);
@@ -71,7 +71,7 @@ public class AssessController {
 		return R.phpOk(assessService.getById(id));
 	}
 
-	@PostMapping({"/create", "/target"})
+	@PostMapping({ "/create", "/target" })
 	@Operation(summary = "创建绩效考核")
 	public R<String> create(@RequestBody AssessSaveDTO dto) {
 		Assess obj = PojoConvertUtil.convertPojo(dto, Assess.class);
@@ -176,14 +176,14 @@ public class AssessController {
 	@GetMapping("/abnormal")
 	@Operation(summary = "绩效未创建列表")
 	public R<List<Assess>> abnormal(@RequestParam(required = false) Long entid,
-									@RequestParam(required = false) Long planId) {
+			@RequestParam(required = false) Long planId) {
 		return R.phpOk(assessService.abnormalList(entid, planId));
 	}
 
 	@GetMapping("/is_abnormal")
 	@Operation(summary = "绩效是否存在未创建")
 	public R<Boolean> isAbnormal(@RequestParam(required = false) Long entid,
-								 @RequestParam(required = false) Long planId) {
+			@RequestParam(required = false) Long planId) {
 		return R.phpOk(assessService.isAbnormal(entid, planId));
 	}
 

@@ -32,5 +32,4 @@ public class RankServiceImpl extends UpServiceImpl<RankMapper, Rank> implements 
 		return super.update(req);
 	}
 
-
 }

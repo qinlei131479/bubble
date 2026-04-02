@@ -71,7 +71,8 @@ public class CommonServiceImpl implements CommonService {
 				if (ObjectUtil.isNotNull(a) && ObjectUtil.isNotNull(a.getStatus()) && a.getStatus() == 0) {
 					throw new IllegalArgumentException("该手机号已被锁定");
 				}
-			} else {
+			}
+			else {
 				if (!systemConfigService.isRegistrationOpen()) {
 					throw new IllegalArgumentException("短信发送失败，未注册的手机号");
 				}
@@ -100,7 +101,6 @@ public class CommonServiceImpl implements CommonService {
 	public CommonVersionVO version() {
 		return new CommonVersionVO("3.9.2", 48, "oa");
 	}
-
 
 	private Admin requireAdmin(long adminId) {
 		Admin admin = adminService.getById(adminId);
