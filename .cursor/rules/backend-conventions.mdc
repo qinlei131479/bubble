@@ -135,7 +135,7 @@ bubble-visual-{feature}  → 可视化管理服务
 ```java
 @GetMapping({"", "/page"})
 @Operation(summary = "xxx列表")
-public R<SimplePageVO> page(@ParameterObject Pg<XxxEntity> pg, @ParameterObject XxxEntity query) {
+public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject XxxEntity query) {
     Page<XxxEntity> res = xxxService.findPg(pg, query);
     return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 }
@@ -167,12 +167,12 @@ public R<String> create(@RequestBody XxxSaveDTO dto) {
     XxxEntity obj = PojoConvertUtil.convertPojo(dto, XxxEntity.class);
     // 按需在此处理 DTO 中特殊字段（如集合转字符串）
     xxxService.create(obj);
-    return R.phpOk("common.insert.succ");
+    return R.phpOk(OaConstants.INSERT_SUCC);
 }
 ```
 
 - Controller 负责 DTO → 实体转换（`PojoConvertUtil.convertPojo`）及特殊字段处理
-- 调 `xxxService.create(obj)`，返回 `R.phpOk("common.insert.succ")`
+- 调 `xxxService.create(obj)`，返回 `R.phpOk(OaConstants.INSERT_SUCC)`
 - **ServiceImpl 必须重写 `create`**，加 `@Transactional(rollbackFor = Exception.class)`（见下文）
 
 #### 4. 修改
@@ -185,7 +185,7 @@ public R<String> update(@PathVariable Long id, @RequestBody XxxSaveDTO dto) {
     obj.setId(id);
     // 按需在此处理 DTO 中特殊字段
     xxxService.update(obj);
-    return R.phpOk("common.update.succ");
+    return R.phpOk(OaConstants.UPDATE_SUCC);
 }
 ```
 
@@ -275,7 +275,7 @@ public class XxxServiceImpl extends UpServiceImpl<XxxMapper, XxxEntity> implemen
     @Override
     @Transactional(rollbackFor = Exception.class)
     public R update(XxxEntity dto) {
-        XxxEntity existing = getById(dto.getId());
+        XxxEntity existing = baseMapper.selectById(dto.getId());
         if (ObjectUtil.isNull(existing)) {
             throw new IllegalArgumentException(NOT_EXISTS);
         }
