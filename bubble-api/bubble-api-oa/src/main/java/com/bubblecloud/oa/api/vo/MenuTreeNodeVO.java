@@ -26,7 +26,7 @@ public class MenuTreeNodeVO {
 	private Long id;
 
 	@Schema(description = "父菜单ID")
-	private Long pid;
+	private Integer pid;
 
 	@Schema(description = "菜单名称")
 	private String menuName;

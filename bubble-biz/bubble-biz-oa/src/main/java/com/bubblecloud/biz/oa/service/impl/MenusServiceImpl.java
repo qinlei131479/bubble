@@ -130,7 +130,7 @@ public class MenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMen
 	private MenuTreeNodeVO toMenuNodeVo(SystemMenus m) {
 		MenuTreeNodeVO vo = new MenuTreeNodeVO();
 		vo.setId(m.getId());
-		vo.setPid(m.getPid());
+		vo.setPid(m.getPid().intValue());
 		vo.setMenuName(m.getMenuName());
 		vo.setMenuPath(m.getMenuPath());
 		vo.setUniPath(blankToEmpty(m.getUniPath()));
@@ -170,8 +170,7 @@ public class MenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMen
 		}
 		List<SystemMenus> tree = new ArrayList<>();
 		for (SystemMenus node : nodeMap.values()) {
-			Long pid = node.getPid();
-			Long pidLong = ObjectUtil.isNull(pid) ? null : pid.longValue();
+			Long pidLong = node.getPid();
 			if (ObjectUtil.isNotNull(pidLong) && nodeMap.containsKey(pidLong)) {
 				SystemMenus parent = nodeMap.get(pidLong);
 				if (Integer.valueOf(1).equals(node.getPosition())) {
