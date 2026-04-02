@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.entity.SystemMenus;
-import com.bubblecloud.oa.api.vo.menu.MenuAdminTreeNodeVO;
+import com.bubblecloud.oa.api.vo.menu.SystemMenusTreeNodeVO;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -13,23 +13,17 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface MenusAdminService extends UpService<SystemMenus> {
+public interface SystemMenusService extends UpService<SystemMenus> {
 
 	/**
 	 * 企业菜单树（与 PHP 列表一致）。
 	 * @param menuName 菜单名模糊（可选）
-	 * @param entid 企业 ID
+	 * @param entId 企业 ID
 	 */
-	List<MenuAdminTreeNodeVO> listMenuTree(String menuName, Integer entid);
-
-	void saveMenu(SystemMenus menu);
-
-	void updateMenu(SystemMenus menu);
-
-	void deleteMenu(Long id);
+	List<SystemMenusTreeNodeVO> listMenuTree(String menuName, Long entId);
 
 	void updateIsShow(Long id, Integer isShow);
 
-	JsonNode getNotSaveMenus(Integer entid);
+	JsonNode getNotSaveMenus(Long entId);
 
 }

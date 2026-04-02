@@ -14,11 +14,11 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "企业菜单树节点")
-public class MenuAdminTreeNodeVO {
+public class SystemMenusTreeNodeVO {
 
 	private Long id;
 
-	private Integer pid;
+	private Long pid;
 
 	private String menuName;
 
@@ -29,6 +29,6 @@ public class MenuAdminTreeNodeVO {
 	private Integer sort;
 
 	@Schema(description = "子节点")
-	private List<MenuAdminTreeNodeVO> children = new ArrayList<>();
+	private List<SystemMenusTreeNodeVO> children = new ArrayList<>();
 
 }

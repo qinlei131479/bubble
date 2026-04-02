@@ -36,7 +36,7 @@ public class SystemMenus extends Req<SystemMenus> {
 	private Long id;
 
 	@Schema(description = "父菜单ID")
-	private Integer pid;
+	private Long pid;
 
 	@Schema(description = "图标")
 	private String icon;
@@ -88,7 +88,7 @@ public class SystemMenus extends Req<SystemMenus> {
 	private Integer sort;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 	@Schema(description = "类型：M菜单 B按钮 A接口 D默认")
 	private String type;

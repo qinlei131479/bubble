@@ -3,22 +3,22 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
-import com.bubblecloud.biz.oa.service.MenusAdminService;
+import com.bubblecloud.biz.oa.service.SystemMenusService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.biz.oa.util.TreeUtil;
 import com.bubblecloud.oa.api.entity.SystemMenus;
-import com.bubblecloud.oa.api.vo.menu.MenuAdminTreeNodeVO;
+import com.bubblecloud.oa.api.vo.menu.SystemMenusTreeNodeVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -29,23 +29,23 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMenus> implements MenusAdminService {
+public class SystemMenusServiceImpl extends UpServiceImpl<SystemMenusMapper, SystemMenus> implements SystemMenusService {
 
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public List<MenuAdminTreeNodeVO> listMenuTree(String menuName, Integer entid) {
+	public List<SystemMenusTreeNodeVO> listMenuTree(String menuName, Long entId) {
 		var q = Wrappers.lambdaQuery(SystemMenus.class)
-			.eq(SystemMenus::getEntid, entid)
-			.isNull(SystemMenus::getDeletedAt);
+				.eq(SystemMenus::getEntid, entId)
+				.isNull(SystemMenus::getDeletedAt);
 		if (StrUtil.isNotBlank(menuName)) {
 			q.like(SystemMenus::getMenuName, menuName);
 		}
 		q.orderByDesc(SystemMenus::getSort).orderByAsc(SystemMenus::getId);
 		List<SystemMenus> rows = baseMapper.selectList(q);
-		List<MenuAdminTreeNodeVO> flat = new ArrayList<>(rows.size());
+		List<SystemMenusTreeNodeVO> flat = new ArrayList<>(rows.size());
 		for (SystemMenus m : rows) {
-			MenuAdminTreeNodeVO n = new MenuAdminTreeNodeVO();
+			SystemMenusTreeNodeVO n = new SystemMenusTreeNodeVO();
 			n.setId(m.getId());
 			n.setPid(m.getPid());
 			n.setMenuName(m.getMenuName());
@@ -54,34 +54,18 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 			n.setSort(m.getSort());
 			flat.add(n);
 		}
-		return TreeUtil.buildTree(flat, MenuAdminTreeNodeVO::getId, MenuAdminTreeNodeVO::getPid,
-				MenuAdminTreeNodeVO::getChildren);
+		return TreeUtil.buildTree(flat, SystemMenusTreeNodeVO::getId, SystemMenusTreeNodeVO::getPid,
+				SystemMenusTreeNodeVO::getChildren);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveMenu(SystemMenus menu) {
-		LocalDateTime now = LocalDateTime.now();
-		menu.setCreatedAt(now);
-		menu.setUpdatedAt(now);
-		baseMapper.insert(menu);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateMenu(SystemMenus menu) {
-		menu.setUpdatedAt(LocalDateTime.now());
-		baseMapper.updateById(menu);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deleteMenu(Long id) {
+	public R deleteById(Long id) {
 		long child = baseMapper.selectCount(Wrappers.lambdaQuery(SystemMenus.class).eq(SystemMenus::getPid, id));
 		if (child > 0) {
 			throw new IllegalArgumentException("请先删除下级菜单");
 		}
-		baseMapper.deleteById(id);
+		return super.deleteById(id);
 	}
 
 	@Override
@@ -95,7 +79,7 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 	}
 
 	@Override
-	public JsonNode getNotSaveMenus(Integer entid) {
+	public JsonNode getNotSaveMenus(Long entId) {
 		ObjectNode root = objectMapper.createObjectNode();
 		root.set("ent", objectMapper.createArrayNode());
 		root.set("uni", objectMapper.createArrayNode());

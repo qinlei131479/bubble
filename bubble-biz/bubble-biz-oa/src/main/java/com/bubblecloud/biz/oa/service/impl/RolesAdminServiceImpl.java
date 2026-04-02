@@ -21,7 +21,7 @@ import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
 import com.bubblecloud.oa.api.entity.EnterpriseRoleUser;
 import com.bubblecloud.oa.api.entity.SystemMenus;
-import com.bubblecloud.oa.api.vo.menu.MenuAdminTreeNodeVO;
+import com.bubblecloud.oa.api.vo.menu.SystemMenusTreeNodeVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +29,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -223,9 +222,9 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 			.isNull(SystemMenus::getDeletedAt)
 			.orderByDesc(SystemMenus::getSort)
 			.orderByAsc(SystemMenus::getId));
-		List<MenuAdminTreeNodeVO> flat = new ArrayList<>();
+		List<SystemMenusTreeNodeVO> flat = new ArrayList<>();
 		for (SystemMenus m : rows) {
-			MenuAdminTreeNodeVO n = new MenuAdminTreeNodeVO();
+			SystemMenusTreeNodeVO n = new SystemMenusTreeNodeVO();
 			n.setId(m.getId());
 			n.setPid(m.getPid());
 			n.setMenuName(m.getMenuName());
@@ -234,8 +233,8 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 			n.setSort(m.getSort());
 			flat.add(n);
 		}
-		return objectMapper.valueToTree(TreeUtil.buildTree(flat, MenuAdminTreeNodeVO::getId,
-				MenuAdminTreeNodeVO::getPid, MenuAdminTreeNodeVO::getChildren));
+		return objectMapper.valueToTree(TreeUtil.buildTree(flat, SystemMenusTreeNodeVO::getId,
+				SystemMenusTreeNodeVO::getPid, SystemMenusTreeNodeVO::getChildren));
 	}
 
 	@Override
