@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AssessTemplateService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -44,7 +45,7 @@ public class AssessTemplateController {
 	@Operation(summary = "创建考核模板")
 	public R<String> create(@RequestBody AssessTemplateSaveDTO dto) {
 		assessTemplateService.createTemplate(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -57,7 +58,7 @@ public class AssessTemplateController {
 	@Operation(summary = "修改考核模板")
 	public R<String> update(@PathVariable Long id, @RequestBody AssessTemplateSaveDTO dto) {
 		assessTemplateService.updateTemplate(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

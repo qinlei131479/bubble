@@ -20,26 +20,26 @@ public interface RolesAdminService extends UpService<EnterpriseRole> {
 	 * @param roleName 角色名模糊（可选）
 	 * @param entid 企业 ID
 	 */
-	List<EnterpriseRole> listRoles(String roleName, int entid);
+	List<EnterpriseRole> listRoles(String roleName, Integer entid);
 
-	long saveRole(int entid, JsonNode body);
+	Long saveRole(Integer entid, JsonNode body);
 
-	void updateRole(long id, int entid, JsonNode body);
+	void updateRole(Long id, Integer entid, JsonNode body);
 
-	void deleteRole(long id, int entid);
+	void deleteRole(Long id, Integer entid);
 
-	void changeRoleStatus(int entid, long roleId, int status);
+	void changeRoleStatus(Integer entid, Long roleId, Integer status);
 
-	List<Admin> getRoleUsers(long roleId, int entid);
+	List<Admin> getRoleUsers(Long roleId, Integer entid);
 
-	JsonNode getUserRoleData(int entid, long userId);
+	JsonNode getUserRoleData(Integer entid, Long userId);
 
-	void changeUserRole(int entid, long userId, JsonNode roleIds);
+	void changeUserRole(Integer entid, Long userId, JsonNode roleIds);
 
-	void addRoleUsers(int entid, int roleId, List<Integer> userIds);
+	void addRoleUsers(Integer entid, Integer roleId, List<Integer> userIds);
 
-	void changeRoleUserStatus(int uid, int entid, int roleId, int status);
+	void changeRoleUserStatus(Integer uid, Integer entid, Integer roleId, Integer status);
 
-	void delRoleUser(int uid, int entid, int roleId);
+	void delRoleUser(Integer uid, Integer entid, Integer roleId);
 
 }

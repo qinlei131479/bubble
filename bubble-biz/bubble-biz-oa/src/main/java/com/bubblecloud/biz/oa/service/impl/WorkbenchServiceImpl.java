@@ -116,7 +116,7 @@ public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMappe
 	}
 
 	@Override
-	public List<WorkbenchStatisticCardVO> getStatistics(int types) {
+	public List<WorkbenchStatisticCardVO> getStatistics(Integer types) {
 		List<WorkbenchStatisticCardVO> list = new ArrayList<>();
 		for (String[] row : STATISTICS) {
 			list.add(new WorkbenchStatisticCardVO(row[0], "0"));
@@ -148,13 +148,13 @@ public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMappe
 	}
 
 	@Override
-	public Map<Integer, WorkbenchDailyDayVO> getMonthDaily(String uid, int entid, String yearMonth) {
+	public Map<Integer, WorkbenchDailyDayVO> getMonthDaily(String uid, Integer entid, String yearMonth) {
 		YearMonth ym = YearMonth.parse(yearMonth);
 		LocalDateTime start = ym.atDay(1).atStartOfDay();
 		LocalDateTime end = ym.plusMonths(1).atDay(1).atStartOfDay();
 		List<EnterpriseUserDaily> rows = baseMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserDaily.class)
 			.eq(EnterpriseUserDaily::getUid, uid)
-			.eq(EnterpriseUserDaily::getEntid, (long) entid)
+			.eq(EnterpriseUserDaily::getEntid, entid.longValue())
 			.ge(EnterpriseUserDaily::getCreatedAt, start)
 			.lt(EnterpriseUserDaily::getCreatedAt, end)
 			.orderByAsc(EnterpriseUserDaily::getCreatedAt));
@@ -174,10 +174,10 @@ public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMappe
 	}
 
 	@Override
-	public List<UserPending> getPendingList(String uid, int entid, String status) {
+	public List<UserPending> getPendingList(String uid, Integer entid, String status) {
 		var q = Wrappers.lambdaQuery(UserPending.class)
 			.eq(UserPending::getUid, uid)
-			.eq(UserPending::getEntid, (long) entid);
+			.eq(UserPending::getEntid, entid.longValue());
 		if (StrUtil.isNotBlank(status)) {
 			try {
 				q.eq(UserPending::getStatus, Integer.parseInt(status.trim()));

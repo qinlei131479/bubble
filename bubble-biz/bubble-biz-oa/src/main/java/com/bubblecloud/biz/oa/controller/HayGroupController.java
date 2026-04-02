@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.HayGroupService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -46,7 +47,7 @@ public class HayGroupController {
 	@Operation(summary = "创建海氏评估组")
 	public R<String> create(@RequestBody HayGroupSaveDTO dto) {
 		hayGroupService.createHayGroup(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -59,7 +60,7 @@ public class HayGroupController {
 	@Operation(summary = "修改海氏评估组")
 	public R<String> update(@PathVariable Long id, @RequestBody HayGroupSaveDTO dto) {
 		hayGroupService.updateHayGroup(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

@@ -21,7 +21,7 @@ public interface AdminService extends UpService<Admin> {
 	/**
 	 * 手机号是否已存在。
 	 */
-	long countByPhone(String phone);
+	Long countByPhone(String phone);
 
 	/**
 	 * 注册新用户（对齐 PHP AdminService::register）。

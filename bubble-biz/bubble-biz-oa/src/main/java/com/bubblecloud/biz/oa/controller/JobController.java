@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankJobService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -53,7 +54,7 @@ public class JobController {
 	@Operation(summary = "创建岗位")
 	public R<String> create(@RequestBody JobSaveDTO dto) {
 		rankJobService.createJob(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -66,7 +67,7 @@ public class JobController {
 	@Operation(summary = "修改岗位")
 	public R<String> update(@PathVariable Long id, @RequestBody JobSaveDTO dto) {
 		rankJobService.updateJob(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
@@ -105,7 +106,7 @@ public class JobController {
 	@Operation(summary = "修改下级职责")
 	public R<String> updateSubordinate(@PathVariable Long id, @RequestBody JobSubordinateUpdateDTO dto) {
 		rankJobService.updateSubordinate(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 }

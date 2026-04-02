@@ -18,8 +18,8 @@ public interface RankService extends UpService<Rank> {
 
 	void createRank(RankSaveDTO dto);
 
-	void updateRank(long id, RankSaveDTO dto);
+	void updateRank(Long id, RankSaveDTO dto);
 
-	void removeRank(long id);
+	void removeRank(Long id);
 
 }

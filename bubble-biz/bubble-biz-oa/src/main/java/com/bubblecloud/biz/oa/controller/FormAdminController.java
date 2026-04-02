@@ -2,7 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Map;
 
-import com.bubblecloud.biz.oa.security.OaSecurityUtil;
+import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.biz.oa.service.FormAdminService;
 import com.bubblecloud.common.core.util.R;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -154,7 +154,7 @@ public class FormAdminController {
 			String selectType = body.has("select_type") ? body.get("select_type").asText() : "";
 			JsonNode data = body.get("data");
 			formAdminService.saveSalesmanCustomFields(uid, customType, selectType, data);
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());

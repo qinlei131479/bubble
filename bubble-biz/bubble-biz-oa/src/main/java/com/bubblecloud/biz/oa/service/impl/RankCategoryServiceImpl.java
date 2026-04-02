@@ -44,7 +44,7 @@ public class RankCategoryServiceImpl extends UpServiceImpl<RankCategoryMapper, R
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateRankCate(long id, RankCateSaveDTO dto) {
+	public void updateRankCate(Long id, RankCateSaveDTO dto) {
 		RankCategory existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -61,7 +61,7 @@ public class RankCategoryServiceImpl extends UpServiceImpl<RankCategoryMapper, R
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeRankCate(long id) {
+	public void removeRankCate(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}

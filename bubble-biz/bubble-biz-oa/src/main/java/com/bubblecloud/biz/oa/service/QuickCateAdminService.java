@@ -13,14 +13,14 @@ import com.bubblecloud.oa.api.entity.Category;
  */
 public interface QuickCateAdminService extends UpService<Category> {
 
-	List<Category> list(int entid);
+	List<Category> list(Integer entid);
 
-	Category getCate(long id);
+	Category getCate(Long id);
 
-	long saveCate(Category row);
+	Long saveCate(Category row);
 
 	void updateCate(Category row);
 
-	void deleteCate(long id);
+	void deleteCate(Long id);
 
 }

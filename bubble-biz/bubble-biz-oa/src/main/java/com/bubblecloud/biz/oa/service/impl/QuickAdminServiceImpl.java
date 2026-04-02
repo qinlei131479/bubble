@@ -26,7 +26,7 @@ import cn.hutool.core.util.StrUtil;
 public class QuickAdminServiceImpl extends UpServiceImpl<SystemQuickMapper, SystemQuick> implements QuickAdminService {
 
 	@Override
-	public Page<SystemQuick> page(Integer cid, String nameLike, int current, int size) {
+	public Page<SystemQuick> page(Integer cid, String nameLike, Integer current, Integer size) {
 		var q = Wrappers.lambdaQuery(SystemQuick.class)
 			.orderByDesc(SystemQuick::getSort)
 			.orderByAsc(SystemQuick::getId);
@@ -49,7 +49,7 @@ public class QuickAdminServiceImpl extends UpServiceImpl<SystemQuickMapper, Syst
 	}
 
 	@Override
-	public SystemQuick getQuick(int id) {
+	public SystemQuick getQuick(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
@@ -71,7 +71,7 @@ public class QuickAdminServiceImpl extends UpServiceImpl<SystemQuickMapper, Syst
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteQuick(int id) {
+	public void deleteQuick(Integer id) {
 		baseMapper.deleteById(id);
 	}
 

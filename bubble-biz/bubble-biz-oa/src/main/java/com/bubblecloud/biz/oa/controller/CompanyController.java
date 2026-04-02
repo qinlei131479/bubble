@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Map;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.CompanyService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.CompanyUpdateDTO;
@@ -49,7 +50,7 @@ public class CompanyController {
 	@Operation(summary = "修改当前企业详情")
 	public R<String> updateEnt(@RequestParam(defaultValue = "1") int entid, @RequestBody CompanyUpdateDTO dto) {
 		if (companyService.updateEnt(entid, dto)) {
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		return R.phpFailed("common.update.fail");
 	}

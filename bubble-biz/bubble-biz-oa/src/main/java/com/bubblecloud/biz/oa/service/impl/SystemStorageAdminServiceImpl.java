@@ -44,13 +44,13 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 	}
 
 	@Override
-	public SystemStorage get(int id) {
+	public SystemStorage get(Integer id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveStorage(int type, String accessKey, String name, String region, String acl) {
+	public void saveStorage(Integer type, String accessKey, String name, String region, String acl) {
 		int now = (int) (System.currentTimeMillis() / 1000L);
 		SystemStorage s = new SystemStorage();
 		s.setType(type);
@@ -73,7 +73,7 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateDomain(int id, String domain, String cdn) {
+	public void updateDomain(Integer id, String domain, String cdn) {
 		SystemStorage s = baseMapper.selectById(id);
 		if (ObjectUtil.isNull(s)) {
 			throw new IllegalArgumentException("记录不存在");
@@ -89,7 +89,7 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setActiveStatus(int id) {
+	public void setActiveStatus(Integer id) {
 		SystemStorage info = baseMapper.selectById(id);
 		if (ObjectUtil.isNull(info)) {
 			throw new IllegalArgumentException("记录不存在");
@@ -110,7 +110,7 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteStorage(int id) {
+	public void deleteStorage(Integer id) {
 		SystemStorage s = baseMapper.selectById(id);
 		if (ObjectUtil.isNull(s)) {
 			return;
@@ -123,7 +123,7 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setUploadType(int type) {
+	public void setUploadType(Integer type) {
 		long active = baseMapper.selectCount(Wrappers.lambdaQuery(SystemStorage.class)
 			.eq(SystemStorage::getType, type)
 			.eq(SystemStorage::getStatus, 1)
@@ -141,7 +141,7 @@ public class SystemStorageAdminServiceImpl extends UpServiceImpl<SystemStorageMa
 	}
 
 	@Override
-	public int getUploadType() {
+	public Integer getUploadType() {
 		SystemConfig row = systemConfigMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getConfigKey, "upload_type")
 			.eq(SystemConfig::getEntid, 0));

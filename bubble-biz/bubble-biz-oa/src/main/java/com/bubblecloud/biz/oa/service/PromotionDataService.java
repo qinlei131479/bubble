@@ -20,12 +20,12 @@ public interface PromotionDataService extends UpService<PromotionData> {
 
 	void createPromotionData(PromotionDataSaveDTO dto);
 
-	void updatePromotionData(long id, PromotionDataSaveDTO dto);
+	void updatePromotionData(Long id, PromotionDataSaveDTO dto);
 
-	void removePromotionData(long id);
+	void removePromotionData(Long id);
 
-	void updateStandard(long id, PromotionDataStandardDTO dto);
+	void updateStandard(Long id, PromotionDataStandardDTO dto);
 
-	void sortPromotionData(long pid, PromotionDataSortDTO dto);
+	void sortPromotionData(Long pid, PromotionDataSortDTO dto);
 
 }

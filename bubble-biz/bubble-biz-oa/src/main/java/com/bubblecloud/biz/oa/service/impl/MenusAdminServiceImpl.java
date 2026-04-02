@@ -34,7 +34,7 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public List<MenuAdminTreeNodeVO> listMenuTree(String menuName, int entid) {
+	public List<MenuAdminTreeNodeVO> listMenuTree(String menuName, Integer entid) {
 		var q = Wrappers.lambdaQuery(SystemMenus.class)
 			.eq(SystemMenus::getEntid, entid)
 			.isNull(SystemMenus::getDeletedAt);
@@ -76,7 +76,7 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteMenu(long id) {
+	public void deleteMenu(Long id) {
 		long child = baseMapper.selectCount(Wrappers.lambdaQuery(SystemMenus.class).eq(SystemMenus::getPid, id));
 		if (child > 0) {
 			throw new IllegalArgumentException("请先删除下级菜单");
@@ -86,7 +86,7 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateIsShow(long id, int isShow) {
+	public void updateIsShow(Long id, Integer isShow) {
 		SystemMenus m = new SystemMenus();
 		m.setId(id);
 		m.setIsShow(isShow);
@@ -95,7 +95,7 @@ public class MenusAdminServiceImpl extends UpServiceImpl<SystemMenusMapper, Syst
 	}
 
 	@Override
-	public JsonNode getNotSaveMenus(int entid) {
+	public JsonNode getNotSaveMenus(Integer entid) {
 		ObjectNode root = objectMapper.createObjectNode();
 		root.set("ent", objectMapper.createArrayNode());
 		root.set("uni", objectMapper.createArrayNode());

@@ -21,16 +21,16 @@ public interface RankJobService extends UpService<RankJob> {
 
 	void createJob(JobSaveDTO dto);
 
-	void updateJob(long id, JobSaveDTO dto);
+	void updateJob(Long id, JobSaveDTO dto);
 
-	void removeJob(long id);
+	void removeJob(Long id);
 
-	void updateJobStatus(long id, int status);
+	void updateJobStatus(Long id, Integer status);
 
 	List<RankJob> selectList(Long entid);
 
-	RankJob getSubordinateDetail(long id);
+	RankJob getSubordinateDetail(Long id);
 
-	void updateSubordinate(long id, JobSubordinateUpdateDTO dto);
+	void updateSubordinate(Long id, JobSubordinateUpdateDTO dto);
 
 }

@@ -18,6 +18,6 @@ public interface AttachCateAdminService extends UpService<Category> {
 	 * @param entid 企业 ID
 	 * @return 分类列表
 	 */
-	List<Category> listByEntid(int entid);
+	List<Category> listByEntid(Integer entid);
 
 }

@@ -3,6 +3,7 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.DictTypeService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -79,7 +80,7 @@ public class DictTypeController {
 		u.setId(id);
 		u.setStatus(status);
 		dictTypeService.updateById(u);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -93,7 +94,7 @@ public class DictTypeController {
 	public R<String> update(@PathVariable Long id, @RequestBody DictType body) {
 		body.setId(id);
 		dictTypeService.updateById(body);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

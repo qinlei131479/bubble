@@ -43,7 +43,7 @@ public class UserProfileServiceImpl extends UpServiceImpl<AdminInfoMapper, Admin
 	private final SmsVerifyService smsVerifyService;
 
 	@Override
-	public UserSelfInfoVO getSelfInfo(long adminId) {
+	public UserSelfInfoVO getSelfInfo(Long adminId) {
 		Admin admin = adminService.getById(adminId);
 		if (ObjectUtil.isNull(admin)) {
 			return null;
@@ -67,7 +67,7 @@ public class UserProfileServiceImpl extends UpServiceImpl<AdminInfoMapper, Admin
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateSelf(long adminId, UserSelfUpdateDTO dto) {
+	public void updateSelf(Long adminId, UserSelfUpdateDTO dto) {
 		Admin admin = adminService.getById(adminId);
 		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");
@@ -122,7 +122,7 @@ public class UserProfileServiceImpl extends UpServiceImpl<AdminInfoMapper, Admin
 	}
 
 	@Override
-	public UserResumeDetailVO getResume(long adminId) {
+	public UserResumeDetailVO getResume(Long adminId) {
 		Admin admin = adminService.getById(adminId);
 		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");
@@ -144,7 +144,7 @@ public class UserProfileServiceImpl extends UpServiceImpl<AdminInfoMapper, Admin
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveResume(long adminId, UserResumeSaveDTO dto) {
+	public void saveResume(Long adminId, UserResumeSaveDTO dto) {
 		Admin admin = adminService.getById(adminId);
 		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("用户不存在");

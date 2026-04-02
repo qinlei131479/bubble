@@ -1,6 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.bubblecloud.biz.oa.security.OaCurrentUser;
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.AuthService;
 import com.bubblecloud.biz.oa.service.ScanLoginService;
 import com.bubblecloud.common.core.util.R;

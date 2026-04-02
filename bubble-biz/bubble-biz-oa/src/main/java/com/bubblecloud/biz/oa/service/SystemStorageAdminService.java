@@ -16,19 +16,19 @@ public interface SystemStorageAdminService extends UpService<SystemStorage> {
 
 	List<SystemStorage> list(Integer type);
 
-	SystemStorage get(int id);
+	SystemStorage get(Integer id);
 
-	void saveStorage(int type, String accessKey, String name, String region, String acl);
+	void saveStorage(Integer type, String accessKey, String name, String region, String acl);
 
-	void updateDomain(int id, String domain, String cdn);
+	void updateDomain(Integer id, String domain, String cdn);
 
-	void setActiveStatus(int id);
+	void setActiveStatus(Integer id);
 
-	void deleteStorage(int id);
+	void deleteStorage(Integer id);
 
-	void setUploadType(int type);
+	void setUploadType(Integer type);
 
-	int getUploadType();
+	Integer getUploadType();
 
 	void saveBasicConfig(JsonNode body);
 

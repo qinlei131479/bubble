@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankCategoryService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -43,7 +44,7 @@ public class RankCateController {
 	@Operation(summary = "创建职级体系分类")
 	public R<String> create(@RequestBody RankCateSaveDTO dto) {
 		rankCategoryService.createRankCate(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -56,7 +57,7 @@ public class RankCateController {
 	@Operation(summary = "修改职级体系分类")
 	public R<String> update(@PathVariable Long id, @RequestBody RankCateSaveDTO dto) {
 		rankCategoryService.updateRankCate(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

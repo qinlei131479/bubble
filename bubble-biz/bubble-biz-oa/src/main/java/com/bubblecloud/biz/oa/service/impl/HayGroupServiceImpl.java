@@ -52,7 +52,7 @@ public class HayGroupServiceImpl extends UpServiceImpl<HayGroupMapper, HayGroup>
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateHayGroup(long id, HayGroupSaveDTO dto) {
+	public void updateHayGroup(Long id, HayGroupSaveDTO dto) {
 		HayGroup existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -69,20 +69,20 @@ public class HayGroupServiceImpl extends UpServiceImpl<HayGroupMapper, HayGroup>
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeHayGroup(long id) {
+	public void removeHayGroup(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}
 
 	@Override
-	public List<HayGroupData> dataList(long groupId) {
+	public List<HayGroupData> dataList(Long groupId) {
 		return hayGroupDataMapper.selectList(
 				Wrappers.lambdaQuery(HayGroupData.class).eq(HayGroupData::getGroupId, groupId)
 						.orderByDesc(HayGroupData::getId));
 	}
 
 	@Override
-	public List<HayGroupData> historyList(long groupId) {
+	public List<HayGroupData> historyList(Long groupId) {
 		return hayGroupDataMapper.selectList(
 				Wrappers.lambdaQuery(HayGroupData.class).eq(HayGroupData::getGroupId, groupId)
 						.orderByDesc(HayGroupData::getAssessTime));

@@ -40,7 +40,7 @@ public interface CommonService {
 	/**
 	 * 更新消息已读；未登录或用户不存在抛出 {@link IllegalArgumentException}。
 	 */
-	void updateMessageRead(Authentication authentication, long messageId, int isRead);
+	void updateMessageRead(Authentication authentication, Long messageId, Integer isRead);
 
 	CommonVersionVO version();
 

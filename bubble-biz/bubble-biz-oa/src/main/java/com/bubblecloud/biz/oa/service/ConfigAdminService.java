@@ -19,12 +19,12 @@ public interface ConfigAdminService extends UpService<SystemConfig> {
 	/**
 	 * 工作台配置行（企业维度，category=work_bench）。
 	 */
-	List<SystemConfig> listWorkBenchConfigs(int entid);
+	List<SystemConfig> listWorkBenchConfigs(Integer entid);
 
 	/**
 	 * 保存工作台配置键值（请求体为 JSON 对象，与 PHP postMore 一致）。
 	 */
-	void saveWorkBench(int entid, JsonNode body);
+	void saveWorkBench(Integer entid, JsonNode body);
 
 	/**
 	 * 某分类下全局配置行（通常 entid=0），用于「修改配置」表单数据。
@@ -44,7 +44,7 @@ public interface ConfigAdminService extends UpService<SystemConfig> {
 	/**
 	 * 保存防火墙配置。
 	 */
-	void saveFirewallConfig(int firewallSwitch, List<String> firewallContent);
+	void saveFirewallConfig(Integer firewallSwitch, List<String> firewallContent);
 
 	/**
 	 * 配置分类列表（系统配置/存储等基础项，对齐 PHP ConfigCate）。

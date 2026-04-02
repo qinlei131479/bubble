@@ -18,12 +18,12 @@ public interface AssessTemplateService extends UpService<AssessTemplate> {
 
 	void createTemplate(AssessTemplateSaveDTO dto);
 
-	void updateTemplate(long id, AssessTemplateSaveDTO dto);
+	void updateTemplate(Long id, AssessTemplateSaveDTO dto);
 
-	void removeTemplate(long id);
+	void removeTemplate(Long id);
 
-	void toggleFavorite(long id);
+	void toggleFavorite(Long id);
 
-	void setCover(long id, String cover);
+	void setCover(Long id, String cover);
 
 }

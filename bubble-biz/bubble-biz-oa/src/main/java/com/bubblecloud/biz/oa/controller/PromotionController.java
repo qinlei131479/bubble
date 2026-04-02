@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.PromotionService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -44,7 +45,7 @@ public class PromotionController {
 	@Operation(summary = "晋升表保存")
 	public R<String> create(@RequestBody PromotionSaveDTO dto) {
 		promotionService.createPromotion(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}")
@@ -57,7 +58,7 @@ public class PromotionController {
 	@Operation(summary = "晋升表修改")
 	public R<String> update(@PathVariable Long id, @RequestBody PromotionSaveDTO dto) {
 		promotionService.updatePromotion(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

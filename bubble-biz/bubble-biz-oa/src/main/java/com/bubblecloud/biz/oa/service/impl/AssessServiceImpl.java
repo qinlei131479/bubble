@@ -7,31 +7,26 @@ import java.util.Collections;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.AssessAppealMapper;
 import com.bubblecloud.biz.oa.mapper.AssessMapper;
 import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
 import com.bubblecloud.biz.oa.service.AssessService;
 import com.bubblecloud.common.core.util.R;
-import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.hr.AssessAppealDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessCensusDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessEvalDTO;
-import com.bubblecloud.oa.api.dto.hr.AssessSaveDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetEvalDTO;
 import com.bubblecloud.oa.api.entity.Assess;
 import com.bubblecloud.oa.api.entity.AssessAppeal;
 import com.bubblecloud.oa.api.entity.AssessScore;
-import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.hr.AssessCensusVO;
-import com.bubblecloud.oa.api.vo.hr.AssessDetailVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 绩效考核服务实现。
@@ -43,85 +38,14 @@ import cn.hutool.core.util.StrUtil;
 @RequiredArgsConstructor
 public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> implements AssessService {
 
-	private static final String NOT_EXISTS = "common.operation.noExists";
-
 	private final AssessAppealMapper assessAppealMapper;
 
 	private final AssessScoreMapper assessScoreMapper;
 
-	@Override
-	public SimplePageVO pageAssess(Pg<Assess> pg, Assess query) {
-		Page<Assess> r = findPg(pg, query);
-		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
-	}
-
-	@Override
-	public SimplePageVO pageAssessForHr(Pg<Assess> pg, Assess query) {
-		Page<Assess> r = findPg(pg, query);
-		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
-	}
-
-	@Override
-	public AssessDetailVO getAssessDetail(long id) {
-		Assess assess = getById(id);
-		assertExists(assess);
-		AssessDetailVO vo = new AssessDetailVO();
-		vo.setId(assess.getId());
-		vo.setName(assess.getName());
-		vo.setUserId(assess.getUserId());
-		vo.setSuperiorId(assess.getSuperiorId());
-		vo.setExamineId(assess.getExamineId());
-		vo.setStartDate(assess.getStartDate());
-		vo.setEndDate(assess.getEndDate());
-		vo.setSelfScore(assess.getSelfScore());
-		vo.setSuperiorScore(assess.getSuperiorScore());
-		vo.setExamineScore(assess.getExamineScore());
-		vo.setFinalScore(assess.getFinalScore());
-		vo.setLevel(assess.getLevel());
-		vo.setStatus(assess.getStatus());
-		vo.setIsAppeal(assess.getIsAppeal());
-		return vo;
-	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void createAssess(AssessSaveDTO dto) {
-		Assess entity = buildFromDto(dto);
-		entity.setStatus(0);
-		save(entity);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void createAssessWithTemplate(AssessSaveDTO dto) {
-		Assess entity = buildFromDto(dto);
-		entity.setStatus(0);
-		save(entity);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateAssess(long id, AssessSaveDTO dto) {
-		Assess existing = getById(id);
-		assertExists(existing);
-		if (StrUtil.isNotBlank(dto.getName())) {
-			existing.setName(dto.getName());
-		}
-		if (ObjectUtil.isNotNull(dto.getStartDate())) {
-			existing.setStartDate(dto.getStartDate());
-		}
-		if (ObjectUtil.isNotNull(dto.getEndDate())) {
-			existing.setEndDate(dto.getEndDate());
-		}
-		if (StrUtil.isNotBlank(dto.getMark())) {
-			existing.setMark(dto.getMark());
-		}
-		updateById(existing);
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void selfEval(long id, AssessEvalDTO dto) {
+	public void selfEval(Long id, AssessEvalDTO dto) {
 		Assess assess = getById(id);
 		assertExists(assess);
 		assess.setSelfContent(dto.getContent());
@@ -132,7 +56,7 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void superiorEval(long id, AssessEvalDTO dto) {
+	public void superiorEval(Long id, AssessEvalDTO dto) {
 		Assess assess = getById(id);
 		assertExists(assess);
 		assess.setSuperiorScore(ObjectUtil.defaultIfNull(dto.getScore(), BigDecimal.ZERO));
@@ -142,7 +66,7 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void examineEval(long id, AssessEvalDTO dto) {
+	public void examineEval(Long id, AssessEvalDTO dto) {
 		Assess assess = getById(id);
 		assertExists(assess);
 		assess.setExamineScore(ObjectUtil.defaultIfNull(dto.getScore(), BigDecimal.ZERO));
@@ -153,7 +77,7 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void enableAssess(long id) {
+	public void enableAssess(Long id) {
 		Assess assess = getById(id);
 		assertExists(assess);
 		assess.setStatus(ObjectUtil.defaultIfNull(assess.getStatus(), 0) == 0 ? 1 : 0);
@@ -176,19 +100,13 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 	}
 
 	@Override
-	public List<Object> scoreRecord(long id) {
+	public List<Object> scoreRecord(Long id) {
 		List<AssessScore> scores = assessScoreMapper.selectList(
 				Wrappers.lambdaQuery(AssessScore.class).eq(AssessScore::getUserId, id)
 						.orderByAsc(AssessScore::getLevel));
 		return new ArrayList<>(scores);
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deleteAssess(long id) {
-		assertExists(getById(id));
-		removeById(id);
-	}
 
 	@Override
 	public List<Object> deleteRecord(Long entid) {
@@ -200,7 +118,7 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void appealOrReject(long id, AssessAppealDTO dto) {
+	public void appealOrReject(Long id, AssessAppealDTO dto) {
 		Assess assess = getById(id);
 		assertExists(assess);
 		if (ObjectUtil.isNull(dto.getResult())) {
@@ -212,8 +130,7 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 			assessAppealMapper.insert(appeal);
 			assess.setIsAppeal(1);
 			assess.setStatus(4);
-		}
-		else {
+		} else {
 			// 驳回或通过
 			AssessAppeal appeal = assessAppealMapper.selectOne(
 					Wrappers.lambdaQuery(AssessAppeal.class).eq(AssessAppeal::getAssessId, id)
@@ -271,24 +188,10 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 		return super.update(req);
 	}
 
-	private Assess buildFromDto(AssessSaveDTO dto) {
-		Assess entity = new Assess();
-		entity.setName(dto.getName());
-		entity.setUserId(dto.getUserId());
-		entity.setSuperiorId(dto.getSuperiorId());
-		entity.setExamineId(dto.getExamineId());
-		entity.setPlanId(dto.getPlanId());
-		entity.setTemplateId(dto.getTemplateId());
-		entity.setStartDate(dto.getStartDate());
-		entity.setEndDate(dto.getEndDate());
-		entity.setMark(dto.getMark());
-		entity.setIsAppeal(0);
-		return entity;
-	}
 
 	private void assertExists(Assess entity) {
 		if (ObjectUtil.isNull(entity) || ObjectUtil.isNotNull(entity.getDeletedAt())) {
-			throw new IllegalArgumentException(NOT_EXISTS);
+			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 	}
 

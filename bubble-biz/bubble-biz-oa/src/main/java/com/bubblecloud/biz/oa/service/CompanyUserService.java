@@ -19,18 +19,18 @@ import java.util.List;
  */
 public interface CompanyUserService extends UpService<Admin> {
 
-	SimplePageVO listCompanyUsers(int entid, String pid, String name, Integer status, int current, int size);
+	SimplePageVO listCompanyUsers(Integer entid, String pid, String name, Integer status, Integer current, Integer size);
 
-	SimplePageVO addressBook(int entid, String name, Integer status, int current, int size);
+	SimplePageVO addressBook(Integer entid, String name, Integer status, Integer current, Integer size);
 
-	CompanyUserProfileVO userInfo(long adminId, int entid);
+	CompanyUserProfileVO userInfo(Long adminId, Integer entid);
 
-	UserFrameBriefVO userFrame(long adminId, int entid);
+	UserFrameBriefVO userFrame(Long adminId, Integer entid);
 
-	List<FrameDepartmentTreeNodeVO> addressBookTree(int entid, String name);
+	List<FrameDepartmentTreeNodeVO> addressBookTree(Integer entid, String name);
 
-	CompanyUserCardVO getCardEdit(long targetAdminId, int entid);
+	CompanyUserCardVO getCardEdit(Long targetAdminId, Integer entid);
 
-	void updateCompanyUserCard(long targetAdminId, int entid, EnterpriseUserCardUpdateDTO dto);
+	void updateCompanyUserCard(Long targetAdminId, Integer entid, EnterpriseUserCardUpdateDTO dto);
 
 }

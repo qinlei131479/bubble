@@ -45,7 +45,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 	}
 
 	@Override
-	public void updateStatus(long id, ScheduleStatusUpdateDTO body) {
+	public void updateStatus(Long id, ScheduleStatusUpdateDTO body) {
 		// 占位
 	}
 

@@ -48,7 +48,7 @@ public class RankJobServiceImpl extends UpServiceImpl<RankJobMapper, RankJob> im
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateJob(long id, JobSaveDTO dto) {
+	public void updateJob(Long id, JobSaveDTO dto) {
 		RankJob existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -68,14 +68,14 @@ public class RankJobServiceImpl extends UpServiceImpl<RankJobMapper, RankJob> im
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeJob(long id) {
+	public void removeJob(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateJobStatus(long id, int status) {
+	public void updateJobStatus(Long id, Integer status) {
 		RankJob existing = getById(id);
 		assertExists(existing);
 		existing.setStatus(status);
@@ -91,7 +91,7 @@ public class RankJobServiceImpl extends UpServiceImpl<RankJobMapper, RankJob> im
 	}
 
 	@Override
-	public RankJob getSubordinateDetail(long id) {
+	public RankJob getSubordinateDetail(Long id) {
 		RankJob job = getById(id);
 		assertExists(job);
 		return job;
@@ -99,7 +99,7 @@ public class RankJobServiceImpl extends UpServiceImpl<RankJobMapper, RankJob> im
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateSubordinate(long id, JobSubordinateUpdateDTO dto) {
+	public void updateSubordinate(Long id, JobSubordinateUpdateDTO dto) {
 		RankJob existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getDuty())) {

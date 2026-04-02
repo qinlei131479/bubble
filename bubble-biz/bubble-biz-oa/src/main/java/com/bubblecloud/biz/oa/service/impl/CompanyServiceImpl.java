@@ -41,12 +41,12 @@ public class CompanyServiceImpl extends UpServiceImpl<EnterpriseMapper, Enterpri
 	private final UserEnterpriseApplyMapper userEnterpriseApplyMapper;
 
 	@Override
-	public CompanyEntInfoVO getEntAndUserInfo(int entId) {
-		if (entId <= 0) {
+	public CompanyEntInfoVO getEntAndUserInfo(Integer entId) {
+		if (ObjectUtil.isNull(entId) || entId <= 0) {
 			throw new IllegalArgumentException("企业ID不能为空");
 		}
 		Enterprise ent = this.getOne(Wrappers.lambdaQuery(Enterprise.class)
-			.eq(Enterprise::getId, (long) entId)
+			.eq(Enterprise::getId, entId.longValue())
 			.eq(Enterprise::getStatus, 1)
 			.isNull(Enterprise::getDeleteTime));
 		if (ObjectUtil.isNull(ent)) {
@@ -61,7 +61,7 @@ public class CompanyServiceImpl extends UpServiceImpl<EnterpriseMapper, Enterpri
 			}
 		}
 		long frameCount = frameMapper.selectCount(
-				Wrappers.lambdaQuery(Frame.class).eq(Frame::getEntid, (long) entId).isNull(Frame::getDeletedAt));
+				Wrappers.lambdaQuery(Frame.class).eq(Frame::getEntid, entId.longValue()).isNull(Frame::getDeletedAt));
 		long enterpriseCount = adminMapper
 			.selectCount(Wrappers.lambdaQuery(Admin.class).eq(Admin::getStatus, 1).isNull(Admin::getDeletedAt));
 		CompanyEntInfoVO vo = new CompanyEntInfoVO();
@@ -86,16 +86,16 @@ public class CompanyServiceImpl extends UpServiceImpl<EnterpriseMapper, Enterpri
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean updateEnt(int entId, CompanyUpdateDTO dto) {
-		if (entId <= 0 || ObjectUtil.isNull(dto)) {
+	public boolean updateEnt(Integer entId, CompanyUpdateDTO dto) {
+		if (ObjectUtil.isNull(entId) || entId <= 0 || ObjectUtil.isNull(dto)) {
 			return false;
 		}
-		Enterprise existing = this.getById((long) entId);
+		Enterprise existing = this.getById(entId.longValue());
 		if (ObjectUtil.isNull(existing)) {
 			return false;
 		}
 		boolean nameChanged = StrUtil.isNotBlank(dto.getEnterpriseName());
-		var uw = Wrappers.lambdaUpdate(Enterprise.class).eq(Enterprise::getId, (long) entId);
+		var uw = Wrappers.lambdaUpdate(Enterprise.class).eq(Enterprise::getId, entId.longValue());
 		boolean hasField = false;
 		if (ObjectUtil.isNotNull(dto.getLogo())) {
 			uw.set(Enterprise::getLogo, dto.getLogo());
@@ -136,7 +136,7 @@ public class CompanyServiceImpl extends UpServiceImpl<EnterpriseMapper, Enterpri
 		if (rows > 0 && nameChanged) {
 			frameMapper.update(null,
 					Wrappers.lambdaUpdate(Frame.class)
-						.eq(Frame::getEntid, (long) entId)
+						.eq(Frame::getEntid, entId.longValue())
 						.eq(Frame::getPid, 0)
 						.isNull(Frame::getDeletedAt)
 						.set(Frame::getName, dto.getEnterpriseName()));
@@ -145,7 +145,7 @@ public class CompanyServiceImpl extends UpServiceImpl<EnterpriseMapper, Enterpri
 	}
 
 	@Override
-	public CompanyQuantityVO getQuantity(String type, int entId) {
+	public CompanyQuantityVO getQuantity(String type, Integer entId) {
 		if (StrUtil.isBlank(type)) {
 			return new CompanyQuantityVO(0L);
 		}

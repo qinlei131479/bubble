@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.CommonService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
@@ -100,7 +101,7 @@ public class CommonController {
 	@Operation(summary = "修改消息已读状态")
 	public R<String> updateMessage(Authentication authentication, @PathVariable Long id, @PathVariable Integer isRead) {
 		commonService.updateMessageRead(authentication, id, isRead);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 }

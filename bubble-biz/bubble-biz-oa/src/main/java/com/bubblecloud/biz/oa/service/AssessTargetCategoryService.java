@@ -18,8 +18,8 @@ public interface AssessTargetCategoryService extends UpService<AssessTargetCateg
 
 	void createTargetCate(AssessTargetCateSaveDTO dto);
 
-	void updateTargetCate(long id, AssessTargetCateSaveDTO dto);
+	void updateTargetCate(Long id, AssessTargetCateSaveDTO dto);
 
-	void removeTargetCate(long id);
+	void removeTargetCate(Long id);
 
 }

@@ -4,7 +4,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
-import com.bubblecloud.biz.oa.security.OaCurrentUser;
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.WorkbenchService;
 import com.bubblecloud.common.core.util.R;

@@ -2,7 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
-import com.bubblecloud.biz.oa.security.OaCurrentUser;
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.FrameService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.FrameSaveDTO;
@@ -47,14 +47,14 @@ public class FrameController {
 	@GetMapping
 	@Operation(summary = "部门树列表")
 	public R<List<FrameDepartmentTreeNodeVO>> list(@RequestParam(defaultValue = "1") Integer is_show,
-			@RequestParam(defaultValue = "1") Integer entid) {
+												   @RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.departmentTreeList(is_show, entid));
 	}
 
 	@GetMapping("/tree")
 	@Operation(summary = "权限/范围用部门树")
 	public R<List<FrameAuthTreeNodeVO>> tree(@RequestParam(defaultValue = "0") Integer role,
-			@RequestParam(defaultValue = "0") Integer scope, @RequestParam(defaultValue = "1") Integer entid) {
+											 @RequestParam(defaultValue = "0") Integer scope, @RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");
@@ -65,7 +65,7 @@ public class FrameController {
 	@GetMapping("/user")
 	@Operation(summary = "部门人员树")
 	public R<List<FrameUserTreeNodeVO>> userTree(@RequestParam(defaultValue = "0") Integer role,
-			@RequestParam(defaultValue = "0") Integer leave, @RequestParam(defaultValue = "1") Integer entid) {
+												 @RequestParam(defaultValue = "0") Integer leave, @RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = currentUserId();
 		if (ObjectUtil.isNull(uid)) {
 			return R.phpFailed("未登录");
@@ -76,7 +76,7 @@ public class FrameController {
 	@GetMapping("/create")
 	@Operation(summary = "新增部门表单")
 	public R<FrameFormDataVO> createForm(@RequestParam(defaultValue = "1") Integer entid) {
-		return R.phpOk(frameService.getFormData(entid, 0));
+		return R.phpOk(frameService.getFormData(entid, 0L));
 	}
 
 	@PostMapping
@@ -95,7 +95,7 @@ public class FrameController {
 	@PutMapping("/{id}")
 	@Operation(summary = "更新部门")
 	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
-			@RequestBody FrameUpdateDTO dto) {
+							@RequestBody FrameUpdateDTO dto) {
 		frameService.updateDepartment(id, entid, dto);
 		return R.phpOk("修改成功");
 	}
@@ -116,7 +116,7 @@ public class FrameController {
 	@GetMapping("/users/{frameId}")
 	@Operation(summary = "部门负责人/成员")
 	public R<List<FrameAdminBriefVO>> frameUsers(@PathVariable Integer frameId,
-			@RequestParam(defaultValue = "1") Integer entid) {
+												 @RequestParam(defaultValue = "1") Integer entid) {
 		return R.phpOk(frameService.getFrameUsers(frameId, entid));
 	}
 

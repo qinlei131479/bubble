@@ -20,16 +20,16 @@ public interface MenusAdminService extends UpService<SystemMenus> {
 	 * @param menuName 菜单名模糊（可选）
 	 * @param entid 企业 ID
 	 */
-	List<MenuAdminTreeNodeVO> listMenuTree(String menuName, int entid);
+	List<MenuAdminTreeNodeVO> listMenuTree(String menuName, Integer entid);
 
 	void saveMenu(SystemMenus menu);
 
 	void updateMenu(SystemMenus menu);
 
-	void deleteMenu(long id);
+	void deleteMenu(Long id);
 
-	void updateIsShow(long id, int isShow);
+	void updateIsShow(Long id, Integer isShow);
 
-	JsonNode getNotSaveMenus(int entid);
+	JsonNode getNotSaveMenus(Integer entid);
 
 }

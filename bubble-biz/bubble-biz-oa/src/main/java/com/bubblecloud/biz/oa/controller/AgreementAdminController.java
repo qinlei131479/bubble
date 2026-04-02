@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AgreementAdminService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Agreement;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * 用户协议（对齐 PHP {@code ent/system/treaty}）。增删改查路由与调用方式以本类为 OA 模板。
@@ -47,7 +49,7 @@ public class AgreementAdminController {
 	@Operation(summary = "新增协议")
 	public R<String> create(@RequestBody Agreement req) {
 		agreementAdminService.create(req);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@PutMapping("/{id}")
@@ -55,7 +57,7 @@ public class AgreementAdminController {
 	public R<String> update(@PathVariable Long id, @RequestBody Agreement req) {
 		req.setId(id);
 		agreementAdminService.update(req);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

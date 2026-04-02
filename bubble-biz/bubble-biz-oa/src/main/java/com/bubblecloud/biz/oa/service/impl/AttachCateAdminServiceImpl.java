@@ -24,7 +24,7 @@ public class AttachCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Ca
 	private static final String TYPE_ATTACH = "systemAttach";
 
 	@Override
-	public List<Category> listByEntid(int entid) {
+	public List<Category> listByEntid(Integer entid) {
 		return baseMapper.selectList(Wrappers.lambdaQuery(Category.class)
 			.eq(Category::getType, TYPE_ATTACH)
 			.eq(Category::getEntid, entid)

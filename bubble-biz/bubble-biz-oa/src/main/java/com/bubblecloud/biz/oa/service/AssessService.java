@@ -22,35 +22,21 @@ import com.bubblecloud.oa.api.vo.hr.AssessDetailVO;
  */
 public interface AssessService extends UpService<Assess> {
 
-	SimplePageVO pageAssess(Pg<Assess> pg, Assess query);
+	void selfEval(Long id, AssessEvalDTO dto);
 
-	SimplePageVO pageAssessForHr(Pg<Assess> pg, Assess query);
+	void superiorEval(Long id, AssessEvalDTO dto);
 
-	AssessDetailVO getAssessDetail(long id);
+	void examineEval(Long id, AssessEvalDTO dto);
 
-	void createAssess(AssessSaveDTO dto);
-
-	void createAssessWithTemplate(AssessSaveDTO dto);
-
-	void updateAssess(long id, AssessSaveDTO dto);
-
-	void selfEval(long id, AssessEvalDTO dto);
-
-	void superiorEval(long id, AssessEvalDTO dto);
-
-	void examineEval(long id, AssessEvalDTO dto);
-
-	void enableAssess(long id);
+	void enableAssess(Long id);
 
 	void evalTarget(AssessTargetEvalDTO dto);
 
-	List<Object> scoreRecord(long id);
-
-	void deleteAssess(long id);
+	List<Object> scoreRecord(Long id);
 
 	List<Object> deleteRecord(Long entid);
 
-	void appealOrReject(long id, AssessAppealDTO dto);
+	void appealOrReject(Long id, AssessAppealDTO dto);
 
 	AssessCensusVO census(AssessCensusDTO dto);
 

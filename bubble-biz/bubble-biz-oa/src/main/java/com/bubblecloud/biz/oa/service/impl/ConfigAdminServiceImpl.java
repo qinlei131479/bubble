@@ -38,7 +38,7 @@ public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, Sy
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public List<SystemConfig> listWorkBenchConfigs(int entid) {
+	public List<SystemConfig> listWorkBenchConfigs(Integer entid) {
 		return baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
 			.eq(SystemConfig::getCategory, CAT_WORK_BENCH)
 			.eq(SystemConfig::getEntid, entid)
@@ -48,7 +48,7 @@ public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, Sy
 	}
 
 	@Override
-	public void saveWorkBench(int entid, JsonNode body) {
+	public void saveWorkBench(Integer entid, JsonNode body) {
 		if (ObjectUtil.isNull(body) || !body.isObject()) {
 			return;
 		}
@@ -123,7 +123,7 @@ public class ConfigAdminServiceImpl extends UpServiceImpl<SystemConfigMapper, Sy
 	}
 
 	@Override
-	public void saveFirewallConfig(int firewallSwitch, List<String> firewallContent) {
+	public void saveFirewallConfig(Integer firewallSwitch, List<String> firewallContent) {
 		if (ObjectUtil.isNotNull(firewallContent)) {
 			for (String pattern : firewallContent) {
 				if (ObjectUtil.isNull(pattern) || pattern.isEmpty()) {

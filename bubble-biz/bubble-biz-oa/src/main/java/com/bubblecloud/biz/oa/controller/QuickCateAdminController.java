@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.QuickCateAdminService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Category;
@@ -46,7 +47,7 @@ public class QuickCateAdminController {
 	@Operation(summary = "新增分类")
 	public R<String> create(@RequestBody Category body) {
 		quickCateAdminService.saveCate(body);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -60,7 +61,7 @@ public class QuickCateAdminController {
 	public R<String> update(@PathVariable Long id, @RequestBody Category body) {
 		body.setId(id);
 		quickCateAdminService.updateCate(body);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.CompanySalaryService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.CompanySalarySaveDTO;
@@ -59,7 +60,7 @@ public class CompanySalaryController {
 	@Operation(summary = "保存调薪记录")
 	public R<String> create(@RequestBody CompanySalarySaveDTO dto) {
 		if (companySalaryService.saveSalary(dto)) {
-			return R.phpOk("common.insert.succ");
+			return R.phpOk(OaConstants.INSERT_SUCC);
 		}
 		return R.phpFailed("common.insert.fail");
 	}
@@ -68,7 +69,7 @@ public class CompanySalaryController {
 	@Operation(summary = "修改调薪记录")
 	public R<String> update(@PathVariable Long id, @RequestBody CompanySalarySaveDTO dto) {
 		if (companySalaryService.updateSalary(id, dto)) {
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		return R.phpFailed("common.update.fail");
 	}

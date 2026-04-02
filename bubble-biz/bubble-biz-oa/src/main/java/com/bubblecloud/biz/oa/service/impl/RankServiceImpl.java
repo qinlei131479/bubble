@@ -46,7 +46,7 @@ public class RankServiceImpl extends UpServiceImpl<RankMapper, Rank> implements 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateRank(long id, RankSaveDTO dto) {
+	public void updateRank(Long id, RankSaveDTO dto) {
 		Rank existing = getById(id);
 		assertExists(existing);
 		if (ObjectUtil.isNotNull(dto.getCateId())) {
@@ -72,7 +72,7 @@ public class RankServiceImpl extends UpServiceImpl<RankMapper, Rank> implements 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeRank(long id) {
+	public void removeRank(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}

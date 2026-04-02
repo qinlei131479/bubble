@@ -17,6 +17,6 @@ public interface ScanLoginService extends UpService<Admin> {
 
 	ScanStatusResultVO pollStatus(String key);
 
-	void bindScanUserId(String key, long userId);
+	void bindScanUserId(String key, Long userId);
 
 }

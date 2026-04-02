@@ -14,10 +14,10 @@ import com.bubblecloud.oa.api.vo.company.CompanyQuantityVO;
  */
 public interface CompanyService extends UpService<Enterprise> {
 
-	CompanyEntInfoVO getEntAndUserInfo(int entId);
+	CompanyEntInfoVO getEntAndUserInfo(Integer entId);
 
-	boolean updateEnt(int entId, CompanyUpdateDTO dto);
+	boolean updateEnt(Integer entId, CompanyUpdateDTO dto);
 
-	CompanyQuantityVO getQuantity(String type, int entId);
+	CompanyQuantityVO getQuantity(String type, Integer entId);
 
 }

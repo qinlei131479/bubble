@@ -44,14 +44,14 @@ public class PromotionServiceImpl extends UpServiceImpl<PromotionMapper, Promoti
 	}
 
 	@Override
-	public Promotion getPromotionDetail(long id) {
+	public Promotion getPromotionDetail(Long id) {
 		Promotion p = getById(id);
 		assertPromotionExists(p);
 		return p;
 	}
 
 	@Override
-	public void updatePromotion(long id, PromotionSaveDTO dto) {
+	public void updatePromotion(Long id, PromotionSaveDTO dto) {
 		Promotion existing = getById(id);
 		assertPromotionExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -64,7 +64,7 @@ public class PromotionServiceImpl extends UpServiceImpl<PromotionMapper, Promoti
 	}
 
 	@Override
-	public void removePromotion(long id) {
+	public void removePromotion(Long id) {
 		Promotion existing = getById(id);
 		assertPromotionExists(existing);
 		removeById(id);

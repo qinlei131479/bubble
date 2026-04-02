@@ -14,15 +14,15 @@ import com.bubblecloud.oa.api.entity.SystemQuick;
  */
 public interface QuickAdminService extends UpService<SystemQuick> {
 
-	Page<SystemQuick> page(Integer cid, String nameLike, int current, int size);
+	Page<SystemQuick> page(Integer cid, String nameLike, Integer current, Integer size);
 
-	SystemQuick getQuick(int id);
+	SystemQuick getQuick(Integer id);
 
 	void saveQuick(SystemQuick row);
 
 	void updateQuick(SystemQuick row);
 
-	void deleteQuick(int id);
+	void deleteQuick(Integer id);
 
 	List<SystemQuick> listAll(Integer cid);
 

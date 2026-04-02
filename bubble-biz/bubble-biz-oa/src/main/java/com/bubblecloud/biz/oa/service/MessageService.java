@@ -12,9 +12,9 @@ import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
  */
 public interface MessageService extends UpService<EnterpriseMessageNotice> {
 
-	CommonMessageVO getMessageList(long adminId, String uid, int entid, int page, int limit, String cateId,
+	CommonMessageVO getMessageList(Long adminId, String uid, Integer entid, Integer page, Integer limit, String cateId,
 			String title);
 
-	void updateMessageRead(long adminId, String uid, long messageId, int isRead);
+	void updateMessageRead(Long adminId, String uid, Long messageId, Integer isRead);
 
 }

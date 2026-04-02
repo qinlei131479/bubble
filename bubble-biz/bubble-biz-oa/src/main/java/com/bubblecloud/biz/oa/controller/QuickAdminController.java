@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.QuickAdminService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.SystemQuick;
@@ -47,7 +48,7 @@ public class QuickAdminController {
 	@Operation(summary = "新增")
 	public R<String> create(@RequestBody SystemQuick body) {
 		quickAdminService.saveQuick(body);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -61,7 +62,7 @@ public class QuickAdminController {
 	public R<String> update(@PathVariable Integer id, @RequestBody SystemQuick body) {
 		body.setId(id);
 		quickAdminService.updateQuick(body);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@GetMapping("/{id}")

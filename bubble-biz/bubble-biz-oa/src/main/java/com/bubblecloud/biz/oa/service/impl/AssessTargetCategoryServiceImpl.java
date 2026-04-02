@@ -45,7 +45,7 @@ public class AssessTargetCategoryServiceImpl extends UpServiceImpl<AssessTargetC
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateTargetCate(long id, AssessTargetCateSaveDTO dto) {
+	public void updateTargetCate(Long id, AssessTargetCateSaveDTO dto) {
 		AssessTargetCategory existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -65,7 +65,7 @@ public class AssessTargetCategoryServiceImpl extends UpServiceImpl<AssessTargetC
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeTargetCate(long id) {
+	public void removeTargetCate(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}

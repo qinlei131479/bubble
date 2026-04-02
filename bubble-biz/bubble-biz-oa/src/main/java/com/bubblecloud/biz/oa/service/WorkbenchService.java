@@ -33,7 +33,7 @@ public interface WorkbenchService extends UpService<EnterpriseUserDaily> {
 	/**
 	 * 业绩统计卡片。
 	 */
-	List<WorkbenchStatisticCardVO> getStatistics(int types);
+	List<WorkbenchStatisticCardVO> getStatistics(Integer types);
 
 	/**
 	 * 业绩统计类型管理数据。
@@ -53,11 +53,11 @@ public interface WorkbenchService extends UpService<EnterpriseUserDaily> {
 	/**
 	 * 某月每日汇报摘要（对齐 PHP ReportService::getMonthDailyList）。
 	 */
-	Map<Integer, WorkbenchDailyDayVO> getMonthDaily(String uid, int entid, String yearMonth);
+	Map<Integer, WorkbenchDailyDayVO> getMonthDaily(String uid, Integer entid, String yearMonth);
 
 	/**
 	 * 待办列表（对齐 PHP UserPendingService::getPendingList）。
 	 */
-	List<UserPending> getPendingList(String uid, int entid, String status);
+	List<UserPending> getPendingList(String uid, Integer entid, String status);
 
 }

@@ -1,6 +1,8 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.security.SecureRandom;
+
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +24,6 @@ import cn.hutool.core.util.ObjectUtil;
 @Service
 public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements AdminService {
 
-	private static final String AVATAR_BASE = "https://shmily-album.oss-cn-shenzhen.aliyuncs.com/admin_face/face%d.png";
-
 	private static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
 	private final SecureRandom random = new SecureRandom();
@@ -40,7 +40,7 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 	}
 
 	@Override
-	public long countByPhone(String phone) {
+	public Long countByPhone(String phone) {
 		return this.count(Wrappers.lambdaQuery(Admin.class).eq(Admin::getPhone, phone).isNull(Admin::getDeletedAt));
 	}
 
@@ -52,12 +52,13 @@ public class AdminServiceImpl extends UpServiceImpl<AdminMapper, Admin> implemen
 		a.setPhone(phone);
 		a.setName(phone.substring(0, 3) + "****" + phone.substring(7));
 		a.setPassword(encodedPassword);
-		a.setAvatar(String.format(AVATAR_BASE, random.nextInt(10) + 1));
+		a.setAvatar(String.format(OaConstants.AVATAR_BASE, random.nextInt(10) + 1));
 		a.setStatus(1);
 		a.setIsInit(1);
 		a.setIsAdmin(0);
 		a.setRoles("[]");
 		this.save(a);
+
 		return a;
 	}
 

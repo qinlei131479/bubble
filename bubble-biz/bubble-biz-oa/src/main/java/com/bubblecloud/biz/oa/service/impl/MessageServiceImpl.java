@@ -25,8 +25,8 @@ public class MessageServiceImpl extends UpServiceImpl<EnterpriseMessageNoticeMap
 		implements MessageService {
 
 	@Override
-	public CommonMessageVO getMessageList(long adminId, String uid, int entid, int page, int limit, String cateId,
-			String title) {
+	public CommonMessageVO getMessageList(Long adminId, String uid, Integer entid, Integer page, Integer limit,
+			String cateId, String title) {
 		LambdaQueryWrapper<EnterpriseMessageNotice> q = buildQuery(adminId, uid, entid, cateId, title);
 		long total = this.count(q);
 		q.orderByDesc(EnterpriseMessageNotice::getId);
@@ -37,10 +37,10 @@ public class MessageServiceImpl extends UpServiceImpl<EnterpriseMessageNoticeMap
 		return vo;
 	}
 
-	private static LambdaQueryWrapper<EnterpriseMessageNotice> buildQuery(long adminId, String uid, int entid,
+	private static LambdaQueryWrapper<EnterpriseMessageNotice> buildQuery(Long adminId, String uid, Integer entid,
 			String cateId, String title) {
 		LambdaQueryWrapper<EnterpriseMessageNotice> q = Wrappers.lambdaQuery(EnterpriseMessageNotice.class);
-		q.and(w -> w.eq(EnterpriseMessageNotice::getEntid, (long) entid)
+		q.and(w -> w.eq(EnterpriseMessageNotice::getEntid, entid.longValue())
 			.or()
 			.eq(EnterpriseMessageNotice::getEntid, 0L));
 		String idStr = String.valueOf(adminId);
@@ -61,7 +61,7 @@ public class MessageServiceImpl extends UpServiceImpl<EnterpriseMessageNoticeMap
 	}
 
 	@Override
-	public void updateMessageRead(long adminId, String uid, long messageId, int isRead) {
+	public void updateMessageRead(Long adminId, String uid, Long messageId, Integer isRead) {
 		EnterpriseMessageNotice row = this.getById(messageId);
 		if (ObjectUtil.isNull(row)) {
 			throw new IllegalArgumentException("消息不存在");

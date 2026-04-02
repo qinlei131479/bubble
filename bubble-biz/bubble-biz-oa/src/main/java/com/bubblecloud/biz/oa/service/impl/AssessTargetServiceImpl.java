@@ -48,7 +48,7 @@ public class AssessTargetServiceImpl extends UpServiceImpl<AssessTargetMapper, A
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateTarget(long id, AssessTargetSaveDTO dto) {
+	public void updateTarget(Long id, AssessTargetSaveDTO dto) {
 		AssessTarget existing = getById(id);
 		assertExists(existing);
 		if (ObjectUtil.isNotNull(dto.getCateId())) {
@@ -77,7 +77,7 @@ public class AssessTargetServiceImpl extends UpServiceImpl<AssessTargetMapper, A
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeTarget(long id) {
+	public void removeTarget(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}

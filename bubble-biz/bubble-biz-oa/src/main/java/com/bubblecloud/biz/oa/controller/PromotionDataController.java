@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.PromotionDataService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -45,7 +46,7 @@ public class PromotionDataController {
 	@Operation(summary = "创建晋升数据项")
 	public R<String> create(@RequestBody PromotionDataSaveDTO dto) {
 		promotionDataService.createPromotionData(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -58,7 +59,7 @@ public class PromotionDataController {
 	@Operation(summary = "修改晋升数据项")
 	public R<String> update(@PathVariable Long id, @RequestBody PromotionDataSaveDTO dto) {
 		promotionDataService.updatePromotionData(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
@@ -72,7 +73,7 @@ public class PromotionDataController {
 	@Operation(summary = "标准修改")
 	public R<String> updateStandard(@PathVariable Long id, @RequestBody PromotionDataStandardDTO dto) {
 		promotionDataService.updateStandard(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@PostMapping("/sort/{pid}")

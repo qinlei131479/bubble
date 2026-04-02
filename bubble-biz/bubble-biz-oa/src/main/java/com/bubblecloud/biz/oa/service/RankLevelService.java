@@ -22,14 +22,14 @@ public interface RankLevelService extends UpService<RankLevel> {
 
 	void createRankLevel(RankLevelSaveDTO dto);
 
-	void updateRankLevel(long id, RankLevelSaveDTO dto);
+	void updateRankLevel(Long id, RankLevelSaveDTO dto);
 
 	void batchUpdateRankLevel(String batch, RankLevelBatchUpdateDTO dto);
 
-	void relateRank(long id, Long rankId);
+	void relateRank(Long id, Long rankId);
 
-	void removeRelateRank(long id);
+	void removeRelateRank(Long id);
 
-	List<Rank> unrelatedRanks(long jobId, long entid);
+	List<Rank> unrelatedRanks(Long jobId, Long entid);
 
 }

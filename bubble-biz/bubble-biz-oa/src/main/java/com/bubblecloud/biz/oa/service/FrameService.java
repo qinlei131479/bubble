@@ -22,24 +22,24 @@ import com.bubblecloud.oa.api.vo.frame.FrameUserTreeNodeVO;
  */
 public interface FrameService extends UpService<Frame> {
 
-	List<FrameDepartmentTreeNodeVO> departmentTreeList(int isShow, int entid);
+	List<FrameDepartmentTreeNodeVO> departmentTreeList(Integer isShow, Integer entid);
 
-	List<FrameAuthTreeNodeVO> getTree(Long userId, int entid, boolean withRole, boolean isScope);
+	List<FrameAuthTreeNodeVO> getTree(Long userId, Integer entid, boolean withRole, boolean isScope);
 
-	List<FrameUserTreeNodeVO> getUserTree(Long userId, int entid, boolean withRole, boolean leave);
+	List<FrameUserTreeNodeVO> getUserTree(Long userId, Integer entid, boolean withRole, boolean leave);
 
-	FrameFormDataVO getFormData(int entid, long frameId);
+	FrameFormDataVO getFormData(Integer entid, Long frameId);
 
 	void createDepartment(FrameSaveDTO dto);
 
-	void updateDepartment(long id, int entid, FrameUpdateDTO dto);
+	void updateDepartment(Long id, Integer entid, FrameUpdateDTO dto);
 
-	FrameDetailVO departmentInfo(long id, int entid);
+	FrameDetailVO departmentInfo(Long id, Integer entid);
 
-	void deleteDepartment(long id, int entid);
+	void deleteDepartment(Long id, Integer entid);
 
-	List<FrameAdminBriefVO> getFrameUsers(int frameId, int entid);
+	List<FrameAdminBriefVO> getFrameUsers(Integer frameId, Integer entid);
 
-	List<FrameScopeItemVO> scopeFrames(Long userId, int entid);
+	List<FrameScopeItemVO> scopeFrames(Long userId, Integer entid);
 
 }

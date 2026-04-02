@@ -18,8 +18,8 @@ public interface AssessTargetService extends UpService<AssessTarget> {
 
 	void createTarget(AssessTargetSaveDTO dto);
 
-	void updateTarget(long id, AssessTargetSaveDTO dto);
+	void updateTarget(Long id, AssessTargetSaveDTO dto);
 
-	void removeTarget(long id);
+	void removeTarget(Long id);
 
 }

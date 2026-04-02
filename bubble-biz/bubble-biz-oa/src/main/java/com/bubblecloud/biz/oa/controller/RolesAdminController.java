@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.RolesAdminService;
 import com.bubblecloud.common.core.util.R;
@@ -49,7 +50,7 @@ public class RolesAdminController {
 	public R<String> create(@RequestParam(defaultValue = "1") Integer entid, @RequestBody JsonNode body) {
 		try {
 			rolesAdminService.saveRole(entid, body);
-			return R.phpOk("common.insert.succ");
+			return R.phpOk(OaConstants.INSERT_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
@@ -62,7 +63,7 @@ public class RolesAdminController {
 			@RequestBody JsonNode body) {
 		try {
 			rolesAdminService.updateRole(id, entid, body);
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
@@ -75,7 +76,7 @@ public class RolesAdminController {
 			@RequestParam Integer status) {
 		try {
 			rolesAdminService.changeRoleStatus(entid, id, status);
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
@@ -152,7 +153,7 @@ public class RolesAdminController {
 		int roleId = body.has("role_id") ? body.get("role_id").asInt() : 0;
 		try {
 			rolesAdminService.changeRoleUserStatus(uid, entid, roleId, status);
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());

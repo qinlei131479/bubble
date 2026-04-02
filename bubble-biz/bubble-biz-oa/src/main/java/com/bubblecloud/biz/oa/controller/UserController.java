@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.bubblecloud.biz.oa.security.OaCurrentUser;
+import com.bubblecloud.biz.oa.constant.OaConstants;
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.MenusService;
 import com.bubblecloud.biz.oa.service.UserProfileService;
 import com.bubblecloud.common.core.util.R;
@@ -88,11 +89,11 @@ public class UserController {
 		}
 		if (ObjectUtil.isNull(dto)) {
 			// 兼容 PHP empty body
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		try {
 			userProfileService.updateSelf(currentUser.getId(), dto);
-			return R.phpOk("common.update.succ");
+			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());

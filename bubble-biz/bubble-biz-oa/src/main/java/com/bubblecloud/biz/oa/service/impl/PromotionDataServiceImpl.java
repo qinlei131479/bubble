@@ -51,7 +51,7 @@ public class PromotionDataServiceImpl extends UpServiceImpl<PromotionDataMapper,
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updatePromotionData(long id, PromotionDataSaveDTO dto) {
+	public void updatePromotionData(Long id, PromotionDataSaveDTO dto) {
 		PromotionData existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -71,14 +71,14 @@ public class PromotionDataServiceImpl extends UpServiceImpl<PromotionDataMapper,
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removePromotionData(long id) {
+	public void removePromotionData(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateStandard(long id, PromotionDataStandardDTO dto) {
+	public void updateStandard(Long id, PromotionDataStandardDTO dto) {
 		PromotionData existing = getById(id);
 		assertExists(existing);
 		existing.setStandard(dto.getStandard());
@@ -87,7 +87,7 @@ public class PromotionDataServiceImpl extends UpServiceImpl<PromotionDataMapper,
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void sortPromotionData(long pid, PromotionDataSortDTO dto) {
+	public void sortPromotionData(Long pid, PromotionDataSortDTO dto) {
 		if (ObjectUtil.isNull(dto) || CollUtil.isEmpty(dto.getIds())) {
 			return;
 		}

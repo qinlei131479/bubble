@@ -16,14 +16,14 @@ import com.bubblecloud.oa.api.vo.user.UserSelfInfoVO;
  */
 public interface UserProfileService extends UpService<AdminInfo> {
 
-	UserSelfInfoVO getSelfInfo(long adminId);
+	UserSelfInfoVO getSelfInfo(Long adminId);
 
-	void updateSelf(long adminId, UserSelfUpdateDTO dto);
+	void updateSelf(Long adminId, UserSelfUpdateDTO dto);
 
 	void checkPwd(CheckPwdDTO dto);
 
-	UserResumeDetailVO getResume(long adminId);
+	UserResumeDetailVO getResume(Long adminId);
 
-	void saveResume(long adminId, UserResumeSaveDTO dto);
+	void saveResume(Long adminId, UserResumeSaveDTO dto);
 
 }

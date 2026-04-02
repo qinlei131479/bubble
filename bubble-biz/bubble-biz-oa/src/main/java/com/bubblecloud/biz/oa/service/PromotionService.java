@@ -19,10 +19,10 @@ public interface PromotionService extends UpService<Promotion> {
 
 	void createPromotion(PromotionSaveDTO dto);
 
-	Promotion getPromotionDetail(long id);
+	Promotion getPromotionDetail(Long id);
 
-	void updatePromotion(long id, PromotionSaveDTO dto);
+	void updatePromotion(Long id, PromotionSaveDTO dto);
 
-	void removePromotion(long id);
+	void removePromotion(Long id);
 
 }

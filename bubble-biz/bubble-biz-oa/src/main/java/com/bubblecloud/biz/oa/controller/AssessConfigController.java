@@ -1,9 +1,12 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.service.AssessScoreService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.AssessConfigSaveDTO;
+import com.bubblecloud.oa.api.entity.AssessPlan;
 import com.bubblecloud.oa.api.entity.AssessScore;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,21 +35,23 @@ public class AssessConfigController {
 
 	@GetMapping("/score_config")
 	@Operation(summary = "获取积分配置")
-	public R<SimplePageVO> scoreConfig(@ParameterObject Pg<AssessScore> pg) {
-		return R.phpOk(assessScoreService.pageScoreConfig(pg));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessScore query) {
+		Page<AssessScore> res = assessScoreService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@PostMapping("/score_config")
 	@Operation(summary = "保存积分配置")
 	public R<String> saveScoreConfig(@RequestBody AssessConfigSaveDTO dto) {
-		assessScoreService.saveScoreConfig(dto);
+		AssessScore obj = PojoConvertUtil.convertPojo(dto, AssessScore.class);
+		assessScoreService.create(obj);
 		return R.phpOk("common.operation.succ");
 	}
 
 	@GetMapping("/examine_config")
 	@Operation(summary = "获取审核配置")
 	public R<Object> examineConfig() {
-		return R.phpOk(assessScoreService.getExamineConfig());
+		return R.phpOk(java.util.Collections.emptyMap());
 	}
 
 }

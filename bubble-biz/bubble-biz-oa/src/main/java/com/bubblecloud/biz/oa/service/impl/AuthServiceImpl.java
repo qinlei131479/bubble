@@ -13,8 +13,8 @@ import com.bubblecloud.biz.oa.mapper.EnterpriseMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
 import com.bubblecloud.biz.oa.mapper.RankJobMapper;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
-import com.bubblecloud.biz.oa.security.OaPhpJwtProperties;
-import com.bubblecloud.biz.oa.security.OaPhpJwtTokenService;
+import com.bubblecloud.biz.oa.constant.config.OaPhpJwtProperties;
+import com.bubblecloud.biz.oa.util.OaPhpJwtTokenUtil;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.AuthService;
 import com.bubblecloud.biz.oa.service.SmsVerifyService;
@@ -58,7 +58,7 @@ public class AuthServiceImpl extends UpServiceImpl<AdminMapper, Admin> implement
 
 	private final AdminService adminService;
 
-	private final OaPhpJwtTokenService tokenService;
+	private final OaPhpJwtTokenUtil tokenService;
 
 	private final OaPhpJwtProperties jwtProperties;
 

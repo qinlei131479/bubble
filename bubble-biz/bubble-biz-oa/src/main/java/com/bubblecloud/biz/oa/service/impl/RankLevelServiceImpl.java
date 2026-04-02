@@ -51,7 +51,7 @@ public class RankLevelServiceImpl extends UpServiceImpl<RankLevelMapper, RankLev
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateRankLevel(long id, RankLevelSaveDTO dto) {
+	public void updateRankLevel(Long id, RankLevelSaveDTO dto) {
 		RankLevel existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -94,7 +94,7 @@ public class RankLevelServiceImpl extends UpServiceImpl<RankLevelMapper, RankLev
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void relateRank(long id, Long rankId) {
+	public void relateRank(Long id, Long rankId) {
 		RankLevel existing = getById(id);
 		assertExists(existing);
 		existing.setRankId(rankId);
@@ -103,7 +103,7 @@ public class RankLevelServiceImpl extends UpServiceImpl<RankLevelMapper, RankLev
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeRelateRank(long id) {
+	public void removeRelateRank(Long id) {
 		RankLevel existing = getById(id);
 		assertExists(existing);
 		existing.setRankId(null);
@@ -111,7 +111,7 @@ public class RankLevelServiceImpl extends UpServiceImpl<RankLevelMapper, RankLev
 	}
 
 	@Override
-	public List<Rank> unrelatedRanks(long jobId, long entid) {
+	public List<Rank> unrelatedRanks(Long jobId, Long entid) {
 		return baseMapper.findUnrelatedRanks(jobId, entid);
 	}
 

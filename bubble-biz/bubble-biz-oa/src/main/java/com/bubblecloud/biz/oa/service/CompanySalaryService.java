@@ -15,17 +15,17 @@ import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
  */
 public interface CompanySalaryService extends UpService<EnterpriseUserSalary> {
 
-	Page<EnterpriseUserSalary> pageSalary(int entid, Integer cardId, Integer linkId, Long id,
+	Page<EnterpriseUserSalary> pageSalary(Integer entid, Integer cardId, Integer linkId, Long id,
 			Page<EnterpriseUserSalary> page);
 
-	EnterpriseUserSalary getForEdit(long id);
+	EnterpriseUserSalary getForEdit(Long id);
 
 	boolean saveSalary(CompanySalarySaveDTO dto);
 
-	boolean updateSalary(long id, CompanySalarySaveDTO dto);
+	boolean updateSalary(Long id, CompanySalarySaveDTO dto);
 
-	boolean removeSalary(long id);
+	boolean removeSalary(Long id);
 
-	List<EnterpriseUserSalary> lastByCardId(int cardId);
+	List<EnterpriseUserSalary> lastByCardId(Integer cardId);
 
 }

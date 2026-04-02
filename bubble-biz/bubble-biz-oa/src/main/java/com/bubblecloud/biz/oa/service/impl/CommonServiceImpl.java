@@ -1,6 +1,6 @@
 package com.bubblecloud.biz.oa.service.impl;
 
-import com.bubblecloud.biz.oa.security.OaCurrentUser;
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.CommonService;
 import com.bubblecloud.biz.oa.service.MessageService;
@@ -98,7 +98,7 @@ public class CommonServiceImpl implements CommonService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateMessageRead(Authentication authentication, long messageId, int isRead) {
+	public void updateMessageRead(Authentication authentication, Long messageId, Integer isRead) {
 		OaCurrentUser currentUser = requireOaUser(authentication);
 		Admin admin = requireAdmin(currentUser.getId());
 		messageService.updateMessageRead(currentUser.getId(), admin.getUid(), messageId, isRead);

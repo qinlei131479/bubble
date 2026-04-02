@@ -32,7 +32,7 @@ public interface ScheduleApiService extends UpService<Schedule> {
 	/**
 	 * 修改日程状态。
 	 */
-	void updateStatus(long id, ScheduleStatusUpdateDTO body);
+	void updateStatus(Long id, ScheduleStatusUpdateDTO body);
 
 	/**
 	 * GET /user/schedule 日历待办（外层为数组，首元素含 list）。

@@ -18,8 +18,8 @@ public interface RankCategoryService extends UpService<RankCategory> {
 
 	void createRankCate(RankCateSaveDTO dto);
 
-	void updateRankCate(long id, RankCateSaveDTO dto);
+	void updateRankCate(Long id, RankCateSaveDTO dto);
 
-	void removeRankCate(long id);
+	void removeRankCate(Long id);
 
 }

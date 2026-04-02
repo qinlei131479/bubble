@@ -21,12 +21,12 @@ public interface HayGroupService extends UpService<HayGroup> {
 
 	void createHayGroup(HayGroupSaveDTO dto);
 
-	void updateHayGroup(long id, HayGroupSaveDTO dto);
+	void updateHayGroup(Long id, HayGroupSaveDTO dto);
 
-	void removeHayGroup(long id);
+	void removeHayGroup(Long id);
 
-	List<HayGroupData> dataList(long groupId);
+	List<HayGroupData> dataList(Long groupId);
 
-	List<HayGroupData> historyList(long groupId);
+	List<HayGroupData> historyList(Long groupId);
 
 }

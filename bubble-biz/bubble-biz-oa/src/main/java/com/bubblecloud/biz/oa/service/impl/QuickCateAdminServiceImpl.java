@@ -26,7 +26,7 @@ public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Cat
 	private static final String TYPE_QUICK = "quickConfig";
 
 	@Override
-	public List<Category> list(int entid) {
+	public List<Category> list(Integer entid) {
 		return baseMapper.selectList(Wrappers.lambdaQuery(Category.class)
 			.eq(Category::getType, TYPE_QUICK)
 			.eq(Category::getEntid, entid)
@@ -35,13 +35,13 @@ public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Cat
 	}
 
 	@Override
-	public Category getCate(long id) {
+	public Category getCate(Long id) {
 		return baseMapper.selectById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public long saveCate(Category row) {
+	public Long saveCate(Category row) {
 		row.setType(TYPE_QUICK);
 		LocalDateTime now = LocalDateTime.now();
 		row.setCreatedAt(now);
@@ -59,7 +59,7 @@ public class QuickCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Cat
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteCate(long id) {
+	public void deleteCate(Long id) {
 		baseMapper.deleteById(id);
 	}
 

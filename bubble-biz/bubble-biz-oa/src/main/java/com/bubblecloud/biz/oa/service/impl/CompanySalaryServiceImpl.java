@@ -27,7 +27,7 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 		implements CompanySalaryService {
 
 	@Override
-	public Page<EnterpriseUserSalary> pageSalary(int entid, Integer cardId, Integer linkId, Long id,
+	public Page<EnterpriseUserSalary> pageSalary(Integer entid, Integer cardId, Integer linkId, Long id,
 			Page<EnterpriseUserSalary> page) {
 		var q = Wrappers.lambdaQuery(EnterpriseUserSalary.class).eq(EnterpriseUserSalary::getEntid, entid);
 		if (ObjectUtil.isNotNull(cardId) && cardId > 0) {
@@ -44,7 +44,7 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 	}
 
 	@Override
-	public EnterpriseUserSalary getForEdit(long id) {
+	public EnterpriseUserSalary getForEdit(Long id) {
 		return baseMapper.selectById(id);
 	}
 
@@ -64,7 +64,7 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean updateSalary(long id, CompanySalarySaveDTO dto) {
+	public boolean updateSalary(Long id, CompanySalarySaveDTO dto) {
 		EnterpriseUserSalary e = baseMapper.selectById(id);
 		if (ObjectUtil.isNull(e)) {
 			return false;
@@ -92,12 +92,12 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean removeSalary(long id) {
+	public boolean removeSalary(Long id) {
 		return baseMapper.deleteById(id) > 0;
 	}
 
 	@Override
-	public List<EnterpriseUserSalary> lastByCardId(int cardId) {
+	public List<EnterpriseUserSalary> lastByCardId(Integer cardId) {
 		return baseMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
 			.eq(EnterpriseUserSalary::getCardId, cardId)
 			.orderByDesc(EnterpriseUserSalary::getTakeDate)

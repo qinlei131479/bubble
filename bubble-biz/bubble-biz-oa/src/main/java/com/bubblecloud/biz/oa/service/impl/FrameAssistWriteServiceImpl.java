@@ -26,8 +26,8 @@ public class FrameAssistWriteServiceImpl extends UpServiceImpl<FrameAssistMapper
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setUserFrames(int entid, long userId, List<Integer> frameIds, int masterFrameId, boolean isAdmin,
-			long superiorUid, List<Integer> manageFrameIds) {
+	public void setUserFrames(Integer entid, Long userId, List<Integer> frameIds, Integer masterFrameId, boolean isAdmin,
+			Long superiorUid, List<Integer> manageFrameIds) {
 		LocalDateTime now = LocalDateTime.now();
 		List<Integer> manage = ObjectUtil.isNull(manageFrameIds) ? List.of() : manageFrameIds;
 
@@ -40,7 +40,7 @@ public class FrameAssistWriteServiceImpl extends UpServiceImpl<FrameAssistMapper
 					.isNull(FrameAssist::getDeletedAt));
 
 		for (Integer fid : frameIds) {
-			int isMastart = (ObjectUtil.isNotNull(fid) && fid == masterFrameId) ? 1 : 0;
+			int isMastart = (ObjectUtil.isNotNull(fid) && fid.equals(masterFrameId)) ? 1 : 0;
 			int isFrameAdmin = (isAdmin && ObjectUtil.isNotNull(fid) && manage.contains(fid)) ? 1 : 0;
 			FrameAssist exist = baseMapper.selectOne(Wrappers.lambdaQuery(FrameAssist.class)
 				.eq(FrameAssist::getEntid, entid)

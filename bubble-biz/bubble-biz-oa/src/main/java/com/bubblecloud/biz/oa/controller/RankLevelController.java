@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankLevelService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
@@ -48,7 +49,7 @@ public class RankLevelController {
 	@Operation(summary = "创建职位等级")
 	public R<String> create(@RequestBody RankLevelSaveDTO dto) {
 		rankLevelService.createRankLevel(dto);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
@@ -61,7 +62,7 @@ public class RankLevelController {
 	@Operation(summary = "修改职位等级")
 	public R<String> update(@PathVariable Long id, @RequestBody RankLevelSaveDTO dto) {
 		rankLevelService.updateRankLevel(id, dto);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@PutMapping("/batch/{batch}")

@@ -53,7 +53,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public List<EnterpriseRole> listRoles(String roleName, int entid) {
+	public List<EnterpriseRole> listRoles(String roleName, Integer entid) {
 		var q = Wrappers.lambdaQuery(EnterpriseRole.class).eq(EnterpriseRole::getEntid, entid);
 		if (StrUtil.isNotBlank(roleName)) {
 			q.like(EnterpriseRole::getRoleName, roleName);
@@ -64,7 +64,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public long saveRole(int entid, JsonNode body) {
+	public Long saveRole(Integer entid, JsonNode body) {
 		EnterpriseRole r = new EnterpriseRole();
 		fillRole(r, body);
 		r.setEntid(entid);
@@ -74,7 +74,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateRole(long id, int entid, JsonNode body) {
+	public void updateRole(Long id, Integer entid, JsonNode body) {
 		EnterpriseRole exist = baseMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
 			.eq(EnterpriseRole::getId, id)
 			.eq(EnterpriseRole::getEntid, entid));
@@ -126,7 +126,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteRole(long id, int entid) {
+	public void deleteRole(Long id, Integer entid) {
 		EnterpriseRole r = baseMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
 			.eq(EnterpriseRole::getId, id)
 			.eq(EnterpriseRole::getEntid, entid));
@@ -140,7 +140,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void changeRoleStatus(int entid, long roleId, int status) {
+	public void changeRoleStatus(Integer entid, Long roleId, Integer status) {
 		EnterpriseRole r = getBaseMapper().selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
 			.eq(EnterpriseRole::getId, roleId)
 			.eq(EnterpriseRole::getEntid, entid));
@@ -159,7 +159,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 	}
 
 	@Override
-	public List<Admin> getRoleUsers(long roleId, int entid) {
+	public List<Admin> getRoleUsers(Long roleId, Integer entid) {
 		List<Integer> userIds = enterpriseRoleUserMapper
 			.selectList(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
 				.eq(EnterpriseRoleUser::getRoleId, roleId)
@@ -176,7 +176,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 	}
 
 	@Override
-	public JsonNode getUserRoleData(int entid, long userId) {
+	public JsonNode getUserRoleData(Integer entid, Long userId) {
 		List<Integer> roleIds = enterpriseRoleUserMapper
 			.selectList(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
 				.eq(EnterpriseRoleUser::getUserId, userId)
@@ -217,7 +217,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 		}
 	}
 
-	private JsonNode buildMenuTreeJson(int entid) {
+	private JsonNode buildMenuTreeJson(Integer entid) {
 		List<SystemMenus> rows = systemMenusMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
 			.eq(SystemMenus::getEntid, entid)
 			.isNull(SystemMenus::getDeletedAt)
@@ -240,7 +240,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void changeUserRole(int entid, long userId, JsonNode roleIdsNode) {
+	public void changeUserRole(Integer entid, Long userId, JsonNode roleIdsNode) {
 		List<Long> roleIds = new ArrayList<>();
 		if (ObjectUtil.isNotNull(roleIdsNode) && roleIdsNode.isArray()) {
 			for (JsonNode n : roleIdsNode) {
@@ -248,13 +248,13 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 			}
 		}
 		enterpriseRoleUserMapper.delete(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
-			.eq(EnterpriseRoleUser::getUserId, (int) userId)
+			.eq(EnterpriseRoleUser::getUserId, userId.intValue())
 			.eq(EnterpriseRoleUser::getEntid, entid));
 		for (Long rid : roleIds) {
 			EnterpriseRoleUser ru = new EnterpriseRoleUser();
 			ru.setEntid(entid);
 			ru.setRoleId(rid.intValue());
-			ru.setUserId((int) userId);
+			ru.setUserId(userId.intValue());
 			ru.setStatus(1);
 			enterpriseRoleUserMapper.insert(ru);
 		}
@@ -272,7 +272,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addRoleUsers(int entid, int roleId, List<Integer> userIds) {
+	public void addRoleUsers(Integer entid, Integer roleId, List<Integer> userIds) {
 		if (ObjectUtil.isNull(userIds) || userIds.isEmpty()) {
 			throw new IllegalArgumentException("至少选择一个部门或者一个用户");
 		}
@@ -296,7 +296,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 			enterpriseRoleUserMapper.insert(ru);
 			mergeRoleIntoAdmin(uid.longValue(), roleId);
 		}
-		EnterpriseRole role = getBaseMapper().selectById((long) roleId);
+		EnterpriseRole role = getBaseMapper().selectById(roleId.longValue());
 		if (ObjectUtil.isNotNull(role)) {
 			long cnt = enterpriseRoleUserMapper
 				.selectCount(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, roleId));
@@ -336,7 +336,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void changeRoleUserStatus(int uid, int entid, int roleId, int status) {
+	public void changeRoleUserStatus(Integer uid, Integer entid, Integer roleId, Integer status) {
 		EnterpriseRoleUser ru = enterpriseRoleUserMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
 			.eq(EnterpriseRoleUser::getUserId, uid)
 			.eq(EnterpriseRoleUser::getEntid, entid)
@@ -350,12 +350,12 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void delRoleUser(int uid, int entid, int roleId) {
+	public void delRoleUser(Integer uid, Integer entid, Integer roleId) {
 		enterpriseRoleUserMapper.delete(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
 			.eq(EnterpriseRoleUser::getUserId, uid)
 			.eq(EnterpriseRoleUser::getEntid, entid)
 			.eq(EnterpriseRoleUser::getRoleId, roleId));
-		Admin a = adminMapper.selectById((long) uid);
+		Admin a = adminMapper.selectById(uid.longValue());
 		if (ObjectUtil.isNotNull(a)) {
 			List<Long> ids = parseRoleIds(a.getRoles());
 			ids.remove(Long.valueOf(roleId));
@@ -367,7 +367,7 @@ public class RolesAdminServiceImpl extends UpServiceImpl<EnterpriseRoleMapper, E
 			}
 			adminMapper.updateById(a);
 		}
-		EnterpriseRole role = getBaseMapper().selectById((long) roleId);
+		EnterpriseRole role = getBaseMapper().selectById(roleId.longValue());
 		if (ObjectUtil.isNotNull(role)) {
 			long cnt = enterpriseRoleUserMapper
 				.selectCount(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, roleId));

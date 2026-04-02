@@ -15,8 +15,8 @@ import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.bubblecloud.biz.oa.form.FormProtectedKeys;
-import com.bubblecloud.biz.oa.form.SalesmanCustomTypeResolver;
+import com.bubblecloud.biz.oa.constant.form.FormProtectedKeys;
+import com.bubblecloud.biz.oa.constant.form.SalesmanCustomTypeResolver;
 import com.bubblecloud.biz.oa.mapper.FormCategoryMapper;
 import com.bubblecloud.biz.oa.mapper.FormDataMapper;
 import com.bubblecloud.biz.oa.mapper.SalesmanCustomFieldMapper;
@@ -33,7 +33,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -60,7 +59,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 	private final SecureRandom secureRandom = new SecureRandom();
 
 	@Override
-	public List<FormCateListItemVO> listByTypes(int types) {
+	public List<FormCateListItemVO> listByTypes(Integer types) {
 		List<FormCategory> cates = formCategoryMapper.selectList(Wrappers.lambdaQuery(FormCategory.class)
 			.eq(FormCategory::getTypes, types)
 			.orderByDesc(FormCategory::getSort)
@@ -129,7 +128,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public long saveCate(int types, String title, Integer sort, int status) {
+	public Long saveCate(Integer types, String title, Integer sort, Integer status) {
 		FormCategory c = new FormCategory();
 		c.setTitle(ObjectUtil.isNull(title) ? "" : title);
 		c.setSort(ObjectUtil.isNull(sort) ? 0 : sort);
@@ -143,7 +142,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCate(long id, String title, Integer sort, int status) {
+	public void updateCate(Long id, String title, Integer sort, Integer status) {
 		FormCategory c = new FormCategory();
 		c.setId(id);
 		c.setTitle(title);
@@ -155,14 +154,14 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteCate(long id) {
+	public void deleteCate(Long id) {
 		formCategoryMapper.deleteById(id);
-		baseMapper.delete(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, (int) id));
+		baseMapper.delete(Wrappers.lambdaQuery(FormData.class).eq(FormData::getCateId, id.intValue()));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCateStatus(long id, int status) {
+	public void updateCateStatus(Long id, Integer status) {
 		FormCategory c = new FormCategory();
 		c.setId(id);
 		c.setStatus(status != 0 ? 1 : 0);
@@ -172,7 +171,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveFormData(int types, JsonNode body) {
+	public void saveFormData(Integer types, JsonNode body) {
 		if (ObjectUtil.isNull(body) || !body.isArray()) {
 			throw new IllegalArgumentException("data 格式错误");
 		}
@@ -314,7 +313,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void moveFormData(int types, long formDataId, int targetCateId) {
+	public void moveFormData(Integer types, Long formDataId, Integer targetCateId) {
 		List<Integer> cateIds = formCategoryMapper
 			.selectList(Wrappers.lambdaQuery(FormCategory.class).eq(FormCategory::getTypes, types))
 			.stream()
@@ -333,7 +332,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 	}
 
 	@Override
-	public JsonNode getSalesmanCustomFields(long adminId, int customType) {
+	public JsonNode getSalesmanCustomFields(Long adminId, Integer customType) {
 		int formTypes = SalesmanCustomTypeResolver.toFormTypes(customType);
 		ObjectNode root = objectMapper.createObjectNode();
 		ArrayNode list = root.putArray("list");
@@ -365,9 +364,9 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 		return root;
 	}
 
-	private ArrayNode readFieldListArray(long adminId, String compositeType) {
+	private ArrayNode readFieldListArray(Long adminId, String compositeType) {
 		SalesmanCustomField row = salesmanCustomFieldMapper.selectOne(Wrappers.lambdaQuery(SalesmanCustomField.class)
-			.eq(SalesmanCustomField::getUid, (int) adminId)
+			.eq(SalesmanCustomField::getUid, adminId.intValue())
 			.eq(SalesmanCustomField::getCustomType, compositeType));
 		if (ObjectUtil.isNull(row) || StrUtil.isBlank(row.getFieldList())) {
 			return objectMapper.createArrayNode();
@@ -385,7 +384,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void saveSalesmanCustomFields(long adminId, int customType, String selectType, JsonNode dataArray) {
+	public void saveSalesmanCustomFields(Long adminId, Integer customType, String selectType, JsonNode dataArray) {
 		if (!LIST_SELECT.equals(selectType) && !SEARCH_SELECT.equals(selectType)) {
 			throw new IllegalArgumentException("业务类型错误");
 		}
@@ -407,7 +406,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 		String json = arr.toString();
 		SalesmanCustomField existing = salesmanCustomFieldMapper
 			.selectOne(Wrappers.lambdaQuery(SalesmanCustomField.class)
-				.eq(SalesmanCustomField::getUid, (int) adminId)
+				.eq(SalesmanCustomField::getUid, adminId.intValue())
 				.eq(SalesmanCustomField::getCustomType, composite));
 		LocalDateTime now = LocalDateTime.now();
 		if (ObjectUtil.isNotNull(existing)) {
@@ -417,7 +416,7 @@ public class FormAdminServiceImpl extends UpServiceImpl<FormDataMapper, FormData
 		}
 		else {
 			SalesmanCustomField n = new SalesmanCustomField();
-			n.setUid((int) adminId);
+			n.setUid(adminId.intValue());
 			n.setCustomType(composite);
 			n.setFieldList(json);
 			n.setCreatedAt(now);

@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AssessPlanService;
 import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
@@ -47,7 +48,7 @@ public class AssessPlanController {
 
 	@GetMapping({"", "/page"})
 	@Operation(summary = "考核计划列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<AssessPlan> pg, @ParameterObject AssessPlan query) {
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessPlan query) {
 		Page<AssessPlan> res = assessPlanService.findPg(pg, query);
 		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
@@ -68,7 +69,7 @@ public class AssessPlanController {
 					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
 		}
 		assessPlanService.create(obj);
-		return R.phpOk("common.insert.succ");
+		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@PutMapping("/{id}")
@@ -81,7 +82,7 @@ public class AssessPlanController {
 					.map(String::valueOf).collect(Collectors.joining(",", "[", "]")));
 		}
 		assessPlanService.update(obj);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")

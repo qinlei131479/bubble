@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bubblecloud.oa.api.dto.EnterpriseUserCardUpdateDTO;
 import jakarta.validation.Valid;
 
-import com.bubblecloud.biz.oa.security.OaCurrentUser;
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.CompanyUserService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
@@ -25,6 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+
 import cn.hutool.core.util.ObjectUtil;
 
 /**
@@ -44,8 +46,8 @@ public class CompanyUserController {
 	@GetMapping("/list")
 	@Operation(summary = "组织架构人员列表")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer entid, @RequestParam(required = false) String pid,
-			@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
-			@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
+								@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
+								@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(companyUserService.listCompanyUsers(entid, pid, name, status, current, size));
 	}
 
@@ -54,8 +56,7 @@ public class CompanyUserController {
 	public R<CompanyUserCardVO> editUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		try {
 			return R.phpOk(companyUserService.getCardEdit(id, entid));
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
 	}
@@ -63,12 +64,11 @@ public class CompanyUserController {
 	@PutMapping("/card/{id}")
 	@Operation(summary = "修改组织架构成员")
 	public R<String> updateUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
-			@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
+								@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
 		try {
 			companyUserService.updateCompanyUserCard(id, entid, dto);
-			return R.phpOk("common.update.succ");
-		}
-		catch (IllegalArgumentException e) {
+			return R.phpOk(OaConstants.UPDATE_SUCC);
+		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
 	}
@@ -76,14 +76,13 @@ public class CompanyUserController {
 	@GetMapping("/userInfo")
 	@Operation(summary = "获取用户关联企业详情")
 	public R<CompanyUserProfileVO> userInfo(Authentication authentication,
-			@RequestParam(defaultValue = "1") Integer entid) {
+											@RequestParam(defaultValue = "1") Integer entid) {
 		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return R.phpFailed("未登录");
 		}
 		try {
 			return R.phpOk(companyUserService.userInfo(u.getId(), entid));
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
 	}
@@ -96,8 +95,7 @@ public class CompanyUserController {
 		}
 		try {
 			return R.phpOk(companyUserService.userFrame(u.getId(), entid));
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
 	}
@@ -105,15 +103,15 @@ public class CompanyUserController {
 	@GetMapping("/add_book/tree")
 	@Operation(summary = "通讯录部门树")
 	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") Integer entid,
-			@RequestParam(required = false) String name) {
+														   @RequestParam(required = false) String name) {
 		return R.phpOk(companyUserService.addressBookTree(entid, name));
 	}
 
 	@GetMapping("/add_book/list")
 	@Operation(summary = "通讯录用户列表")
 	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") Integer entid,
-			@RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
-			@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
+									   @RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
+									   @RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(companyUserService.addressBook(entid, name, status, current, size));
 	}
 

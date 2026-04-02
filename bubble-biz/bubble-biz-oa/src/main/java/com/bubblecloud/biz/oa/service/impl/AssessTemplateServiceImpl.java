@@ -54,7 +54,7 @@ public class AssessTemplateServiceImpl extends UpServiceImpl<AssessTemplateMappe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateTemplate(long id, AssessTemplateSaveDTO dto) {
+	public void updateTemplate(Long id, AssessTemplateSaveDTO dto) {
 		AssessTemplate existing = getById(id);
 		assertExists(existing);
 		if (StrUtil.isNotBlank(dto.getName())) {
@@ -78,14 +78,14 @@ public class AssessTemplateServiceImpl extends UpServiceImpl<AssessTemplateMappe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void removeTemplate(long id) {
+	public void removeTemplate(Long id) {
 		assertExists(getById(id));
 		removeById(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void toggleFavorite(long id) {
+	public void toggleFavorite(Long id) {
 		AssessTemplate existing = getById(id);
 		assertExists(existing);
 		int cur = ObjectUtil.defaultIfNull(existing.getIsFavorite(), 0);
@@ -95,7 +95,7 @@ public class AssessTemplateServiceImpl extends UpServiceImpl<AssessTemplateMappe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setCover(long id, String cover) {
+	public void setCover(Long id, String cover) {
 		AssessTemplate existing = getById(id);
 		assertExists(existing);
 		existing.setCover(cover);

@@ -88,7 +88,7 @@ public class ScanLoginServiceImpl extends UpServiceImpl<AdminMapper, Admin> impl
 	}
 
 	@Override
-	public void bindScanUserId(String key, long userId) {
+	public void bindScanUserId(String key, Long userId) {
 		String redisKey = KEY_PREFIX + key;
 		if (!Boolean.TRUE.equals(stringRedisTemplate.hasKey(redisKey))) {
 			return;

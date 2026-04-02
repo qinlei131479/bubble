@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.MenusAdminService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.core.util.R;
@@ -62,7 +63,7 @@ public class MenusAdminController {
 		body.setId(id);
 		body.setEntid(entid);
 		menusAdminService.updateMenu(body);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
@@ -81,7 +82,7 @@ public class MenusAdminController {
 	@Operation(summary = "显示/隐藏")
 	public R<String> show(@PathVariable Long id, @RequestParam Integer is_show) {
 		menusAdminService.updateIsShow(id, is_show);
-		return R.phpOk("common.update.succ");
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@PostMapping("/not_save")
