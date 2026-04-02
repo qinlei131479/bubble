@@ -1,7 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AssessTargetCategoryService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetCateSaveDTO;
@@ -30,15 +32,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/ent/assess/target_cate")
 @Tag(name = "绩效指标分类")
-public class AssessTargetCateController {
+public class AssessTargetCategoryController {
 
 	private final AssessTargetCategoryService assessTargetCategoryService;
 
-	@GetMapping({ "", "/page" })
+	@GetMapping({"", "/page"})
 	@Operation(summary = "指标分类列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<AssessTargetCategory> pg,
-			@ParameterObject AssessTargetCategory query) {
-		return R.phpOk(assessTargetCategoryService.pageTargetCate(pg, query));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessTargetCategory query) {
+		Page<AssessTargetCategory> res = assessTargetCategoryService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@GetMapping("/create/{types}")
@@ -50,7 +52,8 @@ public class AssessTargetCateController {
 	@PostMapping
 	@Operation(summary = "创建指标分类")
 	public R<String> create(@RequestBody AssessTargetCateSaveDTO dto) {
-		assessTargetCategoryService.createTargetCate(dto);
+		AssessTargetCategory obj = PojoConvertUtil.convertPojo(dto, AssessTargetCategory.class);
+		assessTargetCategoryService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -63,15 +66,17 @@ public class AssessTargetCateController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改指标分类")
 	public R<String> update(@PathVariable Long id, @RequestBody AssessTargetCateSaveDTO dto) {
-		assessTargetCategoryService.updateTargetCate(id, dto);
+		AssessTargetCategory obj = PojoConvertUtil.convertPojo(dto, AssessTargetCategory.class);
+		obj.setId(id);
+		assessTargetCategoryService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除指标分类")
 	public R<String> removeById(@PathVariable Long id) {
-		assessTargetCategoryService.removeTargetCate(id);
-		return R.phpOk("common.delete.succ");
+		assessTargetCategoryService.deleteById(id);
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

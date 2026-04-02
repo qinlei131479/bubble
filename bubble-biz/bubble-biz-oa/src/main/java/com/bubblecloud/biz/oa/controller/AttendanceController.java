@@ -28,8 +28,8 @@ public class AttendanceController {
 
 	@GetMapping("/group/page")
 	@Operation(summary = "考勤组分页")
-	public R<SimplePageVO> groupPage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
+								@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 

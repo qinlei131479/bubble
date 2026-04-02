@@ -85,7 +85,7 @@ public class FormAdminController {
 	public R<String> removeById(@PathVariable Long id) {
 		try {
 			formAdminService.deleteCate(id);
-			return R.phpOk("common.delete.succ");
+			return R.phpOk(OaConstants.DELETE_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());

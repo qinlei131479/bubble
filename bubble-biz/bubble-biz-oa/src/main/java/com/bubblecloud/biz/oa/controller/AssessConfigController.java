@@ -7,7 +7,6 @@ import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.AssessConfigSaveDTO;
-import com.bubblecloud.oa.api.entity.AssessPlan;
 import com.bubblecloud.oa.api.entity.AssessScore;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;

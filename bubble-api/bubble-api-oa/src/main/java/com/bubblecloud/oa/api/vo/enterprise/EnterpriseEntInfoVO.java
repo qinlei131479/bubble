@@ -1,4 +1,4 @@
-package com.bubblecloud.oa.api.vo.company;
+package com.bubblecloud.oa.api.vo.enterprise;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 当前企业详情（对齐 PHP {@code CompanyService::getEntAndUserInfo}）。
+ * 当前企业详情（对齐 PHP {@code EnterpriseService::getEntAndUserInfo}）。
  *
  * @author qinlei
  * @date 2026/3/29 下午5:30
@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "企业详情")
-public class CompanyEntInfoVO {
+public class EnterpriseEntInfoVO {
 
 	@JsonProperty("id")
 	private Long id;
@@ -56,7 +56,7 @@ public class CompanyEntInfoVO {
 	private Integer status;
 
 	@JsonProperty("user")
-	private CompanyOwnerUserVO user;
+	private EnterpriseOwnerUserVO user;
 
 	@JsonProperty("frames")
 	private Integer frames;

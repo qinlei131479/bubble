@@ -1,4 +1,4 @@
-package com.bubblecloud.oa.api.vo.company;
+package com.bubblecloud.oa.api.vo.enterprise;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "统计数量")
-public class CompanyQuantityVO {
+public class EnterpriseQuantityVO {
 
 	@JsonProperty("num")
 	@Schema(description = "数量")

@@ -65,7 +65,7 @@ public class PromotionController {
 	@Operation(summary = "晋升表删除（软删）")
 	public R<String> removeById(@PathVariable Long id) {
 		promotionService.removePromotion(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

@@ -75,7 +75,7 @@ public class QuickAdminController {
 	@Operation(summary = "删除")
 	public R<String> removeById(@PathVariable Integer id) {
 		quickAdminService.deleteQuick(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

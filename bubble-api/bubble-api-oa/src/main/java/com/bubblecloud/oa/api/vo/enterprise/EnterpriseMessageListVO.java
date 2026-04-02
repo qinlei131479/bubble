@@ -1,4 +1,4 @@
-package com.bubblecloud.oa.api.vo.company;
+package com.bubblecloud.oa.api.vo.enterprise;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,13 +12,13 @@ import lombok.Data;
  * @date 2026/3/29 下午5:30
  */
 @Data
-public class CompanyMessageListVO {
+public class EnterpriseMessageListVO {
 
-	private List<CompanyMessageItemVO> list = Collections.emptyList();
+	private List<EnterpriseMessageItemVO> list = Collections.emptyList();
 
 	private Integer count;
 
-	public CompanyMessageListVO() {
+	public EnterpriseMessageListVO() {
 		this.count = 0;
 	}
 

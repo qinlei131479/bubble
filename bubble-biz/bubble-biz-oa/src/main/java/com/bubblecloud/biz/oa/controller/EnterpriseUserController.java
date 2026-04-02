@@ -14,12 +14,12 @@ import com.bubblecloud.oa.api.dto.EnterpriseUserCardUpdateDTO;
 import jakarta.validation.Valid;
 
 import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
-import com.bubblecloud.biz.oa.service.CompanyUserService;
+import com.bubblecloud.biz.oa.service.EnterpriseUserService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
-import com.bubblecloud.oa.api.vo.company.CompanyUserCardVO;
-import com.bubblecloud.oa.api.vo.company.CompanyUserProfileVO;
-import com.bubblecloud.oa.api.vo.company.UserFrameBriefVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserCardVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserProfileVO;
+import com.bubblecloud.oa.api.vo.enterprise.UserFrameBriefVO;
 import com.bubblecloud.oa.api.vo.frame.FrameDepartmentTreeNodeVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ import java.util.List;
 import cn.hutool.core.util.ObjectUtil;
 
 /**
- * 企业用户（对齐 PHP {@code CompanyUserController}，前缀 {@code ent/user}）。
+ * 企业用户（对齐 PHP {@code EnterpriseUserController}，前缀 {@code ent/user}）。
  *
  * @author qinlei
  * @date 2026/3/29 下午5:30
@@ -39,23 +39,23 @@ import cn.hutool.core.util.ObjectUtil;
 @RequiredArgsConstructor
 @RequestMapping("/ent/user")
 @Tag(name = "企业用户")
-public class CompanyUserController {
+public class EnterpriseUserController {
 
-	private final CompanyUserService companyUserService;
+	private final EnterpriseUserService enterpriseUserService;
 
 	@GetMapping("/list")
 	@Operation(summary = "组织架构人员列表")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer entid, @RequestParam(required = false) String pid,
 								@RequestParam(required = false) String name, @RequestParam(defaultValue = "1") Integer status,
 								@RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
-		return R.phpOk(companyUserService.listCompanyUsers(entid, pid, name, status, current, size));
+		return R.phpOk(enterpriseUserService.listEnterpriseUsers(entid, pid, name, status, current, size));
 	}
 
 	@GetMapping("/card/{id}")
 	@Operation(summary = "组织架构成员信息")
-	public R<CompanyUserCardVO> editUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<EnterpriseUserCardVO> editUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid) {
 		try {
-			return R.phpOk(companyUserService.getCardEdit(id, entid));
+			return R.phpOk(enterpriseUserService.getCardEdit(id, entid));
 		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
@@ -66,7 +66,7 @@ public class CompanyUserController {
 	public R<String> updateUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Integer entid,
 								@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
 		try {
-			companyUserService.updateCompanyUserCard(id, entid, dto);
+			enterpriseUserService.updateEnterpriseUserCard(id, entid, dto);
 			return R.phpOk(OaConstants.UPDATE_SUCC);
 		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
@@ -75,13 +75,13 @@ public class CompanyUserController {
 
 	@GetMapping("/userInfo")
 	@Operation(summary = "获取用户关联企业详情")
-	public R<CompanyUserProfileVO> userInfo(Authentication authentication,
-											@RequestParam(defaultValue = "1") Integer entid) {
+	public R<EnterpriseUserProfileVO> userInfo(Authentication authentication,
+											   @RequestParam(defaultValue = "1") Integer entid) {
 		if (ObjectUtil.isNull(authentication) || !(authentication.getPrincipal() instanceof OaCurrentUser u)) {
 			return R.phpFailed("未登录");
 		}
 		try {
-			return R.phpOk(companyUserService.userInfo(u.getId(), entid));
+			return R.phpOk(enterpriseUserService.userInfo(u.getId(), entid));
 		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
@@ -94,7 +94,7 @@ public class CompanyUserController {
 			return R.phpFailed("未登录");
 		}
 		try {
-			return R.phpOk(companyUserService.userFrame(u.getId(), entid));
+			return R.phpOk(enterpriseUserService.userFrame(u.getId(), entid));
 		} catch (IllegalArgumentException e) {
 			return R.phpFailed(e.getMessage());
 		}
@@ -104,7 +104,7 @@ public class CompanyUserController {
 	@Operation(summary = "通讯录部门树")
 	public R<List<FrameDepartmentTreeNodeVO>> getFrameTree(@RequestParam(defaultValue = "1") Integer entid,
 														   @RequestParam(required = false) String name) {
-		return R.phpOk(companyUserService.addressBookTree(entid, name));
+		return R.phpOk(enterpriseUserService.addressBookTree(entid, name));
 	}
 
 	@GetMapping("/add_book/list")
@@ -112,7 +112,7 @@ public class CompanyUserController {
 	public R<SimplePageVO> addressBook(@RequestParam(defaultValue = "1") Integer entid,
 									   @RequestParam(required = false) String name, @RequestParam(required = false) Integer status,
 									   @RequestParam(defaultValue = "1") Integer current, @RequestParam(defaultValue = "20") Integer size) {
-		return R.phpOk(companyUserService.addressBook(entid, name, status, current, size));
+		return R.phpOk(enterpriseUserService.addressBook(entid, name, status, current, size));
 	}
 
 }

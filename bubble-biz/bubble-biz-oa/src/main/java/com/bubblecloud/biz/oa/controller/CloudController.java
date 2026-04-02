@@ -22,8 +22,8 @@ public class CloudController {
 
 	@GetMapping("/space/page")
 	@Operation(summary = "网盘空间分页")
-	public R<SimplePageVO> spacePage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
+								@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 

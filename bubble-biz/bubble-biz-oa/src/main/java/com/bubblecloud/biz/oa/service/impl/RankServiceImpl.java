@@ -23,8 +23,6 @@ import cn.hutool.core.util.StrUtil;
 @Service
 public class RankServiceImpl extends UpServiceImpl<RankMapper, Rank> implements RankService {
 
-	private static final String NOT_EXISTS = "common.operation.noExists";
-
 	@Override
 	public SimplePageVO pageRank(Pg<Rank> pg, Rank query) {
 		Page<Rank> r = findPg(pg, query);

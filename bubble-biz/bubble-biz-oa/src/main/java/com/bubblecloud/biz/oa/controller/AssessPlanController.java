@@ -89,12 +89,12 @@ public class AssessPlanController {
 	@Operation(summary = "删除考核计划")
 	public R<String> removeById(@PathVariable Long id) {
 		assessPlanService.removeById(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@GetMapping("/enabled")
 	@Operation(summary = "已启用周期列表")
-	public R<List<AssessPlan>> enabledPlans(@RequestParam(required = false) Long entid) {
+	public R<List<AssessPlan>> enabled(@RequestParam(required = false) Long entid) {
 		List<AssessPlan> list = assessPlanService.list(Wrappers.lambdaQuery(AssessPlan.class)
 				.eq(ObjectUtil.isNotNull(entid), AssessPlan::getEntid, entid)
 				.eq(AssessPlan::getStatus, 1)

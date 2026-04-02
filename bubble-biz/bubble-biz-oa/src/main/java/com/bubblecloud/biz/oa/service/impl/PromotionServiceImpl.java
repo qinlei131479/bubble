@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.PromotionMapper;
 import com.bubblecloud.biz.oa.service.PromotionService;
 import com.bubblecloud.common.core.util.R;
@@ -23,8 +24,6 @@ import cn.hutool.core.util.StrUtil;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PromotionServiceImpl extends UpServiceImpl<PromotionMapper, Promotion> implements PromotionService {
-
-	private static final String NOT_EXISTS = "common.operation.noExists";
 
 	@Override
 	public SimplePageVO pagePromotion(Pg<Promotion> pg, Integer status) {
@@ -84,7 +83,7 @@ public class PromotionServiceImpl extends UpServiceImpl<PromotionMapper, Promoti
 
 	private static void assertPromotionExists(Promotion p) {
 		if (ObjectUtil.isNull(p) || ObjectUtil.isNotNull(p.getDeletedAt())) {
-			throw new IllegalArgumentException(NOT_EXISTS);
+			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 	}
 

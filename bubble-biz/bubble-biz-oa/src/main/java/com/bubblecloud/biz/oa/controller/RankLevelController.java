@@ -83,7 +83,7 @@ public class RankLevelController {
 	@Operation(summary = "删除关联职级")
 	public R<String> removeRelation(@PathVariable Long id) {
 		rankLevelService.removeRelateRank(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@GetMapping("/rank/{cate_id}")

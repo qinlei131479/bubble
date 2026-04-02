@@ -68,7 +68,7 @@ public class QuickCateAdminController {
 	@Operation(summary = "删除分类")
 	public R<String> removeById(@PathVariable Long id) {
 		quickCateAdminService.deleteCate(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

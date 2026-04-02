@@ -67,7 +67,7 @@ public class HayGroupController {
 	@Operation(summary = "删除海氏评估组")
 	public R<String> removeById(@PathVariable Long id) {
 		hayGroupService.removeHayGroup(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@GetMapping("/data/{group_id}")

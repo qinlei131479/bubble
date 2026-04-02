@@ -33,7 +33,7 @@
 		WHERE t.deleted_at IS NULL
 	</select>
 
-	<select id="selectEntUserList" resultType="com.bubblecloud.oa.api.vo.company.CompanyUserListItemVO">
+	<select id="selectEntUserList" resultType="com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserListItemVO">
 		SELECT a.id,
 		       a.name,
 		       a.avatar,

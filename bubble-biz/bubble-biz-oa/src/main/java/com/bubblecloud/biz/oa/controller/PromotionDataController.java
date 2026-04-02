@@ -66,7 +66,7 @@ public class PromotionDataController {
 	@Operation(summary = "删除晋升数据项")
 	public R<String> removeById(@PathVariable Long id) {
 		promotionDataService.removePromotionData(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@PostMapping("/standard/{id}")

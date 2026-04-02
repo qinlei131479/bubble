@@ -1,4 +1,4 @@
-package com.bubblecloud.oa.api.vo.company;
+package com.bubblecloud.oa.api.vo.enterprise;
 
 import java.util.List;
 
@@ -7,14 +7,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 当前登录用户在企业侧扩展信息（对齐 PHP {@code CompanyUserController::userInfo}）。
+ * 当前登录用户在企业侧扩展信息（对齐 PHP {@code EnterpriseUserController::userInfo}）。
  *
  * @author qinlei
  * @date 2026/3/29 下午5:30
  */
 @Data
 @Schema(description = "企业用户 profile")
-public class CompanyUserProfileVO {
+public class EnterpriseUserProfileVO {
 
 	@JsonProperty("id")
 	private Long id;

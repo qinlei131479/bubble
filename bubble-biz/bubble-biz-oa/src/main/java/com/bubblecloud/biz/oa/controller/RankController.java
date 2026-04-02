@@ -70,7 +70,7 @@ public class RankController {
 	@Operation(summary = "删除职级")
 	public R<String> removeById(@PathVariable Long id) {
 		rankService.removeRank(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

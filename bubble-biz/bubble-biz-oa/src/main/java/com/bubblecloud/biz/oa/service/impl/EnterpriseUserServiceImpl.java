@@ -5,7 +5,6 @@ import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,7 +12,7 @@ import com.bubblecloud.biz.oa.mapper.AdminMapper;
 import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
 import com.bubblecloud.biz.oa.mapper.SystemConfigMapper;
-import com.bubblecloud.biz.oa.service.CompanyUserService;
+import com.bubblecloud.biz.oa.service.EnterpriseUserService;
 import com.bubblecloud.biz.oa.service.FrameAssistWriteService;
 import com.bubblecloud.biz.oa.service.FrameService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
@@ -22,10 +21,10 @@ import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
-import com.bubblecloud.oa.api.vo.company.CompanyUserCardVO;
-import com.bubblecloud.oa.api.vo.company.CompanyUserListItemVO;
-import com.bubblecloud.oa.api.vo.company.CompanyUserProfileVO;
-import com.bubblecloud.oa.api.vo.company.UserFrameBriefVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserCardVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserListItemVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserProfileVO;
+import com.bubblecloud.oa.api.vo.enterprise.UserFrameBriefVO;
 import com.bubblecloud.oa.api.vo.frame.FrameDepartmentTreeNodeVO;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements CompanyUserService {
+public class EnterpriseUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> implements EnterpriseUserService {
 
 	private final FrameAssistMapper frameAssistMapper;
 
@@ -53,22 +52,22 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 	private final FrameAssistWriteService frameAssistWriteService;
 
 	@Override
-	public SimplePageVO listCompanyUsers(Integer entid, String pid, String name, Integer status, Integer current, Integer size) {
-		Page<CompanyUserListItemVO> p = new Page<>(current, size);
-		Page<CompanyUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name,
+	public SimplePageVO listEnterpriseUsers(Integer entid, String pid, String name, Integer status, Integer current, Integer size) {
+		Page<EnterpriseUserListItemVO> p = new Page<>(current, size);
+		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name,
 				ObjectUtil.isNull(status) ? 1 : status);
 		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
 	}
 
 	@Override
 	public SimplePageVO addressBook(Integer entid, String name, Integer status, Integer current, Integer size) {
-		Page<CompanyUserListItemVO> p = new Page<>(current, size);
-		Page<CompanyUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name, status);
+		Page<EnterpriseUserListItemVO> p = new Page<>(current, size);
+		Page<EnterpriseUserListItemVO> r = baseMapper.selectEntUserList(p, entid, name, status);
 		return SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords());
 	}
 
 	@Override
-	public CompanyUserProfileVO userInfo(Long adminId, Integer entid) {
+	public EnterpriseUserProfileVO userInfo(Long adminId, Integer entid) {
 		Admin admin = baseMapper.selectById(adminId);
 		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("未找到用户信息");
@@ -84,7 +83,7 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 				&& !"1".equals(cfg.getValue()) && !"true".equalsIgnoreCase(cfg.getValue())) {
 			computeMode = 0;
 		}
-		CompanyUserProfileVO vo = new CompanyUserProfileVO();
+		EnterpriseUserProfileVO vo = new EnterpriseUserProfileVO();
 		vo.setId(admin.getId());
 		vo.setUid(admin.getUid());
 		vo.setName(admin.getName());
@@ -132,7 +131,7 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 	}
 
 	@Override
-	public CompanyUserCardVO getCardEdit(Long targetAdminId, Integer entid) {
+	public EnterpriseUserCardVO getCardEdit(Long targetAdminId, Integer entid) {
 		if (frameAssistMapper.selectUserFrames(targetAdminId, entid).isEmpty()) {
 			throw new IllegalArgumentException("企业用户信息不存在");
 		}
@@ -140,7 +139,7 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 		if (ObjectUtil.isNull(admin)) {
 			throw new IllegalArgumentException("企业用户信息不存在");
 		}
-		CompanyUserCardVO vo = new CompanyUserCardVO();
+		EnterpriseUserCardVO vo = new EnterpriseUserCardVO();
 		vo.setId(admin.getId());
 		vo.setUid(admin.getUid());
 		vo.setName(admin.getName());
@@ -152,7 +151,7 @@ public class CompanyUserServiceImpl extends UpServiceImpl<AdminMapper, Admin> im
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCompanyUserCard(Long targetAdminId, Integer entid, EnterpriseUserCardUpdateDTO dto) {
+	public void updateEnterpriseUserCard(Long targetAdminId, Integer entid, EnterpriseUserCardUpdateDTO dto) {
 		if (ObjectUtil.isNull(dto.getFrameId()) || dto.getFrameId().isEmpty()) {
 			throw new IllegalArgumentException("必须选择一个部门");
 		}

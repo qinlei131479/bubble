@@ -21,16 +21,6 @@ import org.springframework.stereotype.Service;
 public class AttachCateAdminServiceImpl extends UpServiceImpl<CategoryMapper, Category>
 		implements AttachCateAdminService {
 
-	private static final String TYPE_ATTACH = "systemAttach";
-
-	@Override
-	public List<Category> listByEntid(Integer entid) {
-		return baseMapper.selectList(Wrappers.lambdaQuery(Category.class)
-			.eq(Category::getType, TYPE_ATTACH)
-			.eq(Category::getEntid, entid)
-			.orderByDesc(Category::getSort));
-	}
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public R create(Category req) {

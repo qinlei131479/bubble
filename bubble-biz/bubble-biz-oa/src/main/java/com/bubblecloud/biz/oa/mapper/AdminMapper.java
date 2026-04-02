@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.common.mybatis.mapper.UpMapper;
 import com.bubblecloud.oa.api.entity.Admin;
-import com.bubblecloud.oa.api.vo.company.CompanyUserListItemVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserListItemVO;
 
 /**
  * eb_admin 表 Mapper。
@@ -17,7 +17,7 @@ import com.bubblecloud.oa.api.vo.company.CompanyUserListItemVO;
 @Mapper
 public interface AdminMapper extends UpMapper<Admin> {
 
-	Page<CompanyUserListItemVO> selectEntUserList(Page<CompanyUserListItemVO> page, @Param("entid") int entid,
-			@Param("name") String name, @Param("status") Integer status);
+	Page<EnterpriseUserListItemVO> selectEntUserList(Page<EnterpriseUserListItemVO> page, @Param("entid") int entid,
+                                                     @Param("name") String name, @Param("status") Integer status);
 
 }

@@ -16,6 +16,6 @@ import com.bubblecloud.oa.api.entity.UserEnterpriseApply;
 @Mapper
 public interface UserEnterpriseApplyMapper extends UpMapper<UserEnterpriseApply> {
 
-	long countInviterReview(@Param("entid") int entid);
+	long countInviterReview(@Param("entid") Long entid);
 
 }

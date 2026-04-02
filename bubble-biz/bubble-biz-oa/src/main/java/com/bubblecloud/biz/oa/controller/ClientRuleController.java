@@ -1,8 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.bubblecloud.biz.oa.service.ClientRuleService;
+import com.bubblecloud.biz.oa.service.SystemConfigService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.config.ClientRuleApproveSaveDTO;
 import com.bubblecloud.oa.api.vo.config.ClientRuleApproveConfigVO;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 客户规则配置，对齐 PHP {@code ent/config/client_rule}。
@@ -31,43 +31,41 @@ import cn.hutool.core.util.StrUtil;
 @Tag(name = "客户规则配置")
 public class ClientRuleController {
 
-	private final ClientRuleService clientRuleService;
+	private final SystemConfigService systemConfigService;
 
 	@GetMapping("/cate")
 	@Operation(summary = "客户规则分类列表")
 	public R<List<ConfigCateItemVO>> cateList() {
-		return R.phpOk(clientRuleService.listClientRuleCates());
+		List<ConfigCateItemVO> list = new ArrayList<>(3);
+		list.add(new ConfigCateItemVO("客户跟进配置", "customer_follow_config"));
+		list.add(new ConfigCateItemVO("客户公海配置", "customer_sea_config"));
+		list.add(new ConfigCateItemVO("客户审批配置", "customer_approve_config"));
+		return R.phpOk(list);
 	}
 
-	@GetMapping({ "/approve", "/approve/{form}" })
+	@GetMapping({"/approve", "/approve/{form}"})
 	@Operation(summary = "获取客户审批规则")
 	public R<ClientRuleApproveConfigVO> getApproveConfig(@PathVariable(required = false) Integer form) {
-		return R.phpOk(clientRuleService.getApproveConfig(form));
+		return R.phpOk(systemConfigService.getApproveConfig(form));
 	}
 
 	@PutMapping("/approve")
 	@Operation(summary = "保存客户审批规则")
 	public R<String> setApproveConfig(@RequestBody ClientRuleApproveSaveDTO dto) {
-		clientRuleService.saveApproveConfig(dto);
+		systemConfigService.saveApproveConfig(dto);
 		return R.phpOk("保存成功");
 	}
 
 	@GetMapping("/{category}")
 	@Operation(summary = "按分类读取配置为 JSON 对象")
 	public R<JsonNode> getConfig(@PathVariable String category) {
-		if (StrUtil.isBlank(category)) {
-			return R.phpFailed("common.empty.attrs");
-		}
-		return R.phpOk(clientRuleService.getConfigByCategory(category));
+		return R.phpOk(systemConfigService.getConfigByCategory(category));
 	}
 
 	@PutMapping("/{category}")
 	@Operation(summary = "按分类保存配置")
 	public R<String> setConfig(@PathVariable String category, @RequestBody JsonNode body) {
-		if (StrUtil.isBlank(category)) {
-			return R.phpFailed("common.empty.attrs");
-		}
-		clientRuleService.saveConfigByCategory(category, body);
+		systemConfigService.saveConfigByCategory(category, body);
 		return R.phpOk("保存成功");
 	}
 

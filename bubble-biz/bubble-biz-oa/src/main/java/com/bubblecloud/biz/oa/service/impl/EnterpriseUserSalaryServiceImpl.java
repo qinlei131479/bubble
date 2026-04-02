@@ -5,14 +5,13 @@ import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.EnterpriseUserSalaryMapper;
-import com.bubblecloud.biz.oa.service.CompanySalaryService;
+import com.bubblecloud.biz.oa.service.EnterpriseUserSalaryService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
-import com.bubblecloud.oa.api.dto.CompanySalarySaveDTO;
+import com.bubblecloud.oa.api.dto.EnterpriseSalarySaveDTO;
 import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
 import cn.hutool.core.util.ObjectUtil;
 
@@ -23,8 +22,8 @@ import cn.hutool.core.util.ObjectUtil;
  * @date 2026/3/29 下午6:30
  */
 @Service
-public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalaryMapper, EnterpriseUserSalary>
-		implements CompanySalaryService {
+public class EnterpriseUserSalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalaryMapper, EnterpriseUserSalary>
+		implements EnterpriseUserSalaryService {
 
 	@Override
 	public Page<EnterpriseUserSalary> pageSalary(Integer entid, Integer cardId, Integer linkId, Long id,
@@ -50,7 +49,7 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean saveSalary(CompanySalarySaveDTO dto) {
+	public boolean saveSalary(EnterpriseSalarySaveDTO dto) {
 		EnterpriseUserSalary e = new EnterpriseUserSalary();
 		e.setEntid(ObjectUtil.isNull(dto.getEntid()) ? 1 : dto.getEntid());
 		e.setCardId(ObjectUtil.isNull(dto.getCardId()) ? 0 : dto.getCardId());
@@ -64,7 +63,7 @@ public class CompanySalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalary
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean updateSalary(Long id, CompanySalarySaveDTO dto) {
+	public boolean updateSalary(Long id, EnterpriseSalarySaveDTO dto) {
 		EnterpriseUserSalary e = baseMapper.selectById(id);
 		if (ObjectUtil.isNull(e)) {
 			return false;

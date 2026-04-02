@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "企业信息更新")
-public class CompanyUpdateDTO {
+public class EnterpriseUpdateDTO {
 
 	@Schema(description = "Logo")
 	private String logo;

@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.AssessPlanMapper;
 import com.bubblecloud.biz.oa.service.AssessPlanService;
 import com.bubblecloud.common.core.util.R;
@@ -19,9 +20,6 @@ import cn.hutool.core.util.ObjectUtil;
 @Service
 public class AssessPlanServiceImpl extends UpServiceImpl<AssessPlanMapper, AssessPlan> implements AssessPlanService {
 
-	private static final String NOT_EXISTS = "common.operation.noExists";
-
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public R create(AssessPlan dto) {
@@ -38,7 +36,7 @@ public class AssessPlanServiceImpl extends UpServiceImpl<AssessPlanMapper, Asses
 	public R update(AssessPlan dto) {
 		AssessPlan existing = getById(dto.getId());
 		if (ObjectUtil.isNull(existing)) {
-			throw new IllegalArgumentException(NOT_EXISTS);
+			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 		return super.update(existing);
 	}

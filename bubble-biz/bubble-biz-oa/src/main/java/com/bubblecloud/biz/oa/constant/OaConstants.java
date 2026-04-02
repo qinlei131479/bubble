@@ -17,4 +17,6 @@ public interface OaConstants {
 	String UPDATE_SUCC = "common.update.succ";
 
 	String OPT_SUCC = "common.operation.succ";
+
+	String DELETE_SUCC = "common.delete.succ";
 }

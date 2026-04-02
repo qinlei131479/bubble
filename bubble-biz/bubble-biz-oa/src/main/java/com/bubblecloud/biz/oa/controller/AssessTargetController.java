@@ -1,7 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AssessTargetService;
+import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetSaveDTO;
@@ -36,8 +38,9 @@ public class AssessTargetController {
 
 	@GetMapping({ "", "/page" })
 	@Operation(summary = "绩效指标列表")
-	public R<SimplePageVO> page(@ParameterObject Pg<AssessTarget> pg, @ParameterObject AssessTarget query) {
-		return R.phpOk(assessTargetService.pageTarget(pg, query));
+	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject AssessTarget query) {
+		Page<AssessTarget> res = assessTargetService.findPg(pg, query);
+		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
 	@GetMapping("/create")
@@ -49,7 +52,8 @@ public class AssessTargetController {
 	@PostMapping
 	@Operation(summary = "创建绩效指标")
 	public R<String> create(@RequestBody AssessTargetSaveDTO dto) {
-		assessTargetService.createTarget(dto);
+		AssessTarget obj = PojoConvertUtil.convertPojo(dto, AssessTarget.class);
+		assessTargetService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
@@ -62,15 +66,17 @@ public class AssessTargetController {
 	@PutMapping("/{id}")
 	@Operation(summary = "修改绩效指标")
 	public R<String> update(@PathVariable Long id, @RequestBody AssessTargetSaveDTO dto) {
-		assessTargetService.updateTarget(id, dto);
+		AssessTarget obj = PojoConvertUtil.convertPojo(dto, AssessTarget.class);
+		obj.setId(id);
+		assessTargetService.update(obj);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除绩效指标")
 	public R<String> removeById(@PathVariable Long id) {
-		assessTargetService.removeTarget(id);
-		return R.phpOk("common.delete.succ");
+		assessTargetService.deleteById(id);
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

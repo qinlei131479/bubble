@@ -2,9 +2,9 @@ package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
-import com.bubblecloud.biz.oa.service.CompanySalaryService;
+import com.bubblecloud.biz.oa.service.EnterpriseUserSalaryService;
 import com.bubblecloud.common.core.util.R;
-import com.bubblecloud.oa.api.dto.CompanySalarySaveDTO;
+import com.bubblecloud.oa.api.dto.EnterpriseSalarySaveDTO;
 import com.bubblecloud.oa.api.entity.EnterpriseUserSalary;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,25 +31,25 @@ import cn.hutool.core.util.ObjectUtil;
 @RequiredArgsConstructor
 @RequestMapping("/ent/company/salary")
 @Tag(name = "调薪记录")
-public class CompanySalaryController {
+public class EnterpriseUserSalaryController {
 
-	private final CompanySalaryService companySalaryService;
+	private final EnterpriseUserSalaryService enterpriseUserSalaryService;
 
-	@GetMapping(value = { "", "/page" })
+	@GetMapping(value = {"", "/page"})
 	@Operation(summary = "调薪记录列表")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer entid,
-			@RequestParam(required = false) Integer cardId, @RequestParam(required = false) Integer linkId,
-			@RequestParam(required = false) Long id, @RequestParam(defaultValue = "1") Long current,
-			@RequestParam(defaultValue = "20") Long size) {
+								@RequestParam(required = false) Integer cardId, @RequestParam(required = false) Integer linkId,
+								@RequestParam(required = false) Long id, @RequestParam(defaultValue = "1") Long current,
+								@RequestParam(defaultValue = "20") Long size) {
 		Page<EnterpriseUserSalary> mpPage = new Page<>(current, size);
-		Page<EnterpriseUserSalary> r = companySalaryService.pageSalary(entid, cardId, linkId, id, mpPage);
+		Page<EnterpriseUserSalary> r = enterpriseUserSalaryService.pageSalary(entid, cardId, linkId, id, mpPage);
 		return R.phpOk(SimplePageVO.of((int) r.getCurrent(), (int) r.getSize(), r.getTotal(), r.getRecords()));
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "获取调薪记录")
 	public R<EnterpriseUserSalary> details(@PathVariable Long id) {
-		EnterpriseUserSalary e = companySalaryService.getForEdit(id);
+		EnterpriseUserSalary e = enterpriseUserSalaryService.getForEdit(id);
 		if (ObjectUtil.isNull(e)) {
 			return R.phpFailed("缺少必要参数");
 		}
@@ -58,8 +58,8 @@ public class CompanySalaryController {
 
 	@PostMapping
 	@Operation(summary = "保存调薪记录")
-	public R<String> create(@RequestBody CompanySalarySaveDTO dto) {
-		if (companySalaryService.saveSalary(dto)) {
+	public R<String> create(@RequestBody EnterpriseSalarySaveDTO dto) {
+		if (enterpriseUserSalaryService.saveSalary(dto)) {
 			return R.phpOk(OaConstants.INSERT_SUCC);
 		}
 		return R.phpFailed("common.insert.fail");
@@ -67,8 +67,8 @@ public class CompanySalaryController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改调薪记录")
-	public R<String> update(@PathVariable Long id, @RequestBody CompanySalarySaveDTO dto) {
-		if (companySalaryService.updateSalary(id, dto)) {
+	public R<String> update(@PathVariable Long id, @RequestBody EnterpriseSalarySaveDTO dto) {
+		if (enterpriseUserSalaryService.updateSalary(id, dto)) {
 			return R.phpOk(OaConstants.UPDATE_SUCC);
 		}
 		return R.phpFailed("common.update.fail");
@@ -77,8 +77,8 @@ public class CompanySalaryController {
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除调薪记录")
 	public R<String> removeById(@PathVariable Long id) {
-		if (companySalaryService.removeSalary(id)) {
-			return R.phpOk("common.delete.succ");
+		if (enterpriseUserSalaryService.removeSalary(id)) {
+			return R.phpOk(OaConstants.DELETE_SUCC);
 		}
 		return R.phpFailed("common.delete.fail");
 	}
@@ -89,7 +89,7 @@ public class CompanySalaryController {
 		if (cardId <= 0) {
 			return R.phpFailed("缺少必要参数");
 		}
-		return R.phpOk(companySalaryService.lastByCardId(cardId));
+		return R.phpOk(enterpriseUserSalaryService.lastByCardId(cardId));
 	}
 
 }

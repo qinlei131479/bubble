@@ -3,6 +3,7 @@ package com.bubblecloud.biz.oa.service.impl;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.PromotionDataMapper;
 import com.bubblecloud.biz.oa.service.PromotionDataService;
 import com.bubblecloud.common.core.util.R;
@@ -28,8 +29,6 @@ import cn.hutool.core.util.StrUtil;
 @Service
 public class PromotionDataServiceImpl extends UpServiceImpl<PromotionDataMapper, PromotionData>
 		implements PromotionDataService {
-
-	private static final String NOT_EXISTS = "common.operation.noExists";
 
 	@Override
 	public SimplePageVO pagePromotionData(Pg<PromotionData> pg, PromotionData query) {
@@ -115,7 +114,7 @@ public class PromotionDataServiceImpl extends UpServiceImpl<PromotionDataMapper,
 
 	private void assertExists(PromotionData entity) {
 		if (ObjectUtil.isNull(entity) || ObjectUtil.isNotNull(entity.getDeletedAt())) {
-			throw new IllegalArgumentException(NOT_EXISTS);
+			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 	}
 

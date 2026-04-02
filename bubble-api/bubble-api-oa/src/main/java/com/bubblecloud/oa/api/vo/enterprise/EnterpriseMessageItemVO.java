@@ -1,4 +1,4 @@
-package com.bubblecloud.oa.api.vo.company;
+package com.bubblecloud.oa.api.vo.enterprise;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -11,6 +11,6 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "企业消息项")
-public class CompanyMessageItemVO {
+public class EnterpriseMessageItemVO {
 
 }

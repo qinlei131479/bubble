@@ -157,7 +157,7 @@ public class AssessController {
 	@Operation(summary = "绩效删除")
 	public R<String> delete(@PathVariable Long id) {
 		assessService.deleteById(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@GetMapping("/del_record")

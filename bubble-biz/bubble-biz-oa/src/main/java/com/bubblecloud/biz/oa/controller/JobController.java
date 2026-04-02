@@ -74,7 +74,7 @@ public class JobController {
 	@Operation(summary = "删除岗位")
 	public R<String> removeById(@PathVariable Long id) {
 		rankJobService.removeJob(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 	@PutMapping("/show/{id}/{status}")

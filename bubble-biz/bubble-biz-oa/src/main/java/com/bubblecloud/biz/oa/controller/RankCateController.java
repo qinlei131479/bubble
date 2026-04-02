@@ -64,7 +64,7 @@ public class RankCateController {
 	@Operation(summary = "删除职级体系分类")
 	public R<String> removeById(@PathVariable Long id) {
 		rankCategoryService.removeRankCate(id);
-		return R.phpOk("common.delete.succ");
+		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 
 }

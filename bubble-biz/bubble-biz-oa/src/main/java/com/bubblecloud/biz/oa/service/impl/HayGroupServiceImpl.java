@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.HayGroupDataMapper;
 import com.bubblecloud.biz.oa.mapper.HayGroupMapper;
 import com.bubblecloud.biz.oa.service.HayGroupService;
@@ -29,8 +30,6 @@ import cn.hutool.core.util.StrUtil;
 @Service
 @RequiredArgsConstructor
 public class HayGroupServiceImpl extends UpServiceImpl<HayGroupMapper, HayGroup> implements HayGroupService {
-
-	private static final String NOT_EXISTS = "common.operation.noExists";
 
 	private final HayGroupDataMapper hayGroupDataMapper;
 
@@ -102,7 +101,7 @@ public class HayGroupServiceImpl extends UpServiceImpl<HayGroupMapper, HayGroup>
 
 	private void assertExists(HayGroup entity) {
 		if (ObjectUtil.isNull(entity) || ObjectUtil.isNotNull(entity.getDeletedAt())) {
-			throw new IllegalArgumentException(NOT_EXISTS);
+			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 	}
 

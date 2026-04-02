@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "调薪记录")
-public class CompanySalarySaveDTO {
+public class EnterpriseSalarySaveDTO {
 
 	@JsonAlias("card_id")
 	@Schema(description = "档案 card_id")
