@@ -6,7 +6,6 @@ import feign.RequestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
-
 /**
  * feign 语言环境透传拦截器
  *

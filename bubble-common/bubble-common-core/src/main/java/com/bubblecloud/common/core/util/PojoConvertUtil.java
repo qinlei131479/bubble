@@ -23,6 +23,7 @@ public class PojoConvertUtil {
 	 * 变量缓存
 	 */
 	private static final Map<String, Map<String, Field>> cacheFields = new ConcurrentHashMap<>();
+
 	private static final Set<Class> basicClass = new HashSet<>();
 
 	static {
@@ -40,7 +41,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 将具有相同属性的类型进行转换
-	 *
 	 * @param orig
 	 * @param <T>
 	 * @return
@@ -53,14 +53,14 @@ public class PojoConvertUtil {
 			T target = targetClass.newInstance();
 			BeanUtil.copyProperties(orig, target);
 			return target;
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			return null;
 		}
 	}
 
 	/**
 	 * 转换list
-	 *
 	 * @param list
 	 * @param targetClass
 	 * @param <T>
@@ -79,7 +79,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 获取字段值
-	 *
 	 * @param field
 	 * @param obj
 	 * @return
@@ -91,7 +90,8 @@ public class PojoConvertUtil {
 			// 设置可访问的权限
 			field.setAccessible(true);
 			return field.get(obj);
-		} finally {
+		}
+		finally {
 			// 恢复访问权限
 			field.setAccessible(access);
 		}
@@ -99,7 +99,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 设置方法值
-	 *
 	 * @param field
 	 * @param obj
 	 * @param value
@@ -112,7 +111,8 @@ public class PojoConvertUtil {
 			// 设置可访问的权限
 			field.setAccessible(true);
 			field.set(obj, value);
-		} finally {
+		}
+		finally {
 			// 恢复访问权限
 			field.setAccessible(access);
 		}
@@ -120,7 +120,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 设置Map
-	 *
 	 * @param value
 	 * @param origField
 	 * @param targetField
@@ -154,7 +153,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 设置集合
-	 *
 	 * @param value
 	 * @param origField
 	 * @param targetField
@@ -189,7 +187,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 设置枚举类型
-	 *
 	 * @param value
 	 * @param origField
 	 * @param targetField
@@ -199,7 +196,8 @@ public class PojoConvertUtil {
 	private static <T> void setEnum(Enum value, Field origField, Field targetField, T targetObject) throws Exception {
 		if (origField.equals(targetField)) {
 			setFieldValue(targetField, targetObject, value);
-		} else {
+		}
+		else {
 			// 枚举类型都具有一个static修饰的valueOf方法
 			Method method = targetField.getType().getMethod("valueOf", String.class);
 			setFieldValue(targetField, targetObject, method.invoke(null, value.toString()));
@@ -208,7 +206,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 设置日期类型
-	 *
 	 * @param value
 	 * @param targetField
 	 * @param targetFieldType
@@ -216,15 +213,18 @@ public class PojoConvertUtil {
 	 * @param <T>
 	 */
 	private static <T> void setDate(Date value, Field targetField, Class targetFieldType, T targetObject,
-									boolean sameType) throws IllegalAccessException {
+			boolean sameType) throws IllegalAccessException {
 		Date date = null;
 		if (sameType) {
 			date = value;
-		} else if (targetFieldType.equals(java.sql.Date.class)) {
+		}
+		else if (targetFieldType.equals(java.sql.Date.class)) {
 			date = new java.sql.Date(value.getTime());
-		} else if (targetFieldType.equals(Date.class)) {
+		}
+		else if (targetFieldType.equals(Date.class)) {
 			date = new Date(value.getTime());
-		} else if (targetFieldType.equals(java.sql.Timestamp.class)) {
+		}
+		else if (targetFieldType.equals(java.sql.Timestamp.class)) {
 			date = new java.sql.Timestamp(value.getTime());
 		}
 		setFieldValue(targetField, targetObject, date);
@@ -232,7 +232,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 获取适配方法
-	 *
 	 * @param clazz
 	 * @param fieldName
 	 * @return
@@ -256,7 +255,6 @@ public class PojoConvertUtil {
 
 	/**
 	 * 确实是否为基础类型
-	 *
 	 * @param clazz
 	 * @return
 	 */
@@ -266,11 +264,11 @@ public class PojoConvertUtil {
 
 	/**
 	 * 判断变量是否有静态修饰符static
-	 *
 	 * @param field
 	 * @return
 	 */
 	private static boolean isStatic(Field field) {
 		return (8 & field.getModifiers()) == 8;
 	}
+
 }
