@@ -11,16 +11,8 @@ import com.bubblecloud.oa.api.entity.Category;
  * @author qinlei
  * @date 2026/3/30
  */
-public interface QuickCateAdminService extends UpService<Category> {
+public interface CategoryService extends UpService<Category> {
 
-	List<Category> list(Integer entid);
-
-	Category getCate(Long id);
-
-	Long saveCate(Category row);
-
-	void updateCate(Category row);
-
-	void deleteCate(Long id);
+	List<Category> list(Long entId);
 
 }

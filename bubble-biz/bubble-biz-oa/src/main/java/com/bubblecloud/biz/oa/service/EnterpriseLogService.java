@@ -9,6 +9,6 @@ import com.bubblecloud.oa.api.entity.EnterpriseLog;
  * @author qinlei
  * @date 2026/3/31
  */
-public interface SystemLogAdminService extends UpService<EnterpriseLog> {
+public interface EnterpriseLogService extends UpService<EnterpriseLog> {
 
 }

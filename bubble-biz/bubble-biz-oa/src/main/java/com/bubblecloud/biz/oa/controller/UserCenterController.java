@@ -1,13 +1,14 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -24,9 +25,8 @@ public class UserCenterController {
 
 	@GetMapping("/resume/page")
 	@Operation(summary = "用户简历分页")
-	public R<SimplePageVO> resumePage(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
-		return R.phpOk(SimplePageVO.empty(current, size));
+	public R<SimplePageVO> page(@ParameterObject Pg pg) {
+		return R.phpOk(SimplePageVO.empty((int) pg.getCurrent(), (int) pg.getSize()));
 	}
 
 }

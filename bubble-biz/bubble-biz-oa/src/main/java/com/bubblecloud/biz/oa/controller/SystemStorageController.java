@@ -2,8 +2,10 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Map;
 
-import com.bubblecloud.biz.oa.service.SystemStorageAdminService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.bubblecloud.biz.oa.service.SystemStorageService;
 import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.oa.api.entity.SystemStorage;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,14 +31,16 @@ import cn.hutool.core.util.ObjectUtil;
 @RequiredArgsConstructor
 @RequestMapping("/ent/config/storage")
 @Tag(name = "云存储配置")
-public class SystemStorageAdminController {
+public class SystemStorageController {
 
-	private final SystemStorageAdminService systemStorageAdminService;
+	private final SystemStorageService systemStorageService;
 
 	@GetMapping("/index")
 	@Operation(summary = "云存储列表")
 	public R<?> list(@RequestParam(required = false) Integer type) {
-		return R.phpOk(systemStorageAdminService.list(type));
+		return R.phpOk(systemStorageService.list(Wrappers.lambdaQuery(SystemStorage.class)
+				.eq(SystemStorage::getIsDelete, 0)
+				.orderByDesc(SystemStorage::getId)));
 	}
 
 	@GetMapping("/create/{type}")
@@ -54,7 +58,7 @@ public class SystemStorageAdminController {
 	@GetMapping("/config")
 	@Operation(summary = "当前上传方式")
 	public R<Map<String, Integer>> getConfig() {
-		return R.phpOk(Map.of("type", systemStorageAdminService.getUploadType()));
+		return R.phpOk(Map.of("type", systemStorageService.getUploadType()));
 	}
 
 	@PostMapping("/config")
@@ -72,29 +76,26 @@ public class SystemStorageAdminController {
 	@PostMapping("/{type}")
 	@Operation(summary = "保存云存储")
 	public R<String> create(@PathVariable Integer type, @RequestBody JsonNode body) {
-		String accessKey = text(body, "accessKey");
-		String name = text(body, "name");
-		String region = text(body, "region");
-		String acl = text(body, "acl");
-		systemStorageAdminService.saveStorage(type, accessKey, name, region, acl);
+		SystemStorage obj = new SystemStorage();
+		obj.setType(type);
+		obj.setAccessKey(text(body, "accessKey"));
+		obj.setName(text(body, "name"));
+		obj.setRegion(text(body, "region"));
+		obj.setAcl(text(body, "acl"));
+		systemStorageService.create(obj);
 		return R.phpOk("添加成功");
 	}
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "启用该存储")
-	public R<String> status(@PathVariable Integer id) {
-		try {
-			systemStorageAdminService.setActiveStatus(id);
-			return R.phpOk("修改成功");
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+	public R<String> updateStatus(@PathVariable Long id) {
+		systemStorageService.updateStatus(id);
+		return R.phpOk("修改成功");
 	}
 
 	@GetMapping("/domain/{id}")
 	@Operation(summary = "域名表单占位")
-	public R<String> getUpdateDomainForm(@PathVariable Integer id) {
+	public R<String> getUpdateDomainForm(@PathVariable Long id) {
 		return R.phpOk("ok");
 	}
 
@@ -106,22 +107,19 @@ public class SystemStorageAdminController {
 
 	@PostMapping("/domain/{id}")
 	@Operation(summary = "修改域名")
-	public R<String> updateDomain(@PathVariable Integer id, @RequestBody JsonNode body) {
-		String domain = text(body, "domain");
-		String cdn = text(body, "cdn");
-		try {
-			systemStorageAdminService.updateDomain(id, domain, cdn);
-			return R.phpOk("修改成功");
-		}
-		catch (IllegalArgumentException ex) {
-			return R.phpFailed(ex.getMessage());
-		}
+	public R<String> updateDomain(@PathVariable Long id, @RequestBody JsonNode body) {
+		SystemStorage obj = new SystemStorage();
+		obj.setId(id);
+		obj.setDomain(text(body, "domain"));
+		obj.setCdn(text(body, "cdn"));
+		systemStorageService.updateDomain(obj);
+		return R.phpOk("修改成功");
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
-	public R<String> removeById(@PathVariable Integer id) {
-		systemStorageAdminService.deleteStorage(id);
+	public R<String> removeById(@PathVariable Long id) {
+		systemStorageService.deleteById(id);
 		return R.phpOk("删除成功");
 	}
 
@@ -129,10 +127,9 @@ public class SystemStorageAdminController {
 	@Operation(summary = "切换存储方式")
 	public R<String> uploadType(@PathVariable Integer type) {
 		try {
-			systemStorageAdminService.setUploadType(type);
+			systemStorageService.setUploadType(type);
 			return R.phpOk(type != 1 ? "切换云存储成功,请检查是否开启使用了存储空间" : "切换本地存储成功");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
 		}
 	}
@@ -140,7 +137,7 @@ public class SystemStorageAdminController {
 	@PutMapping("/save_basic")
 	@Operation(summary = "保存云存储详细配置")
 	public R<String> updateConfig(@RequestBody JsonNode body) {
-		systemStorageAdminService.saveBasicConfig(body);
+		systemStorageService.saveBasicConfig(body);
 		return R.phpOk("保存成功");
 	}
 

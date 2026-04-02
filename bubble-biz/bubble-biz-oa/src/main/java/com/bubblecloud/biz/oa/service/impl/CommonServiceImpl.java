@@ -1,11 +1,6 @@
 package com.bubblecloud.biz.oa.service.impl;
 
-import com.bubblecloud.biz.oa.service.AdminService;
-import com.bubblecloud.biz.oa.service.CommonService;
-import com.bubblecloud.biz.oa.service.MessageService;
-import com.bubblecloud.biz.oa.service.SiteService;
-import com.bubblecloud.biz.oa.service.SmsVerifyService;
-import com.bubblecloud.biz.oa.service.SystemConfigService;
+import com.bubblecloud.biz.oa.service.*;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.dto.SmsVerifySendDTO;
@@ -18,7 +13,6 @@ import com.bubblecloud.oa.api.vo.common.CommonAuthVO;
 import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
 import com.bubblecloud.oa.api.vo.common.CommonVersionVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
@@ -41,7 +35,7 @@ public class CommonServiceImpl implements CommonService {
 
 	private final AdminService adminService;
 
-	private final MessageService messageService;
+	private final EnterpriseMessageNoticeService enterpriseMessageNoticeService;
 
 	@Override
 	public CaptchaVO captcha() {
@@ -90,7 +84,7 @@ public class CommonServiceImpl implements CommonService {
 	public CommonMessageVO messageList(Integer page, Integer limit, String cateId, String title) {
 		Long userId = OaSecurityUtil.currentUserId();
 		Admin admin = requireAdmin(userId);
-		return messageService.getMessageList(userId, admin.getUid(), 1, page, limit,
+		return enterpriseMessageNoticeService.getMessageList(userId, admin.getUid(), 1L, page, limit,
 				ObjectUtil.isNull(cateId) ? "" : cateId, ObjectUtil.isNull(title) ? "" : title);
 	}
 
@@ -99,7 +93,7 @@ public class CommonServiceImpl implements CommonService {
 	public void updateMessageRead(Long messageId, Integer isRead) {
 		Long userId = OaSecurityUtil.currentUserId();
 		Admin admin = requireAdmin(userId);
-		messageService.updateMessageRead(userId, admin.getUid(), messageId, isRead);
+		enterpriseMessageNoticeService.updateMessageRead(userId, admin.getUid(), messageId, isRead);
 	}
 
 	@Override

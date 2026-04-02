@@ -31,15 +31,15 @@ public class Message extends Req<Message> {
 	private Long id;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 	@Schema(description = "关联业务ID")
 	@TableField("relation_id")
-	private Integer relationId;
+	private Long relationId;
 
 	@Schema(description = "分类ID")
 	@TableField("cate_id")
-	private Integer cateId;
+	private Long cateId;
 
 	@Schema(description = "关联 curl ID")
 	@TableField("curl_id")

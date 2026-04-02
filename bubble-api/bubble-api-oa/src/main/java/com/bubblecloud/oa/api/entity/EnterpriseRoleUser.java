@@ -27,13 +27,13 @@ public class EnterpriseRoleUser extends Req<EnterpriseRoleUser> {
 	private Long id;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 	@Schema(description = "角色ID")
-	private Integer roleId;
+	private Long roleId;
 
 	@Schema(description = "员工 admin.id")
-	private Integer userId;
+	private Long userId;
 
 	@Schema(description = "状态 1 启用 0 禁用")
 	private Integer status;

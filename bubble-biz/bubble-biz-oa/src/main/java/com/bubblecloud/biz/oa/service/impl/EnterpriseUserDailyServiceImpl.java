@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.EnterpriseUserDailyMapper;
 import com.bubblecloud.biz.oa.mapper.UserPendingMapper;
-import com.bubblecloud.biz.oa.service.WorkbenchService;
+import com.bubblecloud.biz.oa.service.EnterpriseUserDailyService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.EnterpriseUserDaily;
 import com.bubblecloud.oa.api.entity.UserPending;
@@ -37,8 +37,8 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class WorkbenchServiceImpl extends UpServiceImpl<EnterpriseUserDailyMapper, EnterpriseUserDaily>
-		implements WorkbenchService {
+public class EnterpriseUserDailyServiceImpl extends UpServiceImpl<EnterpriseUserDailyMapper, EnterpriseUserDaily>
+		implements EnterpriseUserDailyService {
 
 	private final UserPendingMapper userPendingMapper;
 

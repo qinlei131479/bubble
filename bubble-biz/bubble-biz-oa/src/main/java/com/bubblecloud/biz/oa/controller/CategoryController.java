@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.constant.OaConstants;
-import com.bubblecloud.biz.oa.service.QuickCateAdminService;
+import com.bubblecloud.biz.oa.service.CategoryService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Category;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,14 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/ent/config/quickCate")
 @Tag(name = "快捷入口分类")
-public class QuickCateAdminController {
+public class CategoryController {
 
-	private final QuickCateAdminService quickCateAdminService;
+	private final CategoryService categoryService;
 
 	@GetMapping
 	@Operation(summary = "分类列表")
-	public R<?> list(@RequestParam(defaultValue = "0") Integer entid) {
-		return R.phpOk(quickCateAdminService.list(entid));
+	public R<?> list(@RequestParam(defaultValue = "0") Long entid) {
+		return R.phpOk(categoryService.list(entid));
 	}
 
 	@GetMapping("/create")
@@ -45,29 +45,29 @@ public class QuickCateAdminController {
 
 	@PostMapping
 	@Operation(summary = "新增分类")
-	public R<String> create(@RequestBody Category body) {
-		quickCateAdminService.saveCate(body);
+	public R<String> create(@RequestBody Category req) {
+		categoryService.create(req);
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
 	@GetMapping("/{id}/edit")
 	@Operation(summary = "编辑数据")
 	public R<Category> details(@PathVariable Long id) {
-		return R.phpOk(quickCateAdminService.getCate(id));
+		return R.phpOk(categoryService.getById(id));
 	}
 
 	@PutMapping("/{id}")
 	@Operation(summary = "保存修改")
-	public R<String> update(@PathVariable Long id, @RequestBody Category body) {
-		body.setId(id);
-		quickCateAdminService.updateCate(body);
+	public R<String> update(@PathVariable Long id, @RequestBody Category req) {
+		req.setId(id);
+		categoryService.update(req);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除分类")
 	public R<String> removeById(@PathVariable Long id) {
-		quickCateAdminService.deleteCate(id);
+		categoryService.deleteById(id);
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 

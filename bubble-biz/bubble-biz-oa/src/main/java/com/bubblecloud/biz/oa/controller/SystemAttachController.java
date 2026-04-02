@@ -8,6 +8,7 @@ import com.bubblecloud.oa.api.entity.SystemAttach;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,19 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/ent/system/attach")
 @Tag(name = "系统附件")
-public class SystemAttachAdminController {
+public class SystemAttachController {
 
 	private final SystemAttachAdminService systemAttachAdminService;
 
-	@GetMapping(value = { "", "/page" })
+	@GetMapping(value = {"", "/page"})
 	@Operation(summary = "附件分页")
-	public R<Page<SystemAttach>> page(@RequestParam(defaultValue = "1") int entid,
-			@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int limit) {
-		Pg<SystemAttach> pg = new Pg<>();
+	public R<Page<SystemAttach>> page(@ParameterObject Pg pg, @ParameterObject SystemAttach query,
+									  @RequestParam(defaultValue = "1") int pageNum,
+									  @RequestParam(defaultValue = "20") int limit) {
 		pg.setCurrent(pageNum);
 		pg.setSize(limit);
-		SystemAttach query = new SystemAttach();
-		query.setEntid(entid);
 		return R.phpOk(systemAttachAdminService.findPg(pg, query));
 	}
 

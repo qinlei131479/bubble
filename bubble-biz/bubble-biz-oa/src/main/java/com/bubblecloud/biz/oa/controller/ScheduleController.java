@@ -39,7 +39,7 @@ public class ScheduleController {
 	@GetMapping("/page")
 	@Operation(summary = "日程分页（占位）")
 	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
+								@RequestParam(defaultValue = "20") Integer size) {
 		return R.phpOk(SimplePageVO.empty(current, size));
 	}
 
@@ -51,15 +51,15 @@ public class ScheduleController {
 
 	@PostMapping("/index")
 	@Operation(summary = "日程列表")
-	public R<List<ScheduleRecordVO>> list(@RequestBody(required = false) ScheduleIndexQueryDTO body) {
-		return R
-			.phpOk(scheduleApiService.scheduleIndex(ObjectUtil.isNotNull(body) ? body : new ScheduleIndexQueryDTO()));
+	public R<List<ScheduleRecordVO>> list(@RequestBody(required = false) ScheduleIndexQueryDTO dto) {
+		return R.phpOk(scheduleApiService.scheduleIndex(dto));
 	}
 
 	@PutMapping("/status/{id}")
 	@Operation(summary = "修改日程状态")
-	public R<String> status(@PathVariable Long id, @RequestBody(required = false) ScheduleStatusUpdateDTO body) {
-		scheduleApiService.updateStatus(id, ObjectUtil.isNotNull(body) ? body : new ScheduleStatusUpdateDTO());
+	public R<String> status(@PathVariable Long id, @RequestBody(required = false) ScheduleStatusUpdateDTO dto) {
+		dto.setId(id);
+		scheduleApiService.updateStatus(dto);
 		return R.phpOk("ok");
 	}
 

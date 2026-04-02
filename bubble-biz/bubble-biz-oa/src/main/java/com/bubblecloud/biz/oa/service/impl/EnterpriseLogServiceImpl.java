@@ -1,7 +1,7 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import com.bubblecloud.biz.oa.mapper.EnterpriseLogMapper;
-import com.bubblecloud.biz.oa.service.SystemLogAdminService;
+import com.bubblecloud.biz.oa.service.EnterpriseLogService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.EnterpriseLog;
 import org.springframework.stereotype.Service;
@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2026/3/31
  */
 @Service
-public class SystemLogAdminServiceImpl extends UpServiceImpl<EnterpriseLogMapper, EnterpriseLog>
-		implements SystemLogAdminService {
+public class EnterpriseLogServiceImpl extends UpServiceImpl<EnterpriseLogMapper, EnterpriseLog>
+		implements EnterpriseLogService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

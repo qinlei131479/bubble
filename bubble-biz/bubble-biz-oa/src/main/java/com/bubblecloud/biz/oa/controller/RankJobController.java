@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/ent/jobs")
 @Tag(name = "岗位")
-public class JobController {
+public class RankJobController {
 
 	private final RankJobService rankJobService;
 

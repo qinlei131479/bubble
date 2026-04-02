@@ -18,7 +18,7 @@ import com.bubblecloud.oa.api.vo.workbench.WorkbenchStatisticsTypeVO;
  * @author qinlei
  * @date 2026/3/28 15:30
  */
-public interface WorkbenchService extends UpService<EnterpriseUserDaily> {
+public interface EnterpriseUserDailyService extends UpService<EnterpriseUserDaily> {
 
 	/**
 	 * 快捷入口：cates + checkd（默认含工作台、我的日程、企业通讯录）。

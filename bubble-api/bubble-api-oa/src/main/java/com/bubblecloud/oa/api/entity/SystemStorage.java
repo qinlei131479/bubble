@@ -27,7 +27,7 @@ public class SystemStorage extends Req<SystemStorage> {
 
 	@TableId(type = IdType.AUTO)
 	@Schema(description = "主键ID")
-	private Integer id;
+	private Long id;
 
 	@Schema(description = "AccessKey")
 	@TableField("access_key")

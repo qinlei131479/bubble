@@ -1,20 +1,14 @@
 package com.bubblecloud.biz.oa.service;
 
 import com.bubblecloud.common.mybatis.service.UpService;
-import com.bubblecloud.oa.api.entity.EnterpriseMessageNotice;
-import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
+import com.bubblecloud.oa.api.entity.Message;
 
 /**
- * 公共消息列表（对齐 PHP NoticeRecordService::getMessageList）。
+ * 系统消息配置（eb_message），对齐 PHP ent/system/message。
  *
  * @author qinlei
- * @date 2026/3/30 18:00
+ * @date 2026/3/31
  */
-public interface MessageService extends UpService<EnterpriseMessageNotice> {
-
-	CommonMessageVO getMessageList(Long adminId, String uid, Integer entid, Integer page, Integer limit, String cateId,
-			String title);
-
-	void updateMessageRead(Long adminId, String uid, Long messageId, Integer isRead);
+public interface MessageService extends UpService<Message> {
 
 }

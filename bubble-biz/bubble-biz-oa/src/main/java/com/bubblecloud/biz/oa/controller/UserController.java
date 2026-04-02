@@ -1,16 +1,14 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.constant.OaConstants;
-import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import com.bubblecloud.biz.oa.service.MenusService;
+import com.bubblecloud.biz.oa.service.ScheduleApiService;
 import com.bubblecloud.biz.oa.service.UserProfileService;
+import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
-import com.bubblecloud.oa.api.dto.CheckPwdDTO;
-import com.bubblecloud.oa.api.dto.MenusQueryDTO;
-import com.bubblecloud.oa.api.dto.UserJoinDTO;
-import com.bubblecloud.oa.api.dto.UserResumeSaveDTO;
-import com.bubblecloud.oa.api.dto.UserSelfUpdateDTO;
+import com.bubblecloud.oa.api.dto.*;
 import com.bubblecloud.oa.api.vo.MenusVO;
+import com.bubblecloud.oa.api.vo.schedule.UserScheduleDayWrapperVO;
 import com.bubblecloud.oa.api.vo.user.UserResumeDetailVO;
 import com.bubblecloud.oa.api.vo.user.UserSelfInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,14 +16,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import cn.hutool.core.util.ObjectUtil;
+
+import java.util.List;
 
 /**
  * OA 用户模块。
@@ -43,15 +37,13 @@ public class UserController {
 
 	private final UserProfileService userProfileService;
 
+	private final ScheduleApiService scheduleApiService;
+
 	@GetMapping("/menus")
 	@Operation(summary = "获取当前用户菜单")
-	public R<MenusVO> menus(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication)
-				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return R.phpFailed("未登录");
-		}
+	public R<MenusVO> menus() {
 		MenusQueryDTO dto = new MenusQueryDTO();
-		dto.setUserId(currentUser.getId());
+		dto.setUserId(OaSecurityUtil.currentUserId());
 		return R.phpOk(menusService.menus(dto));
 	}
 
@@ -70,72 +62,42 @@ public class UserController {
 	 */
 	@GetMapping("/account_info")
 	@Operation(summary = "获取当前用户账号资料（含邮箱扩展）")
-	public R<UserSelfInfoVO> accountInfo(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication)
-				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return R.phpFailed("未登录");
-		}
-		UserSelfInfoVO vo = userProfileService.getSelfInfo(currentUser.getId());
+	public R<UserSelfInfoVO> accountInfo() {
+		UserSelfInfoVO vo = userProfileService.getSelfInfo(OaSecurityUtil.currentUserId());
 		return ObjectUtil.isNull(vo) ? R.phpFailed("用户不存在") : R.phpOk(vo);
 	}
 
 	@PutMapping("/account_info")
 	@Operation(summary = "修改当前用户账号资料")
-	public R<String> updateAccountInfo(Authentication authentication,
-			@RequestBody(required = false) UserSelfUpdateDTO dto) {
-		if (ObjectUtil.isNull(authentication)
-				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return R.phpFailed("未登录");
-		}
-		if (ObjectUtil.isNull(dto)) {
-			// 兼容 PHP empty body
-			return R.phpOk(OaConstants.UPDATE_SUCC);
-		}
-		try {
-			userProfileService.updateSelf(currentUser.getId(), dto);
-			return R.phpOk(OaConstants.UPDATE_SUCC);
-		}
-		catch (IllegalArgumentException e) {
-			return R.phpFailed(e.getMessage());
-		}
+	public R<String> updateAccountInfo(@RequestBody(required = false) UserSelfUpdateDTO dto) {
+		userProfileService.updateSelf(OaSecurityUtil.currentUserId(), dto);
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@PostMapping("/checkpwd")
 	@Operation(summary = "验证密码规范")
 	public R<String> checkPwd(@RequestBody @Valid CheckPwdDTO dto) {
-		try {
-			userProfileService.checkPwd(dto);
-			return R.phpOk("验证成功");
-		}
-		catch (IllegalArgumentException e) {
-			return R.phpFailed(e.getMessage());
-		}
+		userProfileService.checkPwd(dto);
+		return R.phpOk("验证成功");
 	}
 
 	@GetMapping("/resume")
 	@Operation(summary = "获取个人简历")
-	public R<UserResumeDetailVO> resume(Authentication authentication) {
-		if (ObjectUtil.isNull(authentication)
-				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return R.phpFailed("未登录");
-		}
-		return R.phpOk(userProfileService.getResume(currentUser.getId()));
+	public R<UserResumeDetailVO> resume() {
+		return R.phpOk(userProfileService.getResume(OaSecurityUtil.currentUserId()));
 	}
 
 	@PutMapping("/resume_save")
 	@Operation(summary = "保存个人简历")
-	public R<String> resumeSave(Authentication authentication, @RequestBody UserResumeSaveDTO dto) {
-		if (ObjectUtil.isNull(authentication)
-				|| !(authentication.getPrincipal() instanceof OaCurrentUser currentUser)) {
-			return R.phpFailed("未登录");
-		}
-		try {
-			userProfileService.saveResume(currentUser.getId(), dto);
-			return R.phpOk("保存成功");
-		}
-		catch (IllegalArgumentException e) {
-			return R.phpFailed(e.getMessage());
-		}
+	public R<String> resumeSave(@RequestBody UserResumeSaveDTO dto) {
+		userProfileService.saveResume(OaSecurityUtil.currentUserId(), dto);
+		return R.phpOk("保存成功");
 	}
 
+
+	@GetMapping("/schedule")
+	@Operation(summary = "用户-日历待办列表")
+	public R<List<UserScheduleDayWrapperVO>> schedule(@ModelAttribute UserScheduleQueryDTO query) {
+		return R.phpOk(scheduleApiService.userScheduleList(query));
+	}
 }

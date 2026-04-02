@@ -17,10 +17,10 @@ public class CommonMessageVO {
 
 	private List<EnterpriseMessageNotice> list = Collections.emptyList();
 
-	private Integer messageNum;
+	private Long messageNum;
 
 	public CommonMessageVO() {
-		this.messageNum = 0;
+		this.messageNum = 0L;
 	}
 
 }

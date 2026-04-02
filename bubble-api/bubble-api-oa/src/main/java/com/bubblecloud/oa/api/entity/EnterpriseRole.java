@@ -48,7 +48,7 @@ public class EnterpriseRole extends Req<EnterpriseRole> {
 	private String apiUnique;
 
 	@Schema(description = "企业ID")
-	private Integer entid;
+	private Long entid;
 
 	@Schema(description = "数据范围")
 	private Integer dataLevel;
