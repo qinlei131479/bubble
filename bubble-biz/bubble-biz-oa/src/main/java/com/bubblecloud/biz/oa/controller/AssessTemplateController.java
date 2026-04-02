@@ -72,14 +72,14 @@ public class AssessTemplateController {
 	@Operation(summary = "收藏/取消收藏模板")
 	public R<String> toggleFavorite(@PathVariable Long id) {
 		assessTemplateService.toggleFavorite(id);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@PostMapping("/cover/{id}")
 	@Operation(summary = "设置模板封面")
 	public R<String> setCover(@PathVariable Long id, @RequestParam String cover) {
 		assessTemplateService.setCover(id, cover);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.Map;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.biz.oa.service.FormAdminService;
 import com.bubblecloud.common.core.util.R;
@@ -72,7 +73,7 @@ public class FormAdminController {
 			Integer sort = intOrNull(body, "sort");
 			int status = body.has("status") ? body.get("status").asInt(1) : 1;
 			formAdminService.updateCate(id, title, sort, status);
-			return R.phpOk("common.operation.succ");
+			return R.phpOk(OaConstants.OPT_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
@@ -96,7 +97,7 @@ public class FormAdminController {
 	public R<String> show(@PathVariable Long id, @RequestParam Integer status) {
 		try {
 			formAdminService.updateCateStatus(id, status);
-			return R.phpOk("common.operation.succ");
+			return R.phpOk(OaConstants.OPT_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
@@ -112,7 +113,7 @@ public class FormAdminController {
 				data = body;
 			}
 			formAdminService.saveFormData(types, data);
-			return R.phpOk("common.operation.succ");
+			return R.phpOk(OaConstants.OPT_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());
@@ -126,7 +127,7 @@ public class FormAdminController {
 			long id = body.has("id") ? body.get("id").asLong() : 0L;
 			int cateId = body.has("cate_id") ? body.get("cate_id").asInt() : 0;
 			formAdminService.moveFormData(types, id, cateId);
-			return R.phpOk("common.operation.succ");
+			return R.phpOk(OaConstants.OPT_SUCC);
 		}
 		catch (IllegalArgumentException ex) {
 			return R.phpFailed(ex.getMessage());

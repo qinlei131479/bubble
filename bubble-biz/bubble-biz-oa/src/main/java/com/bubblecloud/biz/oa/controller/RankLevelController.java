@@ -69,14 +69,14 @@ public class RankLevelController {
 	@Operation(summary = "批量修改职位等级")
 	public R<String> batchUpdate(@PathVariable String batch, @RequestBody RankLevelBatchUpdateDTO dto) {
 		rankLevelService.batchUpdateRankLevel(batch, dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@PutMapping("/relation/{id}")
 	@Operation(summary = "修改职位等级关联职级")
 	public R<String> relateRank(@PathVariable Long id, @RequestParam Long rankId) {
 		rankLevelService.relateRank(id, rankId);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@DeleteMapping("/relation/{id}")

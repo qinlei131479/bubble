@@ -80,7 +80,7 @@ public class PromotionDataController {
 	@Operation(summary = "数据项排序")
 	public R<String> sort(@PathVariable Long pid, @RequestBody PromotionDataSortDTO dto) {
 		promotionDataService.sortPromotionData(pid, dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 }

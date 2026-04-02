@@ -92,28 +92,28 @@ public class AssessController {
 	@Operation(summary = "绩效考核自评")
 	public R<String> selfEval(@PathVariable Long id, @RequestBody AssessEvalDTO dto) {
 		assessService.selfEval(id, dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@PutMapping("/superior_eval/{id}")
 	@Operation(summary = "上级评价")
 	public R<String> superiorEval(@PathVariable Long id, @RequestBody AssessEvalDTO dto) {
 		assessService.superiorEval(id, dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@PutMapping("/examine_eval/{id}")
 	@Operation(summary = "上上级审核")
 	public R<String> examineEval(@PathVariable Long id, @RequestBody AssessEvalDTO dto) {
 		assessService.examineEval(id, dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@GetMapping("/show/{id}")
 	@Operation(summary = "启用/停用绩效考核")
 	public R<String> show(@PathVariable Long id) {
 		assessService.enableAssess(id);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@GetMapping("/explain/{id}")
@@ -138,7 +138,7 @@ public class AssessController {
 	@Operation(summary = "绩效指标自评")
 	public R<String> evalTarget(@RequestBody AssessTargetEvalDTO dto) {
 		assessService.evalTarget(dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@GetMapping("/score/{id}")
@@ -170,7 +170,7 @@ public class AssessController {
 	@Operation(summary = "绩效申诉/驳回")
 	public R<String> appeal(@PathVariable Long id, @RequestBody AssessAppealDTO dto) {
 		assessService.appealOrReject(id, dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@GetMapping("/abnormal")

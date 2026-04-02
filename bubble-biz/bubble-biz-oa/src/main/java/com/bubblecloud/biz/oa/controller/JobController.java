@@ -81,7 +81,7 @@ public class JobController {
 	@Operation(summary = "修改岗位状态")
 	public R<String> updateStatus(@PathVariable Long id, @PathVariable Integer status) {
 		rankJobService.updateJobStatus(id, status);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@GetMapping("/select")

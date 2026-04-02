@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AssessScoreService;
 import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
@@ -45,7 +46,7 @@ public class AssessConfigController {
 	public R<String> saveScoreConfig(@RequestBody AssessConfigSaveDTO dto) {
 		AssessScore obj = PojoConvertUtil.convertPojo(dto, AssessScore.class);
 		assessScoreService.create(obj);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 	@GetMapping("/examine_config")

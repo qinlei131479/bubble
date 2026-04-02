@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.controller;
 
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.EmployeeTrainService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.EmployeeTrainUpdateDTO;
@@ -40,7 +41,7 @@ public class EmployeeTrainController {
 	public R<String> update(@PathVariable String type, @RequestBody EmployeeTrain dto) {
 		dto.setType(type);
 		employeeTrainService.update(dto);
-		return R.phpOk("common.operation.succ");
+		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
 }
