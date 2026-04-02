@@ -1,9 +1,11 @@
-package com.bubblecloud.biz.oa.security;
+package com.bubblecloud.biz.oa.filter;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
+import com.bubblecloud.biz.oa.util.OaPhpJwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,9 +27,9 @@ import cn.hutool.core.util.StrUtil;
 @Component
 public class OaPhpJwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final OaPhpJwtTokenService tokenService;
+	private final OaPhpJwtTokenUtil tokenService;
 
-	public OaPhpJwtAuthenticationFilter(OaPhpJwtTokenService tokenService) {
+	public OaPhpJwtAuthenticationFilter(OaPhpJwtTokenUtil tokenService) {
 		this.tokenService = tokenService;
 	}
 

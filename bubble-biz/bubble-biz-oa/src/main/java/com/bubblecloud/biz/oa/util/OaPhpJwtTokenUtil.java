@@ -1,4 +1,4 @@
-package com.bubblecloud.biz.oa.security;
+package com.bubblecloud.biz.oa.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.bubblecloud.biz.oa.constant.config.OaPhpJwtProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import cn.hutool.core.util.StrUtil;
  */
 @Component
 @RequiredArgsConstructor
-public class OaPhpJwtTokenService {
+public class OaPhpJwtTokenUtil {
 
 	private static final String HMAC_SHA256 = "HmacSHA256";
 

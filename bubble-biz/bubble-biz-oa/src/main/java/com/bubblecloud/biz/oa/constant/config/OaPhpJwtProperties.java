@@ -1,4 +1,4 @@
-package com.bubblecloud.biz.oa.security;
+package com.bubblecloud.biz.oa.constant.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

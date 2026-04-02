@@ -1,5 +1,6 @@
-package com.bubblecloud.biz.oa.security;
+package com.bubblecloud.biz.oa.constant.config;
 
+import com.bubblecloud.biz.oa.filter.OaPhpJwtAuthenticationFilter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

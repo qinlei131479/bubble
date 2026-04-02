@@ -1,4 +1,4 @@
-package com.bubblecloud.biz.oa.form;
+package com.bubblecloud.biz.oa.constant.form;
 
 import java.util.Set;
 

@@ -1,5 +1,6 @@
-package com.bubblecloud.biz.oa.security;
+package com.bubblecloud.biz.oa.util;
 
+import com.bubblecloud.biz.oa.constant.config.OaCurrentUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import cn.hutool.core.util.ObjectUtil;
