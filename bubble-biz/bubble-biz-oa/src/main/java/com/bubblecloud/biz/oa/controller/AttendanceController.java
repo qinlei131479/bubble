@@ -4,14 +4,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.bubblecloud.common.core.util.R;
-import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.placeholder.LabelValueOptionVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,13 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/ent/attendance")
 @Tag(name = "考勤管理")
 public class AttendanceController {
-
-	@GetMapping("/group/page")
-	@Operation(summary = "考勤组分页")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
-		return R.phpOk(SimplePageVO.empty(current, size));
-	}
 
 	/**
 	 * 与 PHP {@code ent/attendance/abnormal_date} 一致：可补卡异常日期下拉
