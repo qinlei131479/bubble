@@ -651,6 +651,12 @@
 | eb_client_config | ClientConfig |
 | eb_contract_resource | ContractResource |
 
+### 7.4 阶段 5 Java 落地说明（与 PHP / 库表对齐）
+
+- **表名勘误**：客户主表为 **`eb_customer`**（实体 `Customer`），非文档旧称 `eb_client_customer`；合同主表为 **`eb_contract`**（实体 `Contract`）。联系人/记录等仍以 `eb_client_*` 或业务表为准，以 `mysql-schema.sql` 与 PHP Model 为准。
+- **已接入（bubble-biz-oa）**：`CrmCustomerController`、`CrmCustomerLiaisonController`、`CrmCustomerRecordController`、`CrmContractController`、`CrmContractResourceController`、`CrmClientFollowController`、`CrmClientLabelController`（`ent/client/labels`）、`CrmClientRemindController`（`ent/client/remind`）、`CrmClientFileController`（`ent/client/file/*`，附件表 `eb_system_attach`，本地上传目录可用 JVM 参数 `-Doa.upload.dir=...` 覆盖默认 `user.dir/data/oa-upload`）、`CrmClientBillController`（`ent/client/bill/*`，含列表 census、财务审核/撤回/统计等；**未**接 PHP 侧财务总账 `BillService` 与各类 Task）、`CrmClientInvoiceController`（`ent/client/invoice/*`，含 `GET record/{id}`；**在线开票 URI** 为占位，需后续接开票网关）。占位 `ClientController` 已移除。
+- **仍待对齐**：与 PHP 全量行为（审批链、消息 Task、`getRenewCensus` 完整数据、发票日志写入、附件与财务流水双向联动等）、客户/合同列表与业绩统计字段级对齐、提醒与日程（`Schedule`）联动等。
+
 ---
 
 ## 八、阶段 6：财务管理 (P2)
