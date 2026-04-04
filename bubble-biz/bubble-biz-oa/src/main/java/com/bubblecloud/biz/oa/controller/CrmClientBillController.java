@@ -69,7 +69,7 @@ public class CrmClientBillController {
 		}
 	}
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "付款记录列表（含 census）")
 	public R<Map<String, Object>> index(@RequestParam Map<String, String> params) {
 		Map<String, String> q = toStrMap(params);
@@ -83,7 +83,7 @@ public class CrmClientBillController {
 		return R.phpOk(clientBillCrmService.billList(entid1(parseInt(q, "entid")), q, pageOf(q), limitOf(q)));
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "新增付款记录")
 	public R<Map<String, Long>> store(@RequestBody ClientBill body, @RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = OaSecurityUtil.currentUserId();
@@ -94,7 +94,8 @@ public class CrmClientBillController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改付款记录")
-	public R<String> update(@PathVariable long id, @RequestBody ClientBill body, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<String> update(@PathVariable long id, @RequestBody ClientBill body,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = OaSecurityUtil.currentUserId();
 		clientBillCrmService.updateBill(id, entid1(entid), body, uid == null ? "" : String.valueOf(uid), false);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
@@ -109,7 +110,8 @@ public class CrmClientBillController {
 
 	@PostMapping("/status/{id}")
 	@Operation(summary = "财务审核付款记录")
-	public R<String> setStatus(@PathVariable long id, @RequestBody JsonNode body, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<String> setStatus(@PathVariable long id, @RequestBody JsonNode body,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = OaSecurityUtil.currentUserId();
 		clientBillCrmService.statusUpdate(id, entid1(entid), body, uid == null ? "" : String.valueOf(uid));
 		return R.phpOk("common.operation.succ");
@@ -132,7 +134,8 @@ public class CrmClientBillController {
 
 	@GetMapping("/price_statistics/{eid}")
 	@Operation(summary = "累计付款/审核中金额")
-	public R<Map<String, String>> priceStatistics(@PathVariable int eid, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<Map<String, String>> priceStatistics(@PathVariable int eid,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		if (eid <= 0) {
 			return R.phpFailed("common.empty.attrs");
 		}
@@ -148,14 +151,15 @@ public class CrmClientBillController {
 			return R.phpFailed("common.empty.attrs");
 		}
 		Integer invoiceId = parseInt(q, "invoice_id");
-		List<ClientBill> list = clientBillCrmService.unInvoicedList(entid1(parseInt(q, "entid")), eid, invoiceId, pageOf(q),
-			limitOf(q));
+		List<ClientBill> list = clientBillCrmService.unInvoicedList(entid1(parseInt(q, "entid")), eid, invoiceId,
+				pageOf(q), limitOf(q));
 		return R.phpOk(list);
 	}
 
 	@PutMapping("/finance/{id}")
 	@Operation(summary = "财务编辑付款记录")
-	public R<String> financeUpdate(@PathVariable long id, @RequestBody ClientBill body, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<String> financeUpdate(@PathVariable long id, @RequestBody ClientBill body,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = OaSecurityUtil.currentUserId();
 		clientBillCrmService.financeUpdate(id, entid1(entid), body, uid == null ? "" : String.valueOf(uid));
 		return R.phpOk(OaConstants.UPDATE_SUCC);
@@ -170,7 +174,8 @@ public class CrmClientBillController {
 
 	@GetMapping("/contract_statistics/{cid}")
 	@Operation(summary = "合同统计")
-	public R<Map<String, String>> contractStatistics(@PathVariable int cid, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<Map<String, String>> contractStatistics(@PathVariable int cid,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		if (cid <= 0) {
 			return R.phpFailed("common.empty.attrs");
 		}
@@ -179,7 +184,8 @@ public class CrmClientBillController {
 
 	@GetMapping("/customer_statistics/{eid}")
 	@Operation(summary = "客户统计")
-	public R<Map<String, String>> customerStatistics(@PathVariable int eid, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<Map<String, String>> customerStatistics(@PathVariable int eid,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		if (eid <= 0) {
 			return R.phpFailed("common.empty.attrs");
 		}

@@ -21,7 +21,8 @@ public interface CrmClientFileService {
 
 	void deleteAttach(int entid, int attachId);
 
-	Map<String, Object> upload(int entid, int cid, int eid, int fid, MultipartFile file, String uidStr) throws IOException;
+	Map<String, Object> upload(int entid, int cid, int eid, int fid, MultipartFile file, String uidStr)
+			throws IOException;
 
 	void setRealName(int entid, int id, String realName);
 

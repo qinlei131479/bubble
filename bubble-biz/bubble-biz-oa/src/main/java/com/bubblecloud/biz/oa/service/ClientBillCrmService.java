@@ -44,8 +44,10 @@ public interface ClientBillCrmService {
 
 	Map<String, String> customerStatistics(int eid, int entid);
 
-	/** 合同续费到期摘要（按 {@code cate_id} 聚合），与 PHP 路由 {@code renew_census/{cid}} 及列表中的 {@code renew_census} 字段对齐。 */
+	/**
+	 * 合同续费到期摘要（按 {@code cate_id} 聚合），与 PHP 路由 {@code renew_census/{cid}} 及列表中的
+	 * {@code renew_census} 字段对齐。
+	 */
 	Object getRenewCensus(int cid, int entid);
 
 }
-

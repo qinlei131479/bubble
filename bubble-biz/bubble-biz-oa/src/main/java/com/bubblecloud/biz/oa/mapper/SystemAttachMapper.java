@@ -19,6 +19,7 @@ public interface SystemAttachMapper extends UpMapper<SystemAttach> {
 	/**
 	 * 客户文件列表（对齐 PHP AttachService#getRelationList：relation_type 2~6，可按客户 eid 过滤）。
 	 */
-	Page<SystemAttach> selectClientRelationPage(Page<SystemAttach> page, @Param("entid") int entid, @Param("eid") Integer eid);
+	Page<SystemAttach> selectClientRelationPage(Page<SystemAttach> page, @Param("entid") int entid,
+			@Param("eid") Integer eid);
 
 }
