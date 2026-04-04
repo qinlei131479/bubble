@@ -67,6 +67,20 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	}
 
 	@Override
+	public String getConfigRawValue(String configKey) {
+		if (StrUtil.isBlank(configKey)) {
+			return "";
+		}
+		SystemConfig c = this.getOne(
+				Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, configKey).last("LIMIT 1"),
+				false);
+		if (ObjectUtil.isNull(c) || ObjectUtil.isNull(c.getValue())) {
+			return "";
+		}
+		return c.getValue();
+	}
+
+	@Override
 	@SuppressWarnings("unused")
 	public ClientRuleApproveConfigVO getApproveConfig(Integer form) {
 		ClientRuleApproveConfigVO vo = new ClientRuleApproveConfigVO();

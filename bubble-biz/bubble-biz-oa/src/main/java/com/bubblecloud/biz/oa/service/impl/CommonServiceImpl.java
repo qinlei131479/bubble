@@ -9,13 +9,20 @@ import com.bubblecloud.oa.api.vo.CaptchaVO;
 import com.bubblecloud.oa.api.vo.ConfigVO;
 import com.bubblecloud.oa.api.vo.SiteVO;
 import com.bubblecloud.oa.api.vo.SmsVerifyKeyVO;
+import com.bubblecloud.oa.api.vo.common.CityTreeNodeVO;
 import com.bubblecloud.oa.api.vo.common.CommonAuthVO;
 import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
+import com.bubblecloud.oa.api.vo.common.CommonSiteAddressVO;
 import com.bubblecloud.oa.api.vo.common.CommonVersionVO;
+import com.bubblecloud.oa.api.vo.common.InitDataUrlVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
+import java.util.List;
 
 /**
  * {@link CommonService} 实现。
@@ -37,9 +44,15 @@ public class CommonServiceImpl implements CommonService {
 
 	private final EnterpriseMessageNoticeService enterpriseMessageNoticeService;
 
+	private final SystemBackupService systemBackupService;
+
+	private final SystemCityService systemCityService;
+
+	private final OaImageCaptchaService oaImageCaptchaService;
+
 	@Override
 	public CaptchaVO captcha() {
-		return new CaptchaVO("oa-captcha-key", "");
+		return oaImageCaptchaService.create();
 	}
 
 	@Override
@@ -54,7 +67,8 @@ public class CommonServiceImpl implements CommonService {
 
 	@Override
 	public CommonAuthVO auth() {
-		return new CommonAuthVO(1, 999);
+		// 与 PHP success 空 data 一致：前端仅 status===-1 时弹授权；0 表示不提醒
+		return new CommonAuthVO(0, 0);
 	}
 
 	@Override
@@ -100,6 +114,40 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public CommonVersionVO version() {
 		return new CommonVersionVO("3.9.2", 48, "oa");
+	}
+
+	@Override
+	public CommonSiteAddressVO siteAddress() {
+		String address = systemConfigService.getConfigRawValue("site_url");
+		String aiImage = systemConfigService.getConfigRawValue("ai_image");
+		String logo = systemConfigService.getConfigRawValue("ent_website_logo");
+		String siteName = systemConfigService.getConfigRawValue("site_name");
+		return new CommonSiteAddressVO(StrUtil.nullToEmpty(address), StrUtil.nullToEmpty(aiImage),
+				StrUtil.nullToEmpty(logo), StrUtil.nullToEmpty(siteName));
+	}
+
+	@Override
+	public InitDataUrlVO initData(String version) {
+		String path = systemBackupService.findLatestPathByVersion(StrUtil.nullToEmpty(version));
+		if (StrUtil.isBlank(path)) {
+			return new InitDataUrlVO("");
+		}
+		String base = StrUtil.removeSuffix(systemConfigService.getConfigRawValue("site_url"), "/");
+		if (StrUtil.isBlank(base)) {
+			return new InitDataUrlVO("");
+		}
+		String p = path.startsWith("/") ? path : "/" + path;
+		return new InitDataUrlVO(base + p);
+	}
+
+	@Override
+	public List<CityTreeNodeVO> cityTree() {
+		return systemCityService.cityTree();
+	}
+
+	@Override
+	public void logoutSession() {
+		SecurityContextHolder.clearContext();
 	}
 
 	private Admin requireAdmin(long adminId) {

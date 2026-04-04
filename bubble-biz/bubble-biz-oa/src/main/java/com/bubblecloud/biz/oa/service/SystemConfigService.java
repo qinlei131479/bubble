@@ -32,6 +32,11 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 	boolean isRegistrationOpen();
 
 	/**
+	 * 按 config key 读取单条 value，不存在返回空串。
+	 */
+	String getConfigRawValue(String configKey);
+
+	/**
 	 * 客户审批开关配置。
 	 */
 	ClientRuleApproveConfigVO getApproveConfig(Integer form);

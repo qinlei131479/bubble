@@ -28,7 +28,7 @@ public class OaPhpJwtSecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/ent/user/login", "/ent/user/register", "/ent/user/phone_login", "/ent/user/scan_key",
-						"/ent/user/scan_status", "/ent/common/captcha", "/ent/common/site")
+						"/ent/user/scan_status", "/ent/common/captcha", "/ent/common/site", "/ent/common/download")
 				.permitAll()
 				.anyRequest()
 				.authenticated())

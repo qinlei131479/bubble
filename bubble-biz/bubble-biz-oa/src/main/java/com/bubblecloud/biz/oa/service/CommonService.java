@@ -1,15 +1,19 @@
 package com.bubblecloud.biz.oa.service;
 
+import java.util.List;
+
 import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.dto.SmsVerifySendDTO;
 import com.bubblecloud.oa.api.vo.CaptchaVO;
 import com.bubblecloud.oa.api.vo.ConfigVO;
 import com.bubblecloud.oa.api.vo.SiteVO;
 import com.bubblecloud.oa.api.vo.SmsVerifyKeyVO;
+import com.bubblecloud.oa.api.vo.common.CityTreeNodeVO;
 import com.bubblecloud.oa.api.vo.common.CommonAuthVO;
 import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
+import com.bubblecloud.oa.api.vo.common.CommonSiteAddressVO;
 import com.bubblecloud.oa.api.vo.common.CommonVersionVO;
-import org.springframework.security.core.Authentication;
+import com.bubblecloud.oa.api.vo.common.InitDataUrlVO;
 
 /**
  * OA 公共接口聚合业务（对齐 {@code CommonController} 路由）。
@@ -42,5 +46,25 @@ public interface CommonService {
 	void updateMessageRead(Long messageId, Integer isRead);
 
 	CommonVersionVO version();
+
+	/**
+	 * GET site_address：站点根地址与默认展示信息。
+	 */
+	CommonSiteAddressVO siteAddress();
+
+	/**
+	 * POST initData：默认数据包完整 URL。
+	 */
+	InitDataUrlVO initData(String version);
+
+	/**
+	 * GET city：省市区树。
+	 */
+	List<CityTreeNodeVO> cityTree();
+
+	/**
+	 * 清除当前 Security 上下文（对齐 PHP common/logout）。
+	 */
+	void logoutSession();
 
 }
