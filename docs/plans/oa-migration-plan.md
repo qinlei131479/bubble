@@ -181,7 +181,7 @@ flowchart TB
   - **主要代码**：`MessageController`、`MessageService`/`MessageServiceImpl`、`EnterpriseMessageNoticeServiceImpl`、`MessageCategory`；工作台 `EnterpriseUserDailyService` 未改。
 
 - **W-03 附件与云存储**  
-  - [ ] `SystemStorage` / `SystemAttach` 与 CRM 文件、导入模板、员工档案导入共用能力验收。  
+  - [x] `SystemStorage` / `SystemAttach` 与 CRM 文件、导入模板、员工档案导入共用能力验收（本地上传根目录 `OaLocalUploadSupport` + `upload_type`；`ent/system/attach/*` 与 PHP 路由对齐；附件分类树 + CRUD；云存储列表/凭证写入 `eb_system_config`/软删与 PHP 语义一致；非本地存储上传返回明确错误）。  
   - **主要代码**：`SystemStorageController`、`SystemAttachController`、`AttachCateAdminController`。
 
 #### Wave 2 — P0 组织与档案

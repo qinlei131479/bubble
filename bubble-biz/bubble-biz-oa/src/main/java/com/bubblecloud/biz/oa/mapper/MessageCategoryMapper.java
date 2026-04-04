@@ -7,6 +7,7 @@ import com.bubblecloud.oa.api.entity.MessageCategory;
 
 /**
  * eb_message_category。
+ *
  * @author qinlei
  */
 @Mapper

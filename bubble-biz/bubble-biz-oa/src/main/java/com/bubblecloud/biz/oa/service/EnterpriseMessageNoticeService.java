@@ -16,8 +16,8 @@ import com.bubblecloud.oa.api.vo.common.CommonMessageVO;
 public interface EnterpriseMessageNoticeService extends UpService<EnterpriseMessageNotice> {
 
 	/**
-	 * @param isReadFilter 与 PHP {@code is_read} 一致：{@code null} 表示不按已读过滤；{@code 0}/{@code 1} 过滤未读/已读。
-	 *                     {@code GET ent/common/message} 固定传 {@code 0}。
+	 * @param isReadFilter 与 PHP {@code is_read} 一致：{@code null}
+	 * 表示不按已读过滤；{@code 0}/{@code 1} 过滤未读/已读。 {@code GET ent/common/message} 固定传 {@code 0}。
 	 */
 	CommonMessageVO getMessageList(Long adminId, String uid, Long entId, Integer page, Integer limit, String cateId,
 			String title, Integer isReadFilter);
@@ -36,7 +36,8 @@ public interface EnterpriseMessageNoticeService extends UpService<EnterpriseMess
 			String title, String isReadRaw);
 
 	/**
-	 * 企业消息「全部」{@code GET ent/company/message/list}：不按接收人过滤（对齐 PHP {@code NoticeRecordController::list}）。
+	 * 企业消息「全部」{@code GET ent/company/message/list}：不按接收人过滤（对齐 PHP
+	 * {@code NoticeRecordController::list}）。
 	 */
 	CommonMessageVO getCompanyMessageAll(Long entId, Integer page, Integer limit, String cateId, String title,
 			String isReadRaw);

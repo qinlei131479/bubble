@@ -10,6 +10,7 @@ import lombok.Data;
 
 /**
  * {@code GET ent/system/message/list} 单行（含 {@code message_template} 与分渠道模板字段）。
+ *
  * @author qinlei
  */
 @Data

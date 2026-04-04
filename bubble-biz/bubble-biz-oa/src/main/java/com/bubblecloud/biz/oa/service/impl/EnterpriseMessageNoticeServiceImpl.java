@@ -141,8 +141,9 @@ public class EnterpriseMessageNoticeServiceImpl
 		if (restrictToRecipient) {
 			String adminIdStr = String.valueOf(adminId);
 			String uidStr = StrUtil.nullToEmpty(uid);
-			q.and(w -> w.eq(EnterpriseMessageNotice::getToUid, uidStr).or()
-					.eq(EnterpriseMessageNotice::getToUid, adminIdStr));
+			q.and(w -> w.eq(EnterpriseMessageNotice::getToUid, uidStr)
+				.or()
+				.eq(EnterpriseMessageNotice::getToUid, adminIdStr));
 		}
 		if (StrUtil.isNotBlank(cateId) && !"0".equals(cateId)) {
 			try {
@@ -209,18 +210,15 @@ public class EnterpriseMessageNoticeServiceImpl
 			}
 		}
 		if (!ids.isEmpty()) {
-			List<Admin> byId = adminMapper.selectList(Wrappers.lambdaQuery(Admin.class)
-				.in(Admin::getId, ids)
-				.isNull(Admin::getDeletedAt));
+			List<Admin> byId = adminMapper
+				.selectList(Wrappers.lambdaQuery(Admin.class).in(Admin::getId, ids).isNull(Admin::getDeletedAt));
 			for (Admin a : byId) {
 				map.put(String.valueOf(a.getId()), a);
 			}
 		}
 		for (String u : uuids) {
-			Admin a = adminMapper.selectOne(Wrappers.lambdaQuery(Admin.class)
-				.eq(Admin::getUid, u)
-				.isNull(Admin::getDeletedAt)
-				.last("LIMIT 1"));
+			Admin a = adminMapper.selectOne(
+					Wrappers.lambdaQuery(Admin.class).eq(Admin::getUid, u).isNull(Admin::getDeletedAt).last("LIMIT 1"));
 			if (ObjectUtil.isNotNull(a)) {
 				map.put(u, a);
 			}
@@ -331,8 +329,9 @@ public class EnterpriseMessageNoticeServiceImpl
 			long entId) {
 		return Wrappers.lambdaUpdate(EnterpriseMessageNotice.class)
 			.and(w -> w.eq(EnterpriseMessageNotice::getEntid, entId).or().eq(EnterpriseMessageNotice::getEntid, 0L))
-			.and(w -> w.eq(EnterpriseMessageNotice::getToUid, StrUtil.nullToEmpty(uid)).or()
-					.eq(EnterpriseMessageNotice::getToUid, String.valueOf(adminId)));
+			.and(w -> w.eq(EnterpriseMessageNotice::getToUid, StrUtil.nullToEmpty(uid))
+				.or()
+				.eq(EnterpriseMessageNotice::getToUid, String.valueOf(adminId)));
 	}
 
 	@Override
@@ -345,8 +344,9 @@ public class EnterpriseMessageNoticeServiceImpl
 		LambdaQueryWrapper<EnterpriseMessageNotice> dq = Wrappers.lambdaQuery(EnterpriseMessageNotice.class)
 			.in(EnterpriseMessageNotice::getId, idList)
 			.and(w -> w.eq(EnterpriseMessageNotice::getEntid, entId).or().eq(EnterpriseMessageNotice::getEntid, 0L))
-			.and(w -> w.eq(EnterpriseMessageNotice::getToUid, StrUtil.nullToEmpty(uid)).or()
-					.eq(EnterpriseMessageNotice::getToUid, String.valueOf(adminId)));
+			.and(w -> w.eq(EnterpriseMessageNotice::getToUid, StrUtil.nullToEmpty(uid))
+				.or()
+				.eq(EnterpriseMessageNotice::getToUid, String.valueOf(adminId)));
 		int n = baseMapper.delete(dq);
 		if (n <= 0) {
 			throw new IllegalArgumentException("删除失败");

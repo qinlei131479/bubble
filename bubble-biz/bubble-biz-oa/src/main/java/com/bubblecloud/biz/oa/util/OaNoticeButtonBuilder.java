@@ -10,6 +10,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 对齐 PHP {@code NoticeRecordService::getButtonInfo}。
+ *
  * @author qinlei
  */
 public final class OaNoticeButtonBuilder {
@@ -27,7 +28,7 @@ public final class OaNoticeButtonBuilder {
 		String newUniUrl = data.getUniUrl().contains("?") ? data.getUniUrl() + "&id=" + id
 				: data.getUniUrl() + "?id=" + id;
 		switch (status) {
-			case -1 :
+			case -1:
 				if (containsAny(nt, "contract_abnormal", "contract_overdue_day_remind", "contract_soon_overdue_remind",
 						"contract_overdue_remind", "contract_urgent_renew", "contract_day_remind", "approv", "recall",
 						"contract_return_money", "contract_renew", "contract_expend", "finance_verify_fail")) {
@@ -49,7 +50,7 @@ public final class OaNoticeButtonBuilder {
 				data.setUrl("");
 				data.setUniUrl("");
 				break;
-			case 1 :
+			case 1:
 				if (nt.contains("daily") || nt.contains("assess") || nt.contains("news")) {
 					data.setTitle("立即查看");
 				}
@@ -62,7 +63,7 @@ public final class OaNoticeButtonBuilder {
 					data.setUniUrl(newUniUrl);
 				}
 				break;
-			case 2 :
+			case 2:
 				if (!nt.contains("assess")) {
 					data.setAction(OaNoticeActionConstants.DETAIL);
 					data.setTitle("未通过");
@@ -80,13 +81,13 @@ public final class OaNoticeButtonBuilder {
 					}
 				}
 				break;
-			case 4 :
+			case 4:
 				data.setAction(OaNoticeActionConstants.DELETE);
 				data.setTitle("已结束");
 				data.setUrl("");
 				data.setUniUrl("");
 				break;
-			case 5 :
+			case 5:
 				if (nt.contains("assess")) {
 					data.setAction(OaNoticeActionConstants.DETAIL);
 					data.setTitle("立即查看");
@@ -102,7 +103,7 @@ public final class OaNoticeButtonBuilder {
 					data.setUniUrl("");
 				}
 				break;
-			default :
+			default:
 				data.setAction(OaNoticeActionConstants.DETAIL);
 				if (nt.contains("daily") && !nt.contains("attendance")) {
 					data.setTitle("立即填写");

@@ -1,12 +1,12 @@
 package com.bubblecloud.biz.oa.service;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.SystemAttach;
+import com.bubblecloud.oa.api.vo.AttachUploadResultVO;
 import com.bubblecloud.oa.api.vo.ListCountVO;
 
 /**
@@ -21,7 +21,7 @@ public interface CrmClientFileService {
 
 	void deleteAttach(int entid, int attachId);
 
-	Map<String, Object> upload(int entid, int cid, int eid, int fid, MultipartFile file, String uidStr)
+	AttachUploadResultVO upload(int entid, int cid, int eid, int fid, MultipartFile file, String uidStr)
 			throws IOException;
 
 	void setRealName(int entid, int id, String realName);

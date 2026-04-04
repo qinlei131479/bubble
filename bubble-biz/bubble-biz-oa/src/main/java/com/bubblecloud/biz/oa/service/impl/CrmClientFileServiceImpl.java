@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.SystemAttachMapper;
 import com.bubblecloud.biz.oa.service.CrmClientFileService;
+import com.bubblecloud.biz.oa.util.OaLocalUploadSupport;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.SystemAttach;
+import com.bubblecloud.oa.api.vo.AttachUploadResultVO;
 import com.bubblecloud.oa.api.vo.ListCountVO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,11 +36,6 @@ public class CrmClientFileServiceImpl implements CrmClientFileService {
 		this.systemAttachMapper = systemAttachMapper;
 	}
 
-	private static Path uploadRoot() {
-		String base = System.getProperty("oa.upload.dir", System.getProperty("user.dir") + "/data/oa-upload");
-		return Path.of(base);
-	}
-
 	@Override
 	public ListCountVO<SystemAttach> index(int entid, Integer eid, Pg<SystemAttach> pg) {
 		Integer qeid = (eid != null && eid > 0) ? eid : null;
@@ -55,18 +50,14 @@ public class CrmClientFileServiceImpl implements CrmClientFileService {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
 		if (StrUtil.isNotBlank(row.getAttDir())) {
-			try {
-				Path p = uploadRoot().resolve(row.getAttDir().replaceFirst("^/+", ""));
-				Files.deleteIfExists(p);
-			}
-			catch (IOException ignored) {
-			}
+			String rel = row.getAttDir().replaceFirst("^/+", "");
+			OaLocalUploadSupport.deleteRelativeFileIfExists(rel);
 		}
 		systemAttachMapper.deleteById(attachId);
 	}
 
 	@Override
-	public Map<String, Object> upload(int entid, int cid, int eid, int fid, MultipartFile file, String uidStr)
+	public AttachUploadResultVO upload(int entid, int cid, int eid, int fid, MultipartFile file, String uidStr)
 			throws IOException {
 		if (file == null || file.isEmpty()) {
 			throw new IllegalArgumentException("common.empty.attrs");
@@ -75,7 +66,7 @@ public class CrmClientFileServiceImpl implements CrmClientFileService {
 		String ext = FileUtil.extName(orig);
 		String sub = java.time.LocalDate.now().toString().replace("-", "/");
 		String name = UUID.randomUUID().toString().replace("-", "") + (StrUtil.isBlank(ext) ? "" : "." + ext);
-		Path dir = uploadRoot().resolve("attach").resolve(Path.of(sub));
+		Path dir = OaLocalUploadSupport.uploadRoot().resolve("attach").resolve(Path.of(sub));
 		Files.createDirectories(dir);
 		Path target = dir.resolve(name);
 		file.transferTo(target.toFile());
@@ -100,14 +91,7 @@ public class CrmClientFileServiceImpl implements CrmClientFileService {
 		a.setUpdatedAt(LocalDateTime.now());
 		systemAttachMapper.insert(a);
 
-		Map<String, Object> res = new HashMap<>();
-		res.put("src", a.getAttDir());
-		res.put("url", a.getAttDir());
-		res.put("attach_id", a.getId());
-		res.put("id", a.getId());
-		res.put("size", a.getAttSize());
-		res.put("name", a.getRealName());
-		return res;
+		return AttachUploadResultVO.of(a.getAttDir(), a.getAttDir(), a.getId(), a.getAttSize(), a.getRealName());
 	}
 
 	@Override

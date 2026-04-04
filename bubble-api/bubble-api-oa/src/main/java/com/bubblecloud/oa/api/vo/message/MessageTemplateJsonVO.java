@@ -8,6 +8,7 @@ import lombok.Data;
 
 /**
  * 系统消息列表中的模板行（蛇形 JSON，对齐 Laravel toArray）。
+ *
  * @author qinlei
  */
 @Data

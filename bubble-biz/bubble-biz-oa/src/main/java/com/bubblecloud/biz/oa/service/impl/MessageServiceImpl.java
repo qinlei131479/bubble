@@ -99,31 +99,30 @@ public class MessageServiceImpl extends UpServiceImpl<MessageMapper, Message> im
 		SystemMessageListItemVO vo = new SystemMessageListItemVO();
 		BeanUtil.copyProperties(m, vo);
 		vo.setTemplateVar(parseTemplateVar(m.getTemplateVar()));
-		List<MessageTemplate> ordered = tpls == null ? List.of() : tpls.stream()
-			.sorted((a, b) -> Integer.compare(nz(a.getType()), nz(b.getType())))
-			.toList();
+		List<MessageTemplate> ordered = tpls == null ? List.of()
+				: tpls.stream().sorted((a, b) -> Integer.compare(nz(a.getType()), nz(b.getType()))).toList();
 		List<MessageTemplateJsonVO> jsonList = new ArrayList<>();
 		for (MessageTemplate t : ordered) {
 			MessageTemplateJsonVO j = toTplJson(t);
 			jsonList.add(j);
 			int ty = nz(t.getType());
 			switch (ty) {
-				case TYPE_SYSTEM :
+				case TYPE_SYSTEM:
 					vo.setSystemTemplate(j);
 					break;
-				case TYPE_SMS :
+				case TYPE_SMS:
 					vo.setSmsTemplate(j);
 					break;
-				case TYPE_WORK :
+				case TYPE_WORK:
 					vo.setWorkTemplate(j);
 					break;
-				case TYPE_DING :
+				case TYPE_DING:
 					vo.setDingTemplate(j);
 					break;
-				case TYPE_OTHER :
+				case TYPE_OTHER:
 					vo.setOtherTemplate(j);
 					break;
-				default :
+				default:
 			}
 		}
 		vo.setMessageTemplate(jsonList);
@@ -159,10 +158,9 @@ public class MessageServiceImpl extends UpServiceImpl<MessageMapper, Message> im
 
 	@Override
 	public List<MessageCategoryCountVO> getMessageCateCount(long entId, long adminId, String uuid) {
-		List<MessageCategory> cats = messageCategoryMapper
-			.selectList(Wrappers.lambdaQuery(MessageCategory.class)
-				.orderByAsc(MessageCategory::getSort)
-				.orderByAsc(MessageCategory::getId));
+		List<MessageCategory> cats = messageCategoryMapper.selectList(Wrappers.lambdaQuery(MessageCategory.class)
+			.orderByAsc(MessageCategory::getSort)
+			.orderByAsc(MessageCategory::getId));
 		List<Map<String, Object>> grouped = enterpriseMessageNoticeService.countUnreadByCate(entId, adminId, uuid);
 		Map<Long, Long> countByCate = new HashMap<>();
 		for (Map<String, Object> row : grouped) {

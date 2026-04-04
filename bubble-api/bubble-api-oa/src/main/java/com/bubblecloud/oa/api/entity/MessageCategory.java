@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 消息分类，对应 eb_message_category。
+ *
  * @author qinlei
  */
 @Data

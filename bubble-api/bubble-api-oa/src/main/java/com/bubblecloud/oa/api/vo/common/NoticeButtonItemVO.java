@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * 企业消息列表单条操作按钮（对齐 PHP NoticeRecordService::getButtonInfo）。
+ *
  * @author qinlei
  */
 @Data

@@ -1,12 +1,11 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.Map;
-
 import com.bubblecloud.biz.oa.service.CrmClientFileService;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.entity.SystemAttach;
+import com.bubblecloud.oa.api.vo.AttachUploadResultVO;
 import com.bubblecloud.oa.api.vo.ListCountVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import cn.hutool.core.util.ObjectUtil;
 
 /**
@@ -62,21 +63,20 @@ public class CrmClientFileController {
 
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "上传客户文件")
-	public R<Map<String, Object>> upload(@RequestParam(defaultValue = "0") int cid,
+	public R<AttachUploadResultVO> upload(@RequestParam(defaultValue = "0") int cid,
 			@RequestParam(defaultValue = "0") int eid, @RequestParam(defaultValue = "0") int fid,
 			@RequestParam("file") MultipartFile file, @RequestParam(defaultValue = "1") Integer entid)
 			throws Exception {
 		Long uid = OaSecurityUtil.currentUserId();
 		String uidStr = uid == null ? "" : String.valueOf(uid);
-		Map<String, Object> data = crmClientFileService.upload(entidOr1(entid), cid, eid, fid, file, uidStr);
-		return R.phpOk(data);
+		return R.phpOk(crmClientFileService.upload(entidOr1(entid), cid, eid, fid, file, uidStr));
 	}
 
 	@PutMapping("/real_name/{id}")
 	@Operation(summary = "客户文件重命名")
 	public R<String> realName(@PathVariable int id, @RequestParam(defaultValue = "1") Integer entid,
-			@RequestBody Map<String, String> body) {
-		String realName = body == null ? "" : body.getOrDefault("real_name", "");
+			@RequestBody(required = false) JsonNode body) {
+		String realName = body == null ? "" : body.path("real_name").asText("");
 		crmClientFileService.setRealName(entidOr1(entid), id, realName);
 		return R.phpOk("common.operation.succ");
 	}

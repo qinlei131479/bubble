@@ -7,6 +7,7 @@ import com.bubblecloud.oa.api.entity.MessageTemplate;
 
 /**
  * eb_message_template。
+ *
  * @author qinlei
  */
 @Mapper

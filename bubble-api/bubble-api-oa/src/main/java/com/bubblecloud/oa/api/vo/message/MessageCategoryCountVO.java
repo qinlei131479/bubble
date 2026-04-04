@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * {@code GET ent/system/message/cate} 单项（含分类字段 + 未读数），对齐 PHP {@code getMessageCateCount}。
+ *
  * @author qinlei
  */
 @Data

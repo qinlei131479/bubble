@@ -2,6 +2,7 @@ package com.bubblecloud.oa.api.constant;
 
 /**
  * 与 PHP {@code NoticeEnum} 中消息按钮 action 一致，供站内信列表 {@code buttons} 使用。
+ *
  * @author qinlei
  */
 public final class OaNoticeActionConstants {

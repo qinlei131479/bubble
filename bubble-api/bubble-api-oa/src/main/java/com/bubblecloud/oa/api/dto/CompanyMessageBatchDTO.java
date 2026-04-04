@@ -9,6 +9,7 @@ import lombok.Data;
 
 /**
  * {@code PUT/DELETE ent/company/message/batch} 请求体（蛇形字段对齐 PHP）。
+ *
  * @author qinlei
  */
 @Data

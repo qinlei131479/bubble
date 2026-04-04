@@ -1,12 +1,11 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.Map;
-
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.service.SystemStorageService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.SystemStorage;
+import com.bubblecloud.oa.api.vo.StorageUploadTypeVO;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 云存储（对齐 PHP {@code ent/config/storage}，无真实云 SDK）。
@@ -38,14 +38,15 @@ public class SystemStorageController {
 	@GetMapping("/index")
 	@Operation(summary = "云存储列表")
 	public R<?> list(@RequestParam(required = false) Integer type) {
-		return R.phpOk(systemStorageService.list(Wrappers.lambdaQuery(SystemStorage.class)
-			.eq(SystemStorage::getIsDelete, 0)
-			.orderByDesc(SystemStorage::getId)));
+		return R.phpOk(systemStorageService.listStorages(type));
 	}
 
 	@GetMapping("/create/{type}")
 	@Operation(summary = "创建表单占位")
 	public R<String> createForm(@PathVariable Integer type) {
+		if (ObjectUtil.isNull(type) || type == 0) {
+			return R.phpFailed("参数错误");
+		}
 		return R.phpOk("ok");
 	}
 
@@ -57,13 +58,14 @@ public class SystemStorageController {
 
 	@GetMapping("/config")
 	@Operation(summary = "当前上传方式")
-	public R<Map<String, Integer>> getConfig() {
-		return R.phpOk(Map.of("type", systemStorageService.getUploadType()));
+	public R<StorageUploadTypeVO> getConfig() {
+		return R.phpOk(new StorageUploadTypeVO(systemStorageService.getUploadType()));
 	}
 
 	@PostMapping("/config")
-	@Operation(summary = "保存 access 等（占位写入扩展表）")
+	@Operation(summary = "保存 access 等到 eb_system_config")
 	public R<String> saveConfig(@RequestBody JsonNode body) {
+		systemStorageService.saveCredentialConfig(body);
 		return R.phpOk("保存成功");
 	}
 
@@ -83,6 +85,10 @@ public class SystemStorageController {
 		obj.setRegion(text(body, "region"));
 		obj.setAcl(text(body, "acl"));
 		systemStorageService.create(obj);
+		if (body instanceof ObjectNode objectNode) {
+			objectNode.put("type", type);
+			systemStorageService.saveCredentialConfig(objectNode);
+		}
 		return R.phpOk("添加成功");
 	}
 
@@ -100,17 +106,24 @@ public class SystemStorageController {
 	}
 
 	@GetMapping("/method")
-	@Operation(summary = "详细配置项占位")
-	public R<String> getStorageConfig() {
-		return R.phpOk("ok");
+	@Operation(summary = "详细配置项（水印/缩略图等）")
+	public R<ObjectNode> getStorageConfig() {
+		return R.phpOk(systemStorageService.storageMethodDetail());
 	}
 
 	@PostMapping("/domain/{id}")
 	@Operation(summary = "修改域名")
 	public R<String> updateDomain(@PathVariable Long id, @RequestBody JsonNode body) {
+		String domain = text(body, "domain");
+		if (StrUtil.isBlank(domain)) {
+			return R.phpFailed("参数错误");
+		}
+		if (!domain.contains("https://") && !domain.contains("http://")) {
+			return R.phpFailed("格式错误，请输入格式为：http://域名");
+		}
 		SystemStorage obj = new SystemStorage();
 		obj.setId(id);
-		obj.setDomain(text(body, "domain"));
+		obj.setDomain(domain);
 		obj.setCdn(text(body, "cdn"));
 		systemStorageService.updateDomain(obj);
 		return R.phpOk("修改成功");
@@ -119,8 +132,16 @@ public class SystemStorageController {
 	@DeleteMapping("/{id}")
 	@Operation(summary = "删除")
 	public R<String> removeById(@PathVariable Long id) {
-		systemStorageService.deleteById(id);
-		return R.phpOk("删除成功");
+		if (ObjectUtil.isNull(id) || id <= 0) {
+			return R.phpFailed("参数错误");
+		}
+		try {
+			systemStorageService.deleteStorage(id);
+			return R.phpOk("删除成功");
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
 	}
 
 	@PutMapping("/save_type/{type}")

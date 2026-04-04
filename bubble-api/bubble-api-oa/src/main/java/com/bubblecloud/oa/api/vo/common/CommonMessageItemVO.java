@@ -11,6 +11,7 @@ import lombok.Data;
 
 /**
  * GET /ent/common/message 单条结构：蛇形字段 + {@code buttons} + 解析后的 JSON 字段。
+ *
  * @author qinlei
  */
 @Data
