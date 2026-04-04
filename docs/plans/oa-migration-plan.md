@@ -176,9 +176,9 @@ flowchart TB
   - **主要代码**：`CommonController`、`CommonService` / `CommonServiceImpl`。
 
 - **W-02 消息与待办一致性**  
-  - [ ] `common/message` 与 `UserPending`、工作台 `pending` 数据同源校验。  
-  - [ ] 后台 `ent/system/message` 与 PHP 差异清单关闭。  
-  - **主要代码**：`MessageController`、`MessageService`；工作台 `EnterpriseUserDailyService`。
+  - [x] `common/message` 与 PHP `NoticeRecordService::getMessageList` 对齐：默认 `is_read=0`、`buttons`、模板 `url/uni_url`、`messageNum` 同条件计数；列表蛇形字段。`UserPending` / 工作台 `pending` 仍为独立表（与 PHP 一致），未合并数据源。  
+  - [x] 后台 `ent/system/message/list` 返回 `list`+`count` 及 `message_template`/`system_template` 等；新增 `GET /cate`（分类 + 未读数）。`find/{id}` 仍为实体直出（PHP 含模板拆分，可后续 W 再补）。  
+  - **主要代码**：`MessageController`、`MessageService`/`MessageServiceImpl`、`EnterpriseMessageNoticeServiceImpl`、`MessageCategory`；工作台 `EnterpriseUserDailyService` 未改。
 
 - **W-03 附件与云存储**  
   - [ ] `SystemStorage` / `SystemAttach` 与 CRM 文件、导入模板、员工档案导入共用能力验收。  

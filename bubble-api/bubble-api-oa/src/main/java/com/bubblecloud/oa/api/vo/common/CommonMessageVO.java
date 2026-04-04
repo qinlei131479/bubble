@@ -3,7 +3,6 @@ package com.bubblecloud.oa.api.vo.common;
 import java.util.Collections;
 import java.util.List;
 
-import com.bubblecloud.oa.api.entity.EnterpriseMessageNotice;
 import lombok.Data;
 
 /**
@@ -15,7 +14,7 @@ import lombok.Data;
 @Data
 public class CommonMessageVO {
 
-	private List<EnterpriseMessageNotice> list = Collections.emptyList();
+	private List<CommonMessageItemVO> list = Collections.emptyList();
 
 	private Long messageNum;
 

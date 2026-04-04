@@ -100,7 +100,7 @@ public class CommonServiceImpl implements CommonService {
 		Long userId = OaSecurityUtil.currentUserId();
 		Admin admin = requireAdmin(userId);
 		return enterpriseMessageNoticeService.getMessageList(userId, admin.getUid(), 1L, page, limit,
-				ObjectUtil.isNull(cateId) ? "" : cateId, ObjectUtil.isNull(title) ? "" : title);
+				ObjectUtil.isNull(cateId) ? "" : cateId, ObjectUtil.isNull(title) ? "" : title, 0);
 	}
 
 	@Override

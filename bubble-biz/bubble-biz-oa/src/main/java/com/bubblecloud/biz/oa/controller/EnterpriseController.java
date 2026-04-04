@@ -1,7 +1,5 @@
 package com.bubblecloud.biz.oa.controller;
 
-import java.util.Map;
-
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.EnterpriseService;
 import com.bubblecloud.common.core.util.PojoConvertUtil;
@@ -10,7 +8,6 @@ import com.bubblecloud.oa.api.dto.EnterpriseUpdateDTO;
 import com.bubblecloud.oa.api.entity.Enterprise;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.enterprise.EnterpriseEntInfoVO;
-import com.bubblecloud.oa.api.vo.enterprise.EnterpriseMessageListVO;
 import com.bubblecloud.oa.api.vo.enterprise.EnterpriseQuantityVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,12 +60,6 @@ public class EnterpriseController {
 	@Operation(summary = "获取统计数量")
 	public R<EnterpriseQuantityVO> quantity(@PathVariable String type, @RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseService.getQuantity(type, entid));
-	}
-
-	@GetMapping("/message")
-	@Operation(summary = "消息中心列表（工作台系统通知）")
-	public R<EnterpriseMessageListVO> messageList(@RequestParam Map<String, String> query) {
-		return R.phpOk(new EnterpriseMessageListVO());
 	}
 
 }
