@@ -18,7 +18,8 @@ import cn.hutool.core.util.ObjectUtil;
  * @date 2026/4/3 14:00
  */
 @Service
-public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper, ClientFollow> implements ClientFollowCrmService {
+public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper, ClientFollow>
+		implements ClientFollowCrmService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

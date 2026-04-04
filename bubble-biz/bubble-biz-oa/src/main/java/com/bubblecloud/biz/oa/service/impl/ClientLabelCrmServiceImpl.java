@@ -16,7 +16,8 @@ import cn.hutool.core.util.ObjectUtil;
  * @date 2026/4/3 14:00
  */
 @Service
-public class ClientLabelCrmServiceImpl extends UpServiceImpl<ClientLabelMapper, ClientLabel> implements ClientLabelCrmService {
+public class ClientLabelCrmServiceImpl extends UpServiceImpl<ClientLabelMapper, ClientLabel>
+		implements ClientLabelCrmService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

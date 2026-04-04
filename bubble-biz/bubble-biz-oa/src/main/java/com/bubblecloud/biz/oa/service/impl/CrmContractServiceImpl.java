@@ -149,9 +149,10 @@ public class CrmContractServiceImpl extends UpServiceImpl<ContractMapper, Contra
 	public ObjectNode listStatistics(int types, Long adminId) {
 		ObjectNode o = objectMapper.createObjectNode();
 		o.put("total", baseMapper.selectCount(Wrappers.lambdaQuery(Contract.class).isNull(Contract::getDeletedAt)));
-		o.put("self", baseMapper.selectCount(Wrappers.lambdaQuery(Contract.class)
-			.isNull(Contract::getDeletedAt)
-			.eq(Contract::getUid, adminId.intValue())));
+		o.put("self",
+				baseMapper.selectCount(Wrappers.lambdaQuery(Contract.class)
+					.isNull(Contract::getDeletedAt)
+					.eq(Contract::getUid, adminId.intValue())));
 		return o;
 	}
 
@@ -162,9 +163,10 @@ public class CrmContractServiceImpl extends UpServiceImpl<ContractMapper, Contra
 		if (ObjectUtil.isNull(c)) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
-		ClientContractSubscribe row = clientContractSubscribeMapper.selectOne(Wrappers.lambdaQuery(ClientContractSubscribe.class)
-			.eq(ClientContractSubscribe::getUid, adminId.intValue())
-			.eq(ClientContractSubscribe::getCid, contractId.intValue()));
+		ClientContractSubscribe row = clientContractSubscribeMapper
+			.selectOne(Wrappers.lambdaQuery(ClientContractSubscribe.class)
+				.eq(ClientContractSubscribe::getUid, adminId.intValue())
+				.eq(ClientContractSubscribe::getCid, contractId.intValue()));
 		if (row == null) {
 			row = new ClientContractSubscribe();
 			row.setEntid(0);
@@ -243,9 +245,10 @@ public class CrmContractServiceImpl extends UpServiceImpl<ContractMapper, Contra
 			baseMapper.updateById(c);
 		}
 		if (invoice == 1 && !customerEids.isEmpty()) {
-			clientInvoiceMapper.update(null, Wrappers.lambdaUpdate(ClientInvoice.class)
-				.in(ClientInvoice::getEid, customerEids)
-				.set(ClientInvoice::getUid, String.valueOf(toUid)));
+			clientInvoiceMapper.update(null,
+					Wrappers.lambdaUpdate(ClientInvoice.class)
+						.in(ClientInvoice::getEid, customerEids)
+						.set(ClientInvoice::getUid, String.valueOf(toUid)));
 		}
 	}
 
@@ -296,7 +299,8 @@ public class CrmContractServiceImpl extends UpServiceImpl<ContractMapper, Contra
 		}
 		for (Field f : Contract.class.getDeclaredFields()) {
 			f.setAccessible(true);
-			com.baomidou.mybatisplus.annotation.TableField tf = f.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
+			com.baomidou.mybatisplus.annotation.TableField tf = f
+				.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
 			if (tf != null && !tf.exist()) {
 				continue;
 			}

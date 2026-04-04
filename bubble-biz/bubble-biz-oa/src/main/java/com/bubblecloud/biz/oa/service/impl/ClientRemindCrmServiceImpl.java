@@ -26,13 +26,14 @@ import cn.hutool.core.util.StrUtil;
  * @date 2026/4/3 14:00
  */
 @Service
-public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper, ClientRemind> implements ClientRemindCrmService {
+public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper, ClientRemind>
+		implements ClientRemindCrmService {
 
 	@Override
 	public ClientRemind getActiveById(long id) {
-		return getOne(new LambdaQueryWrapper<ClientRemind>()
-			.eq(ClientRemind::getId, id)
-			.isNull(ClientRemind::getDeletedAt), false);
+		return getOne(
+				new LambdaQueryWrapper<ClientRemind>().eq(ClientRemind::getId, id).isNull(ClientRemind::getDeletedAt),
+				false);
 	}
 
 	@Override
@@ -94,8 +95,7 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
-		boolean ok = update(new LambdaUpdateWrapper<ClientRemind>()
-			.eq(ClientRemind::getId, id)
+		boolean ok = update(new LambdaUpdateWrapper<ClientRemind>().eq(ClientRemind::getId, id)
 			.isNull(ClientRemind::getDeletedAt)
 			.set(ClientRemind::getDeletedAt, LocalDateTime.now()));
 		return ok ? R.ok() : R.failed("common.operation.fail");
@@ -108,8 +108,7 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
-		update(new LambdaUpdateWrapper<ClientRemind>()
-			.eq(ClientRemind::getId, id)
+		update(new LambdaUpdateWrapper<ClientRemind>().eq(ClientRemind::getId, id)
 			.isNull(ClientRemind::getDeletedAt)
 			.set(ClientRemind::getMark, mark == null ? "" : mark));
 	}
@@ -121,15 +120,14 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
-		update(new LambdaUpdateWrapper<ClientRemind>()
-			.eq(ClientRemind::getId, id)
+		update(new LambdaUpdateWrapper<ClientRemind>().eq(ClientRemind::getId, id)
 			.isNull(ClientRemind::getDeletedAt)
 			.set(ClientRemind::getStatus, 1));
 	}
 
 	private static String uniquedPayload(ClientRemind r) {
 		return String.valueOf(r.getEid()) + "|" + r.getCid() + "|" + r.getNum() + "|" + r.getTypes() + "|"
-			+ (r.getMark() == null ? "" : r.getMark()) + "|" + r.getTime();
+				+ (r.getMark() == null ? "" : r.getMark()) + "|" + r.getTime();
 	}
 
 	private static String md5Hex(String s) {

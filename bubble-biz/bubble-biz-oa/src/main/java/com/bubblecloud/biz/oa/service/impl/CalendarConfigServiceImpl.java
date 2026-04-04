@@ -59,10 +59,10 @@ public class CalendarConfigServiceImpl extends UpServiceImpl<CalendarConfigMappe
 		if (time.contains("-")) {
 			String[] p = time.split("-");
 			if (p.length >= 2) {
-				return new String[]{p[0], p[1], p[1]};
+				return new String[] { p[0], p[1], p[1] };
 			}
 		}
-		return new String[]{time, "01", "12"};
+		return new String[] { time, "01", "12" };
 	}
 
 	private Map<String, CalendarConfig> getCalendarMapByYear(int year) {
@@ -83,7 +83,8 @@ public class CalendarConfigServiceImpl extends UpServiceImpl<CalendarConfigMappe
 						&& calendar.get(dayStr).getIsRest() == 0) {
 					merge = false;
 				}
-			} else {
+			}
+			else {
 				if (!calendar.containsKey(dayStr)) {
 					merge = false;
 				}

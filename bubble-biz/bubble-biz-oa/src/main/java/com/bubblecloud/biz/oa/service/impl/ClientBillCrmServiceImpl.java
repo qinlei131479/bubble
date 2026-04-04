@@ -52,10 +52,15 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 	private static final DateTimeFormatter END_TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	private final ClientBillMapper clientBillMapper;
+
 	private final ContractMapper contractMapper;
+
 	private final ClientInvoiceMapper clientInvoiceMapper;
+
 	private final CustomerMapper customerMapper;
+
 	private final SystemGroupDataMapper systemGroupDataMapper;
+
 	private final ObjectMapper objectMapper;
 
 	public ClientBillCrmServiceImpl(ClientBillMapper clientBillMapper, ContractMapper contractMapper,
@@ -142,8 +147,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 		}
 		String name = q == null ? null : q.get("name");
 		if (StrUtil.isNotBlank(name)) {
-			List<Customer> cs = customerMapper.selectList(Wrappers.lambdaQuery(Customer.class)
-				.like(Customer::getCustomerName, name.trim()));
+			List<Customer> cs = customerMapper
+				.selectList(Wrappers.lambdaQuery(Customer.class).like(Customer::getCustomerName, name.trim()));
 			List<Long> eids = cs.stream().map(Customer::getId).filter(Objects::nonNull).toList();
 			if (eids.isEmpty()) {
 				qw.eq("id", -1);
@@ -245,9 +250,13 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 		Map<String, String> q = query == null ? new HashMap<>() : new HashMap<>(query);
 		Integer eid = parseInt(q, "eid");
 		if (eid != null && eid > 0) {
-			List<Contract> contracts = contractMapper.selectList(Wrappers.lambdaQuery(Contract.class)
-				.eq(Contract::getEid, eid));
-			List<Integer> cids = contracts.stream().map(Contract::getId).filter(Objects::nonNull).map(Long::intValue).toList();
+			List<Contract> contracts = contractMapper
+				.selectList(Wrappers.lambdaQuery(Contract.class).eq(Contract::getEid, eid));
+			List<Integer> cids = contracts.stream()
+				.map(Contract::getId)
+				.filter(Objects::nonNull)
+				.map(Long::intValue)
+				.toList();
 			q.remove("eid");
 			if (cids.isEmpty()) {
 				Map<String, Object> out = new HashMap<>();
@@ -278,7 +287,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 		for (int i = 0; i < 30; i++) {
 			String no = day + "_" + java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 6);
 			Long c = clientBillMapper.selectCount(Wrappers.lambdaQuery(ClientBill.class)
-				.eq(ClientBill::getEntid, entid).eq(ClientBill::getBillNo, no));
+				.eq(ClientBill::getEntid, entid)
+				.eq(ClientBill::getBillNo, no));
 			if (c != null && c == 0) {
 				return no;
 			}
@@ -318,8 +328,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateBill(long id, int entid, ClientBill body, String uidStr, boolean finance) {
-		ClientBill ex = clientBillMapper.selectOne(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
+		ClientBill ex = clientBillMapper.selectOne(
+				Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -345,8 +355,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void destroy(long id, int entid) {
-		ClientBill ex = clientBillMapper.selectOne(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
+		ClientBill ex = clientBillMapper.selectOne(
+				Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -361,8 +371,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void statusUpdate(long id, int entid, JsonNode body, String uuidForAttach) {
-		ClientBill ex = clientBillMapper.selectOne(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
+		ClientBill ex = clientBillMapper.selectOne(
+				Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -458,8 +468,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void withdraw(long id, int entid) {
-		ClientBill ex = clientBillMapper.selectOne(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
+		ClientBill ex = clientBillMapper.selectOne(
+				Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -516,8 +526,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void financeDelete(long id, int entid) {
-		ClientBill ex = clientBillMapper.selectOne(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
+		ClientBill ex = clientBillMapper.selectOne(
+				Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -530,8 +540,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 
 	@Override
 	public ClientBill getInfo(long id, int entid) {
-		ClientBill ex = clientBillMapper.selectOne(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
+		ClientBill ex = clientBillMapper.selectOne(
+				Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getId, id).eq(ClientBill::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("付款记录不存在");
 		}
@@ -744,7 +754,8 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 			return;
 		}
 		ClientInvoice inv = clientInvoiceMapper.selectOne(Wrappers.lambdaQuery(ClientInvoice.class)
-			.eq(ClientInvoice::getId, invoiceId.longValue()).eq(ClientInvoice::getEntid, entid));
+			.eq(ClientInvoice::getId, invoiceId.longValue())
+			.eq(ClientInvoice::getEntid, entid));
 		if (inv == null) {
 			return;
 		}
@@ -766,7 +777,9 @@ public class ClientBillCrmServiceImpl implements ClientBillCrmService {
 			return;
 		}
 		long traded = clientBillMapper.selectCount(Wrappers.lambdaQuery(ClientBill.class)
-			.eq(ClientBill::getEid, eid).in(ClientBill::getTypes, 0, 1).eq(ClientBill::getStatus, 1));
+			.eq(ClientBill::getEid, eid)
+			.in(ClientBill::getTypes, 0, 1)
+			.eq(ClientBill::getStatus, 1));
 		cu.setCustomerStatus(traded > 0 ? "1" : "0");
 		customerMapper.updateById(cu);
 	}

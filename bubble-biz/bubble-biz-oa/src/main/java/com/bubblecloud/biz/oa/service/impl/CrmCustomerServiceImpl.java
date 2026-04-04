@@ -124,9 +124,10 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 		}
 		ObjectNode o = objectMapper.createObjectNode();
 		o.put("total", countCustomers(types, uidScope));
-		o.put("concern", clientSubscribeMapper.selectCount(Wrappers.lambdaQuery(ClientSubscribe.class)
-			.eq(ClientSubscribe::getUid, adminId.intValue())
-			.eq(ClientSubscribe::getSubscribeStatus, 1)));
+		o.put("concern",
+				clientSubscribeMapper.selectCount(Wrappers.lambdaQuery(ClientSubscribe.class)
+					.eq(ClientSubscribe::getUid, adminId.intValue())
+					.eq(ClientSubscribe::getSubscribeStatus, 1)));
 		o.put("unsettled", countByStatusHint(types, uidScope, "0"));
 		o.put("traded", countByStatusHint(types, uidScope, "1"));
 		o.put("urgent_follow_up", countUrgentFollow(types, uidScope));
@@ -287,7 +288,8 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 			}
 			c.setCustomerStatus("2");
 			baseMapper.updateById(c);
-			insertRecord(id, 3, adminId.intValue(), ObjectUtil.defaultIfNull(c.getUid(), 0), c.getReturnNum(), "客户标记为流失");
+			insertRecord(id, 3, adminId.intValue(), ObjectUtil.defaultIfNull(c.getUid(), 0), c.getReturnNum(),
+					"客户标记为流失");
 		}
 	}
 
@@ -302,7 +304,8 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 		}
 		for (Long id : ids) {
 			Customer c = baseMapper.selectById(id);
-			if (ObjectUtil.isNull(c) || ObjectUtil.isNotNull(c.getDeletedAt()) || c.getUid() == null || c.getUid() == 0) {
+			if (ObjectUtil.isNull(c) || ObjectUtil.isNotNull(c.getDeletedAt()) || c.getUid() == null
+					|| c.getUid() == 0) {
 				continue;
 			}
 			int before = c.getUid();
@@ -311,7 +314,8 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 			c.setReturnNum(ObjectUtil.defaultIfNull(c.getReturnNum(), 0) + 1);
 			baseMapper.updateById(c);
 			insertRecord(id, 1, adminId.intValue(), before, c.getReturnNum(), reason);
-			clientSubscribeMapper.delete(Wrappers.lambdaQuery(ClientSubscribe.class).eq(ClientSubscribe::getEid, id.intValue()));
+			clientSubscribeMapper
+				.delete(Wrappers.lambdaQuery(ClientSubscribe.class).eq(ClientSubscribe::getEid, id.intValue()));
 		}
 	}
 
@@ -433,7 +437,8 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 			return;
 		}
 		for (Long eid : customerIds) {
-			clientLabelsMapper.delete(Wrappers.lambdaQuery(ClientLabels.class).eq(ClientLabels::getEid, eid.intValue()));
+			clientLabelsMapper
+				.delete(Wrappers.lambdaQuery(ClientLabels.class).eq(ClientLabels::getEid, eid.intValue()));
 			if (ObjectUtil.isEmpty(labelIds)) {
 				continue;
 			}
@@ -496,19 +501,23 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 					Wrappers.lambdaUpdate(Contract.class).in(Contract::getEid, eids).set(Contract::getUid, toUid));
 		}
 		if (invoice == 1) {
-			clientInvoiceMapper.update(null, Wrappers.lambdaUpdate(ClientInvoice.class)
-				.in(ClientInvoice::getEid, eids)
-				.set(ClientInvoice::getUid, String.valueOf(toUid)));
+			clientInvoiceMapper.update(null,
+					Wrappers.lambdaUpdate(ClientInvoice.class)
+						.in(ClientInvoice::getEid, eids)
+						.set(ClientInvoice::getUid, String.valueOf(toUid)));
 		}
 		customerLiaisonMapper.update(null,
-				Wrappers.lambdaUpdate(CustomerLiaison.class).in(CustomerLiaison::getEid, eids).set(CustomerLiaison::getUid, toUid));
+				Wrappers.lambdaUpdate(CustomerLiaison.class)
+					.in(CustomerLiaison::getEid, eids)
+					.set(CustomerLiaison::getUid, toUid));
 	}
 
 	@Override
 	public ObjectNode performanceStatistics(JsonNode body) {
 		ObjectNode root = objectMapper.createObjectNode();
 		ObjectNode newCustomer = objectMapper.createObjectNode();
-		newCustomer.put("count", baseMapper.selectCount(Wrappers.lambdaQuery(Customer.class).isNull(Customer::getDeletedAt)));
+		newCustomer.put("count",
+				baseMapper.selectCount(Wrappers.lambdaQuery(Customer.class).isNull(Customer::getDeletedAt)));
 		newCustomer.put("ratio", 0);
 		root.set("new_customer", newCustomer);
 		root.set("bill", objectMapper.valueToTree(crmDashboardMapper.billIncomeByMonth()));
@@ -673,7 +682,8 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 		}
 		for (Field f : Customer.class.getDeclaredFields()) {
 			f.setAccessible(true);
-			com.baomidou.mybatisplus.annotation.TableField tf = f.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
+			com.baomidou.mybatisplus.annotation.TableField tf = f
+				.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
 			if (tf != null && !tf.exist()) {
 				continue;
 			}

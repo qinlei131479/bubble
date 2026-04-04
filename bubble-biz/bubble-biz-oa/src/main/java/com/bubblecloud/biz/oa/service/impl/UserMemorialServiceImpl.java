@@ -44,7 +44,6 @@ public class UserMemorialServiceImpl extends UpServiceImpl<UserMemorialMapper, U
 
 	private final AdminService adminService;
 
-
 	private String requireUid(Long adminId) {
 		if (ObjectUtil.isNull(adminId)) {
 			throw new IllegalArgumentException("用户未登录");
@@ -80,17 +79,18 @@ public class UserMemorialServiceImpl extends UpServiceImpl<UserMemorialMapper, U
 		}
 		if (ObjectUtil.isNull(pid) || pid == 0) {
 			query.setPid(ensureDefaultCategoryId(query.getUid()).intValue());
-		} else {
+		}
+		else {
 			query.setPid(pid);
 		}
 	}
 
 	private Long ensureDefaultCategoryId(String uid) {
 		UserMemorialCategory one = userMemorialCategoryMapper.selectOne(Wrappers.lambdaQuery(UserMemorialCategory.class)
-				.eq(UserMemorialCategory::getUid, uid)
-				.eq(UserMemorialCategory::getPid, 0)
-				.eq(UserMemorialCategory::getTypes, 0)
-				.last("LIMIT 1"));
+			.eq(UserMemorialCategory::getUid, uid)
+			.eq(UserMemorialCategory::getPid, 0)
+			.eq(UserMemorialCategory::getTypes, 0)
+			.last("LIMIT 1"));
 		if (ObjectUtil.isNull(one)) {
 			LocalDateTime now = LocalDateTime.now();
 			UserMemorialCategory c = new UserMemorialCategory();
@@ -155,7 +155,8 @@ public class UserMemorialServiceImpl extends UpServiceImpl<UserMemorialMapper, U
 		row.setContent(HtmlUtils.htmlEscape(StrUtil.nullToEmpty(dto.getContent())));
 		if (ObjectUtil.isNotNull(dto.getPid()) && dto.getPid() != 0) {
 			row.setPid(dto.getPid());
-		} else {
+		}
+		else {
 			row.setPid(existing.getPid());
 		}
 		String oldTitle = existing.getTitle();
@@ -164,7 +165,8 @@ public class UserMemorialServiceImpl extends UpServiceImpl<UserMemorialMapper, U
 		String newContent = row.getContent();
 		if (!StrUtil.equals(oldTitle, newTitle) || !StrUtil.equals(oldContent, newContent)) {
 			row.setUpdatedAt(LocalDateTime.now());
-		} else {
+		}
+		else {
 			row.setUpdatedAt(existing.getUpdatedAt());
 		}
 		baseMapper.updateById(row);
@@ -195,9 +197,11 @@ public class UserMemorialServiceImpl extends UpServiceImpl<UserMemorialMapper, U
 			String label;
 			if (currentMonth.equals(ym)) {
 				label = "本月";
-			} else if (lastMonth.equals(ym)) {
+			}
+			else if (lastMonth.equals(ym)) {
 				label = "上个月";
-			} else {
+			}
+			else {
 				label = YearMonth.parse(ym).format(zhFmt);
 			}
 			rows.add(new UserMemorialGroupRowVO(label, list));

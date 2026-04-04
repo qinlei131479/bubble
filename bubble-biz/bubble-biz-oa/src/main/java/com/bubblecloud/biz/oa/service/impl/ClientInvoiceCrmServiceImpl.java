@@ -38,9 +38,13 @@ import cn.hutool.core.util.StrUtil;
 public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 
 	private final ClientInvoiceMapper clientInvoiceMapper;
+
 	private final ClientBillMapper clientBillMapper;
+
 	private final ClientInvoiceLogMapper clientInvoiceLogMapper;
+
 	private final ContractMapper contractMapper;
+
 	private final ObjectMapper objectMapper;
 
 	public ClientInvoiceCrmServiceImpl(ClientInvoiceMapper clientInvoiceMapper, ClientBillMapper clientBillMapper,
@@ -75,7 +79,8 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 		return v.setScale(2, RoundingMode.HALF_UP).toPlainString();
 	}
 
-	private void applyInvoiceFilters(QueryWrapper<ClientInvoice> qw, int entid, Map<String, String> q, boolean financeList) {
+	private void applyInvoiceFilters(QueryWrapper<ClientInvoice> qw, int entid, Map<String, String> q,
+			boolean financeList) {
 		qw.eq("entid", entid);
 		Integer eid = parseInt(q, "eid");
 		if (eid != null) {
@@ -194,7 +199,8 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 		if (!bIds.isEmpty()) {
 			for (Integer bid : bIds) {
 				ClientBill b = clientBillMapper.selectById(bid.longValue());
-				if (b == null || !java.util.Objects.equals(b.getEntid(), entid) || b.getStatus() == null || b.getStatus() != 1) {
+				if (b == null || !java.util.Objects.equals(b.getEntid(), entid) || b.getStatus() == null
+						|| b.getStatus() != 1) {
 					throw new IllegalArgumentException("申请失败,请核对付款单");
 				}
 				price = price.add(b.getNum() == null ? BigDecimal.ZERO : b.getNum());
@@ -228,7 +234,8 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 	@Transactional(rollbackFor = Exception.class)
 	public void update(long id, int entid, JsonNode body) {
 		ClientInvoice ex = clientInvoiceMapper.selectOne(Wrappers.lambdaQuery(ClientInvoice.class)
-			.eq(ClientInvoice::getId, id).eq(ClientInvoice::getEntid, entid));
+			.eq(ClientInvoice::getId, id)
+			.eq(ClientInvoice::getEntid, entid));
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -243,7 +250,8 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 			BigDecimal price = BigDecimal.ZERO;
 			for (Integer bid : bIds) {
 				ClientBill b = clientBillMapper.selectById(bid.longValue());
-				if (b == null || !java.util.Objects.equals(b.getEntid(), entid) || b.getStatus() == null || b.getStatus() != 1) {
+				if (b == null || !java.util.Objects.equals(b.getEntid(), entid) || b.getStatus() == null
+						|| b.getStatus() != 1) {
 					throw new IllegalArgumentException("申请失败,请核对付款单");
 				}
 				price = price.add(b.getNum() == null ? BigDecimal.ZERO : b.getNum());
@@ -260,8 +268,10 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 		}
 		clientInvoiceMapper.updateById(inv);
 		if (!bIds.isEmpty()) {
-			clientBillMapper.update(null, Wrappers.lambdaUpdate(ClientBill.class)
-				.eq(ClientBill::getInvoiceId, id).set(ClientBill::getInvoiceId, 0));
+			clientBillMapper.update(null,
+					Wrappers.lambdaUpdate(ClientBill.class)
+						.eq(ClientBill::getInvoiceId, id)
+						.set(ClientBill::getInvoiceId, 0));
 			for (Integer bid : bIds) {
 				ClientBill b = clientBillMapper.selectById(bid.longValue());
 				b.setInvoiceId((int) id);
@@ -298,14 +308,16 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 						ids.add(x.asLong());
 					}
 					if (!ids.isEmpty()) {
-						return clientBillMapper.selectList(Wrappers.lambdaQuery(ClientBill.class).in(ClientBill::getId, ids));
+						return clientBillMapper
+							.selectList(Wrappers.lambdaQuery(ClientBill.class).in(ClientBill::getId, ids));
 					}
 				}
 			}
 			catch (Exception ignored) {
 			}
 		}
-		return clientBillMapper.selectList(Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getInvoiceId, invoiceId));
+		return clientBillMapper
+			.selectList(Wrappers.lambdaQuery(ClientBill.class).eq(ClientBill::getInvoiceId, invoiceId));
 	}
 
 	@Override
@@ -315,7 +327,8 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 			throw new IllegalArgumentException("参数错误");
 		}
 		ClientInvoice inv = clientInvoiceMapper.selectOne(Wrappers.lambdaQuery(ClientInvoice.class)
-			.eq(ClientInvoice::getId, id).eq(ClientInvoice::getEntid, entid));
+			.eq(ClientInvoice::getId, id)
+			.eq(ClientInvoice::getEntid, entid));
 		if (inv == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
@@ -362,8 +375,10 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 		for (JsonNode x : data) {
 			ids.add(x.asLong());
 		}
-		clientInvoiceMapper.update(null, Wrappers.lambdaUpdate(ClientInvoice.class)
-			.in(ClientInvoice::getId, ids).set(ClientInvoice::getUid, uidStr));
+		clientInvoiceMapper.update(null,
+				Wrappers.lambdaUpdate(ClientInvoice.class)
+					.in(ClientInvoice::getId, ids)
+					.set(ClientInvoice::getUid, uidStr));
 	}
 
 	@Override
@@ -517,7 +532,8 @@ public class ClientInvoiceCrmServiceImpl implements ClientInvoiceCrmService {
 	@Override
 	public ClientInvoice info(long id, int entid) {
 		ClientInvoice inv = clientInvoiceMapper.selectOne(Wrappers.lambdaQuery(ClientInvoice.class)
-			.eq(ClientInvoice::getId, id).eq(ClientInvoice::getEntid, entid));
+			.eq(ClientInvoice::getId, id)
+			.eq(ClientInvoice::getEntid, entid));
 		if (inv == null) {
 			throw new IllegalArgumentException("发票不存在");
 		}

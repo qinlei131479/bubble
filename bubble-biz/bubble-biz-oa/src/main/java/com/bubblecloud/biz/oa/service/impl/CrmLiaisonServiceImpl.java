@@ -35,7 +35,8 @@ import cn.hutool.core.util.StrUtil;
  */
 @Service
 @RequiredArgsConstructor
-public class CrmLiaisonServiceImpl extends UpServiceImpl<CustomerLiaisonMapper, CustomerLiaison> implements CrmLiaisonService {
+public class CrmLiaisonServiceImpl extends UpServiceImpl<CustomerLiaisonMapper, CustomerLiaison>
+		implements CrmLiaisonService {
 
 	private final FormDataService formDataService;
 
@@ -134,7 +135,8 @@ public class CrmLiaisonServiceImpl extends UpServiceImpl<CustomerLiaisonMapper, 
 		}
 		for (Field f : CustomerLiaison.class.getDeclaredFields()) {
 			f.setAccessible(true);
-			com.baomidou.mybatisplus.annotation.TableField tf = f.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
+			com.baomidou.mybatisplus.annotation.TableField tf = f
+				.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
 			if (tf != null && !tf.exist()) {
 				continue;
 			}
