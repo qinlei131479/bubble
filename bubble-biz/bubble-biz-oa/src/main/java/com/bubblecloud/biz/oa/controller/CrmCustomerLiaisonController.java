@@ -47,7 +47,7 @@ public class CrmCustomerLiaisonController {
 		return id;
 	}
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "联系人列表")
 	public R<java.util.List<CustomerLiaison>> index(@RequestParam Integer eid) {
 		return R.phpOk(crmLiaisonService.listByEid(eid));
@@ -59,7 +59,7 @@ public class CrmCustomerLiaisonController {
 		return R.phpOk(crmLiaisonService.createForm());
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "保存联系人")
 	public R<ObjectNode> store(@RequestBody JsonNode body) {
 		int eid = body.path("eid").asInt(0);

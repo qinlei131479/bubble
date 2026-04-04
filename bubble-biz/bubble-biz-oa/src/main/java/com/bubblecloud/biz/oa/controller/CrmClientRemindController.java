@@ -38,7 +38,7 @@ public class CrmClientRemindController {
 
 	private final ClientRemindCrmService clientRemindCrmService;
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "付款提醒列表")
 	public R<SimplePageVO> index(@ParameterObject Pg pg, @RequestParam(required = false) Integer eid,
 			@RequestParam(required = false) Integer cid) {
@@ -46,10 +46,11 @@ public class CrmClientRemindController {
 		q.setEid(eid);
 		q.setCid(cid);
 		Page<ClientRemind> page = clientRemindCrmService.findPg(pg, q);
-		return R.phpOk(SimplePageVO.of((int) page.getCurrent(), (int) page.getSize(), page.getTotal(), page.getRecords()));
+		return R
+			.phpOk(SimplePageVO.of((int) page.getCurrent(), (int) page.getSize(), page.getTotal(), page.getRecords()));
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "保存付款提醒")
 	public R<String> store(@RequestBody ClientRemind body) {
 		clientRemindCrmService.create(body);

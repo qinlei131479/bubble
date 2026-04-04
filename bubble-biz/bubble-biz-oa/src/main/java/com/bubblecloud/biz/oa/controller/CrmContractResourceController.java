@@ -37,7 +37,7 @@ public class CrmContractResourceController {
 
 	private final ContractResourceCrmService contractResourceCrmService;
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "合同附件列表")
 	public R<SimplePageVO> index(@ParameterObject Pg pg, @RequestParam(required = false) Integer cid,
 			@RequestParam(required = false) Integer entid) {
@@ -48,7 +48,7 @@ public class CrmContractResourceController {
 		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "保存合同附件")
 	public R<String> store(@RequestBody ContractResource body) {
 		contractResourceCrmService.create(body);

@@ -27,7 +27,7 @@ public class CrmCustomerRecordController {
 
 	private final CustomerRecordQueryService customerRecordQueryService;
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "客户记录列表")
 	public R<List<CustomerRecord>> index(@RequestParam Integer eid) {
 		if (eid == null || eid < 1) {

@@ -39,8 +39,8 @@ public class UserMemorialController {
 
 	@GetMapping({ "", "/page" })
 	@Operation(summary = "备忘录列表")
-	public R<ListCountVO<UserMemorial>> index(@ParameterObject Pg pg,
-			@RequestParam(required = false) Integer pid, @RequestParam(required = false) String title) {
+	public R<ListCountVO<UserMemorial>> index(@ParameterObject Pg pg, @RequestParam(required = false) Integer pid,
+			@RequestParam(required = false) String title) {
 		return R.phpOk(userMemorialService.listPage(pg, pid, title, OaSecurityUtil.currentUserId()));
 	}
 

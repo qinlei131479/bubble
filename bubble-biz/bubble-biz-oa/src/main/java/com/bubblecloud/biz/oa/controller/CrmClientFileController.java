@@ -45,8 +45,8 @@ public class CrmClientFileController {
 
 	@GetMapping("/index")
 	@Operation(summary = "客户文件列表")
-	public R<ListCountVO<SystemAttach>> index(@ParameterObject Pg<SystemAttach> pg, @RequestParam(required = false) Integer eid,
-			@RequestParam(defaultValue = "1") Integer entid) {
+	public R<ListCountVO<SystemAttach>> index(@ParameterObject Pg<SystemAttach> pg,
+			@RequestParam(required = false) Integer eid, @RequestParam(defaultValue = "1") Integer entid) {
 		if (pg.getSize() <= 0) {
 			pg.setSize(20);
 		}
@@ -62,9 +62,10 @@ public class CrmClientFileController {
 
 	@PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "上传客户文件")
-	public R<Map<String, Object>> upload(@RequestParam(defaultValue = "0") int cid, @RequestParam(defaultValue = "0") int eid,
-			@RequestParam(defaultValue = "0") int fid, @RequestParam("file") MultipartFile file,
-			@RequestParam(defaultValue = "1") Integer entid) throws Exception {
+	public R<Map<String, Object>> upload(@RequestParam(defaultValue = "0") int cid,
+			@RequestParam(defaultValue = "0") int eid, @RequestParam(defaultValue = "0") int fid,
+			@RequestParam("file") MultipartFile file, @RequestParam(defaultValue = "1") Integer entid)
+			throws Exception {
 		Long uid = OaSecurityUtil.currentUserId();
 		String uidStr = uid == null ? "" : String.valueOf(uid);
 		Map<String, Object> data = crmClientFileService.upload(entidOr1(entid), cid, eid, fid, file, uidStr);

@@ -60,7 +60,7 @@ public class CrmCustomerController {
 		return R.phpOk(crmCustomerService.createForm());
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "新增客户")
 	public R<ObjectNode> store(@RequestBody JsonNode body) {
 		ObjectNode data = crmCustomerService.storeFromBody(body, requireAdminId());

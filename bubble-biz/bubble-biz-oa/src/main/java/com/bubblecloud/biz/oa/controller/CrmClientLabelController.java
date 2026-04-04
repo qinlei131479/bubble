@@ -37,7 +37,7 @@ public class CrmClientLabelController {
 
 	private final ClientLabelCrmService clientLabelCrmService;
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "标签列表")
 	public R<SimplePageVO> index(@ParameterObject Pg pg, @RequestParam(required = false) Long entid,
 			@RequestParam(required = false) String name, @RequestParam(defaultValue = "0") Integer pid) {
@@ -48,10 +48,11 @@ public class CrmClientLabelController {
 			q.setName(name);
 		}
 		Page<ClientLabel> page = clientLabelCrmService.findPg(pg, q);
-		return R.phpOk(SimplePageVO.of((int) page.getCurrent(), (int) page.getSize(), page.getTotal(), page.getRecords()));
+		return R
+			.phpOk(SimplePageVO.of((int) page.getCurrent(), (int) page.getSize(), page.getTotal(), page.getRecords()));
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "保存标签")
 	public R<String> store(@RequestBody ClientLabel body) {
 		clientLabelCrmService.create(body);

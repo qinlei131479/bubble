@@ -98,14 +98,14 @@ public class CrmClientInvoiceController {
 		return R.phpOk(clientInvoiceCrmService.listFinance(entid1(parseInt(q, "entid")), q, pageOf(q), limitOf(q)));
 	}
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "发票申请列表")
 	public R<Map<String, Object>> index(@RequestParam Map<String, String> params) {
 		Map<String, String> q = toMap(params);
 		return R.phpOk(clientInvoiceCrmService.index(entid1(parseInt(q, "entid")), q, pageOf(q), limitOf(q)));
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "保存发票申请")
 	public R<Map<String, Long>> store(@RequestBody JsonNode body, @RequestParam(defaultValue = "1") Integer entid) {
 		Long uid = OaSecurityUtil.currentUserId();
@@ -115,7 +115,8 @@ public class CrmClientInvoiceController {
 
 	@PutMapping("/{id}")
 	@Operation(summary = "修改发票申请")
-	public R<String> update(@PathVariable long id, @RequestBody JsonNode body, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<String> update(@PathVariable long id, @RequestBody JsonNode body,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		clientInvoiceCrmService.update(id, entid1(entid), body);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
@@ -135,7 +136,8 @@ public class CrmClientInvoiceController {
 
 	@PostMapping("/status/{id}")
 	@Operation(summary = "审核发票")
-	public R<String> postStatus(@PathVariable long id, @RequestBody JsonNode body, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<String> postStatus(@PathVariable long id, @RequestBody JsonNode body,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		int st = body.path("status").asInt(0);
 		clientInvoiceCrmService.statusAudit(id, entid1(entid), body, st);
 		return R.phpOk("common.operation.succ");
@@ -237,7 +239,8 @@ public class CrmClientInvoiceController {
 
 	@GetMapping("/record/{invoiceId}")
 	@Operation(summary = "开票操作记录")
-	public R<List<ClientInvoiceLog>> record(@PathVariable long invoiceId, @RequestParam(defaultValue = "1") Integer entid) {
+	public R<List<ClientInvoiceLog>> record(@PathVariable long invoiceId,
+			@RequestParam(defaultValue = "1") Integer entid) {
 		if (invoiceId <= 0) {
 			return R.phpFailed("common.empty.attrs");
 		}

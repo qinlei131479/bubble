@@ -33,12 +33,12 @@ public class ApproveConfigController {
 
 	private final ApproveConfigService approveConfigService;
 
-	@GetMapping({"", "/page"})
+	@GetMapping({ "", "/page" })
 	@Operation(summary = "审批配置列表")
 	public R<ListCountVO<Approve>> index(@ParameterObject Pg pg, @ParameterObject Approve query,
-										 @RequestParam(required = false) String name,
-										 @RequestParam(required = false) Integer types, @RequestParam(required = false) Integer status,
-										 @RequestParam(required = false) Integer examine, @RequestParam(required = false) Long entid) {
+			@RequestParam(required = false) String name, @RequestParam(required = false) Integer types,
+			@RequestParam(required = false) Integer status, @RequestParam(required = false) Integer examine,
+			@RequestParam(required = false) Long entid) {
 		query.setNameLike(name);
 		query.setFilterTypes(types);
 		query.setFilterStatus(status);

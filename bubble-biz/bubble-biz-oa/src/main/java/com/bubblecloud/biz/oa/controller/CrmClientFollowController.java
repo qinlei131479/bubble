@@ -34,7 +34,7 @@ public class CrmClientFollowController {
 
 	private final ClientFollowCrmService clientFollowCrmService;
 
-	@GetMapping({"", "/"})
+	@GetMapping({ "", "/" })
 	@Operation(summary = "跟进列表")
 	public R<List<ClientFollow>> index(@RequestParam Integer eid, @RequestParam(defaultValue = "0") Integer status) {
 		return R.phpOk(clientFollowCrmService.list(Wrappers.lambdaQuery(ClientFollow.class)
@@ -44,7 +44,7 @@ public class CrmClientFollowController {
 			.orderByDesc(ClientFollow::getId)));
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "保存跟进")
 	public R<String> store(@RequestBody ClientFollow body) {
 		clientFollowCrmService.create(body);

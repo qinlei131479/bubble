@@ -59,7 +59,7 @@ public class CrmContractController {
 		return R.phpOk(crmContractService.createForm());
 	}
 
-	@PostMapping({"", "/"})
+	@PostMapping({ "", "/" })
 	@Operation(summary = "新增合同")
 	public R<String> store(@RequestBody JsonNode body) {
 		crmContractService.store(body, aid());
