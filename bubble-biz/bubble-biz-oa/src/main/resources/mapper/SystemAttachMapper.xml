@@ -11,4 +11,26 @@
 		ORDER BY t.id DESC
 	</select>
 
+	<select id="selectClientRelationPage" resultType="com.bubblecloud.oa.api.entity.SystemAttach">
+		SELECT t.* FROM eb_system_attach t
+		<where>
+			AND t.entid = #{entid}
+			<choose>
+				<when test="eid != null and eid > 0">
+					AND (
+					(t.relation_type = 2 AND t.relation_id IN (SELECT id FROM eb_client_bill WHERE entid = #{entid} AND eid = #{eid}))
+					OR (t.relation_type = 3 AND t.relation_id IN (SELECT id FROM eb_contract_resource WHERE entid = #{entid} AND eid = #{eid}))
+					OR (t.relation_type = 4 AND t.relation_id = #{eid})
+					OR (t.relation_type = 5 AND t.relation_id IN (SELECT id FROM eb_client_follow WHERE eid = #{eid} AND deleted_at IS NULL))
+					OR (t.relation_type = 6 AND t.relation_id IN (SELECT id FROM eb_client_invoice WHERE entid = #{entid} AND eid = #{eid}))
+					)
+				</when>
+				<otherwise>
+					AND t.relation_type IN (2, 3, 4, 5, 6)
+				</otherwise>
+			</choose>
+		</where>
+		ORDER BY t.id DESC
+	</select>
+
 </mapper>

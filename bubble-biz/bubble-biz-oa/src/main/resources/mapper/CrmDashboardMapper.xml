@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.CrmDashboardMapper">
+
+	<select id="customerCreatedByMonth" resultType="com.bubblecloud.oa.api.vo.crm.NamedCountVO">
+		SELECT DATE_FORMAT(t.created_at, '%Y-%m') AS name, COUNT(1) AS cnt
+		FROM eb_customer t
+		WHERE t.deleted_at IS NULL AND t.created_at IS NOT NULL
+		GROUP BY DATE_FORMAT(t.created_at, '%Y-%m')
+		ORDER BY name DESC
+		LIMIT 24
+	</select>
+
+	<select id="contractCategoryRank" resultType="com.bubblecloud.oa.api.vo.crm.NamedCountVO">
+		SELECT IFNULL(t.contract_category, '') AS name, COUNT(1) AS cnt
+		FROM eb_contract t
+		WHERE t.deleted_at IS NULL
+		GROUP BY t.contract_category
+		ORDER BY cnt DESC
+		LIMIT 50
+	</select>
+
+	<select id="customerCountBySalesman" resultType="com.bubblecloud.oa.api.vo.crm.NamedCountVO">
+		SELECT CAST(t.uid AS CHAR) AS name, COUNT(1) AS cnt
+		FROM eb_customer t
+		WHERE t.deleted_at IS NULL AND t.uid IS NOT NULL AND t.uid &gt; 0
+		GROUP BY t.uid
+		ORDER BY cnt DESC
+		LIMIT 50
+	</select>
+
+	<select id="billIncomeByMonth" resultType="com.bubblecloud.oa.api.vo.crm.NamedCountVO">
+		SELECT DATE_FORMAT(t.date, '%Y-%m') AS name, CAST(IFNULL(SUM(t.num), 0) AS SIGNED) AS cnt
+		FROM eb_client_bill t
+		WHERE t.bill_types = 1 AND t.date IS NOT NULL
+		GROUP BY DATE_FORMAT(t.date, '%Y-%m')
+		ORDER BY name DESC
+		LIMIT 24
+	</select>
+
+</mapper>

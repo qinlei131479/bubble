@@ -1,8 +1,8 @@
 # 陀螺匠 OA 迁移执行计划：PHP Laravel 9 → Java 17 + Spring Boot 3
 
-> **版本**: 1.0  
+> **版本**: 1.0 + **v2 执行路线图**（2026-04-04）  
 > **创建日期**: 2026-03-30  
-> **目标**: 功能对齐，不新增能力；前端 Vue2 保持不变  
+> **目标**: 功能对齐，不新增能力；前端 Vue2 保持不变；**日常排期以第二节 v2 工作包为准**，第三节起为 1.0 接口字典（保留对照 PHP 明细）。  
 
 ---
 
@@ -61,7 +61,235 @@
 
 ---
 
-## 二、11 阶段总览
+## 二、v2 执行路线图（当前排期）
+
+> **用途**：将原「11 阶段」拆为 **7 个波次、28 个工作包（W-01～W-28）**，按 **依赖优先** 排序；与 `bubble-biz-oa` / `bubble-api-oa` 真实占位情况对齐。  
+> **接口清单**：仍以本文 **第三节起** 各阶段表格为 PHP→Java 对照字典。
+
+### 2.1 开发规范（强制）
+
+实施与 Code Review 须遵守仓库规则 [`.cursor/rules/backend-conventions.mdc`](../../.cursor/rules/backend-conventions.mdc)，OA 相关要点如下：
+
+- **分层**：`XxxService extends UpService`、`XxxServiceImpl extends UpServiceImpl`、`XxxMapper extends UpMapper`；自定义 SQL 写在 `bubble-biz-oa/.../mapper/XxxMapper.xml`，Mapper 接口上禁止 `@Select`/`@Update` 等（BaseMapper 无 XML 的 CRUD 除外）。
+- **对外返回**：OA 接口统一 `R.phpOk` / `R.phpFailed`，勿与网关 `R.ok` 混用。
+- **Controller**：禁止注入 Mapper、禁止在 Controller 内写 `Wrappers.lambdaQuery`；复杂条件查询在 ServiceImpl + XML。
+- **类型**：禁止业务层 `Map<String, Object>` 作入参/出参/Mapper 行；用 `bubble-api-oa` 的 DTO/VO/实体或 `JsonNode` 等规范例外。
+- **占位**：禁止新增 `SimplePageVO.empty` 类占位桩；每工作包交付时应消掉本包范围内的空分页/空列表桩。
+- **事务**：`ServiceImpl` 对 `create`/`update` 重写并 `@Transactional(rollbackFor = Exception.class)` 后调 `super.create`/`super.update`。
+- **验收第一原则**：与 **PHP 同路径、同参数、同响应结构** 对齐，用 Java 复刻能力，不擅自增删前端契约字段。
+
+### 2.2 相对 1.0 文档的代码状态勘误
+
+以下条目修正 **第三节各表「Java 状态」列可能已过期** 的判断；实施前以代码为准。
+
+| 类别 | 说明 |
+|------|------|
+| **已实现或已优于 1.0 描述** | `LoginController`：`register`、`phone_login`、`scan_key`/`scan_status` 等已接入；`CommonController`：部分短信 `verify`/`verify/key`、`message` 已接；`EnterpriseUserController`：`PUT /card/{id}` 等已接；工作台 `EnterpriseUserDailyController`：`/daily`、`/pending` 等已接；`UserMemorialController`：备忘录 CRUD；CRM 多控制器已落地（见阶段 5 之 §7.4）。 |
+| **`SimplePageVO.empty` 等显式占位** | `ScheduleController` `GET /page`；`EnterpriseController` `GET /user-card/page`；`UserCenterController` 简历分页；`CloudController`、`FinanceController`、`ModuleController`、`ProgramController`、`ReportController` 等模块级占位入口。迭代内应逐项替换为真实 `findPg`/业务 VO。 |
+| **考勤** | `AttendanceGroupController`、`CalendarConfigController` 已有实现；`AttendanceController` 当前多为空列表桩；PHP 侧统计/打卡/班次/排班/周期等需在 Java 侧 **按控制器维度补全**（见 W-13）。 |
+| **审批** | `ApproveConfig` / `ApproveHolidayType` / `ApproveReply` 已有；**`ent/approve/apply`（审批申请与流转主流程）在 Java 侧缺对等 Controller**，见 W-14。 |
+| **日报** | `DailyController` 等仅部分桩（如 `report_member` 空列表），与 PHP `ent/daily` 全量差距大，见 W-15。 |
+| **路径别名** | `UserController` 使用 `GET/PUT /account_info` 对应 PHP 个人资料时，与文档中的 `/userInfo` 命名可能不一致，以 **前端实际请求路径** 与 PHP 路由为准做回归，避免重复注册同路径。 |
+
+### 2.3 排期规则（优先级）
+
+- **依赖优先**：列表/详情要联查的能力（**标签、提醒、附件、日程**）先于主实体大列表。
+- **横切先于垂直**：Common / 附件 / 消息先于 CRM、档案导入。
+- **同一前端页**：按 PHP 调用顺序（先下拉选项，再保存主表）。
+- **占位清零**：每迭代结束扫描 `SimplePageVO.empty` 与无业务含义的 `Collections.emptyList()` 桩。
+
+### 2.4 波次总览
+
+| 波次 | 名称 | 优先级 | 工作包 | 主要依赖 |
+|------|------|--------|--------|----------|
+| Wave 1 | 横切底座 | P0 | W-01～W-03 | 无 |
+| Wave 2 | 组织与档案 | P0 | W-04～W-06 | W-03 利于导入类能力 |
+| Wave 3 | 系统管理 | P0 | W-07～W-08 | Wave 1 |
+| Wave 4 | 人事查漏补缺 | P1 | W-09～W-11 | Wave 2～3 |
+| Wave 5 | OA 办公 | P1 | W-12～W-15 | 组织/用户数据一致 |
+| Wave 6 | CRM（严格顺序） | P1 | W-16～W-22 | W-03、W-12；**标签→提醒→跟进/文件→客户→…** |
+| Wave 7 | 财务/项目/低代码/开放/Flow | P2～P3 | W-23～W-28 | CRM/日程/审批等主链稳定后 |
+
+### 2.5 依赖关系（示意）
+
+```mermaid
+flowchart TB
+  subgraph wave1 [Wave1_P0横切]
+    W01[W01_Common与验证码]
+    W02[W02_消息与待办]
+    W03[W03_附件与存储]
+  end
+  subgraph wave2 [Wave2_P0组织档案]
+    W04[W04_UserCard档案]
+    W05[W05_履历与教育等]
+    W06[W06_JobAnalysis可选]
+  end
+  subgraph wave3 [Wave3_P0系统管理]
+    W07[W07_角色与菜单]
+    W08[W08_配置与ClientRule]
+  end
+  subgraph wave4 [Wave4_P1人事]
+    W09[W09_职级岗位海氏]
+    W10[W10_Assess绩效]
+    W11[W11_晋升调薪培训]
+  end
+  subgraph wave5 [Wave5_P1办公OA]
+    W12[W12_日程Schedule全量]
+    W13[W13_考勤拆分]
+    W14[W14_审批Apply]
+    W15[W15_日报Daily全量]
+  end
+  subgraph wave6 [Wave6_P1_CRM按序]
+    W16[W16_ClientLabel]
+    W17[W17_ClientRemind]
+    W18[W18_Follow与File]
+    W19[W19_Customer主流程]
+    W20[W20_Liaison与Record]
+    W21[W21_Contract与Resource]
+    W22[W22_Bill与Invoice]
+  end
+  subgraph wave7 [Wave7_P2P3]
+    W23[W23_财务ent_bill]
+    W24[W24_项目Program]
+    W25[W25_低代码CrudModule]
+    W26[W26_辅助云盘等]
+    W27[W27_OpenAPI]
+    W28[W28_bubble_biz_flow]
+  end
+  W03 --> W04
+  W03 --> W18
+  W12 --> W17
+  W16 --> W19
+  W17 --> W19
+  W21 --> W22
+  W14 --> W28
+  W25 --> W28
+```
+
+### 2.6 工作包明细（W-01～W-28）
+
+#### Wave 1 — P0 横切底座
+
+- **W-01 Common 与验证码**  
+  - [ ] 对齐 PHP `ent/common` 仍缺项（上传/下载、`initData`、城市、问卷、发票回调等，见第三节 3.2.2）。  
+  - [ ] 评估 `captcha`、`auth` 是否仍为占位语义，按 PHP 真值实现。  
+  - **主要代码**：`CommonController`、`CommonService` / `CommonServiceImpl`。
+
+- **W-02 消息与待办一致性**  
+  - [ ] `common/message` 与 `UserPending`、工作台 `pending` 数据同源校验。  
+  - [ ] 后台 `ent/system/message` 与 PHP 差异清单关闭。  
+  - **主要代码**：`MessageController`、`MessageService`；工作台 `EnterpriseUserDailyService`。
+
+- **W-03 附件与云存储**  
+  - [ ] `SystemStorage` / `SystemAttach` 与 CRM 文件、导入模板、员工档案导入共用能力验收。  
+  - **主要代码**：`SystemStorageController`、`SystemAttachController`、`AttachCateAdminController`。
+
+#### Wave 2 — P0 组织与档案
+
+- **W-04 员工档案 UserCard**  
+  - [ ] 实现 PHP `ent/company/card` 全量接口，**替换** `EnterpriseController` 的 `GET /user-card/page` 占位。  
+  - **主要代码**：新建或扩展 `UserCard` 相关 Controller/Service（路径以 PHP 为准）。
+
+- **W-05 个人与企业履历线**  
+  - [ ] 第三节 3.2.8：工作经历、教育、任职、备忘录分类、企业侧履历等 Resource；与 `UserMemorialController` 路径分工清晰。  
+  - **主要代码**：按 PHP 前缀新增/补全 Controller + `bubble-api-oa` 实体/DTO。
+
+- **W-06 JobAnalysis（可选并行）**  
+  - [ ] `ent/company/job_analysis` 与 PHP 对齐。
+
+#### Wave 3 — P0 系统管理
+
+- **W-07 角色与菜单**  
+  - [ ] `EnterpriseRoleController` / `SystemMenusController` 相对 PHP `ent/system/roles`、`ent/system/menus` 的 CRUD 与扩展接口闭集（成员、密码等）。
+
+- **W-08 其余配置与 ClientRule**  
+  - [ ] Dict/Form/Quick/Agreement/Log/Upgrade 等与第四节对照，标已实现/缺口。  
+  - [ ] `ClientRuleController` 与 PHP 行为一致。
+
+#### Wave 4 — P1 人事（查漏补缺）
+
+- **W-09 职级 / 岗位 / 海氏**  
+  - [ ] `RankCategoryController`、`RankController`、`RankJobController`、`RankLevelController`、`HayGroupController` 与 PHP Service 字段级 diff 关闭。
+
+- **W-10 绩效 Assess**  
+  - [ ] `AssessController` 及关联 Plan/Target/Template 等与 PHP 21+ 接口返回形状与分支对齐。
+
+- **W-11 晋升 / 调薪 / 培训**  
+  - [ ] `PromotionController`、`PromotionDataController`、`EnterpriseUserSalaryController`、`EmployeeTrainController` 等与 PHP 对齐（在已有 Controller 上补业务）。
+
+#### Wave 5 — P1 OA 办公
+
+- **W-12 日程 Schedule 全量**  
+  - [ ] 去掉 `ScheduleController` 分页桩；补齐 PHP `ent/schedule` 缺失接口（类型 CRUD、日程 CRUD、评价等，见第六节 6.2）。  
+  - **依赖说明**：**W-17 客户提醒与日程联动** 依赖本包完成。
+
+- **W-13 考勤拆分实现**  
+  - [ ] 按 PHP 七个考勤相关控制器维度在 Java 侧增补 Controller/Service（统计、打卡、班次、排班、周期等），与现有 `AttendanceGroup`、`CalendarConfig` 衔接。  
+  - [ ] 消除 `AttendanceController` 仅空列表问题；处理 `AttendanceGroupServiceImpl` 中 RosterCycle 等待办。
+
+- **W-14 审批 Apply**  
+  - [ ] **新增** `ApproveApplyController`，路径对齐 `ent/approve/apply`（处理、撤销、导出、催办、加签、转审等）。  
+  - [ ] 与 **W-28** 衔接策略：**先 PHP 等价直实现**，再迁 Flowable/Camunda（见第十三节）。
+
+- **W-15 日报 Daily 全量**  
+  - [ ] 以 `DailyController`、`ReportController`（或合并策略以 PHP 为准）对齐 `ent/daily` 全量；依赖组织架构与员工档案数据一致。
+
+#### Wave 6 — P1 CRM（**严格顺序：标签 → 提醒（联动日程）→ 跟进/文件 → 客户 → 联系人/记录 → 合同 → 账单/发票**）
+
+- **W-16 ClientLabel（最先）**  
+  - [ ] 标签 CRUD + 与客户列表筛选、客户保存时标签关联，与 PHP 一致。  
+  - **主要代码**：`CrmClientLabelController` 及 Service/Mapper。
+
+- **W-17 ClientRemind**  
+  - [ ] 提醒全量；**与日程（W-12）联动**（对齐 §7.4）。  
+  - **主要代码**：`CrmClientRemindController`。
+
+- **W-18 ClientFollow + ClientFile**  
+  - [ ] 跟进与文件；**文件依赖 W-03 附件体系**。  
+  - **主要代码**：`CrmClientFollowController`、`CrmClientFileController`。
+
+- **W-19 Customer 主流程**  
+  - [ ] 列表/详情/流转/统计/标签/业务员/导入等在 **W-16、W-18** 完成后做字段级回归。  
+  - **主要代码**：`CrmCustomerController`。
+
+- **W-20 Liaison + Record**  
+  - [ ] `CrmCustomerLiaisonController`、`CrmCustomerRecordController` 与 PHP 对齐。
+
+- **W-21 Contract + Resource**  
+  - [ ] `CrmContractController`、`CrmContractResourceController` 与 PHP 对齐。
+
+- **W-22 Bill + Invoice**  
+  - [ ] `CrmClientBillController`、`CrmClientInvoiceController`；在线开票 URI 等占位按 §7.4 关闭或对接网关；**依赖 W-21**。
+
+#### Wave 7 — P2 / P3 与 Flow
+
+- **W-23 财务 `ent/bill`**  
+  - [ ] 替换 `FinanceController` 占位；可与 CRM 账单联动验证。
+
+- **W-24 项目 Program**  
+  - [ ] 替换 `ProgramController` 等占位（见第九节）。
+
+- **W-25 低代码 Crud / Module**  
+  - [ ] 替换 `ModuleController` 占位；按第十节拆子能力（表、字段、触发器、视图、dashboard、curl、approve）。
+
+- **W-26 辅助能力**  
+  - [ ] 云盘 `CloudController`、公告、物资、帮助、Chat 与 AGI 边界（见第十一节）。
+
+- **W-27 Open API**  
+  - [ ] 对齐第十二节；依赖 CRM、日程、低代码等主数据稳定。
+
+- **W-28 bubble-biz-flow**  
+  - [ ] 与 W-14、W-25 审批链路对接（见第十三节）。
+
+### 2.7 工作包验收建议（每个 W-XX）
+
+- PHP 与 Java 同路径抽样请求对比（路径、关键字段、HTTP 状态与 `data` 形状）。  
+- 列出本次变更的 `bubble-api-oa` DTO/VO/实体。  
+- 复杂 SQL 注明 `XxxMapper.xml` 与 PHP 原 Service/SQL 对照点。
+
+### 2.8 归档：1.0 十一阶段粗粒度总览
+
+> 以下为 **v1.0** 阶段划分，**仅作粗粒度参考**；执行顺序以 **2.4～2.6** 工作包为准。
 
 | 阶段 | 名称 | 优先级 | PHP 控制器数 | 预估工时 | 前置依赖 |
 |------|------|--------|-------------|---------|---------|
@@ -81,6 +309,8 @@
 ---
 
 ## 三、阶段 1：核心用户与组织管理 (P0)
+
+> **说明**：本节起为 **1.0 PHP→Java 接口字典**；任务优先级、依赖与占位消桩顺序以 **第二节 v2** 为准。表格中「Java 状态」可能早于当前代码，实施前结合 **§2.2 勘误** 与仓库代码核对。
 
 ### 3.1 目标与验收标准
 
@@ -915,3 +1145,4 @@
 | 日期 | 版本 | 说明 |
 |------|------|------|
 | 2026-03-30 | 1.0 | 初始版本：基于 PHP 源码全量扫描生成 11 阶段详细计划 |
+| 2026-04-04 | 1.0 + v2 | 新增第二节「v2 执行路线图」：28 个工作包、7 波次、依赖示意与代码勘误；原 11 阶段表归档至 §2.8；第三节起仍为 1.0 接口字典 |
