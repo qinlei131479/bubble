@@ -12,7 +12,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 组合数据项，对应 eb_system_group_data（续费类型等 JSON 配置）。
+ * 组合数据项，对应 eb_system_group_data 表（续费类型等 JSON 配置）。
+ *
+ * @author qinlei
+ * @date 2026/4/5
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,11 +26,11 @@ public class SystemGroupData extends Req<SystemGroupData> {
 	private static final long serialVersionUID = 1L;
 
 	@TableId(type = IdType.AUTO)
-	@Schema(description = "主键")
+	@Schema(description = "主键ID")
 	private Long id;
 
+	@Schema(description = "组合ID")
 	@TableField("group_id")
-	@Schema(description = "组合 ID")
 	private Integer groupId;
 
 	@Schema(description = "JSON 数据")
@@ -39,9 +42,11 @@ public class SystemGroupData extends Req<SystemGroupData> {
 	@Schema(description = "状态")
 	private Integer status;
 
+	@Schema(description = "创建时间")
 	@TableField("created_at")
 	private LocalDateTime createdAt;
 
+	@Schema(description = "更新时间")
 	@TableField("updated_at")
 	private LocalDateTime updatedAt;
 

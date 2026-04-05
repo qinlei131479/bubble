@@ -9,6 +9,7 @@ import com.bubblecloud.oa.api.entity.EnterpriseUserChange;
  * eb_enterprise_user_change。
  *
  * @author qinlei
+ * @date 2026/4/5
  */
 @Mapper
 public interface EnterpriseUserChangeMapper extends UpMapper<EnterpriseUserChange> {

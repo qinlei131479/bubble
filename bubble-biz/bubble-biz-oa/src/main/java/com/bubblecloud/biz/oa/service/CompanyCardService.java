@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * 员工档案 {@code ent/company/card}（对齐 PHP UserCardController + AdminService）。
  *
  * @author qinlei
+ * @date 2026/4/5
  */
 public interface CompanyCardService {
 

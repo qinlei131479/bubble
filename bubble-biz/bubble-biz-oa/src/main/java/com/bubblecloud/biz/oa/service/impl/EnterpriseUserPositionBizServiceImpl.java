@@ -23,6 +23,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * EnterpriseUserPositionBizServiceImpl。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 @Service
 @RequiredArgsConstructor
 public class EnterpriseUserPositionBizServiceImpl

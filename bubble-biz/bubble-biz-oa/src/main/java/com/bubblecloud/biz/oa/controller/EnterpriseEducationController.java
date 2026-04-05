@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 企业员工教育经历（对齐 PHP {@code ent/education}）。
+ * @author qinlei
+ * @date 2026/4/5
  */
 @RestController
 @RequiredArgsConstructor

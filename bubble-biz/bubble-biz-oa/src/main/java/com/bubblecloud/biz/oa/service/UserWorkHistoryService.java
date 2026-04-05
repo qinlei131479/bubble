@@ -6,6 +6,13 @@ import com.bubblecloud.oa.api.entity.UserWorkHistory;
 import com.bubblecloud.oa.api.vo.ListCountVO;
 import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 
+/**
+ * UserWorkHistoryService。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 public interface UserWorkHistoryService {
 
 	ListCountVO<UserWorkHistory> list(Long adminId, Long resumeIdFilter);

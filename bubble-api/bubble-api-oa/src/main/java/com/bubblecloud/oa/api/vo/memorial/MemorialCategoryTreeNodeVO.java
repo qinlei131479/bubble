@@ -8,7 +8,9 @@ import lombok.Data;
 
 /**
  * 备忘录分类树节点（供 el-tree：id、name、children、count）。
+ *
  * @author qinlei
+ * @date 2026/4/5
  */
 @Data
 @Schema(description = "备忘录分类树节点")
@@ -20,7 +22,7 @@ public class MemorialCategoryTreeNodeVO {
 	@Schema(description = "名称")
 	private String name;
 
-	@Schema(description = "上级 ID")
+	@Schema(description = "上级ID")
 	private Integer pid;
 
 	@Schema(description = "该文件夹下备忘录数量")

@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * 与 PHP {@code elForm} 对齐，供 form-create 使用。
+ *
  * @author qinlei
+ * @date 2026/4/5
  */
 @Data
 @NoArgsConstructor

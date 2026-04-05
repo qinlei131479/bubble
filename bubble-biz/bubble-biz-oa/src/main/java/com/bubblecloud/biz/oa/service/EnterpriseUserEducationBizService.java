@@ -6,6 +6,13 @@ import com.bubblecloud.oa.api.entity.EnterpriseUserEducation;
 import com.bubblecloud.oa.api.vo.ListCountVO;
 import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 
+/**
+ * EnterpriseUserEducationBizService。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 public interface EnterpriseUserEducationBizService {
 
 	ListCountVO<EnterpriseUserEducation> list(Long userId);

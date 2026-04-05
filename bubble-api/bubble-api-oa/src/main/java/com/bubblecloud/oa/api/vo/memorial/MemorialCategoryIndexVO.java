@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * 备忘录分类列表（对齐 PHP {@code total} + {@code tree}）。
+ *
  * @author qinlei
+ * @date 2026/4/5
  */
 @Data
 @NoArgsConstructor

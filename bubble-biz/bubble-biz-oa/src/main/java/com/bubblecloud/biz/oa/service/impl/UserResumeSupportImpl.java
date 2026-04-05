@@ -15,6 +15,13 @@ import com.bubblecloud.oa.api.entity.UserResume;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * UserResumeSupportImpl。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 @Service
 @RequiredArgsConstructor
 public class UserResumeSupportImpl implements UserResumeSupport {

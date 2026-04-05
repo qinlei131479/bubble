@@ -9,6 +9,7 @@ import com.bubblecloud.oa.api.entity.MessageTemplate;
  * eb_message_template。
  *
  * @author qinlei
+ * @date 2026/4/5
  */
 @Mapper
 public interface MessageTemplateMapper extends UpMapper<MessageTemplate> {

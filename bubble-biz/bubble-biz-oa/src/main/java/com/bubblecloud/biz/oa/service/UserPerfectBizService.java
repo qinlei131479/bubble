@@ -2,6 +2,13 @@ package com.bubblecloud.biz.oa.service;
 
 import com.bubblecloud.oa.api.vo.perfect.UserPerfectIndexVO;
 
+/**
+ * UserPerfectBizService。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 public interface UserPerfectBizService {
 
 	UserPerfectIndexVO listForCurrentUser(Long adminId, Integer status, Integer page, Integer limit);

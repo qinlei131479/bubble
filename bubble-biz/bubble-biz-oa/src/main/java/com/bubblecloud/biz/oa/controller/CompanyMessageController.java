@@ -25,6 +25,7 @@ import cn.hutool.core.util.StrUtil;
  * 企业消息（对齐 PHP {@code ent/company/message}，含消息中心抽屉）。
  *
  * @author qinlei
+ * @date 2026/4/5
  */
 @RestController
 @RequiredArgsConstructor

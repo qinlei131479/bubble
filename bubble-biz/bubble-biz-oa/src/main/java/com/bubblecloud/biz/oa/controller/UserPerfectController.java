@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 邀请完善档案（对齐 PHP {@code ent/user/perfect}）。
+ * @author qinlei
+ * @date 2026/4/5
  */
 @RestController
 @RequiredArgsConstructor

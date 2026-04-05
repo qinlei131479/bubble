@@ -5,6 +5,13 @@ import com.bubblecloud.oa.api.dto.memorial.MemorialCategorySaveDTO;
 import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import com.bubblecloud.oa.api.vo.memorial.MemorialCategoryIndexVO;
 
+/**
+ * UserMemorialCategoryBizService。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 public interface UserMemorialCategoryBizService {
 
 	MemorialCategoryIndexVO index(Long adminId);

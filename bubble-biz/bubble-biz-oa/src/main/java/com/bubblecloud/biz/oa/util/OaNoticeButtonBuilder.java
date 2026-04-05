@@ -12,6 +12,7 @@ import cn.hutool.core.util.StrUtil;
  * 对齐 PHP {@code NoticeRecordService::getButtonInfo}。
  *
  * @author qinlei
+ * @date 2026/4/5
  */
 public final class OaNoticeButtonBuilder {
 

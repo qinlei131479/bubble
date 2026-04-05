@@ -31,6 +31,13 @@ import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * UserMemorialCategoryBizServiceImpl。
+ *
+ * @author qinlei
+ * @date 2026/4/5
+ */
+
 @Service
 @RequiredArgsConstructor
 public class UserMemorialCategoryBizServiceImpl implements UserMemorialCategoryBizService {

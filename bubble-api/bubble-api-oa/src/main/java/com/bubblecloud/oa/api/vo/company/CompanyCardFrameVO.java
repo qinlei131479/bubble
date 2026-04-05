@@ -9,6 +9,7 @@ import lombok.Data;
  * 档案列表/详情中的部门节点（对齐 PHP {@code frames} 关联字段名）。
  *
  * @author qinlei
+ * @date 2026/4/5
  */
 @Data
 @Schema(description = "员工档案部门项")
