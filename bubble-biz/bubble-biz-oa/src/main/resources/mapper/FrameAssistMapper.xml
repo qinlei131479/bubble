@@ -71,4 +71,13 @@
 		ORDER BY fa.is_mastart DESC, fa.id ASC
 	</select>
 
+	<select id="selectUserIdsByFrameIds" resultType="java.lang.Long">
+		SELECT DISTINCT fa.user_id
+		FROM eb_frame_assist fa
+		WHERE fa.entid = #{entid}
+		  AND fa.deleted_at IS NULL
+		  AND fa.frame_id IN
+		<foreach collection="frameIds" item="fid" open="(" separator="," close=")">#{fid}</foreach>
+	</select>
+
 </mapper>

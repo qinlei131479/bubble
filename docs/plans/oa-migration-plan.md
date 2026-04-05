@@ -200,7 +200,7 @@ flowchart TB
 #### Wave 3 — P0 系统管理
 
 - **W-07 角色与菜单**  
-  - [ ] `EnterpriseRoleController` / `SystemMenusController` 相对 PHP `ent/system/roles`、`ent/system/menus` 的 CRUD 与扩展接口闭集（成员、密码等）。
+  - [x] `EnterpriseRoleController` / `SystemMenusController` 相对 PHP `ent/system/roles`、`ent/system/menus` 的 CRUD 与扩展接口闭集（成员、密码等）。
 
 - **W-08 其余配置与 ClientRule**  
   - [ ] Dict/Form/Quick/Agreement/Log/Upgrade 等与第四节对照，标已实现/缺口。  

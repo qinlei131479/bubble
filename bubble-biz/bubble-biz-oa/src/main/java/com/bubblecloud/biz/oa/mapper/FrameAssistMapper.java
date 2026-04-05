@@ -30,4 +30,9 @@ public interface FrameAssistMapper extends UpMapper<FrameAssist> {
 	List<FrameAssistCardBatchRow> selectFramesForCardBatch(@Param("entid") long entid,
 			@Param("userIds") Collection<Long> userIds);
 
+	/**
+	 * 部门下的员工 admin.id（去重），用于角色按部门批量加人。
+	 */
+	List<Long> selectUserIdsByFrameIds(@Param("entid") long entid, @Param("frameIds") Collection<Integer> frameIds);
+
 }

@@ -1,12 +1,11 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,15 +13,22 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseRoleMapper;
 import com.bubblecloud.biz.oa.mapper.EnterpriseRoleUserMapper;
+import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
+import com.bubblecloud.biz.oa.mapper.FrameMapper;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
 import com.bubblecloud.biz.oa.service.EnterpriseRoleService;
-import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
+import com.bubblecloud.biz.oa.service.SystemMenusService;
 import com.bubblecloud.biz.oa.util.TreeUtil;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
+import com.bubblecloud.oa.api.dto.FrameAssistView;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.EnterpriseRole;
 import com.bubblecloud.oa.api.entity.EnterpriseRoleUser;
+import com.bubblecloud.oa.api.entity.Frame;
 import com.bubblecloud.oa.api.entity.SystemMenus;
 import com.bubblecloud.oa.api.vo.menu.SystemMenusTreeNodeVO;
+import com.bubblecloud.oa.api.vo.role.EnterpriseRoleListItemVO;
+import com.bubblecloud.oa.api.vo.role.RoleMemberRowVO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +36,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -50,16 +57,169 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 
 	private final SystemMenusMapper systemMenusMapper;
 
+	private final FrameMapper frameMapper;
+
+	private final FrameAssistMapper frameAssistMapper;
+
+	private final SystemMenusService systemMenusService;
+
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public List<EnterpriseRole> listRoles(String roleName, Long entId) {
+	public List<EnterpriseRoleListItemVO> listRoles(String roleName, Long entId) {
 		var q = Wrappers.lambdaQuery(EnterpriseRole.class).eq(EnterpriseRole::getEntid, entId);
 		if (StrUtil.isNotBlank(roleName)) {
 			q.like(EnterpriseRole::getRoleName, roleName);
 		}
 		q.orderByDesc(EnterpriseRole::getId);
-		return baseMapper.selectList(q);
+		List<EnterpriseRole> rows = baseMapper.selectList(q);
+		if (CollUtil.isEmpty(rows)) {
+			return List.of();
+		}
+		List<EnterpriseRoleListItemVO> out = new ArrayList<>(rows.size());
+		for (EnterpriseRole r : rows) {
+			EnterpriseRoleListItemVO vo = new EnterpriseRoleListItemVO();
+			vo.setId(r.getId());
+			vo.setRoleName(r.getRoleName());
+			vo.setUserCount(r.getUserCount());
+			vo.setStatus(r.getStatus());
+			vo.setDataLevel(r.getDataLevel());
+			vo.setDirectly(r.getDirectly());
+			vo.setFrameId(r.getFrameId());
+			vo.setFrame(resolveFrames(r.getFrameId()));
+			out.add(vo);
+		}
+		return out;
+	}
+
+	private List<EnterpriseRoleListItemVO.FrameBriefVO> resolveFrames(String frameIdRaw) {
+		List<Long> ids = parseIdList(frameIdRaw);
+		if (ids.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<Frame> frames = frameMapper
+			.selectList(Wrappers.lambdaQuery(Frame.class).in(Frame::getId, ids).isNull(Frame::getDeletedAt));
+		List<EnterpriseRoleListItemVO.FrameBriefVO> list = new ArrayList<>();
+		for (Frame f : frames) {
+			EnterpriseRoleListItemVO.FrameBriefVO b = new EnterpriseRoleListItemVO.FrameBriefVO();
+			b.setId(f.getId());
+			b.setName(f.getName());
+			list.add(b);
+		}
+		return list;
+	}
+
+	private List<Long> parseIdList(String raw) {
+		if (StrUtil.isBlank(raw)) {
+			return List.of();
+		}
+		String t = raw.trim();
+		try {
+			JsonNode n = objectMapper.readTree(t);
+			if (n.isArray()) {
+				List<Long> ids = new ArrayList<>();
+				for (JsonNode x : n) {
+					if (x.isIntegralNumber()) {
+						ids.add(x.longValue());
+					}
+					else if (x.isTextual()) {
+						Long v = parseLongSafe(x.asText());
+						if (ObjectUtil.isNotNull(v)) {
+							ids.add(v);
+						}
+					}
+				}
+				return ids;
+			}
+		}
+		catch (Exception ignored) {
+		}
+		if (t.contains(",")) {
+			List<Long> ids = new ArrayList<>();
+			for (String p : t.split(",")) {
+				Long v = parseLongSafe(p.trim());
+				if (ObjectUtil.isNotNull(v)) {
+					ids.add(v);
+				}
+			}
+			return ids;
+		}
+		Long one = parseLongSafe(t);
+		return ObjectUtil.isNull(one) ? List.of() : List.of(one);
+	}
+
+	private static Long parseLongSafe(String s) {
+		if (StrUtil.isBlank(s)) {
+			return null;
+		}
+		try {
+			return Long.parseLong(s);
+		}
+		catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public JsonNode getRoleInfo(Long entId, Long roleId) {
+		List<Long> defaultApis = new ArrayList<>();
+		ObjectNode rule = objectMapper.createObjectNode();
+		if (ObjectUtil.isNotNull(roleId) && roleId > 0) {
+			EnterpriseRole er = baseMapper.selectOne(Wrappers.lambdaQuery(EnterpriseRole.class)
+				.eq(EnterpriseRole::getId, roleId)
+				.eq(EnterpriseRole::getEntid, entId));
+			if (ObjectUtil.isNull(er)) {
+				throw new IllegalArgumentException("修改的角色不存在");
+			}
+			rule.put("id", er.getId());
+			rule.put("role_name", StrUtil.nullToEmpty(er.getRoleName()));
+			rule.set("rules", readJsonArray(er.getRules()));
+			rule.set("apis", readJsonArray(er.getApis()));
+			rule.put("status", ObjectUtil.defaultIfNull(er.getStatus(), 0));
+			rule.put("data_level", ObjectUtil.defaultIfNull(er.getDataLevel(), 1));
+			rule.put("directly", ObjectUtil.defaultIfNull(er.getDirectly(), 0));
+			ArrayNode frameArr = objectMapper.createArrayNode();
+			for (EnterpriseRoleListItemVO.FrameBriefVO f : resolveFrames(er.getFrameId())) {
+				ObjectNode o = objectMapper.createObjectNode();
+				o.put("id", f.getId());
+				o.put("name", f.getName());
+				frameArr.add(o);
+			}
+			rule.set("frame", frameArr);
+			defaultApis.addAll(jsonArrayToLongList(er.getApis()));
+		}
+		JsonNode tree = systemMenusService.buildRoleMenuCascader(entId, defaultApis);
+		ObjectNode root = objectMapper.createObjectNode();
+		root.set("tree", tree);
+		root.set("rule", rule);
+		root.set("crud", objectMapper.createArrayNode());
+		return root;
+	}
+
+	private ArrayNode readJsonArray(String raw) {
+		if (StrUtil.isBlank(raw)) {
+			return objectMapper.createArrayNode();
+		}
+		try {
+			JsonNode n = objectMapper.readTree(raw);
+			if (n.isArray()) {
+				return (ArrayNode) n;
+			}
+		}
+		catch (Exception ignored) {
+		}
+		return objectMapper.createArrayNode();
+	}
+
+	private List<Long> jsonArrayToLongList(String raw) {
+		ArrayNode arr = readJsonArray(raw);
+		List<Long> ids = new ArrayList<>();
+		for (JsonNode x : arr) {
+			if (x.isIntegralNumber()) {
+				ids.add(x.longValue());
+			}
+		}
+		return ids;
 	}
 
 	@Override
@@ -159,20 +319,50 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 	}
 
 	@Override
-	public List<Admin> getRoleUsers(Long roleId, Long entId) {
-		List<Long> userIds = enterpriseRoleUserMapper
+	public JsonNode getRoleUserList(Long roleId, Long entId, Integer page, Integer limit) {
+		long ok = baseMapper.selectCount(Wrappers.lambdaQuery(EnterpriseRole.class)
+			.eq(EnterpriseRole::getId, roleId)
+			.eq(EnterpriseRole::getEntid, entId));
+		if (ok == 0) {
+			throw new IllegalArgumentException("无效的角色ID");
+		}
+		List<EnterpriseRoleUser> rus = enterpriseRoleUserMapper
 			.selectList(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
 				.eq(EnterpriseRoleUser::getRoleId, roleId)
-				.eq(EnterpriseRoleUser::getEntid, entId)
-				.eq(EnterpriseRoleUser::getStatus, 1))
-			.stream()
-			.map(EnterpriseRoleUser::getUserId)
-			.toList();
-		if (userIds.isEmpty()) {
-			return List.of();
+				.eq(EnterpriseRoleUser::getEntid, entId));
+		int pg = ObjectUtil.defaultIfNull(page, 1);
+		int lim = ObjectUtil.defaultIfNull(limit, 15);
+		int from = Math.max(0, (pg - 1) * lim);
+		List<EnterpriseRoleUser> slice = rus.stream().skip(from).limit(lim).toList();
+		ArrayNode list = objectMapper.createArrayNode();
+		for (EnterpriseRoleUser ru : slice) {
+			Admin a = adminMapper.selectById(ru.getUserId());
+			if (ObjectUtil.isNull(a) || ObjectUtil.isNotNull(a.getDeletedAt())) {
+				continue;
+			}
+			RoleMemberRowVO row = new RoleMemberRowVO();
+			row.setId(a.getId());
+			row.setName(a.getName());
+			row.setStatus(ru.getStatus());
+			List<FrameAssistView> frames = frameAssistMapper.selectUserFrames(a.getId(), entId);
+			RoleMemberRowVO.FrameNameVO fn = new RoleMemberRowVO.FrameNameVO();
+			fn.setName("--");
+			for (FrameAssistView fv : frames) {
+				if (ObjectUtil.equal(fv.getIsMastart(), 1) && StrUtil.isNotBlank(fv.getFrameName())) {
+					fn.setName(fv.getFrameName());
+					break;
+				}
+			}
+			if ("--".equals(fn.getName()) && CollUtil.isNotEmpty(frames)) {
+				fn.setName(frames.get(0).getFrameName());
+			}
+			row.setFrame(fn);
+			list.add(objectMapper.valueToTree(row));
 		}
-		return adminMapper
-			.selectList(Wrappers.lambdaQuery(Admin.class).in(Admin::getId, userIds).eq(Admin::getStatus, 1));
+		ObjectNode root = objectMapper.createObjectNode();
+		root.set("list", list);
+		root.put("count", rus.size());
+		return root;
 	}
 
 	@Override
@@ -248,7 +438,7 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 			}
 		}
 		enterpriseRoleUserMapper.delete(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
-			.eq(EnterpriseRoleUser::getUserId, userId.intValue())
+			.eq(EnterpriseRoleUser::getUserId, userId)
 			.eq(EnterpriseRoleUser::getEntid, entId));
 		for (Long rid : roleIds) {
 			EnterpriseRoleUser ru = new EnterpriseRoleUser();
@@ -272,18 +462,30 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addRoleUsers(Long entId, Long roleId, List<Long> userIds) {
-		if (ObjectUtil.isNull(userIds) || userIds.isEmpty()) {
+	public void addRoleUsers(Long entId, Long roleId, List<Long> userIds, List<Integer> frameIds) {
+		if (ObjectUtil.isNull(roleId) || roleId <= 0) {
+			throw new IllegalArgumentException("角色id不能为空");
+		}
+		Set<Long> merged = new LinkedHashSet<>();
+		if (CollUtil.isNotEmpty(userIds)) {
+			merged.addAll(userIds);
+		}
+		if (CollUtil.isNotEmpty(frameIds)) {
+			List<Long> fromFrames = frameAssistMapper.selectUserIdsByFrameIds(entId, frameIds);
+			merged.addAll(fromFrames);
+		}
+		if (merged.isEmpty()) {
 			throw new IllegalArgumentException("至少选择一个部门或者一个用户");
 		}
-		Set<Long> existing = enterpriseRoleUserMapper
+		List<Long> userIdsList = enterpriseRoleUserMapper
 			.selectList(Wrappers.lambdaQuery(EnterpriseRoleUser.class)
 				.eq(EnterpriseRoleUser::getRoleId, roleId)
-				.in(EnterpriseRoleUser::getUserId, userIds))
+				.in(EnterpriseRoleUser::getUserId, merged))
 			.stream()
 			.map(EnterpriseRoleUser::getUserId)
-			.collect(Collectors.toSet());
-		List<Long> newIds = userIds.stream().filter(id -> !existing.contains(id)).toList();
+			.toList();
+		Set<Long> existing = new LinkedHashSet<>(userIdsList);
+		List<Long> newIds = merged.stream().filter(id -> !existing.contains(id)).toList();
 		if (newIds.isEmpty()) {
 			throw new IllegalArgumentException("您选择的用户已全部加入该角色下");
 		}
@@ -294,9 +496,9 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 			ru.setUserId(uid);
 			ru.setStatus(1);
 			enterpriseRoleUserMapper.insert(ru);
-			mergeRoleIntoAdmin(uid.longValue(), roleId);
+			mergeRoleIntoAdmin(uid, roleId);
 		}
-		EnterpriseRole role = getBaseMapper().selectById(roleId.longValue());
+		EnterpriseRole role = getBaseMapper().selectById(roleId);
 		if (ObjectUtil.isNotNull(role)) {
 			long cnt = enterpriseRoleUserMapper
 				.selectCount(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, roleId));
@@ -311,7 +513,7 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 			return;
 		}
 		Set<Long> ids = new LinkedHashSet<>(parseRoleIds(a.getRoles()));
-		ids.add((long) roleId);
+		ids.add(roleId);
 		try {
 			a.setRoles(objectMapper.writeValueAsString(ids));
 		}
@@ -358,7 +560,7 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 		Admin a = adminMapper.selectById(uid);
 		if (ObjectUtil.isNotNull(a)) {
 			List<Long> ids = parseRoleIds(a.getRoles());
-			ids.remove(Long.valueOf(roleId));
+			ids.remove(roleId);
 			try {
 				a.setRoles(objectMapper.writeValueAsString(ids));
 			}
@@ -367,13 +569,38 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 			}
 			adminMapper.updateById(a);
 		}
-		EnterpriseRole role = getBaseMapper().selectById(roleId.longValue());
+		EnterpriseRole role = getBaseMapper().selectById(roleId);
 		if (ObjectUtil.isNotNull(role)) {
 			long cnt = enterpriseRoleUserMapper
 				.selectCount(Wrappers.lambdaQuery(EnterpriseRoleUser.class).eq(EnterpriseRoleUser::getRoleId, roleId));
 			role.setUserCount((int) cnt);
 			getBaseMapper().updateById(role);
 		}
+	}
+
+	@Override
+	public void updateSuperRole(Long entId, JsonNode body) {
+		JsonNode rules = body.get("rules");
+		if (ObjectUtil.isNull(rules) || !rules.isArray() || rules.isEmpty()) {
+			throw new IllegalArgumentException("至少选择一个权限");
+		}
+		// 无 eb_system_role 等企业超级角色表时，仅占位成功；后续可接表持久化。
+	}
+
+	@Override
+	public JsonNode getSuperRoleMenus(Long entId, String menuName) {
+		ObjectNode root = objectMapper.createObjectNode();
+		root.set("menus", objectMapper.createArrayNode());
+		ObjectNode rules = objectMapper.createObjectNode();
+		rules.set("rules", objectMapper.createArrayNode());
+		rules.set("apis", objectMapper.createArrayNode());
+		root.set("rules", rules);
+		return root;
+	}
+
+	@Override
+	public JsonNode getMenusRuleByPid(Long pid) {
+		return systemMenusService.listPidMenuRules(pid);
 	}
 
 	@Override

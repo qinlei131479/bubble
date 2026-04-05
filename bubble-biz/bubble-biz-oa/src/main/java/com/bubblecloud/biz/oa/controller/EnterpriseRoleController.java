@@ -1,12 +1,13 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.AdminService;
 import com.bubblecloud.biz.oa.service.EnterpriseRoleService;
 import com.bubblecloud.common.core.util.R;
-import com.bubblecloud.oa.api.entity.EnterpriseRole;
+import com.bubblecloud.oa.api.vo.role.EnterpriseRoleListItemVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,11 +39,31 @@ public class EnterpriseRoleController {
 
 	private final AdminService adminService;
 
+	@GetMapping("/create")
+	@Operation(summary = "新建角色表单数据")
+	public R<JsonNode> createForm(@RequestParam(defaultValue = "1") Long entid) {
+		return R.phpOk(enterpriseRoleService.getRoleInfo(entid, 0L));
+	}
+
 	@GetMapping
 	@Operation(summary = "角色列表")
-	public R<List<EnterpriseRole>> list(@RequestParam(required = false) String role_name,
+	public R<List<EnterpriseRoleListItemVO>> list(@RequestParam(required = false) String role_name,
 			@RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseRoleService.listRoles(role_name, entid));
+	}
+
+	@GetMapping("/{id:\\d+}/edit")
+	@Operation(summary = "编辑角色表单数据")
+	public R<JsonNode> editForm(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid) {
+		return R.phpOk(enterpriseRoleService.getRoleInfo(entid, id));
+	}
+
+	@GetMapping("/{id:\\d+}")
+	@Operation(summary = "启用/禁用角色（前端 GET + query）")
+	public R<String> changeStatusByGet(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
+			@RequestParam Integer status) {
+		enterpriseRoleService.changeRoleStatus(entid, id, status);
+		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@PostMapping
@@ -52,7 +73,7 @@ public class EnterpriseRoleController {
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/{id:\\d+}")
 	@Operation(summary = "修改角色")
 	public R<String> update(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
 			@RequestBody JsonNode body) {
@@ -60,28 +81,29 @@ public class EnterpriseRoleController {
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
-	@PostMapping("/{id}/status")
-	@Operation(summary = "启用/禁用角色")
-	public R<String> show(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
+	@PostMapping("/{id:\\d+}/status")
+	@Operation(summary = "启用/禁用角色（POST 兼容）")
+	public R<String> changeStatusByPost(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
 			@RequestParam Integer status) {
 		enterpriseRoleService.changeRoleStatus(entid, id, status);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id:\\d+}")
 	@Operation(summary = "删除角色")
 	public R<String> removeById(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid) {
 		enterpriseRoleService.deleteRole(id, entid);
 		return R.phpOk("删除成功");
 	}
 
-	@GetMapping("/user/{id}")
+	@GetMapping("/user/{id:\\d+}")
 	@Operation(summary = "角色成员")
-	public R<?> getRoleUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid) {
-		return R.phpOk(enterpriseRoleService.getRoleUsers(id, entid));
+	public R<JsonNode> getRoleUser(@PathVariable Long id, @RequestParam(defaultValue = "1") Long entid,
+			@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer limit) {
+		return R.phpOk(enterpriseRoleService.getRoleUserList(id, entid, page, limit));
 	}
 
-	@GetMapping("/role/{uid}")
+	@GetMapping("/role/{uid:\\d+}")
 	@Operation(summary = "用户角色与菜单树")
 	public R<JsonNode> getUserRole(@PathVariable Long uid, @RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(enterpriseRoleService.getUserRoleData(entid, uid));
@@ -100,13 +122,19 @@ public class EnterpriseRoleController {
 	@Operation(summary = "角色添加成员")
 	public R<String> addUser(@RequestParam(defaultValue = "1") Long entid, @RequestBody JsonNode body) {
 		Long roleId = body.has("role_id") ? body.get("role_id").asLong() : 0;
-		List<Long> userIds = new java.util.ArrayList<>();
+		List<Long> userIds = new ArrayList<>();
 		if (body.has("user_id") && body.get("user_id").isArray()) {
 			for (JsonNode n : body.get("user_id")) {
 				userIds.add(n.asLong());
 			}
 		}
-		enterpriseRoleService.addRoleUsers(entid, roleId, userIds);
+		List<Integer> frameIds = new ArrayList<>();
+		if (body.has("frame_id") && body.get("frame_id").isArray()) {
+			for (JsonNode n : body.get("frame_id")) {
+				frameIds.add(n.asInt());
+			}
+		}
+		enterpriseRoleService.addRoleUsers(entid, roleId, userIds, frameIds);
 		return R.phpOk("添加成员成功");
 	}
 
@@ -120,13 +148,33 @@ public class EnterpriseRoleController {
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
-	@DeleteMapping("/del_user")
-	@Operation(summary = "移除成员")
+	@PostMapping("/del_user")
+	@Operation(summary = "移除成员（与前端 POST 一致）")
 	public R<String> deleteUser(@RequestParam(defaultValue = "1") Long entid, @RequestBody JsonNode body) {
 		Long uid = body.has("uid") ? body.get("uid").asLong() : 0;
 		Long roleId = body.has("role_id") ? body.get("role_id").asLong() : 0;
 		enterpriseRoleService.delRoleUser(uid, entid, roleId);
 		return R.phpOk("删除成功");
+	}
+
+	@PostMapping("/update_super_role")
+	@Operation(summary = "修改企业超级角色权限（占位/表未接时仅校验）")
+	public R<String> updateSuperRole(@RequestParam(defaultValue = "1") Long entid, @RequestBody JsonNode body) {
+		enterpriseRoleService.updateSuperRole(entid, body);
+		return R.phpOk(OaConstants.UPDATE_SUCC);
+	}
+
+	@GetMapping("/get_super_role")
+	@Operation(summary = "获取超级角色权限树（占位）")
+	public R<JsonNode> getSuperRole(@RequestParam(defaultValue = "1") Long entid,
+			@RequestParam(required = false) String menu_name) {
+		return R.phpOk(enterpriseRoleService.getSuperRoleMenus(entid, menu_name));
+	}
+
+	@GetMapping("/menus_rule/{pid:\\d+}")
+	@Operation(summary = "某菜单下接口/按钮权限（与 PHP RoleController#getMenusRule 一致）")
+	public R<JsonNode> menusRule(@PathVariable Long pid) {
+		return R.phpOk(enterpriseRoleService.getMenusRuleByPid(pid));
 	}
 
 	@PostMapping("/pwd")
