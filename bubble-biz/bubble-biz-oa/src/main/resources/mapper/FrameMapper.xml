@@ -16,4 +16,11 @@
 		  AND deleted_at IS NULL
 	</select>
 
+	<select id="selectMinIdByEntid" resultType="java.lang.Long">
+		SELECT MIN(id)
+		FROM eb_frame
+		WHERE entid = #{entid}
+		  AND deleted_at IS NULL
+	</select>
+
 </mapper>

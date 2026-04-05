@@ -54,4 +54,21 @@
 		  AND a.status = 1
 	</select>
 
+	<select id="selectFramesForCardBatch" resultType="com.bubblecloud.oa.api.dto.frame.FrameAssistCardBatchRow">
+		SELECT fa.user_id AS userId,
+		       f.id AS frameId,
+		       f.name AS frameName,
+		       f.user_count AS userCount,
+		       fa.is_mastart AS isMastart,
+		       fa.is_admin AS isAdmin,
+		       fa.superior_uid AS superiorUid
+		FROM eb_frame_assist fa
+		LEFT JOIN eb_frame f ON f.id = fa.frame_id AND f.deleted_at IS NULL
+		WHERE fa.entid = #{entid}
+		  AND fa.deleted_at IS NULL
+		  AND fa.user_id IN
+		<foreach collection="userIds" item="uid" open="(" separator="," close=")">#{uid}</foreach>
+		ORDER BY fa.is_mastart DESC, fa.id ASC
+	</select>
+
 </mapper>

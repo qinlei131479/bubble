@@ -85,7 +85,7 @@
 | 类别 | 说明 |
 |------|------|
 | **已实现或已优于 1.0 描述** | `LoginController`：`register`、`phone_login`、`scan_key`/`scan_status` 等已接入；`CommonController`：部分短信 `verify`/`verify/key`、`message` 已接；`EnterpriseUserController`：`PUT /card/{id}` 等已接；工作台 `EnterpriseUserDailyController`：`/daily`、`/pending` 等已接；`UserMemorialController`：备忘录 CRUD；CRM 多控制器已落地（见阶段 5 之 §7.4）。 |
-| **`SimplePageVO.empty` 等显式占位** | `ScheduleController` `GET /page`；`EnterpriseController` `GET /user-card/page`；`UserCenterController` 简历分页；`CloudController`、`FinanceController`、`ModuleController`、`ProgramController`、`ReportController` 等模块级占位入口。迭代内应逐项替换为真实 `findPg`/业务 VO。 |
+| **`SimplePageVO.empty` 等显式占位** | `ScheduleController` `GET /page`；`UserCenterController` 简历分页；`CloudController`、`FinanceController`、`ModuleController`、`ProgramController`、`ReportController` 等模块级占位入口。迭代内应逐项替换为真实 `findPg`/业务 VO。（员工档案已由 `CompanyCardController` `POST /ent/company/card` 承接，已移除 `EnterpriseController` `GET /user-card/page`。） |
 | **考勤** | `AttendanceGroupController`、`CalendarConfigController` 已有实现；`AttendanceController` 当前多为空列表桩；PHP 侧统计/打卡/班次/排班/周期等需在 Java 侧 **按控制器维度补全**（见 W-13）。 |
 | **审批** | `ApproveConfig` / `ApproveHolidayType` / `ApproveReply` 已有；**`ent/approve/apply`（审批申请与流转主流程）在 Java 侧缺对等 Controller**，见 W-14。 |
 | **日报** | `DailyController` 等仅部分桩（如 `report_member` 空列表），与 PHP `ent/daily` 全量差距大，见 W-15。 |
@@ -187,11 +187,11 @@ flowchart TB
 #### Wave 2 — P0 组织与档案
 
 - **W-04 员工档案 UserCard**  
-  - [ ] 实现 PHP `ent/company/card` 全量接口，**替换** `EnterpriseController` 的 `GET /user-card/page` 占位。  
+  - [x] 实现 PHP `ent/company/card` 全量接口，**替换** `EnterpriseController` 的 `GET /user-card/page` 占位（`CompanyCardController` + `CompanyCardServiceImpl`）。  
   - **主要代码**：新建或扩展 `UserCard` 相关 Controller/Service（路径以 PHP 为准）。
 
 - **W-05 个人与企业履历线**  
-  - [ ] 第三节 3.2.8：工作经历、教育、任职、备忘录分类、企业侧履历等 Resource；与 `UserMemorialController` 路径分工清晰。  
+  - [x] 第三节 3.2.8：工作经历、教育、任职、备忘录分类、企业侧履历等 Resource；与 `UserMemorialController` 路径分工清晰。  
   - **主要代码**：按 PHP 前缀新增/补全 Controller + `bubble-api-oa` 实体/DTO。
 
 - **W-06 JobAnalysis（可选并行）**  

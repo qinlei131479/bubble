@@ -1,9 +1,11 @@
 package com.bubblecloud.biz.oa.mapper;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.bubblecloud.common.mybatis.mapper.UpMapper;
 import com.bubblecloud.oa.api.dto.FrameAssistView;
+import com.bubblecloud.oa.api.dto.frame.FrameAssistCardBatchRow;
 import com.bubblecloud.oa.api.entity.FrameAssist;
 import com.bubblecloud.oa.api.vo.frame.FrameAdminBriefVO;
 import com.bubblecloud.oa.api.vo.frame.FrameAssistUserRowVO;
@@ -24,5 +26,8 @@ public interface FrameAssistMapper extends UpMapper<FrameAssist> {
 	List<FrameAdminBriefVO> selectFrameUsers(@Param("frameId") int frameId, @Param("entid") Long entId);
 
 	List<FrameAssistUserRowVO> selectUsersByEnt(@Param("entid") Long entId);
+
+	List<FrameAssistCardBatchRow> selectFramesForCardBatch(@Param("entid") long entid,
+			@Param("userIds") Collection<Long> userIds);
 
 }

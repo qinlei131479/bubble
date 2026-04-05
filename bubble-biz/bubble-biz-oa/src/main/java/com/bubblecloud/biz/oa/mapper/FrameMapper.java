@@ -17,4 +17,6 @@ public interface FrameMapper extends UpMapper<Frame> {
 
 	long countByPid(@Param("pid") long pid, @Param("entid") long entid);
 
+	Long selectMinIdByEntid(@Param("entid") long entid);
+
 }

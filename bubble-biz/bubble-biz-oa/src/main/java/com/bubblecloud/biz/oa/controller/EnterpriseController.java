@@ -6,7 +6,6 @@ import com.bubblecloud.common.core.util.PojoConvertUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.EnterpriseUpdateDTO;
 import com.bubblecloud.oa.api.entity.Enterprise;
-import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.enterprise.EnterpriseEntInfoVO;
 import com.bubblecloud.oa.api.vo.enterprise.EnterpriseQuantityVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,13 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnterpriseController {
 
 	private final EnterpriseService enterpriseService;
-
-	@GetMapping("/user-card/page")
-	@Operation(summary = "员工档案分页（占位）")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
-			@RequestParam(defaultValue = "20") Integer size) {
-		return R.phpOk(SimplePageVO.empty(current, size));
-	}
 
 	@GetMapping("/info")
 	@Operation(summary = "当前企业详情")

@@ -1,10 +1,14 @@
 package com.bubblecloud.biz.oa.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.common.mybatis.mapper.UpMapper;
+import com.bubblecloud.oa.api.dto.company.CompanyCardListQuery;
+import com.bubblecloud.oa.api.dto.company.CompanyCardListRow;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserListItemVO;
 
@@ -19,5 +23,9 @@ public interface AdminMapper extends UpMapper<Admin> {
 
 	Page<EnterpriseUserListItemVO> selectEntUserList(Page<EnterpriseUserListItemVO> page, @Param("entid") Long entid,
 			@Param("name") String name, @Param("status") Integer status);
+
+	long countCompanyCardList(@Param("q") CompanyCardListQuery q);
+
+	List<CompanyCardListRow> selectCompanyCardList(@Param("q") CompanyCardListQuery q);
 
 }
