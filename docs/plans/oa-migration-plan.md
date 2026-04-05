@@ -195,7 +195,7 @@ flowchart TB
   - **主要代码**：按 PHP 前缀新增/补全 Controller + `bubble-api-oa` 实体/DTO。
 
 - **W-06 JobAnalysis（可选并行）**  
-  - [ ] `ent/company/job_analysis` 与 PHP 对齐。
+  - [x] `ent/company/job_analysis` 与 PHP 对齐（`JobAnalysisController` + `JobAnalysisServiceImpl` + `eb_enterprise_user_job_analysis`）。
 
 #### Wave 3 — P0 系统管理
 

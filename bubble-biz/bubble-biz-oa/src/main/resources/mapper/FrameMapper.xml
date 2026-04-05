@@ -23,4 +23,17 @@
 		  AND deleted_at IS NULL
 	</select>
 
+	<select id="selectSubtreeFrameIds" resultType="java.lang.Integer">
+		SELECT f.id
+		FROM eb_frame f
+		WHERE f.deleted_at IS NULL
+		  AND f.entid = #{entid}
+		  AND f.id != #{frameId}
+		  AND (
+			f.path LIKE CONCAT('%/', #{frameId}, '/%')
+				OR f.path LIKE CONCAT('%/', #{frameId}, '/')
+				OR f.path LIKE CONCAT('/', #{frameId}, '/%')
+			)
+	</select>
+
 </mapper>

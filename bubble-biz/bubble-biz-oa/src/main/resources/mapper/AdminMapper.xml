@@ -142,4 +142,64 @@
 		</if>
 	</select>
 
+	<sql id="jobAnalysisAdminFromWhere">
+		FROM eb_admin a
+		INNER JOIN eb_admin_info i ON i.id = a.id
+		INNER JOIN eb_frame_assist fa ON fa.user_id = a.id
+			AND fa.entid = #{p.entid}
+			AND fa.deleted_at IS NULL
+		WHERE a.deleted_at IS NULL
+		<if test="p.types != null and p.types.size() &gt; 0">
+			AND i.type IN
+			<foreach collection="p.types" item="t" open="(" separator="," close=")">#{t}</foreach>
+		</if>
+		<if test="p.name != null and p.name != ''">
+			AND (a.name LIKE CONCAT('%', #{p.name}, '%') OR a.phone LIKE CONCAT('%', #{p.name}, '%'))
+		</if>
+		<if test="p.jobId != null and p.jobId &gt; 0">
+			AND a.job = #{p.jobId}
+		</if>
+		<if test="p.filterByFrame">
+			AND (
+			<choose>
+				<when test="p.subtreeFrameIds != null and p.subtreeFrameIds.size() &gt; 0">
+					fa.frame_id IN
+					<foreach collection="p.subtreeFrameIds" item="fid" open="(" separator="," close=")">#{fid}</foreach>
+					OR fa.frame_id = #{p.frameId}
+				</when>
+				<otherwise>
+					fa.frame_id = #{p.frameId}
+				</otherwise>
+			</choose>
+			)
+		</if>
+		<if test="p.filterByScopeIds">
+			<choose>
+				<when test="p.scopeAdminIds != null and p.scopeAdminIds.size() &gt; 0">
+					AND a.id IN
+					<foreach collection="p.scopeAdminIds" item="aid" open="(" separator="," close=")">#{aid}</foreach>
+				</when>
+				<otherwise>
+					AND 1 = 0
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+
+	<select id="countJobAnalysisAdmins" resultType="long">
+		SELECT COUNT(1) FROM (
+			SELECT a.id
+			<include refid="jobAnalysisAdminFromWhere"/>
+			GROUP BY a.id
+		) x
+	</select>
+
+	<select id="selectJobAnalysisAdminIds" resultType="java.lang.Long">
+		SELECT a.id
+		<include refid="jobAnalysisAdminFromWhere"/>
+		GROUP BY a.id, a.is_admin
+		ORDER BY a.is_admin DESC, MAX(fa.is_admin) DESC, a.id ASC
+		LIMIT #{p.limit} OFFSET #{p.offset}
+	</select>
+
 </mapper>

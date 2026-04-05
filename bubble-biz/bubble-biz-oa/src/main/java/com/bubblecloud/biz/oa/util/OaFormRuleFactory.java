@@ -14,6 +14,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 生成 form-create（element-ui）规则 JSON，对齐 PHP FormService 常用字段形态。
+ *
  * @author qinlei
  * @date 2026/4/5
  */

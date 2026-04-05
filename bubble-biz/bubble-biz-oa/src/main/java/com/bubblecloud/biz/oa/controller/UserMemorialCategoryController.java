@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 备忘录分类（对齐 PHP {@code ent/user/memorial_cate}）。
+ *
  * @author qinlei
  * @date 2026/4/5
  */

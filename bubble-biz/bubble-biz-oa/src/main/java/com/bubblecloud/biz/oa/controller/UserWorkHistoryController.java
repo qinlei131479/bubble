@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 个人简历工作经历（与 {@link EnterpriseUserDailyController} 共用前缀 {@code /ent/user/work}）。
+ *
  * @author qinlei
  * @date 2026/4/5
  */

@@ -7,6 +7,7 @@ import com.bubblecloud.oa.api.entity.SystemGroupData;
 
 /**
  * eb_system_group_data Mapper。
+ *
  * @author qinlei
  * @date 2026/4/5
  */

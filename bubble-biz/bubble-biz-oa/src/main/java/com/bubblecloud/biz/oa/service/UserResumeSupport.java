@@ -2,6 +2,7 @@ package com.bubblecloud.biz.oa.service;
 
 /**
  * 解析/确保当前登录用户关联的 {@link com.bubblecloud.oa.api.entity.UserResume}。
+ *
  * @author qinlei
  * @date 2026/4/5
  */
