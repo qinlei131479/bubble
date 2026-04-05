@@ -20,4 +20,7 @@ public interface OaConstants {
 
 	String DELETE_SUCC = "common.delete.succ";
 
+	/** 与 PHP {@code common.empty.attrs} 一致，路径或必填参数为空。 */
+	String EMPTY_ATTRS = "common.empty.attrs";
+
 }

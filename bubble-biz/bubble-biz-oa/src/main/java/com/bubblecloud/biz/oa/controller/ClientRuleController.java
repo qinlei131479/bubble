@@ -3,10 +3,11 @@ package com.bubblecloud.biz.oa.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.hutool.core.util.StrUtil;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.SystemConfigService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.config.ClientRuleApproveSaveDTO;
-import com.bubblecloud.oa.api.vo.config.ClientRuleApproveConfigVO;
 import com.bubblecloud.oa.api.vo.config.ConfigCateItemVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,9 +45,9 @@ public class ClientRuleController {
 	}
 
 	@GetMapping({ "/approve", "/approve/{form}" })
-	@Operation(summary = "获取客户审批规则")
-	public R<ClientRuleApproveConfigVO> getApproveConfig(@PathVariable(required = false) Integer form) {
-		return R.phpOk(systemConfigService.getApproveConfig(form));
+	@Operation(summary = "获取客户审批规则（form=0 键值，否则 form-create 规则）")
+	public R<JsonNode> getApproveConfig(@PathVariable(required = false) Integer form) {
+		return R.phpOk(systemConfigService.getClientRuleApprovePayload(form));
 	}
 
 	@PutMapping("/approve")
@@ -59,13 +60,19 @@ public class ClientRuleController {
 	@GetMapping("/{category}")
 	@Operation(summary = "按分类读取配置为 JSON 对象")
 	public R<JsonNode> getConfig(@PathVariable String category) {
-		return R.phpOk(systemConfigService.getConfigByCategory(category));
+		if (StrUtil.isBlank(category)) {
+			return R.phpFailed(OaConstants.EMPTY_ATTRS);
+		}
+		return R.phpOk(systemConfigService.getConfigByCategory(category.trim()));
 	}
 
 	@PutMapping("/{category}")
 	@Operation(summary = "按分类保存配置")
 	public R<String> setConfig(@PathVariable String category, @RequestBody JsonNode body) {
-		systemConfigService.saveConfigByCategory(category, body);
+		if (StrUtil.isBlank(category)) {
+			return R.phpFailed(OaConstants.EMPTY_ATTRS);
+		}
+		systemConfigService.saveConfigByCategory(category.trim(), body);
 		return R.phpOk("保存成功");
 	}
 

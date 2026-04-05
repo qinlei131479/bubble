@@ -3,6 +3,9 @@ package com.bubblecloud.biz.oa.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.List;
+
+import com.bubblecloud.oa.api.entity.Approve;
 import com.bubblecloud.oa.api.entity.EnterpriseUserEducation;
 import com.bubblecloud.oa.api.entity.EnterpriseUserPosition;
 import com.bubblecloud.oa.api.entity.EnterpriseUserWork;
@@ -211,6 +214,36 @@ public final class OaFormRuleFactory {
 			return "";
 		}
 		return d.toLocalDate().toString();
+	}
+
+	/**
+	 * 客户审批规则下拉（对齐 PHP Form select + 默认「无需审批」项）。
+	 */
+	public static ObjectNode approveSelect(ObjectMapper om, String field, String title, int value, String zeroLabel,
+			List<Approve> examineOneRows) {
+		ArrayNode opts = om.createArrayNode();
+		ObjectNode z = om.createObjectNode();
+		z.put("value", 0);
+		z.put("label", zeroLabel);
+		opts.add(z);
+		if (examineOneRows != null) {
+			for (Approve a : examineOneRows) {
+				if (ObjectUtil.isNull(a) || ObjectUtil.isNull(a.getId())) {
+					continue;
+				}
+				ObjectNode o = om.createObjectNode();
+				o.put("value", a.getId().intValue());
+				o.put("label", StrUtil.nullToEmpty(a.getName()));
+				opts.add(o);
+			}
+		}
+		ObjectNode n = om.createObjectNode();
+		n.put("type", "select");
+		n.put("field", field);
+		n.put("title", title);
+		n.put("value", value);
+		n.set("options", opts);
+		return n;
 	}
 
 }

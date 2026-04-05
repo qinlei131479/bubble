@@ -1,19 +1,29 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import com.bubblecloud.biz.oa.mapper.ApproveMapper;
+import com.bubblecloud.biz.oa.util.OaFormRuleFactory;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.config.ClientRuleApproveSaveDTO;
-import com.bubblecloud.oa.api.vo.config.ClientRuleApproveConfigVO;
-import com.bubblecloud.oa.api.vo.config.ConfigCateItemVO;
+import com.bubblecloud.oa.api.entity.Approve;
 import com.bubblecloud.oa.api.vo.config.FirewallConfigVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +53,86 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 
 	private static final String CAT_FIREWALL = "firewall";
 
+	private static final List<String> CLIENT_RULE_APPROVE_KEYS = List.of("contract_refund_switch",
+			"contract_renew_switch", "contract_disburse_switch", "invoicing_switch", "void_invoice_switch");
+
+	private static final Map<String, List<String>> CLIENT_RULE_KEYS_BY_CATEGORY;
+
+	private static final Map<String, String> CLIENT_RULE_KEY_DEFAULTS;
+
+	static {
+		Map<String, List<String>> cat = new LinkedHashMap<>();
+		cat.put("customer_follow_config",
+				List.of("follow_up_switch", "follow_up_status", "follow_up_traded", "follow_up_unsettled"));
+		cat.put("customer_sea_config", List.of("return_high_seas_switch", "unsettled_cycle", "unfollowed_cycle",
+				"advance_cycle", "client_policy_switch", "unsettled_client_number"));
+		cat.put("customer_approve_config", List.copyOf(CLIENT_RULE_APPROVE_KEYS));
+		CLIENT_RULE_KEYS_BY_CATEGORY = Collections.unmodifiableMap(cat);
+		Map<String, String> def = new HashMap<>();
+		def.put("follow_up_switch", "0");
+		def.put("follow_up_status", "[]");
+		def.put("follow_up_traded", "0");
+		def.put("follow_up_unsettled", "0");
+		def.put("return_high_seas_switch", "0");
+		def.put("unsettled_cycle", "30");
+		def.put("unfollowed_cycle", "30");
+		def.put("advance_cycle", "5");
+		def.put("client_policy_switch", "0");
+		def.put("unsettled_client_number", "999");
+		def.put("contract_refund_switch", "0");
+		def.put("contract_renew_switch", "0");
+		def.put("contract_disburse_switch", "0");
+		def.put("invoicing_switch", "0");
+		def.put("void_invoice_switch", "0");
+		CLIENT_RULE_KEY_DEFAULTS = Collections.unmodifiableMap(def);
+	}
+
+	private static final Map<String, Integer> APPROVE_TYPE_BY_SWITCH_KEY;
+
+	private static final Map<String, String> APPROVE_ZERO_LABEL_BY_SWITCH_KEY;
+
+	static {
+		Map<String, Integer> t = new HashMap<>();
+		t.put("contract_refund_switch", 6);
+		t.put("contract_renew_switch", 7);
+		t.put("contract_disburse_switch", 8);
+		t.put("invoicing_switch", 9);
+		t.put("void_invoice_switch", 10);
+		APPROVE_TYPE_BY_SWITCH_KEY = Collections.unmodifiableMap(t);
+		Map<String, String> z = new HashMap<>();
+		z.put("contract_refund_switch", "无需审批（直接生成收入账目）");
+		z.put("contract_renew_switch", "无需审批（直接生成收入账目）");
+		z.put("contract_disburse_switch", "无需审批（直接生成支出账目）");
+		z.put("invoicing_switch", "无需审批（财务直接核对开票）");
+		z.put("void_invoice_switch", "无需审批（直接作废发票）");
+		APPROVE_ZERO_LABEL_BY_SWITCH_KEY = Collections.unmodifiableMap(z);
+	}
+
+	private static final Map<String, String> APPROVE_TITLE_FALLBACK = Map.of("contract_refund_switch", "合同回款",
+			"contract_renew_switch", "合同续费", "contract_disburse_switch", "合同支出", "invoicing_switch", "开具发票",
+			"void_invoice_switch", "作废发票");
+
+	private static final Map<String, String> CLIENT_RULE_KEY_TITLES;
+
+	static {
+		Map<String, String> titles = new HashMap<>();
+		titles.put("follow_up_switch", "客户跟进提醒");
+		titles.put("follow_up_status", "客户状态");
+		titles.put("follow_up_traded", "客户状态已成交提醒周期");
+		titles.put("follow_up_unsettled", "客户状态暂未成交提醒周期");
+		titles.put("return_high_seas_switch", "自动退回公海规则");
+		titles.put("unsettled_cycle", "退回客户公海周期(暂未成交)");
+		titles.put("unfollowed_cycle", "未跟进退回公海(暂未成交)");
+		titles.put("advance_cycle", "客户退回公海提醒提前");
+		titles.put("client_policy_switch", "客户保单规则");
+		titles.put("unsettled_client_number", "暂未成交客户数量设置");
+		titles.putAll(APPROVE_TITLE_FALLBACK);
+		CLIENT_RULE_KEY_TITLES = Collections.unmodifiableMap(titles);
+	}
+
 	private final ObjectMapper objectMapper;
+
+	private final ApproveMapper approveMapper;
 
 	@Override
 	public ConfigVO config(ConfigQueryDTO dto) {
@@ -81,18 +170,17 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	}
 
 	@Override
-	@SuppressWarnings("unused")
-	public ClientRuleApproveConfigVO getApproveConfig(Integer form) {
-		ClientRuleApproveConfigVO vo = new ClientRuleApproveConfigVO();
-		vo.setContractRefundSwitch(loadIntConfig("contract_refund_switch", 0));
-		vo.setContractRenewSwitch(loadIntConfig("contract_renew_switch", 0));
-		vo.setContractDisburseSwitch(loadIntConfig("contract_disburse_switch", 0));
-		vo.setInvoicingSwitch(loadIntConfig("invoicing_switch", 0));
-		vo.setVoidInvoiceSwitch(loadIntConfig("void_invoice_switch", 0));
-		return vo;
+	public JsonNode getClientRuleApprovePayload(Integer form) {
+		boolean formMode = ObjectUtil.isNull(form) || form != 0;
+		if (formMode) {
+			OaElFormVO vo = buildClientRuleApproveElForm();
+			return objectMapper.valueToTree(vo);
+		}
+		return buildClientRuleApprovePlain();
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void saveApproveConfig(ClientRuleApproveSaveDTO dto) {
 		if (ObjectUtil.isNull(dto)) {
 			return;
@@ -116,14 +204,20 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 		if (StrUtil.isBlank(category)) {
 			return objectMapper.createObjectNode();
 		}
-		List<SystemConfig> rows = baseMapper.selectList(Wrappers.lambdaQuery(SystemConfig.class)
-			.eq(SystemConfig::getCategory, category)
-			.eq(SystemConfig::getEntid, 0));
+		String c = category.trim();
+		List<String> keys = CLIENT_RULE_KEYS_BY_CATEGORY.get(c);
+		if (CollUtil.isEmpty(keys)) {
+			return objectMapper.createObjectNode();
+		}
 		ObjectNode out = objectMapper.createObjectNode();
-		for (SystemConfig r : rows) {
-			if (ObjectUtil.isNotNull(r.getConfigKey())) {
-				out.put(r.getConfigKey(), ObjectUtil.isNull(r.getValue()) ? "" : r.getValue());
-			}
+		for (String key : keys) {
+			String def = CLIENT_RULE_KEY_DEFAULTS.getOrDefault(key, "");
+			SystemConfig row = baseMapper.selectOne(Wrappers.lambdaQuery(SystemConfig.class)
+				.eq(SystemConfig::getConfigKey, key)
+				.eq(SystemConfig::getEntid, 0)
+				.last("LIMIT 1"));
+			String val = (ObjectUtil.isNotNull(row) && ObjectUtil.isNotNull(row.getValue())) ? row.getValue() : def;
+			putClientRuleConfigLeaf(out, key, val);
 		}
 		return out;
 	}
@@ -133,9 +227,15 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 		if (StrUtil.isBlank(category) || ObjectUtil.isNull(body) || !body.isObject()) {
 			return;
 		}
+		String c = category.trim();
+		List<String> allowedList = CLIENT_RULE_KEYS_BY_CATEGORY.get(c);
+		if (CollUtil.isEmpty(allowedList)) {
+			return;
+		}
+		Set<String> allowed = new HashSet<>(allowedList);
 		body.fields().forEachRemaining(e -> {
 			String k = e.getKey();
-			if (StrUtil.isBlank(k)) {
+			if (StrUtil.isBlank(k) || !allowed.contains(k)) {
 				return;
 			}
 			String val = jsonNodeToString(e.getValue());
@@ -145,16 +245,16 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 				.last("LIMIT 1"));
 			if (ObjectUtil.isNotNull(row)) {
 				row.setValue(val);
-				if (!Objects.equals(category, row.getCategory())) {
-					row.setCategory(category);
+				if (!Objects.equals(c, row.getCategory())) {
+					row.setCategory(c);
 				}
 				baseMapper.updateById(row);
 			}
 			else {
 				SystemConfig n = new SystemConfig();
-				n.setCategory(category);
+				n.setCategory(c);
 				n.setConfigKey(k);
-				n.setKeyName(k);
+				n.setKeyName(CLIENT_RULE_KEY_TITLES.getOrDefault(k, k));
 				n.setValue(val);
 				n.setEntid(0);
 				n.setType("text");
@@ -174,6 +274,87 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 			return n.asText();
 		}
 		return n.toString();
+	}
+
+	private void putClientRuleConfigLeaf(ObjectNode out, String key, String val) {
+		if ("follow_up_status".equals(key)) {
+			String u = StrUtil.isBlank(val) ? "[]" : val.trim();
+			if (u.startsWith("[")) {
+				try {
+					out.set(key, objectMapper.readTree(u));
+					return;
+				}
+				catch (JsonProcessingException ignored) {
+				}
+			}
+		}
+		out.put(key, StrUtil.nullToEmpty(val));
+	}
+
+	private OaElFormVO buildClientRuleApproveElForm() {
+		ArrayNode rules = objectMapper.createArrayNode();
+		for (String key : CLIENT_RULE_APPROVE_KEYS) {
+			SystemConfig row = baseMapper.selectOne(
+					Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
+			String titleBase = resolveApproveSwitchTitle(row, key);
+			String title = StrUtil.endWith(titleBase, "：") ? titleBase : titleBase + "：";
+			int cur = loadIntConfig(key, 0);
+			String zeroLabel = APPROVE_ZERO_LABEL_BY_SWITCH_KEY.getOrDefault(key, "");
+			Integer types = APPROVE_TYPE_BY_SWITCH_KEY.get(key);
+			List<Approve> opts = ObjectUtil.isNull(types) ? List.of() : listApproveExamineOne(types);
+			rules.add(OaFormRuleFactory.approveSelect(objectMapper, key, title, cur, zeroLabel, opts));
+		}
+		OaElFormVO vo = new OaElFormVO();
+		vo.setTitle("修改配置");
+		vo.setMethod("put");
+		vo.setAction("/config/client_rule/approve");
+		vo.setRule(rules);
+		return vo;
+	}
+
+	private String resolveApproveSwitchTitle(SystemConfig row, String key) {
+		if (ObjectUtil.isNotNull(row) && StrUtil.isNotBlank(row.getKeyName())) {
+			return row.getKeyName();
+		}
+		return APPROVE_TITLE_FALLBACK.getOrDefault(key, key);
+	}
+
+	private ObjectNode buildClientRuleApprovePlain() {
+		ObjectNode out = objectMapper.createObjectNode();
+		for (String key : CLIENT_RULE_APPROVE_KEYS) {
+			SystemConfig row = baseMapper.selectOne(
+					Wrappers.lambdaQuery(SystemConfig.class).eq(SystemConfig::getConfigKey, key).last("LIMIT 1"));
+			String raw = "";
+			if (ObjectUtil.isNotNull(row) && ObjectUtil.isNotNull(row.getValue())) {
+				raw = row.getValue().trim();
+			}
+			if (StrUtil.isBlank(raw)) {
+				Integer types = APPROVE_TYPE_BY_SWITCH_KEY.get(key);
+				Long draftId = ObjectUtil.isNull(types) ? null : firstDraftApproveId(types);
+				out.put(key, ObjectUtil.isNull(draftId) ? 0 : draftId.intValue());
+			}
+			else {
+				out.put(key, NumberUtil.parseInt(raw, 0));
+			}
+		}
+		return out;
+	}
+
+	private List<Approve> listApproveExamineOne(Integer types) {
+		return approveMapper.selectList(Wrappers.lambdaQuery(Approve.class)
+			.eq(Approve::getTypes, types)
+			.eq(Approve::getExamine, 1)
+			.orderByAsc(Approve::getSort)
+			.orderByAsc(Approve::getId));
+	}
+
+	private Long firstDraftApproveId(Integer types) {
+		Approve one = approveMapper.selectOne(Wrappers.lambdaQuery(Approve.class)
+			.eq(Approve::getTypes, types)
+			.eq(Approve::getExamine, 0)
+			.orderByAsc(Approve::getId)
+			.last("LIMIT 1"));
+		return ObjectUtil.isNull(one) ? null : one.getId();
 	}
 
 	private int loadIntConfig(String key, int def) {

@@ -5,7 +5,6 @@ import com.bubblecloud.oa.api.dto.ConfigQueryDTO;
 import com.bubblecloud.oa.api.dto.config.ClientRuleApproveSaveDTO;
 import com.bubblecloud.oa.api.entity.SystemConfig;
 import com.bubblecloud.oa.api.vo.ConfigVO;
-import com.bubblecloud.oa.api.vo.config.ClientRuleApproveConfigVO;
 import com.bubblecloud.oa.api.vo.config.FirewallConfigVO;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -37,12 +36,13 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 	String getConfigRawValue(String configKey);
 
 	/**
-	 * 客户审批开关配置。
+	 * 客户审批规则：{@code form == 0} 时为键值（对齐 PHP {@code getApproveConfigs}），否则为 elForm 结构（对齐
+	 * PHP {@code getApproveConfig} + form-create）。
 	 */
-	ClientRuleApproveConfigVO getApproveConfig(Integer form);
+	JsonNode getClientRuleApprovePayload(Integer form);
 
 	/**
-	 * 保存客户审批开关。
+	 * 保存客户审批开关（对齐 PHP {@code updateAllConfig}）。
 	 */
 	void saveApproveConfig(ClientRuleApproveSaveDTO dto);
 

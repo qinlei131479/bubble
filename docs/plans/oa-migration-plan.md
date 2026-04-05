@@ -203,8 +203,8 @@ flowchart TB
   - [x] `EnterpriseRoleController` / `SystemMenusController` 相对 PHP `ent/system/roles`、`ent/system/menus` 的 CRUD 与扩展接口闭集（成员、密码等）。
 
 - **W-08 其余配置与 ClientRule**  
-  - [ ] Dict/Form/Quick/Agreement/Log/Upgrade 等与第四节对照，标已实现/缺口。  
-  - [ ] `ClientRuleController` 与 PHP 行为一致。
+  - [x] 与第四节「系统配置 / 系统管理」对照（已实现 Controller 骨架，业务细项以各小节验收为准）：`DictTypeController`、`DictDataController`、`FormDataController`、`SystemQuickController`、`SystemStorageController`、`AgreementAdminController`（`ent/system/treaty`）、`EnterpriseLogController`（`ent/system/log`）、`UpgradeAdminController`（`ent/system/upgrade`，远程升级仍为占位）、`MessageController`、`SystemAttachController`、`AttachCateAdminController` 等。  
+  - [x] `ClientRuleController` 与 PHP `ent/config/client_rule` 对齐：分类列表；`GET/PUT {category}` 按 `ConfigEnum` 键集读写（`sys_more`/`postMore` 语义）；`GET approve`/`approve/{form}` 双模式（`form!=0` 返回 `OaElFormVO` + 审批流下拉，`form=0` 返回键值并补草稿审批 id）；`PUT approve` 批量更新开关。
 
 #### Wave 4 — P1 人事（查漏补缺）
 
