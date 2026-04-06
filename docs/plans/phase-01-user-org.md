@@ -344,7 +344,7 @@
 | ~~2~~ | ~~实现手机验证码登录~~ | LoginController | ⏸️ 暂不开发 |
 | ~~3~~ | ~~实现扫码登录 key 生成与状态查询~~ | LoginController | ⏸️ 暂不开发 |
 | 1 | 实现图片验证码生成 | CommonController | P0 |
-| 2 | 实现滑块验证码 (AJ-Captcha) | CommonController | P0 |
+| 2 | 实现滑块验证码 (AJ-Captcha) | CommonController | ⏸️ 暂不开发  |
 | 3 | ~~实现短信验证码发送~~ | CommonController | ⏸️ 暂不开发（含 `/verify`、`/verify/key`） |
 | 4 | 实现消息列表与状态修改 | CommonController | P1 |
 | 5 | 实现授权信息/版本/城市接口 | CommonController | P1 |
