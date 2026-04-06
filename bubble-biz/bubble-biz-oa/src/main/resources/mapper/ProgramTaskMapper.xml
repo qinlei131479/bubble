@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.ProgramTaskMapper">
+
+	<select id="countByProgramId" resultType="long">
+		SELECT COUNT(1) FROM eb_program_task t
+		WHERE t.program_id = #{programId} AND t.deleted_at IS NULL
+	</select>
+
+	<select id="countIncompleteByProgramId" resultType="long">
+		SELECT COUNT(1) FROM eb_program_task t
+		WHERE t.program_id = #{programId} AND t.deleted_at IS NULL AND t.status IN (0, 1)
+	</select>
+
+</mapper>

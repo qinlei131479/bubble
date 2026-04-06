@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.ApproveApplyMapper;
 import com.bubblecloud.biz.oa.service.ApproveApplyService;
+import com.bubblecloud.biz.oa.service.OaFlowBridgeService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.ApproveApply;
@@ -23,6 +25,9 @@ import cn.hutool.core.util.StrUtil;
 @Service
 public class ApproveApplyServiceImpl extends UpServiceImpl<ApproveApplyMapper, ApproveApply>
 		implements ApproveApplyService {
+
+	@Autowired
+	private OaFlowBridgeService oaFlowBridgeService;
 
 	@Override
 	public Page<ApproveApply> findPg(Page page, ApproveApply query) {
@@ -63,7 +68,11 @@ public class ApproveApplyServiceImpl extends UpServiceImpl<ApproveApplyMapper, A
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public R create(ApproveApply req) {
-		return super.create(req);
+		R r = super.create(req);
+		if (ObjectUtil.isNotNull(req.getId())) {
+			oaFlowBridgeService.afterApplyCreated(req.getId());
+		}
+		return r;
 	}
 
 	@Override

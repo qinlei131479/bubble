@@ -267,22 +267,24 @@ flowchart TB
 #### Wave 7 — P2 / P3 与 Flow
 
 - **W-23 财务 `ent/bill`**  
-  - [ ] 替换 `FinanceController` 占位；可与 CRM 账单联动验证。
+  - [~] 已移除 `FinanceController`；落地 `BillController`（`/ent/bill`）、`BillCategoryController`、`PayTypeController` 与 `BillList`/`BillCategory`/`EnterprisePaytype`/`ClientBillLog` 等；列表/CRUD/日志/导入主链可用；`chart`/`rank_analysis` 等与 PHP 全量统计仍待对齐。  
+  - **主要代码**：`BillListFinanceServiceImpl`、`BillListMapper.xml`。
 
 - **W-24 项目 Program**  
-  - [ ] 替换 `ProgramController` 等占位（见第九节）。
+  - [~] `ProgramController` 已接列表/下拉/成员/保存/修改/详情/删除；`ProgramOaServiceImpl` + `ProgramMember`/`ProgramTask` 统计；任务/版本/动态/评论等待续（第九节余量）。  
+  - **主要代码**：`ProgramOaService`、`ProgramMapper.xml`。
 
 - **W-25 低代码 Crud / Module**  
-  - [ ] 替换 `ModuleController` 占位；按第十节拆子能力（表、字段、触发器、视图、dashboard、curl、approve）。
+  - [~] 已移除 `ModuleController`；`CrudModuleWave7Controller` 占位 `ent/crud/module/{name}` 列表壳；表/字段/触发器/视图/dashboard/curl/approve 仍按第十节拆分。  
 
 - **W-26 辅助能力**  
-  - [ ] 云盘 `CloudController`、公告、物资、帮助、Chat 与 AGI 边界（见第十一节）。
+  - [~] 已移除 `CloudController`；`CloudSpaceWave7Controller`、`CloudFileWave7Controller` 占位；公告/物资/帮助/Chat 与 AGI 边界仍待第十一节。  
 
 - **W-27 Open API**  
-  - [ ] 对齐第十二节；依赖 CRM、日程、低代码等主数据稳定。
+  - [~] `OpenApiWave7StubController` 注册部分关键路径（如 `/open/auth/login`、`/ent/openapi/key/list` 等）避免裸 404；与第十二节全量 Open 控制器对齐仍待主数据稳定后补。  
 
 - **W-28 bubble-biz-flow**  
-  - [ ] 与 W-14、W-25 审批链路对接（见第十三节）。
+  - [~] `RemoteFlowService` + `WorkflowInternalController`（`/internal/workflow/ping`、`oa-apply-notify`）；`OaFlowBridgeService` 在 `ApproveApplyServiceImpl#create` 后占位通知；Flowable/Camunda 与低代码审批深接仍待第十三节。
 
 ### 2.7 工作包验收建议（每个 W-XX）
 

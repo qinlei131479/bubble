@@ -13,6 +13,10 @@
 	<description>流程业务模块</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<!--upms api、model 模块-->
 		<dependency>
 			<groupId>com.bubblecloud</groupId>

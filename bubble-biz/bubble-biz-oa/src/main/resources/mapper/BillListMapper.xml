@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.BillListMapper">
+
+	<sql id="financeCondsNoTypes">
+		<if test="q.entid != null">
+			AND t.entid = #{q.entid}
+		</if>
+		<if test="q.typeId != null and q.typeId &gt; 0">
+			AND t.type_id = #{q.typeId}
+		</if>
+		<if test="q.cateIds != null and q.cateIds.size() &gt; 0">
+			AND t.cate_id IN
+			<foreach collection="q.cateIds" item="cid" open="(" separator="," close=")">
+				#{cid}
+			</foreach>
+		</if>
+		<if test="q.markLike != null and q.markLike != ''">
+			AND t.mark LIKE CONCAT('%', #{q.markLike}, '%')
+		</if>
+		<if test="q.timeStart != null">
+			AND t.edit_time &gt;= #{q.timeStart}
+		</if>
+		<if test="q.timeEnd != null">
+			AND t.edit_time &lt;= #{q.timeEnd}
+		</if>
+	</sql>
+
+	<select id="selectFinancePage" resultType="com.bubblecloud.oa.api.entity.BillList">
+		SELECT t.*
+		FROM eb_bill_list t
+		<where>
+			<include refid="financeCondsNoTypes"/>
+			<if test="q.types != null">
+				AND t.types = #{q.types}
+			</if>
+		</where>
+		ORDER BY t.id DESC
+	</select>
+
+	<select id="sumNum" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(t.num), 0)
+		FROM eb_bill_list t
+		<where>
+			<include refid="financeCondsNoTypes"/>
+			AND t.types = #{types}
+		</where>
+	</select>
+
+</mapper>

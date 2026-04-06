@@ -20,6 +20,10 @@
 			<groupId>com.bubblecloud</groupId>
 			<artifactId>bubble-api-oa</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.bubblecloud</groupId>
+			<artifactId>bubble-api-flow</artifactId>
+		</dependency>
 		<!--feign 调用-->
 		<dependency>
 			<groupId>com.bubblecloud</groupId>
