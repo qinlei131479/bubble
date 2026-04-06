@@ -241,25 +241,28 @@ flowchart TB
   - **主要代码**：`CrmClientLabelController`、`ClientLabelCrmServiceImpl`、`CustomerMapper.xml`、`CrmCustomerServiceImpl`。
 
 - **W-17 ClientRemind**  
-  - [x] 创建/修改/删除与 `ScheduleApiService` 联动（`CrmScheduleLinkHelper` + `deleteRemindByUniqued`）；删除续费类提醒且无其它同合同续费提醒时 `contract.renew=0`（对齐 PHP）。**未**接：Task 消息、`updatePeriod` 全量、PHP `delScheduleAfter` 回调等。  
-  - **主要代码**：`CrmClientRemindController`、`ClientRemindCrmServiceImpl`、`ScheduleApiServiceImpl`。
+  - [x] 日程联动 + `contract.renew`；`CrmScheduleSideEffectService`：`saveSchedule` 后 `updatePeriod(1,...)`、参与者 `updateStatus` 时同步 `this_period/next_period`、日历删日程时 `delScheduleAfter`（物理删 `eb_client_remind`）/跟进类 `types=0` 清 `uniqued`；`deleteRemindByUniqued` 走 `deleteScheduleFully(..., false)` 避免与接口删提醒重复清库。`OaCrmAsyncNotifyService`（删提醒）、`OaCrmTimerTaskNameSyncService`（改备注，占位）。**仍待**：PHP `Cache::tags(TAG_SCHEDULE)`、真实 Task 表与 Swoole 等价物。  
+  - **主要代码**：`ClientRemindCrmServiceImpl`、`CrmScheduleSideEffectServiceImpl`、`ScheduleApiServiceImpl`。
 
 - **W-18 ClientFollow + ClientFile**  
-  - [x] 跟进：`types=1` 写日程、`types=0` 触发逾期提醒日程完成、`followId` 完成关联行、删除联动删日程；列表改走 `ClientFollowCrmService#listByEid`。文件侧沿用既有 `CrmClientFileController`。**未**接：`attach_ids` 与跟进附件关联（与 PHP 一致需后续）。  
-  - **主要代码**：`CrmClientFollowController`、`ClientFollowCrmServiceImpl`。
+  - [x] 同上日程逻辑；`attach_ids`（`FollowAttachRelationService`，`relation_type=5`）与列表 `attachs`；删跟进 `OaCrmAsyncNotifyService`。文件：`CrmClientFileController`。  
+  - **主要代码**：`ClientFollowCrmServiceImpl`、`FollowAttachRelationServiceImpl`、`CrmClientFollowController`。
 
 - **W-19 Customer 主流程**  
-  - [ ] 列表/详情/流转/统计/标签/业务员/导入等字段级回归（标签筛选与落库已补一层）。  
-  - **主要代码**：`CrmCustomerController`。
+  - [~] 列表标签筛选 + `customer_label` 落库 + `GET info` 返回 `customer_label` ID 数组；其余列表统计/导入/表单字段与 PHP 抽样回归仍可做。  
+  - **主要代码**：`CrmCustomerController`、`CrmCustomerServiceImpl`。
 
 - **W-20 Liaison + Record**  
-  - [ ] `CrmCustomerLiaisonController`、`CrmCustomerRecordController` 与 PHP 对齐。
+  - [~] 路由与 CRUD 已接（`ent/client/liaisons`、`ent/client/record`）；与 PHP 表单/附件字段逐项对照待办。  
+  - **主要代码**：`CrmCustomerLiaisonController`、`CrmCustomerRecordController`。
 
 - **W-21 Contract + Resource**  
-  - [ ] `CrmContractController`、`CrmContractResourceController` 与 PHP 对齐。
+  - [~] 路由与主流程已接；列表统计/关注/异常状态/导入等与 PHP 字段级对照待办。  
+  - **主要代码**：`CrmContractController`、`CrmContractResourceController`。
 
 - **W-22 Bill + Invoice**  
-  - [ ] `CrmClientBillController`、`CrmClientInvoiceController`；在线开票 URI 等占位按 §7.4 关闭或对接网关；**依赖 W-21**。
+  - [~] 路由与主流程已接（含部分 census）；在线开票 URI 占位、与财务总账/Task 全量联动仍待 §7.4。  
+  - **主要代码**：`CrmClientBillController`、`CrmClientInvoiceController`。
 
 #### Wave 7 — P2 / P3 与 Flow
 
@@ -885,7 +888,8 @@ flowchart TB
 
 - **表名勘误**：客户主表为 **`eb_customer`**（实体 `Customer`），非文档旧称 `eb_client_customer`；合同主表为 **`eb_contract`**（实体 `Contract`）。联系人/记录等仍以 `eb_client_*` 或业务表为准，以 `mysql-schema.sql` 与 PHP Model 为准。
 - **已接入（bubble-biz-oa）**：`CrmCustomerController`、`CrmCustomerLiaisonController`、`CrmCustomerRecordController`、`CrmContractController`、`CrmContractResourceController`、`CrmClientFollowController`、`CrmClientLabelController`（`ent/client/labels`）、`CrmClientRemindController`（`ent/client/remind`）、`CrmClientFileController`（`ent/client/file/*`，附件表 `eb_system_attach`，本地上传目录可用 JVM 参数 `-Doa.upload.dir=...` 覆盖默认 `user.dir/data/oa-upload`）、`CrmClientBillController`（`ent/client/bill/*`，含列表 census、财务审核/撤回/统计等；**未**接 PHP 侧财务总账 `BillService` 与各类 Task）、`CrmClientInvoiceController`（`ent/client/invoice/*`，含 `GET record/{id}`；**在线开票 URI** 为占位，需后续接开票网关）。占位 `ClientController` 已移除。
-- **仍待对齐**：与 PHP 全量行为（审批链、消息 Task、`getRenewCensus` 完整数据、发票日志写入、附件与财务流水双向联动等）、客户/合同列表与业绩统计字段级对齐；**已补**：付款提醒/跟进类提醒与日程联动（`ScheduleApiService`）、客户标签列表筛选与 `customer_label` 落库。
+- **仍待对齐**：审批链、真实消息 Task、发票日志与财务流水全量、`getRenewCensus` 等复杂统计、合同/账单列表字段逐项对照。  
+- **已补（CRM↔日程）**：`CrmScheduleSideEffectService`（`updatePeriod`、`delScheduleAfter`）、跟进 `attach_ids`（`relation_type=5`）、客户 `customer_label` 列表/落库/`info` 数组、删提醒/删跟进占位通知接口（可接 MQ）。
 
 ---
 

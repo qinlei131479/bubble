@@ -247,6 +247,10 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 		ObjectNode node = objectMapper.valueToTree(c);
 		int sub = subscribeStatus(adminId.intValue(), id.intValue());
 		node.put("customer_followed", String.valueOf(sub));
+		ArrayNode labelArr = objectMapper.createArrayNode();
+		clientLabelsMapper.selectList(Wrappers.lambdaQuery(ClientLabels.class).eq(ClientLabels::getEid, id.intValue()))
+			.forEach(cl -> labelArr.add(cl.getLabelId()));
+		node.set("customer_label", labelArr);
 		return node;
 	}
 

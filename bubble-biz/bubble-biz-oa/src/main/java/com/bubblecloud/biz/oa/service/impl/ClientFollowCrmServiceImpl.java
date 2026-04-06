@@ -5,17 +5,24 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.crm.CrmScheduleLinkHelper;
+import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.ClientFollowMapper;
 import com.bubblecloud.biz.oa.mapper.CustomerMapper;
 import com.bubblecloud.biz.oa.mapper.ScheduleMapper;
 import com.bubblecloud.biz.oa.mapper.ScheduleRemindMapper;
+import com.bubblecloud.biz.oa.mapper.SystemAttachMapper;
 import com.bubblecloud.biz.oa.service.ClientFollowCrmService;
+import com.bubblecloud.biz.oa.service.FollowAttachRelationService;
+import com.bubblecloud.biz.oa.service.OaCrmAsyncNotifyService;
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
@@ -25,6 +32,7 @@ import com.bubblecloud.oa.api.entity.ClientFollow;
 import com.bubblecloud.oa.api.entity.Customer;
 import com.bubblecloud.oa.api.entity.Schedule;
 import com.bubblecloud.oa.api.entity.ScheduleRemind;
+import com.bubblecloud.oa.api.entity.SystemAttach;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +52,8 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 
 	private static final DateTimeFormatter DT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+	private static final int DEFAULT_ENTID = 1;
+
 	private final CustomerMapper customerMapper;
 
 	private final ScheduleApiService scheduleApiService;
@@ -51,6 +61,12 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 	private final ScheduleRemindMapper scheduleRemindMapper;
 
 	private final ScheduleMapper scheduleMapper;
+
+	private final FollowAttachRelationService followAttachRelationService;
+
+	private final SystemAttachMapper systemAttachMapper;
+
+	private final OaCrmAsyncNotifyService oaCrmAsyncNotifyService;
 
 	@Override
 	public List<ClientFollow> listByEid(Integer eid, Integer status) {
@@ -61,7 +77,31 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 		if (ObjectUtil.isNotNull(status) && status != 0) {
 			w.eq(ClientFollow::getStatus, status);
 		}
-		return list(w);
+		List<ClientFollow> rows = list(w);
+		if (rows.isEmpty()) {
+			return rows;
+		}
+		List<Integer> fids = new ArrayList<>();
+		for (ClientFollow f : rows) {
+			if (f.getId() != null) {
+				fids.add(f.getId().intValue());
+			}
+		}
+		if (fids.isEmpty()) {
+			return rows;
+		}
+		List<SystemAttach> all = systemAttachMapper.selectList(Wrappers.lambdaQuery(SystemAttach.class)
+			.eq(SystemAttach::getRelationType, OaConstants.RELATION_TYPE_FOLLOW)
+			.in(SystemAttach::getRelationId, fids));
+		Map<Integer, List<SystemAttach>> byRel = all.stream()
+			.collect(Collectors.groupingBy(SystemAttach::getRelationId));
+		for (ClientFollow f : rows) {
+			if (f.getId() == null) {
+				continue;
+			}
+			f.setAttachs(byRel.getOrDefault(f.getId().intValue(), List.of()));
+		}
+		return rows;
 	}
 
 	@Override
@@ -85,10 +125,12 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 			if (dto.getTime() == null) {
 				throw new IllegalArgumentException("common.empty.attrs");
 			}
+			dto.setAttachIds(null);
+			dto.setFollowId(null);
 			dto.setUniqued(md5Hex(uniquedPayload(dto) + System.currentTimeMillis()));
 			dto.setStatus(ObjectUtil.defaultIfNull(dto.getStatus(), 0));
 			R res = super.create(dto);
-			scheduleApiService.saveSchedule(uid, 1, CrmScheduleLinkHelper.forClientFollowTrack(dto));
+			scheduleApiService.saveSchedule(uid, DEFAULT_ENTID, CrmScheduleLinkHelper.forClientFollowTrack(dto));
 			return res;
 		}
 		completeDueTrackSchedules(dto.getEid());
@@ -97,8 +139,14 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 				.set(ClientFollow::getStatus, 2));
 		}
 		dto.setTime(null);
+		List<Integer> attachIds = dto.getAttachIds();
 		dto.setFollowId(null);
-		return super.create(dto);
+		dto.setAttachIds(null);
+		R created = super.create(dto);
+		if (dto.getId() != null && attachIds != null) {
+			followAttachRelationService.saveRelation(DEFAULT_ENTID, String.valueOf(uid), dto.getId(), attachIds);
+		}
+		return created;
 	}
 
 	@Override
@@ -119,6 +167,7 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 			if (dto.getTime() == null) {
 				throw new IllegalArgumentException("common.empty.attrs");
 			}
+			dto.setAttachIds(null);
 			String oldU = StrUtil.nullToEmpty(ex.getUniqued());
 			if (StrUtil.isNotBlank(dto.getContent())) {
 				ex.setContent(dto.getContent());
@@ -133,10 +182,16 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 			if (StrUtil.isNotBlank(oldU)) {
 				scheduleApiService.deleteRemindByUniqued(uid, oldU);
 			}
-			scheduleApiService.saveSchedule(uid, 1, CrmScheduleLinkHelper.forClientFollowTrack(ex));
+			scheduleApiService.saveSchedule(uid, DEFAULT_ENTID, CrmScheduleLinkHelper.forClientFollowTrack(ex));
 			return res;
 		}
-		return super.update(dto);
+		List<Integer> attachIds = dto.getAttachIds();
+		dto.setAttachIds(null);
+		R res = super.update(dto);
+		if (attachIds != null && dto.getId() != null) {
+			followAttachRelationService.saveRelation(DEFAULT_ENTID, String.valueOf(uid), dto.getId(), attachIds);
+		}
+		return res;
 	}
 
 	@Override
@@ -152,6 +207,9 @@ public class ClientFollowCrmServiceImpl extends UpServiceImpl<ClientFollowMapper
 			scheduleApiService.deleteRemindByUniqued(delUid, ex.getUniqued());
 		}
 		lambdaUpdate().eq(ClientFollow::getId, id).set(ClientFollow::getDeletedAt, LocalDateTime.now()).update();
+		if (ex.getEid() != null) {
+			oaCrmAsyncNotifyService.clientFollowDeleted(ex.getEid());
+		}
 	}
 
 	private void completeDueTrackSchedules(Integer eid) {

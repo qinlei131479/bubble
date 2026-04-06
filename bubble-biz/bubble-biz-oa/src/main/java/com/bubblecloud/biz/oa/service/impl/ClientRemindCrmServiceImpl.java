@@ -12,6 +12,8 @@ import com.bubblecloud.biz.oa.crm.CrmScheduleLinkHelper;
 import com.bubblecloud.biz.oa.mapper.ClientRemindMapper;
 import com.bubblecloud.biz.oa.mapper.ContractMapper;
 import com.bubblecloud.biz.oa.service.ClientRemindCrmService;
+import com.bubblecloud.biz.oa.service.OaCrmAsyncNotifyService;
+import com.bubblecloud.biz.oa.service.OaCrmTimerTaskNameSyncService;
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
@@ -39,6 +41,10 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 	private final ScheduleApiService scheduleApiService;
 
 	private final ContractMapper contractMapper;
+
+	private final OaCrmAsyncNotifyService oaCrmAsyncNotifyService;
+
+	private final OaCrmTimerTaskNameSyncService oaCrmTimerTaskNameSyncService;
 
 	@Override
 	public ClientRemind getActiveById(long id) {
@@ -127,6 +133,10 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		boolean ok = update(new LambdaUpdateWrapper<ClientRemind>().eq(ClientRemind::getId, id)
 			.isNull(ClientRemind::getDeletedAt)
 			.set(ClientRemind::getDeletedAt, LocalDateTime.now()));
+		if (ok) {
+			int contractCid = ObjectUtil.defaultIfNull(ex.getCid(), 0);
+			oaCrmAsyncNotifyService.clientRemindDeleted(contractCid);
+		}
 		return ok ? R.ok() : R.failed("common.operation.fail");
 	}
 
@@ -157,9 +167,13 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
+		String m = mark == null ? "" : mark;
 		update(new LambdaUpdateWrapper<ClientRemind>().eq(ClientRemind::getId, id)
 			.isNull(ClientRemind::getDeletedAt)
-			.set(ClientRemind::getMark, mark == null ? "" : mark));
+			.set(ClientRemind::getMark, m));
+		if (StrUtil.isNotBlank(ex.getUniqued())) {
+			oaCrmTimerTaskNameSyncService.updateNameByUniqued(ex.getUniqued(), m);
+		}
 	}
 
 	@Override

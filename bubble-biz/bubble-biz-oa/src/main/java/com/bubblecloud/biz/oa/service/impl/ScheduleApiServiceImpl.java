@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.constant.ScheduleConstants;
+import com.bubblecloud.biz.oa.service.CrmScheduleSideEffectService;
 import com.bubblecloud.biz.oa.schedule.ScheduleOccurrenceHelper;
 import com.bubblecloud.biz.oa.schedule.ScheduleOccurrenceHelper.Occurrence;
 import com.bubblecloud.biz.oa.schedule.SchedulePeriodMutationHelper;
@@ -100,6 +101,8 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 	private final ScheduleOccurrenceHelper occurrenceHelper;
 
 	private final SchedulePeriodMutationHelper periodMutationHelper;
+
+	private final CrmScheduleSideEffectService crmScheduleSideEffectService;
 
 	@Override
 	public List<ScheduleRecordVO> scheduleIndex(Long userId, ScheduleIndexQueryDTO body) {
@@ -328,6 +331,11 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 						rb);
 			}
 		}
+		long sc = ObjectUtil.defaultIfNull(dto.getCid(), 0L);
+		if (sc == ScheduleConstants.TYPE_CLIENT_RENEW || sc == ScheduleConstants.TYPE_CLIENT_RETURN) {
+			crmScheduleSideEffectService.syncRemindPeriodAfterScheduleInsert(StrUtil.nullToEmpty(dto.getUniqued()),
+					dto.getStartTime(), dto.getEndTime());
+		}
 	}
 
 	private void validateStore(ScheduleStoreDTO dto) {
@@ -522,7 +530,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		}
 		int type = dto == null || dto.getType() == null ? ScheduleConstants.CHANGE_ALL : dto.getType();
 		if (type == ScheduleConstants.CHANGE_ALL) {
-			deleteScheduleFully(id);
+			deleteScheduleFully(id, true);
 			return;
 		}
 		if (dto == null || StrUtil.isBlank(dto.getStart()) || StrUtil.isBlank(dto.getEnd())) {
@@ -532,7 +540,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		LocalDateTime instEnd = parseDateTime(dto.getEnd());
 		if (type == ScheduleConstants.CHANGE_AFTER) {
 			if (!instStart.isAfter(existing.getStartTime()) && !instEnd.isAfter(existing.getEndTime())) {
-				deleteScheduleFully(id);
+				deleteScheduleFully(id, true);
 				return;
 			}
 			if (instStart.isAfter(existing.getStartTime())) {
@@ -543,7 +551,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 					applyFailTruncate(id, failPrev);
 				}
 				else {
-					deleteScheduleFully(id);
+					deleteScheduleFully(id, true);
 				}
 			}
 			return;
@@ -551,7 +559,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		if (type == ScheduleConstants.CHANGE_NOW) {
 			if (instStart.equals(existing.getStartTime())) {
 				if (!isRepeatingSeries(existing)) {
-					deleteScheduleFully(id);
+					deleteScheduleFully(id, true);
 				}
 				else {
 					LocalDateTime[] next = periodMutationHelper.getNextPeriod(instStart, instEnd,
@@ -583,7 +591,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 			}
 			return;
 		}
-		deleteScheduleFully(id);
+		deleteScheduleFully(id, true);
 	}
 
 	private int resolveEntidFromSchedule(Long scheduleId) {
@@ -594,11 +602,24 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		return 0;
 	}
 
-	private void deleteScheduleFully(Long scheduleId) {
+	private void deleteScheduleFully(Long scheduleId, boolean crmSideEffects) {
+		Schedule sch = baseMapper.selectById(scheduleId);
+		ScheduleRemind rem = firstRemind(scheduleId);
+		String uniqued = rem == null ? "" : StrUtil.nullToEmpty(rem.getUniqued());
+		Long cid = sch == null || sch.getCid() == null ? null : sch.getCid();
 		scheduleRemindMapper.delete(Wrappers.lambdaQuery(ScheduleRemind.class).eq(ScheduleRemind::getSid, scheduleId));
 		scheduleTaskMapper.delete(Wrappers.lambdaQuery(ScheduleTask.class).eq(ScheduleTask::getPid, scheduleId));
 		scheduleUserMapper.delete(Wrappers.lambdaQuery(ScheduleUser.class).eq(ScheduleUser::getScheduleId, scheduleId));
 		baseMapper.deleteById(scheduleId);
+		if (crmSideEffects && StrUtil.isNotBlank(uniqued) && cid != null) {
+			long c = cid.longValue();
+			if (c == ScheduleConstants.TYPE_CLIENT_TRACK) {
+				crmScheduleSideEffectService.afterClientTrackScheduleDeleted(uniqued);
+			}
+			else if (c == ScheduleConstants.TYPE_CLIENT_RENEW || c == ScheduleConstants.TYPE_CLIENT_RETURN) {
+				crmScheduleSideEffectService.afterClientRemindScheduleDeleted(uniqued);
+			}
+		}
 	}
 
 	@Override
@@ -618,7 +639,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		if (rem == null || ObjectUtil.isNull(rem.getSid())) {
 			return;
 		}
-		deleteScheduleFully(rem.getSid());
+		deleteScheduleFully(rem.getSid(), false);
 	}
 
 	private void applyFailTruncate(Long scheduleId, LocalDateTime failBoundary) {
@@ -805,6 +826,19 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		else {
 			save.setCreatedAt(LocalDateTime.now());
 			scheduleTaskMapper.insert(save);
+		}
+		Schedule sch = baseMapper.selectById(body.getId());
+		if (ObjectUtil.isNotNull(sch) && ObjectUtil.isNotNull(sch.getCid())) {
+			long scid = sch.getCid().longValue();
+			if (scid == ScheduleConstants.TYPE_CLIENT_RENEW || scid == ScheduleConstants.TYPE_CLIENT_RETURN) {
+				ScheduleRemind r = firstRemind(body.getId());
+				if (ObjectUtil.isNotNull(r) && StrUtil.isNotBlank(r.getUniqued())) {
+					crmScheduleSideEffectService.syncRemindPeriodAfterParticipantStatus(
+							ObjectUtil.defaultIfNull(body.getStatus(), 0), r.getUniqued(), body.getStart(),
+							body.getEnd(), ObjectUtil.defaultIfNull(sch.getPeriod(), 0),
+							ObjectUtil.defaultIfNull(sch.getRate(), 1), StrUtil.nullToEmpty(sch.getDays()), scid);
+				}
+			}
 		}
 	}
 

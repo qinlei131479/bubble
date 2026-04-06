@@ -23,4 +23,7 @@ public interface OaConstants {
 	/** 与 PHP {@code common.empty.attrs} 一致，路径或必填参数为空。 */
 	String EMPTY_ATTRS = "common.empty.attrs";
 
+	/** 与 PHP {@code AttachService::RELATION_TYPE} 中 follow 一致，跟进记录附件。 */
+	int RELATION_TYPE_FOLLOW = 5;
+
 }

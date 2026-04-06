@@ -1,12 +1,14 @@
 package com.bubblecloud.oa.api.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bubblecloud.common.mybatis.base.Req;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -66,5 +68,16 @@ public class ClientFollow extends Req<ClientFollow> {
 	@TableField(exist = false)
 	@Schema(description = "关联跟进提醒ID")
 	private Long followId;
+
+	/** 附件 ID 列表（请求体，对齐 PHP {@code attach_ids}） */
+	@TableField(exist = false)
+	@JsonProperty("attach_ids")
+	@Schema(description = "附件ID列表")
+	private List<Integer> attachIds;
+
+	/** 列表接口填充，对齐 PHP with attachs */
+	@TableField(exist = false)
+	@Schema(description = "关联附件列表")
+	private List<SystemAttach> attachs;
 
 }
