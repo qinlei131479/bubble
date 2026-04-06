@@ -3,40 +3,47 @@ package com.bubblecloud.biz.oa.service;
 import java.util.List;
 
 import com.bubblecloud.common.mybatis.service.UpService;
-import com.bubblecloud.oa.api.entity.Schedule;
+import com.bubblecloud.oa.api.dto.ScheduleDeleteDTO;
 import com.bubblecloud.oa.api.dto.ScheduleIndexQueryDTO;
+import com.bubblecloud.oa.api.dto.ScheduleReplySaveDTO;
 import com.bubblecloud.oa.api.dto.ScheduleStatusUpdateDTO;
+import com.bubblecloud.oa.api.dto.ScheduleStoreDTO;
+import com.bubblecloud.oa.api.dto.ScheduleUpdateDTO;
 import com.bubblecloud.oa.api.dto.UserScheduleQueryDTO;
+import com.bubblecloud.oa.api.entity.Schedule;
+import com.bubblecloud.oa.api.vo.schedule.ScheduleCalendarCountItemVO;
 import com.bubblecloud.oa.api.vo.schedule.ScheduleRecordVO;
-import com.bubblecloud.oa.api.vo.schedule.ScheduleTypeVO;
 import com.bubblecloud.oa.api.vo.schedule.UserScheduleDayWrapperVO;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * 日程接口占位（兼容 PHP ent/schedule 与待办列表）。
+ * 日程主流程（ent/schedule、用户待办日历）。
  *
  * @author qinlei
  * @date 2026/3/28 15:30
  */
 public interface ScheduleApiService extends UpService<Schedule> {
 
-	/**
-	 * 日程类型列表。
-	 */
-	List<ScheduleTypeVO> typeList();
+	List<ScheduleRecordVO> scheduleIndex(Long userId, ScheduleIndexQueryDTO body);
 
-	/**
-	 * 日程列表 POST /schedule/index。
-	 */
-	List<ScheduleRecordVO> scheduleIndex(ScheduleIndexQueryDTO body);
+	void updateStatus(Long userId, ScheduleStatusUpdateDTO body);
 
-	/**
-	 * 修改日程状态。
-	 */
-	void updateStatus(ScheduleStatusUpdateDTO body);
+	List<UserScheduleDayWrapperVO> userScheduleList(Long userId, UserScheduleQueryDTO query);
 
-	/**
-	 * GET /user/schedule 日历待办（外层为数组，首元素含 list）。
-	 */
-	List<UserScheduleDayWrapperVO> userScheduleList(UserScheduleQueryDTO query);
+	void saveSchedule(Long userId, int entid, ScheduleStoreDTO dto);
+
+	void updateSchedule(Long userId, int entid, Long id, ScheduleUpdateDTO dto);
+
+	void deleteSchedule(Long userId, Long id, ScheduleDeleteDTO dto);
+
+	JsonNode scheduleInfo(Long userId, Long id, String startTime, String endTime);
+
+	List<ScheduleCalendarCountItemVO> scheduleCount(Long userId, int entid, ScheduleIndexQueryDTO body);
+
+	JsonNode replys(Long scheduleId);
+
+	void saveScheduleReply(Long userId, int entid, ScheduleReplySaveDTO dto);
+
+	void deleteScheduleReply(Long userId, Long id);
 
 }

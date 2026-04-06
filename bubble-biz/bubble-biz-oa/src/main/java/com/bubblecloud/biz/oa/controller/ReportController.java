@@ -1,7 +1,9 @@
 package com.bubblecloud.biz.oa.controller;
 
+import java.util.Collections;
+
 import com.bubblecloud.common.core.util.R;
-import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.ListCountVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +24,9 @@ public class ReportController {
 
 	@GetMapping("/page")
 	@Operation(summary = "汇报分页")
-	public R<SimplePageVO> page(@RequestParam(defaultValue = "1") Integer current,
+	public R<ListCountVO<Object>> page(@RequestParam(defaultValue = "1") Integer current,
 			@RequestParam(defaultValue = "20") Integer size) {
-		return R.phpOk(SimplePageVO.empty(current, size));
+		return R.phpOk(ListCountVO.of(Collections.emptyList(), 0));
 	}
 
 }
