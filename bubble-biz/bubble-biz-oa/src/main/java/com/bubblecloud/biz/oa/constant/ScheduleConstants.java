@@ -9,27 +9,36 @@ package com.bubblecloud.biz.oa.constant;
 public interface ScheduleConstants {
 
 	/** 按天重复. */
-	 int REPEAT_DAY = 1;
+	int REPEAT_DAY = 1;
 
 	/** 按周重复. */
-	 int REPEAT_WEEK = 2;
+	int REPEAT_WEEK = 2;
 
 	/** 按月重复. */
-	 int REPEAT_MONTH = 3;
+	int REPEAT_MONTH = 3;
 
 	/** 按年重复. */
-	 int REPEAT_YEAR = 4;
+	int REPEAT_YEAR = 4;
 
 	/** 不重复. */
-	 int REPEAT_NOT = 0;
+	int REPEAT_NOT = 0;
+
+	/** 日程类型：客户跟进（与 PHP {@code ScheduleEnum::TYPE_CLIENT_TRACK} 一致）. */
+	int TYPE_CLIENT_TRACK = 2;
+
+	/** 日程类型：合同续费提醒. */
+	int TYPE_CLIENT_RENEW = 3;
+
+	/** 日程类型：合同回款提醒. */
+	int TYPE_CLIENT_RETURN = 4;
 
 	/** 操作：仅当前. */
-	 int CHANGE_NOW = 0;
+	int CHANGE_NOW = 0;
 
 	/** 操作：当前及以后. */
-	 int CHANGE_AFTER = 1;
+	int CHANGE_AFTER = 1;
 
 	/** 操作：全部. */
-	 int CHANGE_ALL = 2;
+	int CHANGE_ALL = 2;
 
 }

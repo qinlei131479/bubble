@@ -3,6 +3,7 @@ package com.bubblecloud.oa.api.entity;
 import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.bubblecloud.common.mybatis.base.Req;
@@ -60,5 +61,10 @@ public class ClientFollow extends Req<ClientFollow> {
 
 	@Schema(description = "跟进版本")
 	private Integer followVersion;
+
+	/** 完成关联的跟进提醒 ID（请求体，非表字段） */
+	@TableField(exist = false)
+	@Schema(description = "关联跟进提醒ID")
+	private Long followId;
 
 }

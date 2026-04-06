@@ -129,4 +129,8 @@ public class Customer extends Req<Customer> {
 	@Schema(description = "列表查询：业务员 uid 集合（types=1 时来自请求；types=2 时为当前用户）")
 	private List<Integer> queryUidList;
 
+	@TableField(exist = false)
+	@Schema(description = "列表查询：按标签 ID 筛选（与 eb_client_labels 关联，任一匹配即命中）")
+	private List<Integer> queryLabelIds;
+
 }

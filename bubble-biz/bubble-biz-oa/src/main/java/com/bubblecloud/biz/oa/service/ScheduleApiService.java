@@ -46,4 +46,11 @@ public interface ScheduleApiService extends UpService<Schedule> {
 
 	void deleteScheduleReply(Long userId, Long id);
 
+	/**
+	 * 按 {@code eb_schedule_remind.uniqued} 删除关联日程及提醒行（对齐 PHP
+	 * {@code ScheduleInterface::deleteRemind}）。
+	 * @param uid 参与者用户 ID，与提醒表 {@code uid} 一致；找不到记录时静默返回
+	 */
+	void deleteRemindByUniqued(long uid, String uniqued);
+
 }

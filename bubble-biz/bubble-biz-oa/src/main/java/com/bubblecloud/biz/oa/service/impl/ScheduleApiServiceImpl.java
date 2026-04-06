@@ -136,8 +136,7 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 			for (LocalDate day : calendarDays) {
 				Occurrence occ = occurrenceHelper.haveSchedule(s, day, userId, this::computeFinish);
 				if (occ.have()) {
-					unique.putIfAbsent(occ.dedupeKey(),
-							buildRecordVo(s, userId, occ.start(), occ.end(), occ.finish()));
+					unique.putIfAbsent(occ.dedupeKey(), buildRecordVo(s, userId, occ.start(), occ.end(), occ.finish()));
 				}
 			}
 		}
@@ -495,8 +494,8 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 					existing.getDays());
 			applyFailTruncate(id, failPrev);
 			LocalDateTime[] next = periodMutationHelper.getNextPeriod(instStart, instEnd,
-					ObjectUtil.defaultIfNull(existing.getPeriod(), 0),
-					ObjectUtil.defaultIfNull(existing.getRate(), 1), existing.getDays());
+					ObjectUtil.defaultIfNull(existing.getPeriod(), 0), ObjectUtil.defaultIfNull(existing.getRate(), 1),
+					existing.getDays());
 			if (ObjectUtil.isNull(existing.getFailTime()) || !next[0].isAfter(existing.getFailTime())) {
 				ScheduleRemind rem = firstRemind(id);
 				String uq = rem == null ? "" : StrUtil.nullToEmpty(rem.getUniqued());
@@ -572,8 +571,8 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 					existing.getDays());
 			applyFailTruncate(id, failPrev);
 			LocalDateTime[] next = periodMutationHelper.getNextPeriod(instStart, instEnd,
-					ObjectUtil.defaultIfNull(existing.getPeriod(), 0),
-					ObjectUtil.defaultIfNull(existing.getRate(), 1), existing.getDays());
+					ObjectUtil.defaultIfNull(existing.getPeriod(), 0), ObjectUtil.defaultIfNull(existing.getRate(), 1),
+					existing.getDays());
 			if (ObjectUtil.isNull(existing.getFailTime()) || !next[0].isAfter(existing.getFailTime())) {
 				ScheduleRemind rem = firstRemind(id);
 				String uq = rem == null ? "" : StrUtil.nullToEmpty(rem.getUniqued());
@@ -598,9 +597,28 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 	private void deleteScheduleFully(Long scheduleId) {
 		scheduleRemindMapper.delete(Wrappers.lambdaQuery(ScheduleRemind.class).eq(ScheduleRemind::getSid, scheduleId));
 		scheduleTaskMapper.delete(Wrappers.lambdaQuery(ScheduleTask.class).eq(ScheduleTask::getPid, scheduleId));
-		scheduleUserMapper
-			.delete(Wrappers.lambdaQuery(ScheduleUser.class).eq(ScheduleUser::getScheduleId, scheduleId));
+		scheduleUserMapper.delete(Wrappers.lambdaQuery(ScheduleUser.class).eq(ScheduleUser::getScheduleId, scheduleId));
 		baseMapper.deleteById(scheduleId);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteRemindByUniqued(long uid, String uniqued) {
+		if (StrUtil.isBlank(uniqued)) {
+			return;
+		}
+		ScheduleRemind rem = scheduleRemindMapper.selectOne(Wrappers.lambdaQuery(ScheduleRemind.class)
+			.eq(ScheduleRemind::getUniqued, uniqued)
+			.eq(ScheduleRemind::getUid, String.valueOf(uid))
+			.last("LIMIT 1"));
+		if (rem == null) {
+			rem = scheduleRemindMapper.selectOne(
+					Wrappers.lambdaQuery(ScheduleRemind.class).eq(ScheduleRemind::getUniqued, uniqued).last("LIMIT 1"));
+		}
+		if (rem == null || ObjectUtil.isNull(rem.getSid())) {
+			return;
+		}
+		deleteScheduleFully(rem.getSid());
 	}
 
 	private void applyFailTruncate(Long scheduleId, LocalDateTime failBoundary) {
@@ -615,8 +633,10 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		s.setFailTime(endOfDay);
 		s.setUpdatedAt(LocalDateTime.now());
 		baseMapper.updateById(s);
-		scheduleRemindMapper.update(null, Wrappers.lambdaUpdate(ScheduleRemind.class).eq(ScheduleRemind::getSid, scheduleId)
-			.set(ScheduleRemind::getEndTime, failBoundary));
+		scheduleRemindMapper.update(null,
+				Wrappers.lambdaUpdate(ScheduleRemind.class)
+					.eq(ScheduleRemind::getSid, scheduleId)
+					.set(ScheduleRemind::getEndTime, failBoundary));
 	}
 
 	private void applyStartEndAndFailOnSchedule(Long scheduleId, LocalDateTime start, LocalDateTime end,
@@ -632,8 +652,10 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		}
 		s.setUpdatedAt(LocalDateTime.now());
 		baseMapper.updateById(s);
-		scheduleRemindMapper.update(null, Wrappers.lambdaUpdate(ScheduleRemind.class).eq(ScheduleRemind::getSid, scheduleId)
-			.set(ScheduleRemind::getEndTime, failRaw));
+		scheduleRemindMapper.update(null,
+				Wrappers.lambdaUpdate(ScheduleRemind.class)
+					.eq(ScheduleRemind::getSid, scheduleId)
+					.set(ScheduleRemind::getEndTime, failRaw));
 	}
 
 	private boolean isRepeatingSeries(Schedule s) {
@@ -655,9 +677,8 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 	}
 
 	private ScheduleRemind firstRemind(Long sid) {
-		List<ScheduleRemind> list = scheduleRemindMapper.selectList(Wrappers.lambdaQuery(ScheduleRemind.class)
-			.eq(ScheduleRemind::getSid, sid)
-			.last("LIMIT 1"));
+		List<ScheduleRemind> list = scheduleRemindMapper
+			.selectList(Wrappers.lambdaQuery(ScheduleRemind.class).eq(ScheduleRemind::getSid, sid).last("LIMIT 1"));
 		return list.isEmpty() ? null : list.get(0);
 	}
 
@@ -698,8 +719,8 @@ public class ScheduleApiServiceImpl extends UpServiceImpl<ScheduleMapper, Schedu
 		d.setRate(info.getRate());
 		List<Integer> dayInts = periodMutationHelper.parseDayInts(info.getDays());
 		d.setDays(dayInts.isEmpty() ? new ArrayList<>() : new ArrayList<>(dayInts));
-		if (ObjectUtil.defaultIfNull(info.getRemind(), 0) == 1 && ObjectUtil.isNotNull(rem) && rem.getRemindDay() != null
-				&& rem.getRemindTime() != null) {
+		if (ObjectUtil.defaultIfNull(info.getRemind(), 0) == 1 && ObjectUtil.isNotNull(rem)
+				&& rem.getRemindDay() != null && rem.getRemindTime() != null) {
 			d.setRemind(0);
 			d.setRemindTime(fmtDt(LocalDateTime.of(rem.getRemindDay(), rem.getRemindTime())));
 		}

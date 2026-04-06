@@ -112,6 +112,10 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 				q.setQueryUidList(null);
 			}
 		}
+		List<Integer> labelIds = parseIntList(body.get("customer_label"));
+		if (ObjectUtil.isNotEmpty(labelIds)) {
+			q.setQueryLabelIds(labelIds);
+		}
 		Page<Customer> pg = new Page<>(page, limit);
 		Page<Customer> res = baseMapper.findPg(pg, q);
 		return ListCountVO.of(res.getRecords(), res.getTotal());
@@ -439,17 +443,27 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 		for (Long eid : customerIds) {
 			clientLabelsMapper
 				.delete(Wrappers.lambdaQuery(ClientLabels.class).eq(ClientLabels::getEid, eid.intValue()));
-			if (ObjectUtil.isEmpty(labelIds)) {
-				continue;
+			if (ObjectUtil.isNotEmpty(labelIds)) {
+				for (Integer lid : labelIds) {
+					ClientLabels cl = new ClientLabels();
+					cl.setEid(eid.intValue());
+					cl.setLabelId(lid);
+					cl.setCreatedAt(LocalDateTime.now());
+					cl.setUpdatedAt(LocalDateTime.now());
+					clientLabelsMapper.insert(cl);
+				}
 			}
-			for (Integer lid : labelIds) {
-				ClientLabels cl = new ClientLabels();
-				cl.setEid(eid.intValue());
-				cl.setLabelId(lid);
-				cl.setCreatedAt(LocalDateTime.now());
-				cl.setUpdatedAt(LocalDateTime.now());
-				clientLabelsMapper.insert(cl);
+			String labelJson;
+			try {
+				labelJson = ObjectUtil.isEmpty(labelIds) ? "[]" : objectMapper.writeValueAsString(labelIds);
 			}
+			catch (Exception e) {
+				labelJson = "[]";
+			}
+			Customer patch = new Customer();
+			patch.setId(eid);
+			patch.setCustomerLabel(labelJson);
+			baseMapper.updateById(patch);
 		}
 	}
 

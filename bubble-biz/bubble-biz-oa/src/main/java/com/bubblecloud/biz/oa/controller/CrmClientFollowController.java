@@ -1,6 +1,5 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.ClientFollowCrmService;
 import com.bubblecloud.common.core.util.R;
@@ -37,11 +36,7 @@ public class CrmClientFollowController {
 	@GetMapping({ "", "/" })
 	@Operation(summary = "跟进列表")
 	public R<List<ClientFollow>> index(@RequestParam Integer eid, @RequestParam(defaultValue = "0") Integer status) {
-		return R.phpOk(clientFollowCrmService.list(Wrappers.lambdaQuery(ClientFollow.class)
-			.eq(ClientFollow::getEid, eid)
-			.eq(status != null && status != 0, ClientFollow::getStatus, status)
-			.isNull(ClientFollow::getDeletedAt)
-			.orderByDesc(ClientFollow::getId)));
+		return R.phpOk(clientFollowCrmService.listByEid(eid, status));
 	}
 
 	@PostMapping({ "", "/" })

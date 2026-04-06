@@ -8,26 +8,37 @@ import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.bubblecloud.biz.oa.crm.CrmScheduleLinkHelper;
 import com.bubblecloud.biz.oa.mapper.ClientRemindMapper;
+import com.bubblecloud.biz.oa.mapper.ContractMapper;
 import com.bubblecloud.biz.oa.service.ClientRemindCrmService;
+import com.bubblecloud.biz.oa.service.ScheduleApiService;
 import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.ClientRemind;
+import com.bubblecloud.oa.api.entity.Contract;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
 
 /**
- * 付款提醒实现（不写日程/Task，与 PHP 全量行为可后续对齐）。
+ * 付款提醒实现；创建/修改/删除时与日程联动（对齐 PHP {@code ClientRemindService}）。
  *
  * @author qinlei
  * @date 2026/4/3 14:00
  */
 @Service
+@RequiredArgsConstructor
 public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper, ClientRemind>
 		implements ClientRemindCrmService {
+
+	private final ScheduleApiService scheduleApiService;
+
+	private final ContractMapper contractMapper;
 
 	@Override
 	public ClientRemind getActiveById(long id) {
@@ -58,7 +69,10 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (dto.getCateId() == null) {
 			dto.setCateId(0);
 		}
-		return super.create(dto);
+		R res = super.create(dto);
+		int entid = ObjectUtil.defaultIfNull(dto.getEntid(), 1);
+		scheduleApiService.saveSchedule(uid, entid, CrmScheduleLinkHelper.forClientRemind(dto));
+		return res;
 	}
 
 	@Override
@@ -71,6 +85,7 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (dto.getTime() == null) {
 			throw new IllegalArgumentException("common.empty.attrs");
 		}
+		String oldUniqued = StrUtil.nullToEmpty(ex.getUniqued());
 		if (dto.getNum() != null) {
 			ex.setNum(dto.getNum());
 		}
@@ -85,7 +100,15 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 			ex.setCateId(dto.getCateId());
 		}
 		ex.setUniqued(md5Hex(uniquedPayload(ex) + System.currentTimeMillis()));
-		return super.update(ex);
+		R res = super.update(ex);
+		if (StrUtil.isNotBlank(oldUniqued)) {
+			scheduleApiService.deleteRemindByUniqued(ObjectUtil.defaultIfNull(ex.getUserId(), 0).longValue(),
+					oldUniqued);
+		}
+		int entid = ObjectUtil.defaultIfNull(ex.getEntid(), 1);
+		scheduleApiService.saveSchedule(ObjectUtil.defaultIfNull(ex.getUserId(), 0).longValue(), entid,
+				CrmScheduleLinkHelper.forClientRemind(ex));
+		return res;
 	}
 
 	@Override
@@ -95,10 +118,36 @@ public class ClientRemindCrmServiceImpl extends UpServiceImpl<ClientRemindMapper
 		if (ex == null) {
 			throw new IllegalArgumentException("common.operation.noExists");
 		}
+		Long cur = OaSecurityUtil.currentUserId();
+		if (StrUtil.isNotBlank(ex.getUniqued())) {
+			long delUid = cur != null ? cur : ObjectUtil.defaultIfNull(ex.getUserId(), 0).longValue();
+			scheduleApiService.deleteRemindByUniqued(delUid, ex.getUniqued());
+		}
+		maybeClearContractRenew(ex);
 		boolean ok = update(new LambdaUpdateWrapper<ClientRemind>().eq(ClientRemind::getId, id)
 			.isNull(ClientRemind::getDeletedAt)
 			.set(ClientRemind::getDeletedAt, LocalDateTime.now()));
 		return ok ? R.ok() : R.failed("common.operation.fail");
+	}
+
+	private void maybeClearContractRenew(ClientRemind ex) {
+		Integer cid = ex.getCid();
+		if (cid == null || cid <= 0) {
+			return;
+		}
+		if (!Integer.valueOf(1).equals(ObjectUtil.defaultIfNull(ex.getTypes(), 0))) {
+			return;
+		}
+		long others = count(Wrappers.lambdaQuery(ClientRemind.class)
+			.eq(ClientRemind::getCid, cid)
+			.eq(ClientRemind::getTypes, 1)
+			.ne(ClientRemind::getId, ex.getId())
+			.isNull(ClientRemind::getDeletedAt));
+		if (others > 0) {
+			return;
+		}
+		contractMapper.update(null,
+				Wrappers.lambdaUpdate(Contract.class).eq(Contract::getId, cid.longValue()).set(Contract::getRenew, 0));
 	}
 
 	@Override
