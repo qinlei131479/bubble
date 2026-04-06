@@ -11,6 +11,7 @@ import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.HayGroupSaveDTO;
 import com.bubblecloud.oa.api.entity.HayGroup;
 import com.bubblecloud.oa.api.entity.HayGroupData;
+import com.bubblecloud.oa.api.vo.CreatedIdVO;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,10 +49,10 @@ public class HayGroupController {
 
 	@PostMapping
 	@Operation(summary = "创建海氏评估组")
-	public R<String> create(@RequestBody HayGroupSaveDTO dto) {
+	public R<CreatedIdVO> create(@RequestBody HayGroupSaveDTO dto) {
 		HayGroup obj = PojoConvertUtil.convertPojo(dto, HayGroup.class);
 		hayGroupService.create(obj);
-		return R.phpOk(OaConstants.INSERT_SUCC);
+		return R.phpOk(new CreatedIdVO(obj.getId()));
 	}
 
 	@GetMapping("/{id}/edit")

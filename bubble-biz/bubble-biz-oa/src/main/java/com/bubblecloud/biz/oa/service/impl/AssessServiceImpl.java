@@ -10,8 +10,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.AssessAppealMapper;
 import com.bubblecloud.biz.oa.mapper.AssessMapper;
-import com.bubblecloud.biz.oa.mapper.AssessScoreMapper;
+import com.bubblecloud.biz.oa.mapper.AssessUserScoreMapper;
 import com.bubblecloud.biz.oa.service.AssessService;
+import com.bubblecloud.biz.oa.util.OaSecurityUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.hr.AssessAppealDTO;
@@ -20,13 +21,14 @@ import com.bubblecloud.oa.api.dto.hr.AssessEvalDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetEvalDTO;
 import com.bubblecloud.oa.api.entity.Assess;
 import com.bubblecloud.oa.api.entity.AssessAppeal;
-import com.bubblecloud.oa.api.entity.AssessScore;
+import com.bubblecloud.oa.api.entity.AssessUserScore;
 import com.bubblecloud.oa.api.vo.hr.AssessCensusVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 绩效考核服务实现。
@@ -40,7 +42,7 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	private final AssessAppealMapper assessAppealMapper;
 
-	private final AssessScoreMapper assessScoreMapper;
+	private final AssessUserScoreMapper assessUserScoreMapper;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -76,10 +78,16 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void enableAssess(Long id) {
+	public void enableAssess(Long id, Integer status) {
+		int s = ObjectUtil.defaultIfNull(status, 1);
+		if (s != 0 && s != 1) {
+			throw new IllegalArgumentException("无效的状态");
+		}
 		Assess assess = getById(id);
 		assertExists(assess);
-		assess.setStatus(ObjectUtil.defaultIfNull(assess.getStatus(), 0) == 0 ? 1 : 0);
+		assess.setIsShow(s);
+		assess.setMakeStatus(s);
+		assess.setStatus(s);
 		updateById(assess);
 	}
 
@@ -99,19 +107,52 @@ public class AssessServiceImpl extends UpServiceImpl<AssessMapper, Assess> imple
 	}
 
 	@Override
-	public List<Object> scoreRecord(Long id) {
-		List<AssessScore> scores = assessScoreMapper.selectList(Wrappers.lambdaQuery(AssessScore.class)
-			.eq(AssessScore::getUserId, id)
-			.orderByAsc(AssessScore::getLevel));
-		return new ArrayList<>(scores);
+	public List<Object> scoreRecord(Long assessId) {
+		List<AssessUserScore> rows = assessUserScoreMapper.selectList(Wrappers.lambdaQuery(AssessUserScore.class)
+			.eq(AssessUserScore::getAssessid, assessId.intValue())
+			.eq(AssessUserScore::getTypes, 0)
+			.orderByAsc(AssessUserScore::getId));
+		return new ArrayList<>(rows);
 	}
 
 	@Override
 	public List<Object> deleteRecord(Long entid) {
-		List<Assess> deleted = baseMapper.selectList(Wrappers.lambdaQuery(Assess.class)
-			.eq(ObjectUtil.isNotNull(entid), Assess::getEntid, entid)
-			.isNotNull(Assess::getDeletedAt));
-		return new ArrayList<>(deleted);
+		List<AssessUserScore> rows = assessUserScoreMapper.selectList(Wrappers.lambdaQuery(AssessUserScore.class)
+			.eq(ObjectUtil.isNotNull(entid), AssessUserScore::getEntid, entid)
+			.eq(AssessUserScore::getTypes, 1)
+			.orderByDesc(AssessUserScore::getId));
+		return new ArrayList<>(rows);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteAssess(Long id, String mark) {
+		if (StrUtil.isBlank(mark)) {
+			throw new IllegalArgumentException("删除失败，您填写删除原因！");
+		}
+		Assess assess = getById(id);
+		assertExists(assess);
+		Long op = OaSecurityUtil.currentUserId();
+		AssessUserScore row = new AssessUserScore();
+		row.setEntid(assess.getEntid());
+		row.setAssessid(id.intValue());
+		row.setUserid(ObjectUtil.isNull(op) ? 0 : op.intValue());
+		row.setCheckUid(toIntUid(assess.getCheckUid() != null ? assess.getCheckUid() : assess.getSuperiorId()));
+		row.setTestUid(toIntUid(assess.getTestUid() != null ? assess.getTestUid() : assess.getUserId()));
+		row.setScore(ObjectUtil.defaultIfNull(assess.getAssessScore(), BigDecimal.ZERO));
+		row.setTotal(ObjectUtil.defaultIfNull(assess.getAssessTotal(), BigDecimal.ZERO));
+		row.setGrade(ObjectUtil.defaultIfNull(assess.getAssessGrade(), 0));
+		row.setInfo("{}");
+		row.setMark(mark);
+		row.setTypes(1);
+		row.setCreatedAt(LocalDateTime.now());
+		row.setUpdatedAt(LocalDateTime.now());
+		assessUserScoreMapper.insert(row);
+		removeById(id);
+	}
+
+	private static int toIntUid(Long v) {
+		return ObjectUtil.isNull(v) ? 0 : v.intValue();
 	}
 
 	@Override

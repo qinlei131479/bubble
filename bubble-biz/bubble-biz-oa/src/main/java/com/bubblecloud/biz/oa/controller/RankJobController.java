@@ -2,8 +2,6 @@ package com.bubblecloud.biz.oa.controller;
 
 import java.util.List;
 
-import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.RankJobService;
@@ -14,6 +12,7 @@ import com.bubblecloud.oa.api.dto.hr.JobSaveDTO;
 import com.bubblecloud.oa.api.dto.hr.JobSubordinateUpdateDTO;
 import com.bubblecloud.oa.api.entity.RankJob;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.hr.JobSubordinateDetailVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -95,23 +94,20 @@ public class RankJobController {
 	@GetMapping("/select")
 	@Operation(summary = "岗位下拉列表")
 	public R<List<RankJob>> select(@RequestParam(required = false) Long entid) {
-		return R.phpOk(rankJobService.list(Wrappers.lambdaQuery(RankJob.class)
-			.eq(ObjectUtil.isNotNull(entid), RankJob::getEntid, entid)
-			.eq(RankJob::getStatus, 1)
-			.orderByAsc(RankJob::getId)));
+		return R.phpOk(rankJobService.listSelect(entid));
 	}
 
 	@GetMapping("/subordinate")
 	@Operation(summary = "下级岗位职责列表")
-	public R<SimplePageVO> subordinate(@ParameterObject Pg pg, @ParameterObject RankJob query) {
-		Page<RankJob> res = rankJobService.findPg(pg, query);
-		return R.phpOk(SimplePageVO.of((int) res.getCurrent(), (int) res.getSize(), res.getTotal(), res.getRecords()));
+	public R<SimplePageVO> subordinate(@ParameterObject Pg pg, @RequestParam(required = false) Long entid,
+			@RequestParam(required = false) String name) {
+		return R.phpOk(rankJobService.subordinatePage(pg, entid, name));
 	}
 
 	@GetMapping("/subordinate/{id}")
 	@Operation(summary = "获取下级职责详情")
-	public R<RankJob> subordinateDetail(@PathVariable Long id) {
-		return R.phpOk(rankJobService.getById(id));
+	public R<JobSubordinateDetailVO> subordinateDetail(@PathVariable Long id) {
+		return R.phpOk(rankJobService.subordinateDetail(id));
 	}
 
 	@PutMapping("/subordinate/{id}")

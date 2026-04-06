@@ -57,6 +57,12 @@ public class PromotionController {
 		return R.phpOk(promotionService.getById(id));
 	}
 
+	@GetMapping("/{id}/edit")
+	@Operation(summary = "晋升表详情（与 PHP Resource show 路径并存）")
+	public R<Promotion> edit(@PathVariable Long id) {
+		return details(id);
+	}
+
 	@PutMapping("/{id}")
 	@Operation(summary = "晋升表修改")
 	public R<String> update(@PathVariable Long id, @RequestBody PromotionSaveDTO dto) {

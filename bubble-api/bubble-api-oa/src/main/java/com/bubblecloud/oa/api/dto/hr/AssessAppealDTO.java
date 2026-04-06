@@ -22,4 +22,7 @@ public class AssessAppealDTO {
 	@Schema(description = "处理意见")
 	private String opinion;
 
+	@Schema(description = "与 PHP types 一致：0 申诉处理 1 其他分支")
+	private Integer types;
+
 }

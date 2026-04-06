@@ -209,13 +209,13 @@ flowchart TB
 #### Wave 4 — P1 人事（查漏补缺）
 
 - **W-09 职级 / 岗位 / 海氏**  
-  - [ ] `RankCategoryController`、`RankController`、`RankJobController`、`RankLevelController`、`HayGroupController` 与 PHP Service 字段级 diff 关闭。
+  - [x] 职级/岗位：`RankController` 创建表单返回 `tree`+`jobInfo`（对齐 PHP `resourceCreate`）；`RankJobController` 下拉与下级职责走 Service（`listSelect`、`subordinate` 需 `entid`+可选 `name` 分页、`subordinate/{id}` 为员工 id 读写 `duty`）；消除 Controller 内 `Wrappers`。`RankCategory`/`RankLevel`/`HayGroup` 路由与 CRUD 已对齐 PHP 前缀。未关联职级（`freeRank`）等仍依赖当前 `eb_rank_level` 与 PHP `position_relation` 模型差异，可单独立项。  
 
 - **W-10 绩效 Assess**  
-  - [ ] `AssessController` 及关联 Plan/Target/Template 等与 PHP 21+ 接口返回形状与分支对齐。
+  - [x] `show/{id}` 支持 `status` 0/1 并写 `is_show`/`make_status`/`status`；`score/{id}` 按考核 id 读 `eb_assess_user_score`（types=0）；`del_record` 读 types=1 流水；`DELETE delete/{id}` 需 body.mark 并写入删除流水再删考核；`Assess` 实体补充 DB 列映射（`is_show`、`make_status`、`test_uid`、`check_uid`、`score`/`total`/`grade`）。`index`/`list`/复杂 `create`/`update`/自评 `data` 数组等与 PHP `AssessService` 全量仍属后续迭代。  
 
 - **W-11 晋升 / 调薪 / 培训**  
-  - [ ] `PromotionController`、`PromotionDataController`、`EnterpriseUserSalaryController`、`EmployeeTrainController` 等与 PHP 对齐（在已有 Controller 上补业务）。
+  - [x] `HayGroupController` `POST` 创建成功 `data` 含 `id`（`CreatedIdVO`）；`EnterpriseUserSalaryController` `last/{card_id}` 下沉 Service、`card_id` 用 `Long`；`EmployeeTrainController` `PUT` 仅接收 `content`（`EmployeeTrainUpdateDTO`）；`PromotionController` 增加 `GET /{id}/edit` 与详情并存。`PromotionDataController` 等保持既有扩展接口。
 
 #### Wave 5 — P1 OA 办公
 

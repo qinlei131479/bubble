@@ -9,6 +9,7 @@ import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.RankSaveDTO;
 import com.bubblecloud.oa.api.entity.Rank;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -45,8 +47,9 @@ public class RankController {
 
 	@GetMapping("/create")
 	@Operation(summary = "获取创建表单")
-	public R<Void> createForm() {
-		return R.phpOk(null);
+	public R<JsonNode> createForm(@RequestParam(required = false) Long cate_id,
+			@RequestParam(required = false) Long entid) {
+		return R.phpOk(rankService.buildCreateFormPayload(entid));
 	}
 
 	@PostMapping

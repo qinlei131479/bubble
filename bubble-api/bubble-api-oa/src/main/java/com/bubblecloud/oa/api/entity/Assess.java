@@ -1,9 +1,11 @@
 package com.bubblecloud.oa.api.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -77,6 +79,34 @@ public class Assess extends Req<Assess> {
 
 	@Schema(description = "状态：0待自评 1待上级评 2待审核 3已完成 4已申诉 5申诉驳回")
 	private Integer status;
+
+	@Schema(description = "是否启用（DB is_show）")
+	@TableField("is_show")
+	private Integer isShow;
+
+	@Schema(description = "目标制定状态（DB make_status）")
+	@TableField("make_status")
+	private Integer makeStatus;
+
+	@Schema(description = "被考核人（DB test_uid）")
+	@TableField("test_uid")
+	private Long testUid;
+
+	@Schema(description = "考核人（DB check_uid）")
+	@TableField("check_uid")
+	private Long checkUid;
+
+	@Schema(description = "考核得分（DB score）")
+	@TableField("score")
+	private BigDecimal assessScore;
+
+	@Schema(description = "最高分（DB total）")
+	@TableField("total")
+	private BigDecimal assessTotal;
+
+	@Schema(description = "考核等级（DB grade）")
+	@TableField("grade")
+	private Integer assessGrade;
 
 	@Schema(description = "备注")
 	private String mark;

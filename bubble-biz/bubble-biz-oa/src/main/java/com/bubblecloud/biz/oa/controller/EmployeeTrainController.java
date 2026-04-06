@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 员工培训（对齐 PHP {@code ent/company/train}）。
@@ -38,9 +37,8 @@ public class EmployeeTrainController {
 
 	@PutMapping("/{type}")
 	@Operation(summary = "更新培训内容")
-	public R<String> update(@PathVariable String type, @RequestBody EmployeeTrain dto) {
-		dto.setType(type);
-		employeeTrainService.update(dto);
+	public R<String> update(@PathVariable String type, @RequestBody EmployeeTrainUpdateDTO dto) {
+		employeeTrainService.updateTrainContent(type, dto == null ? null : dto.getContent());
 		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 

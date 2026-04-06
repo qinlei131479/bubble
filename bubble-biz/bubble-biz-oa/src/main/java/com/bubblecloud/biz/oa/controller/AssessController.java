@@ -10,6 +10,7 @@ import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.hr.AssessAppealDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessCensusDTO;
+import com.bubblecloud.oa.api.dto.hr.AssessDeleteDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessEvalDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessSaveDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetEvalDTO;
@@ -111,8 +112,8 @@ public class AssessController {
 
 	@GetMapping("/show/{id}")
 	@Operation(summary = "启用/停用绩效考核")
-	public R<String> show(@PathVariable Long id) {
-		assessService.enableAssess(id);
+	public R<String> show(@PathVariable Long id, @RequestParam(required = false, defaultValue = "1") Integer status) {
+		assessService.enableAssess(id, status);
 		return R.phpOk(OaConstants.OPT_SUCC);
 	}
 
@@ -155,8 +156,8 @@ public class AssessController {
 
 	@DeleteMapping("/delete/{id}")
 	@Operation(summary = "绩效删除")
-	public R<String> delete(@PathVariable Long id) {
-		assessService.deleteById(id);
+	public R<String> delete(@PathVariable Long id, @RequestBody AssessDeleteDTO body) {
+		assessService.deleteAssess(id, body == null ? null : body.getMark());
 		return R.phpOk(OaConstants.DELETE_SUCC);
 	}
 

@@ -28,15 +28,23 @@ public interface AssessService extends UpService<Assess> {
 
 	void examineEval(Long id, AssessEvalDTO dto);
 
-	void enableAssess(Long id);
+	/**
+	 * 启用/停用（对齐 PHP {@code showAssess} 的 status 0/1）。
+	 */
+	void enableAssess(Long id, Integer status);
 
 	void evalTarget(AssessTargetEvalDTO dto);
 
-	List<Object> scoreRecord(Long id);
+	List<Object> scoreRecord(Long assessId);
 
 	List<Object> deleteRecord(Long entid);
 
 	void appealOrReject(Long id, AssessAppealDTO dto);
+
+	/**
+	 * 删除绩效并写入删除流水（对齐 PHP {@code deleteAssess}，需删除原因）。
+	 */
+	void deleteAssess(Long id, String mark);
 
 	AssessCensusVO census(AssessCensusDTO dto);
 

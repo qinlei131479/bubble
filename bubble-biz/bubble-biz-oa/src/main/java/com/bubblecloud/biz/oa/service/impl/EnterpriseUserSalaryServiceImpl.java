@@ -1,7 +1,9 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,15 @@ import cn.hutool.core.util.ObjectUtil;
 @Service
 public class EnterpriseUserSalaryServiceImpl extends UpServiceImpl<EnterpriseUserSalaryMapper, EnterpriseUserSalary>
 		implements EnterpriseUserSalaryService {
+
+	@Override
+	public List<EnterpriseUserSalary> listLastByCardId(Long cardId) {
+		return baseMapper.selectList(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
+			.eq(EnterpriseUserSalary::getCardId, cardId)
+			.orderByDesc(EnterpriseUserSalary::getTakeDate)
+			.orderByDesc(EnterpriseUserSalary::getId)
+			.last("LIMIT 1"));
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)

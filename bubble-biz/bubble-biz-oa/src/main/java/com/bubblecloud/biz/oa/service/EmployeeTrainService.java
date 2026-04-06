@@ -14,4 +14,9 @@ public interface EmployeeTrainService extends UpService<EmployeeTrain> {
 
 	EmployeeTrain getInfo(String type);
 
+	/**
+	 * 仅更新培训正文（对齐 PHP {@code postMore content}）。
+	 */
+	void updateTrainContent(String type, String content);
+
 }

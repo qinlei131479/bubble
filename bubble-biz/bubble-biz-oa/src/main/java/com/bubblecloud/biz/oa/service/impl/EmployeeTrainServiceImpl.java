@@ -10,6 +10,7 @@ import com.bubblecloud.biz.oa.service.EmployeeTrainService;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.EmployeeTrain;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 员工培训实现。
@@ -55,21 +56,27 @@ public class EmployeeTrainServiceImpl extends UpServiceImpl<EmployeeTrainMapper,
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public R update(EmployeeTrain req) {
-		validateType(req.getType());
-		String content = ObjectUtil.isNull(req.getContent()) ? "" : req.getContent();
+		updateTrainContent(req.getType(), req.getContent());
+		return R.ok();
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateTrainContent(String type, String content) {
+		validateType(type);
+		String c = StrUtil.nullToEmpty(content);
 		EmployeeTrain existing = baseMapper
-			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, req.getType()));
+			.selectOne(Wrappers.lambdaQuery(EmployeeTrain.class).eq(EmployeeTrain::getType, type));
 		if (ObjectUtil.isNull(existing)) {
 			EmployeeTrain e = new EmployeeTrain();
-			e.setType(req.getType());
-			e.setContent(content);
+			e.setType(type);
+			e.setContent(c);
 			baseMapper.insert(e);
 		}
 		else {
-			existing.setContent(content);
+			existing.setContent(c);
 			baseMapper.updateById(existing);
 		}
-		return R.ok();
 	}
 
 }

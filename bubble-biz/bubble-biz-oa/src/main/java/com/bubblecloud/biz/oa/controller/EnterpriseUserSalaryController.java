@@ -1,6 +1,5 @@
 package com.bubblecloud.biz.oa.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.EnterpriseUserSalaryService;
@@ -79,12 +78,8 @@ public class EnterpriseUserSalaryController {
 
 	@GetMapping("/last/{card_id}")
 	@Operation(summary = "调薪最近记录")
-	public R<List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") Integer cardId) {
-		return R.phpOk(enterpriseUserSalaryService.list(Wrappers.lambdaQuery(EnterpriseUserSalary.class)
-			.eq(EnterpriseUserSalary::getCardId, cardId)
-			.orderByDesc(EnterpriseUserSalary::getTakeDate)
-			.orderByDesc(EnterpriseUserSalary::getId)
-			.last("LIMIT 1")));
+	public R<List<EnterpriseUserSalary>> lastRecord(@PathVariable("card_id") Long cardId) {
+		return R.phpOk(enterpriseUserSalaryService.listLastByCardId(cardId));
 	}
 
 }
