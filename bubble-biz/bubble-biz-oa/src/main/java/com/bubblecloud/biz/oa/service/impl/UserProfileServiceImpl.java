@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.bubblecloud.common.core.util.R;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 当前用户资料与简历。

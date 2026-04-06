@@ -17,7 +17,6 @@ import com.bubblecloud.biz.oa.service.EnterpriseUserService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserCardVO;
-import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserProfileVO;
 import com.bubblecloud.oa.api.vo.enterprise.UserFrameBriefVO;
 import com.bubblecloud.oa.api.vo.frame.FrameDepartmentTreeNodeVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,12 +60,6 @@ public class EnterpriseUserController {
 			@RequestBody @Valid EnterpriseUserCardUpdateDTO dto) {
 		enterpriseUserService.updateEnterpriseUserCard(id, entid, dto);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
-	}
-
-	@GetMapping("/userInfo")
-	@Operation(summary = "获取用户关联企业详情")
-	public R<EnterpriseUserProfileVO> userInfo(@RequestParam(defaultValue = "1") Long entid) {
-		return R.phpOk(enterpriseUserService.userInfo(OaSecurityUtil.currentUserId(), entid));
 	}
 
 	@GetMapping("/userFrame")

@@ -38,8 +38,6 @@ public class CommonServiceImpl implements CommonService {
 
 	private final SiteService siteService;
 
-	private final SmsVerifyService smsVerifyService;
-
 	private final AdminService adminService;
 
 	private final EnterpriseMessageNoticeService enterpriseMessageNoticeService;
@@ -73,26 +71,12 @@ public class CommonServiceImpl implements CommonService {
 
 	@Override
 	public SmsVerifyKeyVO verifyKey() {
-		return smsVerifyService.createSendKey();
+		throw new IllegalArgumentException("短信验证功能本阶段未开放");
 	}
 
 	@Override
 	public void sendVerifySms(SmsVerifySendDTO dto) {
-		if (ObjectUtil.defaultIfNull(dto.getFrom(), 0) != 0) {
-			long cnt = adminService.countByPhone(dto.getPhone());
-			if (cnt > 0) {
-				Admin a = adminService.getByAccount(dto.getPhone());
-				if (ObjectUtil.isNotNull(a) && ObjectUtil.isNotNull(a.getStatus()) && a.getStatus() == 0) {
-					throw new IllegalArgumentException("该手机号已被锁定");
-				}
-			}
-			else {
-				if (!systemConfigService.isRegistrationOpen()) {
-					throw new IllegalArgumentException("短信发送失败，未注册的手机号");
-				}
-			}
-		}
-		smsVerifyService.sendVerifyCode(dto);
+		throw new IllegalArgumentException("短信验证功能本阶段未开放");
 	}
 
 	@Override

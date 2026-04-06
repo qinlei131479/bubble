@@ -1,6 +1,7 @@
 package com.bubblecloud.biz.oa.controller;
 
 import com.bubblecloud.biz.oa.constant.OaConstants;
+import com.bubblecloud.biz.oa.service.EnterpriseUserService;
 import com.bubblecloud.biz.oa.service.MenusService;
 import com.bubblecloud.biz.oa.service.ScheduleApiService;
 import com.bubblecloud.biz.oa.service.UserProfileService;
@@ -9,6 +10,7 @@ import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.*;
 import com.bubblecloud.oa.api.vo.MenusVO;
 import com.bubblecloud.oa.api.vo.schedule.UserScheduleDayWrapperVO;
+import com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserProfileVO;
 import com.bubblecloud.oa.api.vo.user.UserResumeDetailVO;
 import com.bubblecloud.oa.api.vo.user.UserSelfInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +39,8 @@ public class UserController {
 
 	private final UserProfileService userProfileService;
 
+	private final EnterpriseUserService enterpriseUserService;
+
 	private final ScheduleApiService scheduleApiService;
 
 	@GetMapping("/menus")
@@ -57,19 +61,27 @@ public class UserController {
 	}
 
 	/**
-	 * 个人账号资料（PHP User\UserController::userInfo）。与 {@code CompanyUserController} 的
-	 * {@code /userInfo}（企业维度）区分，避免同路径双注册。
+	 * PHP {@code User\UserController::userInfo}：无 {@code entid} 时返回账号+扩展信息；带 {@code entid}
+	 * 时返回企业关联用户视图（对齐原 {@code EnterpriseUserController} 行为，与 PHP 企业端用法一致）。
 	 */
-	@GetMapping("/account_info")
-	@Operation(summary = "获取当前用户账号资料（含邮箱扩展）")
-	public R<UserSelfInfoVO> accountInfo() {
-		UserSelfInfoVO vo = userProfileService.getSelfInfo(OaSecurityUtil.currentUserId());
+	@GetMapping("/userInfo")
+	@Operation(summary = "获取用户信息（个人资料 / 企业关联视图）")
+	public R<Object> userInfoGet(@RequestParam(required = false) Long entid) {
+		Long uid = OaSecurityUtil.currentUserId();
+		if (ObjectUtil.isNotNull(entid)) {
+			EnterpriseUserProfileVO vo = enterpriseUserService.userInfo(uid, entid);
+			return R.phpOk(vo);
+		}
+		UserSelfInfoVO vo = userProfileService.getSelfInfo(uid);
 		return ObjectUtil.isNull(vo) ? R.phpFailed("用户不存在") : R.phpOk(vo);
 	}
 
-	@PutMapping("/account_info")
+	/**
+	 * PHP {@code User\UserController::update}，仅更新当前登录账号主表与 {@code eb_admin_info}。
+	 */
+	@PutMapping("/userInfo")
 	@Operation(summary = "修改当前用户账号资料")
-	public R<String> updateAccountInfo(@RequestBody(required = false) UserSelfUpdateDTO dto) {
+	public R<String> userInfoPut(@RequestBody(required = false) UserSelfUpdateDTO dto) {
 		userProfileService.updateSelf(OaSecurityUtil.currentUserId(), dto);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
