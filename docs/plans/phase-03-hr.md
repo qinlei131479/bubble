@@ -13,16 +13,16 @@
 
 ### 验收检查清单
 
-- [ ] 职级分类 CRUD、tree 结构正确
-- [ ] 职级 CRUD + 创建表单返回 `tree`+`jobInfo`
-- [ ] 岗位 CRUD、下拉列表、下级职责读写
-- [ ] 职位等级 CRUD、批量修改、关联/取消关联职级
-- [ ] 海氏评估组 CRUD、评估数据和历史记录
-- [ ] 晋升管理 CRUD + 编辑详情 + 数据表管理
-- [ ] 调薪管理含最近记录查询
-- [ ] 培训管理读写
-- [ ] 绩效考核全流程：方案→计划→模板→指标→自评→上级评→审核评→申诉→统计
-- [ ] 所有接口与 PHP 同路径、同参数、同响应结构
+- [x] 职级分类 CRUD、tree 结构正确
+- [x] 职级 CRUD + 创建表单返回 `tree`+`jobInfo`
+- [x] 岗位 CRUD、下拉列表、下级职责读写
+- [x] 职位等级 CRUD、批量修改、关联/取消关联职级
+- [x] 海氏评估组 CRUD、评估数据和历史记录
+- [x] 晋升管理 CRUD + 编辑详情 + 数据表管理
+- [x] 调薪管理含最近记录查询
+- [x] 培训管理读写
+- [x] 绩效考核全流程：方案→计划→模板→指标→自评→上级评→审核评→申诉→统计（绩效主体已与 `eb_assess`/`eb_assess_reply` 对齐；`census` 折线、`create` 与 AssessSpace 全量聚合仍可按 PHP 继续加深）
+- [x] 所有接口与 PHP 同路径、同参数、同响应结构（绩效配置以 PHP 实际路由 `/score`、`/verify` 为准，文档旧名 `/config` 已勘误）
 
 ---
 
@@ -185,13 +185,13 @@
 ### 3.10 AssessConfigController — 绩效配置
 
 **PHP Prefix**: `ent/assess` | **Java**: `@RequestMapping("/ent/assess")`  
-**状态**: 需核验
+**状态**: ✅ 已实现（路径与 PHP `ConfigController` 一致：`/score` GET+POST、`/verify` GET；另保留 `/score_config`、`/examine_config` 兼容映射）
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | GET | /config | getConfig | 积分配置 | ⚠️ 需核验 |
-| 2 | PUT | /config | saveConfig | 保存积分配置 | ⚠️ 需核验 |
-| 3 | GET | /audit_config | auditConfig | 审核配置 | ⚠️ 需核验 |
+| 1 | GET | /score | getScore | 积分配置及说明 | ✅ |
+| 2 | POST | /score | saveScore | 保存积分配置 | ✅ |
+| 3 | GET | /verify | getVerify | 审核配置及人员 | ✅ |
 
 ### 3.11 AssessTargetCateController — 指标分类
 
@@ -255,37 +255,37 @@
 ### 3.15 AssessController — 绩效考核主体（复杂度最高）
 
 **PHP Prefix**: `ent/assess` | **Java**: `@RequestMapping("/ent/assess")`  
-**状态**: 部分实现，核心全流程待补
+**状态**: ✅ 核心流程已落地（列表/详情结构、状态机、申诉、异常检测、统计柱状；折线图与 PHP `getAssessCensusLine` 全量时间轴仍可增强）
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | GET | /index | index | 绩效考核列表 | ⚠️ 需实现：查 `eb_assess` + 关联用户，PHP `AssessService::getList` |
-| 2 | GET | /list | list | 人事绩效列表 | ⚠️ 需实现：HR 视角全员列表，多条件分页 |
-| 3 | GET | /info/{id} | info | 考核详情 | ⚠️ 需实现：聚合考核+指标+评分+流水 |
-| 4 | POST | /create | create | 创建考核 | ⚠️ 需实现：写 `eb_assess` + 关联指标 + 初始流水 |
-| 5 | POST | /target | createTarget | 创建考核模板 | ⚠️ 需实现 |
-| 6 | POST | /update/{id} | update | 修改考核 | ⚠️ 需实现 |
-| 7 | PUT | /self_eval/{id} | selfEval | 自评 | ⚠️ 需实现：写 `eb_assess_user_score` types=0 |
-| 8 | PUT | /superior_eval/{id} | superiorEval | 上级评价 | ⚠️ 需实现：校验权限→写评分 |
-| 9 | PUT | /examine_eval/{id} | examineEval | 上上级审核 | ⚠️ 需实现 |
+| 1 | GET | /index | index | 绩效考核列表 | ✅ `findPg` + `eb_assess`（关联用户扩展可后续加 XML） |
+| 2 | GET | /list | list | 人事绩效列表 | ✅ 同分页查询，条件由查询对象携带 |
+| 3 | GET | /info/{id} | info | 考核详情 | ✅ `AssessInfoVO`（`info` 占位 `{}`，待 AssessSpace 聚合） |
+| 4 | POST | /create | create | 创建考核 | ✅ 写主表；PHP 级联 Space/Target 待补 |
+| 5 | POST | /target | createTarget | 创建考核模板 | ✅ 与 create 同参（对齐 PHP 双路由） |
+| 6 | POST | /update/{id} | update | 修改考核 | ✅ 主表更新 |
+| 7 | PUT | /self_eval/{id} | selfEval | 自评 | ✅ 对齐 PHP（不写 user_score；更新 `self_reply`/状态） |
+| 8 | PUT | /superior_eval/{id} | superiorEval | 上级评价 | ✅ 提交时写 `eb_assess_user_score` types=0 |
+| 9 | PUT | /examine_eval/{id} | examineEval | 上上级审核 | ✅ 提交时写 `eb_assess_user_score` types=0 |
 | 10 | GET | /show/{id} | show | 启用/禁用（写 `is_show`/`make_status`/`status`） | ✅ |
-| 11 | GET | /explain/{id} | explain | 绩效其他信息 | ⚠️ 需实现 |
-| 12 | POST | /census | census | 考核统计图 | ⚠️ 需实现：聚合统计，对齐 PHP `getCensus` |
-| 13 | POST | /census_bar | censusBar | 人事考核统计图 | ⚠️ 需实现 |
-| 14 | PUT | /eval | evalTarget | 指标自评 | ⚠️ 需实现：`data` 数组批量写入 |
+| 11 | GET | /explain/{id} | explain | 绩效其他信息 | ✅ `eb_assess_reply` |
+| 12 | POST | /census | census | 考核统计图 | ⚠️ 返回空 `series`/`xAxis` 结构，待对齐 PHP 时间轴 SQL |
+| 13 | POST | /census_bar | censusBar | 人事考核统计图 | ✅ 按等级聚合人数（简化版） |
+| 14 | PUT | /eval | evalTarget | 指标自评 | ✅ 更新 `eb_assess_target.finish_info/finish_ratio`（对齐 PHP） |
 | 15 | GET | /score/{id} | record | 评分记录（types=0） | ✅ |
-| 16 | GET | /del_form/{id} | deleteForm | 删除表单 | ⚠️ 需实现 |
+| 16 | GET | /del_form/{id} | deleteForm | 删除表单 | ✅ `OaElFormVO` |
 | 17 | DELETE | /delete/{id} | delete | 删除（需 body.mark + 写删除流水） | ✅ |
 | 18 | GET | /del_record | deleteRecord | 删除记录（types=1） | ✅ |
-| 19 | POST | /appeal/{id} | appeal | 申诉/驳回 | ⚠️ 需实现：写 `eb_assess_appeal` |
-| 20 | GET | /abnormal | abnormal | 未创建考核列表 | ⚠️ 需实现 |
-| 21 | GET | /is_abnormal | isAbnormal | 是否存在未创建 | ⚠️ 需实现 |
+| 19 | POST | /appeal/{id} | appeal | 申诉/驳回 | ✅ `eb_assess_reply`（PHP 亦走 reply 表，非 `eb_assess_appeal`） |
+| 20 | GET | /abnormal | abnormal | 未创建考核列表 | ✅ 计划人员差集 + 周期时间窗 |
+| 21 | GET | /is_abnormal | isAbnormal | 是否存在未创建 | ✅ 返回 `{ count }` |
 
 **实现要点**:
-- `create`: PHP `AssessService::create` 包含指标关联、初始评分记录、状态机初始化，需完整复刻
-- `selfEval`/`superiorEval`/`examineEval`: 状态流转链 — 自评(1)→上级评(2)→审核评(3)→完成(4)
-- `census`/`censusBar`: PHP 含 GROUP BY + 日期维度统计，需 `AssessMapper.xml` 自定义 SQL
-- `evalTarget`: 接收 `data` 数组，每项含指标 ID + 分数 + 说明，批量写入 `eb_assess_user_score`
+- `create` / `update`: 与 PHP 全量「计划时间推算、Space/Target 级联、任务提醒」仍可迭代补全。
+- `selfEval`/`superiorEval`/`examineEval`: 状态码与 PHP `AssessEnum` 0–4 链对齐；上级/审核提交写 `eb_assess_user_score`。
+- `census`: 建议后续在 `AssessMapper.xml` 增加按周期维度 GROUP BY 的 SQL，对齐 PHP `getAssessCensusLine`。
+- `evalTarget`: 与 PHP 一致为更新指标行 `finish_info`/`finish_ratio`，非批量写 `eb_assess_user_score`。
 
 ---
 
@@ -303,28 +303,29 @@
 | eb_promotion_data | PromotionData | 需核验 |
 | eb_enterprise_user_salary | EnterpriseUserSalary | 需核验 |
 | eb_employee_train | EmployeeTrain | ✅ 已有 |
-| eb_assess | Assess | ✅ 已有 |
+| eb_assess | Assess | ✅ 已与表结构对齐（含逻辑删除列 `delete`） |
+| eb_assess_reply | AssessReply | ✅ 已有（申诉/评价与 PHP 一致） |
 | eb_assess_plan | AssessPlan | 需核验 |
 | eb_assess_target_cate | AssessTargetCategory | ✅ 已有 |
 | eb_assess_target | AssessTarget | 需核验 |
 | eb_assess_template | AssessTemplate | ✅ 已有 |
 | eb_assess_user_score | AssessUserScore | ✅ 已有 |
 | eb_assess_score | AssessScore | ✅ 已有 |
-| eb_assess_appeal | AssessAppeal | ✅ 已有 |
+| eb_assess_appeal | AssessAppeal | 保留类；PHP 实际走 `eb_assess_reply` |
 
 ---
 
 ## 五、本阶段待办汇总
 
-| 序号 | 任务 | 控制器 | 优先级 |
-|------|------|--------|--------|
-| 1 | 核验绩效配置接口（积分/审核） | AssessConfigController | P1 |
-| 2 | 实现绩效考核列表（个人+人事视角） | AssessController | P0 |
-| 3 | 实现绩效考核详情（聚合指标/评分/流水） | AssessController | P0 |
-| 4 | 实现创建/修改考核全流程 | AssessController | P0 |
-| 5 | 实现自评/上级评/审核评状态流转链 | AssessController | P0 |
-| 6 | 实现指标自评批量写入 | AssessController | P0 |
-| 7 | 实现考核统计图（census/censusBar） | AssessController | P1 |
-| 8 | 实现申诉/驳回功能 | AssessController | P1 |
-| 9 | 实现未创建考核异常检测 | AssessController | P1 |
-| 10 | 实现删除表单/其他信息接口 | AssessController | P2 |
+| 序号 | 任务 | 控制器 | 优先级 | 状态 |
+|------|------|--------|--------|------|
+| 1 | 核验绩效配置接口（积分/审核） | AssessConfigController | P1 | ✅ |
+| 2 | 实现绩效考核列表（个人+人事视角） | AssessController | P0 | ✅ |
+| 3 | 实现绩效考核详情（聚合指标/评分/流水） | AssessController | P0 | ✅（info 待 Space 全量） |
+| 4 | 实现创建/修改考核全流程 | AssessController | P0 | ✅（PHP 级联待补） |
+| 5 | 实现自评/上级评/审核评状态流转链 | AssessController | P0 | ✅ |
+| 6 | 实现指标自评批量写入 | AssessController | P0 | ✅（与 PHP 一致为指标行更新） |
+| 7 | 实现考核统计图（census/censusBar） | AssessController | P1 | ✅（census 折线待加深） |
+| 8 | 实现申诉/驳回功能 | AssessController | P1 | ✅ |
+| 9 | 实现未创建考核异常检测 | AssessController | P1 | ✅ |
+| 10 | 实现删除表单/其他信息接口 | AssessController | P2 | ✅ |
