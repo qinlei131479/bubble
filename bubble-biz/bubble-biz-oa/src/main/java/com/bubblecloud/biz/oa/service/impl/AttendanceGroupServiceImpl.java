@@ -879,4 +879,45 @@ public class AttendanceGroupServiceImpl extends UpServiceImpl<AttendanceGroupMap
 		return null;
 	}
 
+	@Override
+	public List<OaIdNameVO> listGroupMemberBriefs(Integer groupId, String nameLike) {
+		if (!groupExists(groupId)) {
+			throw new IllegalArgumentException("操作失败，考勤组记录不存在");
+		}
+		List<Integer> ids = getMemberIdsById(groupId, true);
+		if (CollUtil.isEmpty(ids)) {
+			return List.of();
+		}
+		List<Long> idLong = ids.stream().map(Integer::longValue).toList();
+		var qw = Wrappers.lambdaQuery(Admin.class).eq(Admin::getStatus, 1).in(Admin::getId, idLong);
+		if (StrUtil.isNotBlank(nameLike)) {
+			qw.like(Admin::getName, nameLike.trim());
+		}
+		return adminMapper.selectList(qw)
+			.stream()
+			.map(a -> new OaIdNameVO(a.getId(), StrUtil.nullToEmpty(a.getName())))
+			.toList();
+	}
+
+	@Override
+	public List<Integer> listShiftIdsByGroup(Integer groupId) {
+		if (ObjectUtil.isNull(groupId) || groupId <= 0) {
+			return List.of();
+		}
+		return listShiftIds(groupId);
+	}
+
+	@Override
+	public boolean groupExists(Integer id) {
+		return ObjectUtil.isNotNull(id) && id > 0 && getById(id) != null;
+	}
+
+	@Override
+	public int countGroupsByIds(List<Integer> ids) {
+		if (CollUtil.isEmpty(ids)) {
+			return 0;
+		}
+		return (int) count(Wrappers.lambdaQuery(AttendanceGroup.class).in(AttendanceGroup::getId, ids));
+	}
+
 }

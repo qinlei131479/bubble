@@ -18,6 +18,7 @@ import com.bubblecloud.oa.api.vo.attendance.AttendanceGroupListItemVO;
 import com.bubblecloud.oa.api.vo.attendance.AttendanceGroupSelectItemVO;
 import com.bubblecloud.oa.api.vo.attendance.AttendanceRepeatConflictVO;
 import com.bubblecloud.oa.api.vo.attendance.AttendanceWhitelistVO;
+import com.bubblecloud.oa.api.vo.attendance.OaIdNameVO;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -60,5 +61,16 @@ public interface AttendanceGroupService extends UpService<AttendanceGroup> {
 	List<AttendanceGroupSelectItemVO> getSelectList();
 
 	List<AttendanceRepeatConflictVO> getGroupMembersByType(Integer type, Integer filterId);
+
+	/**
+	 * 考勤组成员 id+name（filter=true，对齐 PHP getGroupMember）。
+	 */
+	List<OaIdNameVO> listGroupMemberBriefs(Integer groupId, String nameLike);
+
+	List<Integer> listShiftIdsByGroup(Integer groupId);
+
+	boolean groupExists(Integer id);
+
+	int countGroupsByIds(List<Integer> ids);
 
 }
