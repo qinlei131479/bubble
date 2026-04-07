@@ -47,9 +47,14 @@ public interface SystemMenusService extends UpService<SystemMenus> {
 	JsonNode getMenuDrawerUpdateForm(Long id, Long entId);
 
 	/**
-	 * 保存企业菜单权限到超级角色（PHP saveMenusForCompany；当前无 system_role 时为空操作）。
+	 * 保存企业菜单权限到超级角色（PHP saveMenusForCompany / saveSystemRole），请求体含 rules、apis 数组。
 	 */
-	void saveMenusForCompany(Long entId);
+	void saveMenusForCompany(Long entId, JsonNode body);
+
+	/**
+	 * 将菜单 ID 集合按 {@link SystemMenus#getPath} 展开为含路径上全部 ID 的集合。
+	 */
+	java.util.Set<Long> expandRuleMenuIds(java.util.Collection<Long> seedIds);
 
 	/**
 	 * 菜单抽屉提交：解析 path 数组、pid、level（对齐 PHP store）。

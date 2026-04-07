@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.bubblecloud.biz.oa.service.SystemRoleService;
 import com.bubblecloud.common.core.util.R;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -39,6 +42,8 @@ public class SystemMenusServiceImpl extends UpServiceImpl<SystemMenusMapper, Sys
 		implements SystemMenusService {
 
 	private final ObjectMapper objectMapper;
+
+	private final SystemRoleService systemRoleService;
 
 	@Override
 	public List<SystemMenusTreeNodeVO> listMenuTree(String menuName, Long entId) {
@@ -87,10 +92,90 @@ public class SystemMenusServiceImpl extends UpServiceImpl<SystemMenusMapper, Sys
 
 	@Override
 	public JsonNode getNotSaveMenus(Long entId) {
+		com.bubblecloud.oa.api.entity.SystemRole superR = systemRoleService.getEnterpriseSuperRole(entId);
+		Set<Long> assigned = expandRuleMenuIds(jsonTextToIdList(superR == null ? null : superR.getRules()));
+		assigned.addAll(expandRuleMenuIds(jsonTextToIdList(superR == null ? null : superR.getApis())));
+		List<SystemMenus> apiMenus = baseMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
+			.eq(SystemMenus::getEntid, entId)
+			.eq(SystemMenus::getType, "A")
+			.eq(SystemMenus::getStatus, 1)
+			.isNull(SystemMenus::getDeletedAt));
+		ArrayNode ent = objectMapper.createArrayNode();
+		ArrayNode uni = objectMapper.createArrayNode();
+		for (SystemMenus m : apiMenus) {
+			if (assigned.contains(m.getId())) {
+				continue;
+			}
+			ObjectNode o = objectMapper.createObjectNode();
+			o.put("name", StrUtil.nullToEmpty(m.getMenuName()));
+			o.put("menu_path", StrUtil.nullToEmpty(m.getApi()));
+			o.put("method", StrUtil.nullToEmpty(m.getMethods()));
+			String api = StrUtil.nullToEmpty(m.getApi()).toLowerCase();
+			if (api.contains("uni")) {
+				uni.add(o);
+			}
+			else {
+				ent.add(o);
+			}
+		}
 		ObjectNode root = objectMapper.createObjectNode();
-		root.set("ent", objectMapper.createArrayNode());
-		root.set("uni", objectMapper.createArrayNode());
+		root.set("ent", ent);
+		root.set("uni", uni);
 		return root;
+	}
+
+	@Override
+	public Set<Long> expandRuleMenuIds(Collection<Long> seedIds) {
+		Set<Long> out = new LinkedHashSet<>();
+		if (CollUtil.isEmpty(seedIds)) {
+			return out;
+		}
+		out.addAll(seedIds);
+		List<SystemMenus> rows = baseMapper.selectList(Wrappers.lambdaQuery(SystemMenus.class)
+			.in(SystemMenus::getId, seedIds)
+			.isNull(SystemMenus::getDeletedAt));
+		for (SystemMenus m : rows) {
+			addPathIds(m.getPath(), out);
+		}
+		return out;
+	}
+
+	private static void addPathIds(String path, Set<Long> out) {
+		if (StrUtil.isBlank(path)) {
+			return;
+		}
+		for (String p : path.split("/")) {
+			if (StrUtil.isBlank(p)) {
+				continue;
+			}
+			try {
+				out.add(Long.parseLong(p.trim()));
+			}
+			catch (NumberFormatException ignored) {
+			}
+		}
+	}
+
+	private List<Long> jsonTextToIdList(String raw) {
+		if (StrUtil.isBlank(raw)) {
+			return List.of();
+		}
+		try {
+			JsonNode n = objectMapper.readTree(raw);
+			if (!n.isArray()) {
+				return List.of();
+			}
+			List<Long> ids = new ArrayList<>();
+			for (JsonNode x : n) {
+				if (x.isIntegralNumber()) {
+					ids.add(x.longValue());
+				}
+			}
+			return ids;
+		}
+		catch (Exception e) {
+			return List.of();
+		}
 	}
 
 	@Override
@@ -352,8 +437,26 @@ public class SystemMenusServiceImpl extends UpServiceImpl<SystemMenusMapper, Sys
 	}
 
 	@Override
-	public void saveMenusForCompany(Long entId) {
-		// 无 eb_system_role 企业超级角色表时占位；与 PHP saveMenusForCompany 对齐接口形态。
+	public void saveMenusForCompany(Long entId, JsonNode body) {
+		if (body == null || body.isNull() || body.isMissingNode()) {
+			return;
+		}
+		List<Long> rules = readLongArrayNode(body.get("rules"));
+		List<Long> apis = readLongArrayNode(body.get("apis"));
+		systemRoleService.saveEnterpriseSuperRole(entId, rules, apis);
+	}
+
+	private static List<Long> readLongArrayNode(JsonNode node) {
+		List<Long> out = new ArrayList<>();
+		if (node == null || !node.isArray()) {
+			return out;
+		}
+		for (JsonNode n : node) {
+			if (n.isIntegralNumber()) {
+				out.add(n.longValue());
+			}
+		}
+		return out;
 	}
 
 	@Override

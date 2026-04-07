@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.oa.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,6 +155,193 @@ public class MessageServiceImpl extends UpServiceImpl<MessageMapper, Message> im
 		catch (Exception ignored) {
 			return raw;
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateMessage(long id, JsonNode body) {
+		Message msg = baseMapper.selectById(id);
+		if (ObjectUtil.isNull(msg)) {
+			throw new IllegalArgumentException("消息不存在");
+		}
+		String remind = bodyText(body, "remind_time");
+		if (StrUtil.isNotBlank(remind)) {
+			msg.setRemindTime(remind);
+			msg.setUpdatedAt(LocalDateTime.now());
+			baseMapper.updateById(msg);
+			return;
+		}
+		String contentTemplate = StrUtil.nullToEmpty(msg.getContent());
+		MessageTemplate smsRow = getTemplate(id, TYPE_SMS);
+		String urlFb = smsRow == null ? "" : StrUtil.nullToEmpty(smsRow.getUrl());
+		String uniFb = smsRow == null ? "" : StrUtil.nullToEmpty(smsRow.getUniUrl());
+		applySystemTemplateStatus(id, body);
+		applySmsTemplate(id, body, contentTemplate, urlFb, uniFb);
+		applyWebhookTemplate(id, body, TYPE_WORK, "work_status", "work_webhook_url", contentTemplate, urlFb, uniFb);
+		applyWebhookTemplate(id, body, TYPE_DING, "ding_status", "ding_webhook_url", contentTemplate, urlFb, uniFb);
+		applyWebhookTemplate(id, body, TYPE_OTHER, "other_status", "other_webhook_url", contentTemplate, urlFb, uniFb);
+	}
+
+	private void applySystemTemplateStatus(long messageId, JsonNode body) {
+		Integer st = readOptionalInt(body, "status");
+		if (ObjectUtil.isNull(st)) {
+			return;
+		}
+		MessageTemplate t = getTemplate(messageId, TYPE_SYSTEM);
+		if (ObjectUtil.isNull(t)) {
+			return;
+		}
+		t.setStatus(st);
+		touchTemplate(t);
+	}
+
+	private void applySmsTemplate(long messageId, JsonNode body, String contentTemplate, String urlFb, String uniFb) {
+		Integer smsSt = readOptionalInt(body, "sms_status");
+		String templateId = bodyText(body, "template_id");
+		if (ObjectUtil.isNull(smsSt) && StrUtil.isBlank(templateId)) {
+			return;
+		}
+		MessageTemplate t = getTemplate(messageId, TYPE_SMS);
+		if (ObjectUtil.isNotNull(t)) {
+			if (ObjectUtil.isNotNull(smsSt)) {
+				t.setStatus(smsSt);
+			}
+			if (StrUtil.isNotBlank(templateId)) {
+				t.setTemplateId(templateId);
+			}
+			touchTemplate(t);
+			return;
+		}
+		MessageTemplate n = newTemplateRow(messageId, TYPE_SMS, contentTemplate, urlFb, uniFb);
+		if (ObjectUtil.isNotNull(smsSt)) {
+			n.setStatus(smsSt);
+		}
+		n.setTemplateId(StrUtil.nullToEmpty(templateId));
+		messageTemplateMapper.insert(n);
+	}
+
+	private void applyWebhookTemplate(long messageId, JsonNode body, int type, String statusField, String urlField,
+			String contentTemplate, String urlFb, String uniFb) {
+		Integer st = readOptionalInt(body, statusField);
+		String url = bodyText(body, urlField);
+		if (ObjectUtil.isNull(st) && StrUtil.isBlank(url)) {
+			return;
+		}
+		MessageTemplate t = getTemplate(messageId, type);
+		if (ObjectUtil.isNotNull(t)) {
+			if (ObjectUtil.isNotNull(st)) {
+				t.setStatus(st);
+			}
+			if (StrUtil.isNotBlank(url)) {
+				t.setWebhookUrl(url);
+			}
+			touchTemplate(t);
+			return;
+		}
+		MessageTemplate n = newTemplateRow(messageId, type, contentTemplate, urlFb, uniFb);
+		if (ObjectUtil.isNotNull(st)) {
+			n.setStatus(st);
+		}
+		n.setWebhookUrl(StrUtil.nullToEmpty(url));
+		messageTemplateMapper.insert(n);
+	}
+
+	private MessageTemplate getTemplate(long messageId, int type) {
+		return messageTemplateMapper.selectOne(Wrappers.lambdaQuery(MessageTemplate.class)
+			.eq(MessageTemplate::getMessageId, messageId)
+			.eq(MessageTemplate::getType, type)
+			.isNull(MessageTemplate::getDeletedAt)
+			.last("LIMIT 1"));
+	}
+
+	private static MessageTemplate newTemplateRow(long messageId, int type, String contentTemplate, String url,
+			String uniUrl) {
+		MessageTemplate t = new MessageTemplate();
+		t.setMessageId(messageId);
+		t.setType(type);
+		t.setContentTemplate(contentTemplate);
+		t.setUrl(StrUtil.nullToEmpty(url));
+		t.setUniUrl(StrUtil.nullToEmpty(uniUrl));
+		t.setRelationStatus(1);
+		t.setStatus(0);
+		LocalDateTime now = LocalDateTime.now();
+		t.setCreatedAt(now);
+		t.setUpdatedAt(now);
+		return t;
+	}
+
+	private void touchTemplate(MessageTemplate t) {
+		t.setUpdatedAt(LocalDateTime.now());
+		messageTemplateMapper.updateById(t);
+	}
+
+	private static Integer readOptionalInt(JsonNode body, String key) {
+		if (ObjectUtil.isNull(body) || !body.has(key)) {
+			return null;
+		}
+		JsonNode n = body.get(key);
+		if (n.isNull()) {
+			return null;
+		}
+		if (n.isIntegralNumber()) {
+			return n.intValue();
+		}
+		String s = n.asText("").trim();
+		if (StrUtil.isBlank(s)) {
+			return null;
+		}
+		try {
+			return Integer.parseInt(s);
+		}
+		catch (NumberFormatException ex) {
+			return null;
+		}
+	}
+
+	private static String bodyText(JsonNode body, String field) {
+		if (ObjectUtil.isNull(body) || !body.has(field) || body.get(field).isNull()) {
+			return "";
+		}
+		return body.get(field).asText("");
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateChannelStatus(long messageId, int type, int status) {
+		Message msg = baseMapper.selectById(messageId);
+		if (ObjectUtil.isNull(msg)) {
+			throw new IllegalArgumentException("消息信息获取失败");
+		}
+		MessageTemplate info = getTemplate(messageId, type);
+		if (ObjectUtil.isNull(info)) {
+			info = newTemplateRow(messageId, type, StrUtil.nullToEmpty(msg.getContent()), "", "");
+			info.setMessageTitle(msg.getTitle());
+			info.setRelationStatus(1);
+			messageTemplateMapper.insert(info);
+		}
+		if (ObjectUtil.defaultIfNull(info.getRelationStatus(), 0) == 0
+				&& ObjectUtil.defaultIfNull(info.getCrudEventId(), 0) == 0) {
+			throw new IllegalArgumentException("平台消息已被关闭，无法修改消息状态");
+		}
+		info.setStatus(status);
+		touchTemplate(info);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void setUserSubscribe(long messageId, int status) {
+		Message m = baseMapper.selectById(messageId);
+		if (ObjectUtil.isNull(m)) {
+			throw new IllegalArgumentException("消息不存在");
+		}
+		m.setUserSub(status);
+		m.setUpdatedAt(LocalDateTime.now());
+		baseMapper.updateById(m);
+	}
+
+	@Override
+	public void syncMessage(long entId) {
+		// 未对接 crmeb 远程消息中心；与 PHP 成功响应保持一致，不做数据变更。
 	}
 
 	@Override

@@ -180,7 +180,7 @@ public class SystemAttachController {
 	}
 
 	@PutMapping(value = "/info/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@Operation(summary = "附件内容更新（PHP 含 Word 转换，Java 侧占位）")
+	@Operation(summary = "附件内容更新（PHP 含 Word 转换；Java 明确不支持在线编辑）")
 	public R<String> updateInfo(@PathVariable Integer id,
 			@RequestParam(value = "content", required = false) String content,
 			@RequestParam(value = "is_file", defaultValue = "0") int isFile) {

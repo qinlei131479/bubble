@@ -52,10 +52,11 @@ public class SystemMenusController {
 		return R.phpOk(systemMenusService.listPidMenuRules(pid));
 	}
 
-	@PostMapping("/save")
-	@Operation(summary = "保存企业菜单到超级角色（占位）")
-	public R<String> saveCompanyMenus(@RequestParam(defaultValue = "1") Long entid) {
-		systemMenusService.saveMenusForCompany(entid);
+	@PostMapping({ "/save", "/save_enterprise" })
+	@Operation(summary = "保存企业菜单到超级角色（body: rules、apis 菜单 ID 数组）")
+	public R<String> saveCompanyMenus(@RequestParam(defaultValue = "1") Long entid,
+			@RequestBody(required = false) JsonNode body) {
+		systemMenusService.saveMenusForCompany(entid, body);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
@@ -109,7 +110,7 @@ public class SystemMenusController {
 	}
 
 	@PostMapping("/not_save")
-	@Operation(summary = "未保存权限占位")
+	@Operation(summary = "获取未保存到角色的菜单权限（ent/uni 分组）")
 	public R<JsonNode> getNotSaveMenus(@RequestParam(defaultValue = "1") Long entid) {
 		return R.phpOk(systemMenusService.getNotSaveMenus(entid));
 	}

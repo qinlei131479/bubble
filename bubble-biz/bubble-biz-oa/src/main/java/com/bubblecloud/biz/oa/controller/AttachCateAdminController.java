@@ -5,6 +5,7 @@ import com.bubblecloud.biz.oa.service.AttachCateAdminService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Category;
 import com.bubblecloud.oa.api.vo.CategoryAttachTreeVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +45,9 @@ public class AttachCateAdminController {
 	}
 
 	@GetMapping("/create")
-	@Operation(summary = "添加表单（PHP 为表单构建器，此处占位）")
-	public R<String> createForm() {
-		return R.phpOk("ok");
+	@Operation(summary = "添加附件分类表单（elForm）")
+	public R<OaElFormVO> createForm(@RequestParam(defaultValue = "1") Integer entid) {
+		return R.phpOk(attachCateAdminService.buildAttachCateCreateForm(entidOr1(entid)));
 	}
 
 	@PostMapping

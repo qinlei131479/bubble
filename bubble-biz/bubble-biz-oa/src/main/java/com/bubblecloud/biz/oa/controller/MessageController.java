@@ -15,9 +15,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -36,6 +40,8 @@ public class MessageController {
 	private final MessageService messageService;
 
 	private final AdminService adminService;
+
+	private final ObjectMapper objectMapper;
 
 	@GetMapping("/list")
 	@Operation(summary = "消息列表（data.list + data.count，含 message_template）")
@@ -70,6 +76,53 @@ public class MessageController {
 	@Operation(summary = "消息详情")
 	public R<Message> details(@PathVariable Long id) {
 		return R.phpOk(messageService.getById(id));
+	}
+
+	@PutMapping("/update/{id}")
+	@Operation(summary = "修改消息（提醒时间 / 渠道模板）")
+	public R<String> update(@PathVariable Long id, @RequestBody(required = false) JsonNode body) {
+		try {
+			JsonNode payload = body == null ? objectMapper.createObjectNode() : body;
+			messageService.updateMessage(id, payload);
+			return R.phpOk("修改成功");
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
+	}
+
+	@PutMapping("/status/{id}/{type}")
+	@Operation(summary = "修改某渠道模板状态")
+	public R<String> status(@PathVariable Long id, @PathVariable Integer type,
+			@RequestBody(required = false) JsonNode body) {
+		int st = body == null ? 0 : body.path("status").asInt(0);
+		try {
+			messageService.updateChannelStatus(id, type, st);
+			return R.phpOk("修改成功");
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
+	}
+
+	@PutMapping("/subscribe/{id}")
+	@Operation(summary = "用户是否可取消订阅")
+	public R<String> subscribe(@PathVariable Long id, @RequestBody(required = false) JsonNode body) {
+		int st = body == null ? 0 : body.path("status").asInt(0);
+		try {
+			messageService.setUserSubscribe(id, st);
+			return R.phpOk("修改成功");
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
+	}
+
+	@PutMapping("/sync")
+	@Operation(summary = "同步系统消息（占位：未对接远程中心）")
+	public R<String> sync(@RequestParam(defaultValue = "1") Long entid) {
+		messageService.syncMessage(entid);
+		return R.phpOk("ok");
 	}
 
 }

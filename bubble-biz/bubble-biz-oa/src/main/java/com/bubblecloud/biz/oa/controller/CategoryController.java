@@ -4,6 +4,7 @@ import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.service.CategoryService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.Category;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +39,9 @@ public class CategoryController {
 	}
 
 	@GetMapping("/create")
-	@Operation(summary = "创建表单占位")
-	public R<String> createForm() {
-		return R.phpOk("ok");
+	@Operation(summary = "添加快捷分类表单（elForm）")
+	public R<OaElFormVO> createForm(@RequestParam(defaultValue = "1") Long entid) {
+		return R.phpOk(categoryService.buildQuickCategoryCreateForm(entid));
 	}
 
 	@PostMapping

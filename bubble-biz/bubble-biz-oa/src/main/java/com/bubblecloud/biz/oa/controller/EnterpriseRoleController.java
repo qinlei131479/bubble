@@ -158,14 +158,14 @@ public class EnterpriseRoleController {
 	}
 
 	@PostMapping("/update_super_role")
-	@Operation(summary = "修改企业超级角色权限（占位/表未接时仅校验）")
+	@Operation(summary = "修改企业超级角色权限（写入 eb_system_role）")
 	public R<String> updateSuperRole(@RequestParam(defaultValue = "1") Long entid, @RequestBody JsonNode body) {
 		enterpriseRoleService.updateSuperRole(entid, body);
 		return R.phpOk(OaConstants.UPDATE_SUCC);
 	}
 
 	@GetMapping("/get_super_role")
-	@Operation(summary = "获取超级角色权限树（占位）")
+	@Operation(summary = "获取超级角色权限树（menus + rules/apis）")
 	public R<JsonNode> getSuperRole(@RequestParam(defaultValue = "1") Long entid,
 			@RequestParam(required = false) String menu_name) {
 		return R.phpOk(enterpriseRoleService.getSuperRoleMenus(entid, menu_name));

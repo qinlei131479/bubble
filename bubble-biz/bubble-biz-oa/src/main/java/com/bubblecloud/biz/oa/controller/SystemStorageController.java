@@ -4,6 +4,7 @@ import com.bubblecloud.biz.oa.service.SystemStorageService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.entity.SystemStorage;
 import com.bubblecloud.oa.api.vo.StorageUploadTypeVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,18 +43,28 @@ public class SystemStorageController {
 	}
 
 	@GetMapping("/create/{type}")
-	@Operation(summary = "创建表单占位")
-	public R<String> createForm(@PathVariable Integer type) {
+	@Operation(summary = "添加云空间表单（elForm）")
+	public R<OaElFormVO> createForm(@PathVariable Integer type) {
 		if (ObjectUtil.isNull(type) || type == 0) {
 			return R.phpFailed("参数错误");
 		}
-		return R.phpOk("ok");
+		try {
+			return R.phpOk(systemStorageService.buildCreateStorageForm(type));
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
 	}
 
 	@GetMapping("/form/{type}")
-	@Operation(summary = "配置表单占位")
-	public R<String> form(@PathVariable Integer type) {
-		return R.phpOk("ok");
+	@Operation(summary = "密钥配置表单（elForm）")
+	public R<OaElFormVO> form(@PathVariable Integer type) {
+		try {
+			return R.phpOk(systemStorageService.buildCredentialConfigForm(type));
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
 	}
 
 	@GetMapping("/config")
@@ -70,9 +81,15 @@ public class SystemStorageController {
 	}
 
 	@GetMapping("/sync/{type}")
-	@Operation(summary = "同步云存储（占位）")
+	@Operation(summary = "同步云存储（校验密钥已配置；不调用云 SDK）")
 	public R<String> sync(@PathVariable Integer type) {
-		return R.phpOk("同步成功");
+		try {
+			systemStorageService.verifyStorageCredentials(type);
+			return R.phpOk("同步成功");
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
 	}
 
 	@PostMapping("/{type}")
@@ -100,9 +117,14 @@ public class SystemStorageController {
 	}
 
 	@GetMapping("/domain/{id}")
-	@Operation(summary = "域名表单占位")
-	public R<String> getUpdateDomainForm(@PathVariable Long id) {
-		return R.phpOk("ok");
+	@Operation(summary = "修改空间域名表单（elForm）")
+	public R<OaElFormVO> getUpdateDomainForm(@PathVariable Long id) {
+		try {
+			return R.phpOk(systemStorageService.buildDomainElForm(id));
+		}
+		catch (IllegalArgumentException ex) {
+			return R.phpFailed(ex.getMessage());
+		}
 	}
 
 	@GetMapping("/method")

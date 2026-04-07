@@ -2,8 +2,11 @@ package com.bubblecloud.biz.oa.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import com.bubblecloud.common.core.util.R;
@@ -18,6 +21,7 @@ import com.bubblecloud.biz.oa.mapper.FrameMapper;
 import com.bubblecloud.biz.oa.mapper.SystemMenusMapper;
 import com.bubblecloud.biz.oa.service.EnterpriseRoleService;
 import com.bubblecloud.biz.oa.service.SystemMenusService;
+import com.bubblecloud.biz.oa.service.SystemRoleService;
 import com.bubblecloud.biz.oa.util.TreeUtil;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.dto.FrameAssistView;
@@ -26,6 +30,7 @@ import com.bubblecloud.oa.api.entity.EnterpriseRole;
 import com.bubblecloud.oa.api.entity.EnterpriseRoleUser;
 import com.bubblecloud.oa.api.entity.Frame;
 import com.bubblecloud.oa.api.entity.SystemMenus;
+import com.bubblecloud.oa.api.entity.SystemRole;
 import com.bubblecloud.oa.api.vo.menu.SystemMenusTreeNodeVO;
 import com.bubblecloud.oa.api.vo.role.EnterpriseRoleListItemVO;
 import com.bubblecloud.oa.api.vo.role.RoleMemberRowVO;
@@ -62,6 +67,8 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 	private final FrameAssistMapper frameAssistMapper;
 
 	private final SystemMenusService systemMenusService;
+
+	private final SystemRoleService systemRoleService;
 
 	private final ObjectMapper objectMapper;
 
@@ -584,18 +591,88 @@ public class EnterpriseRoleServiceImpl extends UpServiceImpl<EnterpriseRoleMappe
 		if (ObjectUtil.isNull(rules) || !rules.isArray() || rules.isEmpty()) {
 			throw new IllegalArgumentException("至少选择一个权限");
 		}
-		// 无 eb_system_role 等企业超级角色表时，仅占位成功；后续可接表持久化。
+		List<Long> ruleIds = new ArrayList<>();
+		for (JsonNode n : rules) {
+			ruleIds.add(n.asLong());
+		}
+		List<Long> apiIds = new ArrayList<>();
+		if (body.has("apis") && body.get("apis").isArray()) {
+			for (JsonNode n : body.get("apis")) {
+				apiIds.add(n.asLong());
+			}
+		}
+		systemRoleService.saveEnterpriseSuperRole(entId, ruleIds, apiIds);
 	}
 
 	@Override
 	public JsonNode getSuperRoleMenus(Long entId, String menuName) {
+		SystemRole template = systemRoleService.getDefaultEnterpriseTemplate();
+		List<Long> templateRules = jsonArrayToLongList(template == null ? null : template.getRules());
+		Set<Long> menuIdSet = new LinkedHashSet<>(systemMenusService.expandRuleMenuIds(templateRules));
+		List<SystemMenus> rows;
+		if (menuIdSet.isEmpty()) {
+			rows = List.of();
+		}
+		else {
+			var q = Wrappers.lambdaQuery(SystemMenus.class)
+				.in(SystemMenus::getId, menuIdSet)
+				.eq(SystemMenus::getStatus, 1)
+				.isNull(SystemMenus::getDeletedAt);
+			if (StrUtil.isNotBlank(menuName)) {
+				q.like(SystemMenus::getMenuName, menuName.trim());
+			}
+			q.orderByDesc(SystemMenus::getSort).orderByAsc(SystemMenus::getId);
+			rows = systemMenusMapper.selectList(q);
+		}
+		ArrayNode menusTree = buildSuperRoleMenuTree(rows);
+		SystemRole entSuper = systemRoleService.getEnterpriseSuperRole(entId);
+		ObjectNode rulesPayload = objectMapper.createObjectNode();
+		if (ObjectUtil.isNotNull(entSuper)) {
+			rulesPayload.set("rules", readJsonArray(entSuper.getRules()));
+			rulesPayload.set("apis", readJsonArray(entSuper.getApis()));
+		}
+		else {
+			rulesPayload.set("rules", objectMapper.createArrayNode());
+			rulesPayload.set("apis", objectMapper.createArrayNode());
+		}
 		ObjectNode root = objectMapper.createObjectNode();
-		root.set("menus", objectMapper.createArrayNode());
-		ObjectNode rules = objectMapper.createObjectNode();
-		rules.set("rules", objectMapper.createArrayNode());
-		rules.set("apis", objectMapper.createArrayNode());
-		root.set("rules", rules);
+		root.set("menus", menusTree);
+		root.set("rules", rulesPayload);
 		return root;
+	}
+
+	private ArrayNode buildSuperRoleMenuTree(List<SystemMenus> rows) {
+		if (CollUtil.isEmpty(rows)) {
+			return objectMapper.createArrayNode();
+		}
+		List<SystemMenus> sorted = new ArrayList<>(rows);
+		sorted.sort(Comparator.comparing(SystemMenus::getSort, Comparator.nullsLast(Comparator.reverseOrder()))
+			.thenComparing(SystemMenus::getId, Comparator.nullsLast(Comparator.naturalOrder())));
+		Map<Long, ObjectNode> byId = new LinkedHashMap<>();
+		for (SystemMenus m : sorted) {
+			ObjectNode n = objectMapper.createObjectNode();
+			n.put("value", m.getId());
+			n.put("id", m.getId());
+			n.put("label", StrUtil.nullToEmpty(m.getMenuName()));
+			n.put("pid", m.getPid() == null ? 0L : m.getPid());
+			if (ObjectUtil.isNotNull(m.getEntid())) {
+				n.put("entid", m.getEntid());
+			}
+			n.set("children", objectMapper.createArrayNode());
+			byId.put(m.getId(), n);
+		}
+		ArrayNode roots = objectMapper.createArrayNode();
+		for (SystemMenus m : sorted) {
+			ObjectNode node = byId.get(m.getId());
+			long pid = m.getPid() == null ? 0L : m.getPid();
+			if (pid == 0L || !byId.containsKey(pid)) {
+				roots.add(node);
+			}
+			else {
+				((ArrayNode) byId.get(pid).get("children")).add(node);
+			}
+		}
+		return roots;
 	}
 
 	@Override
