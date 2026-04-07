@@ -32,11 +32,7 @@ public class SystemRoleServiceImpl extends UpServiceImpl<SystemRoleMapper, Syste
 	public SystemRole getDefaultEnterpriseTemplate() {
 		return baseMapper.selectOne(Wrappers.lambdaQuery(SystemRole.class)
 			.eq(SystemRole::getEntid, 0L)
-			.and(w -> w.eq(SystemRole::getType, "0")
-				.or()
-				.eq(SystemRole::getType, "")
-				.or()
-				.isNull(SystemRole::getType))
+			.and(w -> w.eq(SystemRole::getType, "0").or().eq(SystemRole::getType, "").or().isNull(SystemRole::getType))
 			.orderByAsc(SystemRole::getId)
 			.last("LIMIT 1"));
 	}

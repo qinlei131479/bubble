@@ -2,17 +2,17 @@ package com.bubblecloud.biz.oa.service;
 
 import java.util.List;
 
-import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.dto.hr.AssessAppealDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessCensusDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessEvalDTO;
-import com.bubblecloud.oa.api.dto.hr.AssessSaveDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetEvalDTO;
 import com.bubblecloud.oa.api.entity.Assess;
-import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
+import com.bubblecloud.oa.api.vo.hr.AssessAbnormalUserVO;
 import com.bubblecloud.oa.api.vo.hr.AssessCensusVO;
-import com.bubblecloud.oa.api.vo.hr.AssessDetailVO;
+import com.bubblecloud.oa.api.vo.hr.AssessExplainVO;
+import com.bubblecloud.oa.api.vo.hr.AssessInfoVO;
 
 /**
  * 绩效考核服务。
@@ -50,8 +50,14 @@ public interface AssessService extends UpService<Assess> {
 
 	AssessCensusVO censusBar(AssessCensusDTO dto);
 
-	List<Assess> abnormalList(Long entid, Long planId);
+	List<AssessAbnormalUserVO> abnormalList(Integer period, String time, Long entid);
 
-	boolean isAbnormal(Long entid, Long planId);
+	int abnormalCount(Integer period, String time, Long entid);
+
+	AssessInfoVO getAssessInfo(Long id);
+
+	AssessExplainVO getAssessExplain(Long id);
+
+	OaElFormVO buildDeleteForm(Long id, Long entid);
 
 }

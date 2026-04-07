@@ -6,25 +6,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 绩效指标自评 DTO。
+ * 绩效指标自评（对齐 PHP {@code evalTarget} 参数）。
  *
  * @author qinlei
- * @date 2026/4/1 14:00
+ * @date 2026/4/7 11:00
  */
 @Data
 @Schema(description = "绩效指标自评")
 public class AssessTargetEvalDTO {
 
-	@Schema(description = "绩效考核ID")
+	@Schema(description = "考核ID（PHP assess_id）")
 	private Long assessId;
 
 	@Schema(description = "指标ID")
 	private Long targetId;
 
-	@Schema(description = "自评内容")
-	private String content;
+	@Schema(description = "维度/空间ID")
+	private Long spaceId;
 
-	@Schema(description = "自评分数")
-	private BigDecimal score;
+	@Schema(description = "完成情况说明")
+	private String finishInfo;
+
+	@Schema(description = "完成比例")
+	private BigDecimal finishRatio;
 
 }

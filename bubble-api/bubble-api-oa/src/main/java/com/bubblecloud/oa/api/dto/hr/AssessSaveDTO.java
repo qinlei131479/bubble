@@ -1,45 +1,60 @@
 package com.bubblecloud.oa.api.dto.hr;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 绩效考核保存 DTO。
+ * 绩效考核保存 DTO（与 {@code eb_assess} 常用字段对齐，复杂结构由后续 AssessSpace 扩展）。
  *
  * @author qinlei
- * @date 2026/4/1 14:00
+ * @date 2026/4/7 12:00
  */
 @Data
 @Schema(description = "绩效考核保存")
 public class AssessSaveDTO {
 
+	@Schema(description = "企业ID")
+	private Long entid;
+
 	@Schema(description = "考核名称")
 	private String name;
 
-	@Schema(description = "被考核人ID")
-	private Long userId;
+	@Schema(description = "周期 1-5")
+	private Integer period;
 
-	@Schema(description = "考核人ID（上级）")
-	private Long superiorId;
-
-	@Schema(description = "审核人ID（上上级）")
-	private Long examineId;
-
-	@Schema(description = "考核计划ID")
+	@Schema(description = "计划ID planid")
 	private Long planId;
 
-	@Schema(description = "考核模板ID")
-	private Long templateId;
+	@Schema(description = "组织 frame_id")
+	private Integer frameId;
 
-	@Schema(description = "考核开始日期")
-	private LocalDate startDate;
+	@Schema(description = "被考核人 test_uid")
+	private Long testUid;
 
-	@Schema(description = "考核结束日期")
-	private LocalDate endDate;
+	@Schema(description = "上级 check_uid")
+	private Long checkUid;
 
-	@Schema(description = "备注")
-	private String mark;
+	@Schema(description = "评分方式 types")
+	private Integer types;
+
+	@Schema(description = "目标制定状态 make_status")
+	private Integer makeStatus;
+
+	@Schema(description = "流程状态 status")
+	private Integer status;
+
+	@Schema(description = "是否启用 is_show")
+	private Integer isShow;
+
+	@Schema(description = "满分 total")
+	private BigDecimal assessTotal;
+
+	@Schema(description = "得分 score")
+	private BigDecimal assessScore;
+
+	@Schema(description = "等级 grade")
+	private Integer assessGrade;
 
 }

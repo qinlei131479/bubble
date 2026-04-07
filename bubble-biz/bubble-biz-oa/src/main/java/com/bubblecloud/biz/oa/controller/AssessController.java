@@ -16,7 +16,12 @@ import com.bubblecloud.oa.api.dto.hr.AssessSaveDTO;
 import com.bubblecloud.oa.api.dto.hr.AssessTargetEvalDTO;
 import com.bubblecloud.oa.api.entity.Assess;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
+import com.bubblecloud.oa.api.vo.hr.AssessAbnormalCountVO;
+import com.bubblecloud.oa.api.vo.hr.AssessAbnormalUserVO;
 import com.bubblecloud.oa.api.vo.hr.AssessCensusVO;
+import com.bubblecloud.oa.api.vo.hr.AssessExplainVO;
+import com.bubblecloud.oa.api.vo.hr.AssessInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -68,16 +73,22 @@ public class AssessController {
 
 	@GetMapping("/info/{id}")
 	@Operation(summary = "获取绩效考核详情")
-	public R<Assess> info(@PathVariable Long id) {
-		return R.phpOk(assessService.getById(id));
+	public R<AssessInfoVO> info(@PathVariable Long id) {
+		return R.phpOk(assessService.getAssessInfo(id));
 	}
 
-	@PostMapping({ "/create", "/target" })
+	@PostMapping("/create")
 	@Operation(summary = "创建绩效考核")
 	public R<String> create(@RequestBody AssessSaveDTO dto) {
 		Assess obj = PojoConvertUtil.convertPojo(dto, Assess.class);
 		assessService.create(obj);
 		return R.phpOk(OaConstants.INSERT_SUCC);
+	}
+
+	@PostMapping("/target")
+	@Operation(summary = "创建绩效考核模板（与 create 同参，对齐 PHP 双路由）")
+	public R<String> createTarget(@RequestBody AssessSaveDTO dto) {
+		return create(dto);
 	}
 
 	@PostMapping("/update/{id}")
@@ -119,8 +130,8 @@ public class AssessController {
 
 	@GetMapping("/explain/{id}")
 	@Operation(summary = "获取绩效其他信息")
-	public R<Assess> explain(@PathVariable Long id) {
-		return R.phpOk(assessService.getById(id));
+	public R<AssessExplainVO> explain(@PathVariable Long id) {
+		return R.phpOk(assessService.getAssessExplain(id));
 	}
 
 	@PostMapping("/census")
@@ -150,8 +161,9 @@ public class AssessController {
 
 	@GetMapping("/del_form/{id}")
 	@Operation(summary = "绩效删除表单")
-	public R<Assess> deleteForm(@PathVariable Long id) {
-		return R.phpOk(assessService.getById(id));
+	public R<OaElFormVO> deleteForm(@PathVariable Long id,
+			@RequestParam(required = false, defaultValue = "1") Long entid) {
+		return R.phpOk(assessService.buildDeleteForm(id, entid));
 	}
 
 	@DeleteMapping("/delete/{id}")
@@ -176,16 +188,19 @@ public class AssessController {
 
 	@GetMapping("/abnormal")
 	@Operation(summary = "绩效未创建列表")
-	public R<List<Assess>> abnormal(@RequestParam(required = false) Long entid,
-			@RequestParam(required = false) Long planId) {
-		return R.phpOk(assessService.abnormalList(entid, planId));
+	public R<List<AssessAbnormalUserVO>> abnormal(@RequestParam Integer period,
+			@RequestParam(required = false) String time,
+			@RequestParam(required = false, defaultValue = "1") Long entid) {
+		return R.phpOk(assessService.abnormalList(period, time, entid));
 	}
 
 	@GetMapping("/is_abnormal")
 	@Operation(summary = "绩效是否存在未创建")
-	public R<Boolean> isAbnormal(@RequestParam(required = false) Long entid,
-			@RequestParam(required = false) Long planId) {
-		return R.phpOk(assessService.isAbnormal(entid, planId));
+	public R<AssessAbnormalCountVO> isAbnormal(@RequestParam(required = false) Integer period,
+			@RequestParam(required = false) String time,
+			@RequestParam(required = false, defaultValue = "1") Long entid) {
+		int c = assessService.abnormalCount(period, time, entid);
+		return R.phpOk(new AssessAbnormalCountVO(c));
 	}
 
 }

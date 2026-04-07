@@ -78,8 +78,8 @@ public class CategoryServiceImpl extends UpServiceImpl<CategoryMapper, Category>
 		return n;
 	}
 
-	private static ObjectNode quickCateInput(ObjectMapper om, String field, String title, String value, boolean required,
-			int maxLen) {
+	private static ObjectNode quickCateInput(ObjectMapper om, String field, String title, String value,
+			boolean required, int maxLen) {
 		ObjectNode n = om.createObjectNode();
 		n.put("type", "input");
 		n.put("field", field);

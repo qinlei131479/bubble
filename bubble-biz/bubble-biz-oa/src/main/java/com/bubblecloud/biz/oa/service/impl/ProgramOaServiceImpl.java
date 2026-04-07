@@ -65,8 +65,11 @@ public class ProgramOaServiceImpl implements ProgramOaService {
 
 	@Override
 	public List<Admin> memberCards(Long programId) {
-		List<Long> uids = programMemberMapper.selectList(Wrappers.lambdaQuery(ProgramMember.class)
-			.eq(ProgramMember::getProgramId, programId)).stream().map(ProgramMember::getUid).toList();
+		List<Long> uids = programMemberMapper
+			.selectList(Wrappers.lambdaQuery(ProgramMember.class).eq(ProgramMember::getProgramId, programId))
+			.stream()
+			.map(ProgramMember::getUid)
+			.toList();
 		if (uids.isEmpty()) {
 			return List.of();
 		}
@@ -152,7 +155,8 @@ public class ProgramOaServiceImpl implements ProgramOaService {
 		if (CollUtil.isNotEmpty(members)) {
 			set.addAll(members);
 		}
-		programMemberMapper.delete(Wrappers.lambdaQuery(ProgramMember.class).eq(ProgramMember::getProgramId, programId));
+		programMemberMapper
+			.delete(Wrappers.lambdaQuery(ProgramMember.class).eq(ProgramMember::getProgramId, programId));
 		LocalDateTime now = LocalDateTime.now();
 		for (Long uid : set) {
 			if (ObjectUtil.isNull(uid) || uid <= 0) {

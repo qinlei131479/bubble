@@ -61,8 +61,8 @@ public class UserController {
 	}
 
 	/**
-	 * PHP {@code User\UserController::userInfo}：无 {@code entid} 时返回账号+扩展信息；带 {@code entid}
-	 * 时返回企业关联用户视图（对齐原 {@code EnterpriseUserController} 行为，与 PHP 企业端用法一致）。
+	 * PHP {@code User\UserController::userInfo}：无 {@code entid} 时返回账号+扩展信息；带
+	 * {@code entid} 时返回企业关联用户视图（对齐原 {@code EnterpriseUserController} 行为，与 PHP 企业端用法一致）。
 	 */
 	@GetMapping("/userInfo")
 	@Operation(summary = "获取用户信息（个人资料 / 企业关联视图）")

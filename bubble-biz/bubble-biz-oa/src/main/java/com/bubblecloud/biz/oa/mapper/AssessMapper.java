@@ -18,8 +18,14 @@ import com.bubblecloud.oa.api.entity.Assess;
 public interface AssessMapper extends UpMapper<Assess> {
 
 	/**
-	 * 查询指定计划下未创建考核的用户ID列表。
+	 * 校验考核维度是否存在。
 	 */
-	List<Long> findAbnormalUsers(@Param("entid") Long entid, @Param("planId") Long planId);
+	int countAssessSpace(@Param("entid") Long entid, @Param("assessId") Long assessId, @Param("spaceId") Long spaceId);
+
+	/**
+	 * 计划内应考但未生成考核记录的人员 ID（对齐 PHP 异常检测核心逻辑）。
+	 */
+	List<Long> findAbnormalTestUids(@Param("entid") Long entid, @Param("period") Integer period,
+			@Param("start") java.time.LocalDateTime start, @Param("end") java.time.LocalDateTime end);
 
 }

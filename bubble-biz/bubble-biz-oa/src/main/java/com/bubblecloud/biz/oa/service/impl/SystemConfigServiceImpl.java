@@ -170,6 +170,16 @@ public class SystemConfigServiceImpl extends UpServiceImpl<SystemConfigMapper, S
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void upsertConfigValue(String configKey, String value) {
+		if (StrUtil.isBlank(configKey)) {
+			return;
+		}
+		String v = ObjectUtil.isNull(value) ? "" : value;
+		upsertConfigKey(configKey, v);
+	}
+
+	@Override
 	public JsonNode getClientRuleApprovePayload(Integer form) {
 		boolean formMode = ObjectUtil.isNull(form) || form != 0;
 		if (formMode) {

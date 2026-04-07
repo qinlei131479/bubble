@@ -25,7 +25,8 @@ import cn.hutool.core.util.StrUtil;
  * @date 2026/4/6 16:00
  */
 @Service
-public class BillCategoryServiceImpl extends UpServiceImpl<BillCategoryMapper, BillCategory> implements BillCategoryService {
+public class BillCategoryServiceImpl extends UpServiceImpl<BillCategoryMapper, BillCategory>
+		implements BillCategoryService {
 
 	@Autowired
 	private BillListMapper billListMapper;
@@ -34,8 +35,10 @@ public class BillCategoryServiceImpl extends UpServiceImpl<BillCategoryMapper, B
 	@Transactional(rollbackFor = Exception.class)
 	public R create(BillCategory dto) {
 		normalizePath(dto);
-		long dup = count(Wrappers.lambdaQuery(BillCategory.class).eq(BillCategory::getPid, dto.getPid())
-			.eq(BillCategory::getEntid, dto.getEntid()).eq(BillCategory::getName, dto.getName()));
+		long dup = count(Wrappers.lambdaQuery(BillCategory.class)
+			.eq(BillCategory::getPid, dto.getPid())
+			.eq(BillCategory::getEntid, dto.getEntid())
+			.eq(BillCategory::getName, dto.getName()));
 		if (dup > 0) {
 			throw new IllegalArgumentException("分类已存在，请勿重复添加");
 		}
@@ -54,9 +57,12 @@ public class BillCategoryServiceImpl extends UpServiceImpl<BillCategoryMapper, B
 			throw new IllegalArgumentException(OaConstants.NOT_EXISTS);
 		}
 		normalizePath(dto);
-		long dup = count(Wrappers.lambdaQuery(BillCategory.class).ne(BillCategory::getId, dto.getId())
-			.eq(BillCategory::getPid, dto.getPid()).eq(BillCategory::getEntid, dto.getEntid())
-			.eq(BillCategory::getName, dto.getName()).eq(BillCategory::getTypes, existing.getTypes()));
+		long dup = count(Wrappers.lambdaQuery(BillCategory.class)
+			.ne(BillCategory::getId, dto.getId())
+			.eq(BillCategory::getPid, dto.getPid())
+			.eq(BillCategory::getEntid, dto.getEntid())
+			.eq(BillCategory::getName, dto.getName())
+			.eq(BillCategory::getTypes, existing.getTypes()));
 		if (dup > 0) {
 			throw new IllegalArgumentException("分类已存在，请勿重复添加");
 		}
@@ -129,7 +135,9 @@ public class BillCategoryServiceImpl extends UpServiceImpl<BillCategoryMapper, B
 			}
 			parentNo = StrUtil.nullToEmpty(p.getCateNo());
 		}
-		long n = count(Wrappers.lambdaQuery(BillCategory.class).eq(BillCategory::getPid, pid).eq(BillCategory::getEntid, entid));
+		long n = count(Wrappers.lambdaQuery(BillCategory.class)
+			.eq(BillCategory::getPid, pid)
+			.eq(BillCategory::getEntid, entid));
 		return parentNo + String.format("%02d", n + 1);
 	}
 

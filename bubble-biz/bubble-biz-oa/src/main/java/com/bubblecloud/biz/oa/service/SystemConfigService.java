@@ -36,6 +36,11 @@ public interface SystemConfigService extends UpService<SystemConfig> {
 	String getConfigRawValue(String configKey);
 
 	/**
+	 * 按 config key 写入或更新单条 value（对齐 PHP {@code sys_config} 落库）。
+	 */
+	void upsertConfigValue(String configKey, String value);
+
+	/**
 	 * 客户审批规则：{@code form == 0} 时为键值（对齐 PHP {@code getApproveConfigs}），否则为 elForm 结构（对齐
 	 * PHP {@code getApproveConfig} + form-create）。
 	 */

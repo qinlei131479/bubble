@@ -303,8 +303,7 @@ public class SystemStorageServiceImpl extends UpServiceImpl<SystemStorageMapper,
 			rules.add(storageField("input", "appid", "APPID", configValue("tengxun_appid"), true));
 		}
 		if (type == 5) {
-			rules.add(
-					storageField("input", "storageRegion", "storageRegion", configValue("jd_storage_region"), true));
+			rules.add(storageField("input", "storageRegion", "storageRegion", configValue("jd_storage_region"), true));
 		}
 		return new OaElFormVO("配置信息", "post", "/ent/config/storage/config", rules);
 	}

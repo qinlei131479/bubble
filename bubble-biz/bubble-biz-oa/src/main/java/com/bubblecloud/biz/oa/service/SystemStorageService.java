@@ -37,7 +37,8 @@ public interface SystemStorageService extends UpService<SystemStorage> {
 	OaElFormVO buildCreateStorageForm(Integer type);
 
 	/**
-	 * 密钥配置表单，对齐 PHP {@code getFormStorageConfig}，提交 {@code POST /ent/config/storage/config}。
+	 * 密钥配置表单，对齐 PHP {@code getFormStorageConfig}，提交
+	 * {@code POST /ent/config/storage/config}。
 	 */
 	OaElFormVO buildCredentialConfigForm(Integer type);
 

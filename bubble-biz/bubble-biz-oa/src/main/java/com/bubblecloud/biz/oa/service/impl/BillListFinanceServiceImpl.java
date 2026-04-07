@@ -87,11 +87,11 @@ public class BillListFinanceServiceImpl implements BillListFinanceService {
 
 	@Override
 	public List<ClientBillLog> listLogs(Long entid, Long billListId) {
-		return clientBillLogMapper.selectList(
-				com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery(ClientBillLog.class)
-					.eq(ClientBillLog::getEntid, entid.intValue())
-					.eq(ClientBillLog::getBillListId, billListId.intValue())
-					.orderByDesc(ClientBillLog::getId));
+		return clientBillLogMapper
+			.selectList(com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery(ClientBillLog.class)
+				.eq(ClientBillLog::getEntid, entid.intValue())
+				.eq(ClientBillLog::getBillListId, billListId.intValue())
+				.orderByDesc(ClientBillLog::getId));
 	}
 
 	@Override
