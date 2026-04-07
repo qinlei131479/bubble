@@ -356,4 +356,24 @@ public class AttendanceArrangeServiceImpl extends UpServiceImpl<AttendanceArrang
 		return null;
 	}
 
+	@Override
+	public boolean dayIsRest(int uid, LocalDate date) {
+		boolean calcIsRest = calendarConfigService.dayIsRest(date);
+		AttendanceArrangeRecord info = arrangeRecordMapper.selectOne(Wrappers.lambdaQuery(AttendanceArrangeRecord.class)
+			.eq(AttendanceArrangeRecord::getUid, uid)
+			.apply("DATE(`date`) = {0}", date)
+			.last("LIMIT 1"));
+		if (info == null) {
+			return calcIsRest;
+		}
+		int shiftId = info.getShiftId() == null ? 0 : info.getShiftId();
+		if (shiftId > 1) {
+			return false;
+		}
+		if (shiftId == 1 || (shiftId < 1 && calcIsRest)) {
+			return true;
+		}
+		return false;
+	}
+
 }

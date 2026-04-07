@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.biz.oa.mapper.ApproveApplyMapper;
 import com.bubblecloud.biz.oa.service.ApproveApplyService;
+import com.bubblecloud.biz.oa.service.AttendanceApplyRecordSyncService;
 import com.bubblecloud.biz.oa.service.OaFlowBridgeService;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
@@ -29,6 +30,9 @@ public class ApproveApplyServiceImpl extends UpServiceImpl<ApproveApplyMapper, A
 	@Autowired
 	private OaFlowBridgeService oaFlowBridgeService;
 
+	@Autowired
+	private AttendanceApplyRecordSyncService attendanceApplyRecordSyncService;
+
 	@Override
 	public Page<ApproveApply> findPg(Page page, ApproveApply query) {
 		if (ObjectUtil.isNull(query)) {
@@ -49,6 +53,9 @@ public class ApproveApplyServiceImpl extends UpServiceImpl<ApproveApplyMapper, A
 		}
 		a.setStatus(status);
 		baseMapper.updateById(a);
+		if (status == 1) {
+			attendanceApplyRecordSyncService.createFromPassedApply(id);
+		}
 	}
 
 	@Override

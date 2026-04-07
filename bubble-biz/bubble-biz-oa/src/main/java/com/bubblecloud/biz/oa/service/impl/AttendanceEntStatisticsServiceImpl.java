@@ -20,22 +20,27 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.bubblecloud.biz.oa.attendance.AttendanceClockImportAsyncService;
 import com.bubblecloud.biz.oa.attendance.AttendanceClockRecordSearchQuery;
 import com.bubblecloud.biz.oa.attendance.AttendanceShiftRuleValidation;
 import com.bubblecloud.biz.oa.attendance.AttendanceStatisticsSearchQuery;
 import com.bubblecloud.biz.oa.attendance.AttendanceTimeScope;
 import com.bubblecloud.biz.oa.constant.AttendanceClockConstants;
 import com.bubblecloud.biz.oa.mapper.AdminMapper;
+import com.bubblecloud.biz.oa.mapper.AttendanceApplyRecordMapper;
 import com.bubblecloud.biz.oa.mapper.AttendanceClockRecordMapper;
 import com.bubblecloud.biz.oa.mapper.AttendanceHandleRecordMapper;
 import com.bubblecloud.biz.oa.mapper.AttendanceStatisticsMapper;
 import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
 import com.bubblecloud.biz.oa.mapper.FrameMapper;
+import com.bubblecloud.biz.oa.service.ApproveHolidayTypeService;
 import com.bubblecloud.biz.oa.service.AttendanceEntStatisticsService;
 import com.bubblecloud.biz.oa.service.AttendanceGroupService;
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.attendance.AttendanceStatisticsAdjustDTO;
 import com.bubblecloud.oa.api.entity.Admin;
+import com.bubblecloud.oa.api.entity.ApproveHolidayType;
+import com.bubblecloud.oa.api.entity.AttendanceApplyRecord;
 import com.bubblecloud.oa.api.entity.AttendanceClockRecord;
 import com.bubblecloud.oa.api.entity.AttendanceGroup;
 import com.bubblecloud.oa.api.entity.AttendanceHandleRecord;
@@ -51,7 +56,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 考勤统计、打卡、异常日期（对齐 PHP 考勤统计/打卡相关接口；请假/审批/排班应出勤等未接模块处以 0 或空列表占位）。
+ * 考勤统计、打卡、异常日期（对齐 PHP 考勤统计/打卡；请假等时长来自 {@code eb_attendance_apply_record}，导入走异步分块）。
  *
  * @author qinlei
  * @date 2026/4/7
@@ -69,6 +74,16 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 
 	private static final List<String> IMPORT_FIELDS = List.of("时间", "姓名", "第一次上班", "第一次下班", "第二次上班", "第二次下班");
 
+	private static final int APPLY_HOLIDAY = 1;
+
+	private static final int APPLY_SIGN = 2;
+
+	private static final int APPLY_OVERTIME = 3;
+
+	private static final int APPLY_OUT = 4;
+
+	private static final int APPLY_TRIP = 5;
+
 	private final AttendanceStatisticsMapper statisticsMapper;
 
 	private final AttendanceClockRecordMapper clockRecordMapper;
@@ -84,6 +99,12 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 	private final FrameAssistMapper frameAssistMapper;
 
 	private final ObjectMapper objectMapper;
+
+	private final AttendanceClockImportAsyncService attendanceClockImportAsyncService;
+
+	private final AttendanceApplyRecordMapper attendanceApplyRecordMapper;
+
+	private final ApproveHolidayTypeService approveHolidayTypeService;
 
 	@Override
 	public Map<String, Object> dailyStatistics(Pg<Object> pg, Long viewerId, Integer scope,
@@ -129,7 +150,7 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 			list.add(toMonthlyRowMap(row, ym));
 		}
 		Map<String, Object> out = listData(list, total);
-		out.put("holiday_type", List.of());
+		out.put("holiday_type", listHolidayTypesMeta());
 		return out;
 	}
 
@@ -214,11 +235,16 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 		m.put("normal_days", statisticsMapper.countNormalDays(targetUid, range.startInclusive(), range.endInclusive()));
 		m.put("work_hours", formatOneDecimal(
 				statisticsMapper.avgActualWorkHours(targetUid, range.startInclusive(), range.endInclusive())));
-		m.put("leave_hours", "0");
-		m.put("out_hours", "0");
-		m.put("trip_hours", "0");
-		m.put("overtime_hours", "0");
-		m.put("sign", 0);
+		m.put("leave_hours", fmtApplyHours(attendanceApplyRecordMapper.sumWorkHours(targetUid, range.startInclusive(),
+				range.endInclusive(), APPLY_HOLIDAY)));
+		m.put("out_hours", fmtApplyHours(attendanceApplyRecordMapper.sumWorkHours(targetUid, range.startInclusive(),
+				range.endInclusive(), APPLY_OUT)));
+		m.put("trip_hours", fmtApplyHours(attendanceApplyRecordMapper.sumWorkHours(targetUid, range.startInclusive(),
+				range.endInclusive(), APPLY_TRIP)));
+		m.put("overtime_hours", fmtApplyHours(attendanceApplyRecordMapper.sumWorkHours(targetUid,
+				range.startInclusive(), range.endInclusive(), APPLY_OVERTIME)));
+		m.put("sign", attendanceApplyRecordMapper.countByUidRangeType(targetUid, range.startInclusive(),
+				range.endInclusive(), APPLY_SIGN));
 		m.put("late", statisticsMapper.countAnyShiftStatusInRange(targetUid, range.startInclusive(),
 				range.endInclusive(), List.of(AttendanceClockConstants.LATE)));
 		m.put("extreme_late", statisticsMapper.countAnyShiftStatusInRange(targetUid, range.startInclusive(),
@@ -361,7 +387,7 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 				throw new IllegalArgumentException(f + "数据不存在");
 			}
 		}
-		log.info("考勤导入打卡记录已接收 {} 条，异步队列未接，后续可对接批量导入任务", data.size());
+		attendanceClockImportAsyncService.scheduleExcelImport(data);
 	}
 
 	@Override
@@ -372,7 +398,7 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 		if (CollUtil.isEmpty(data)) {
 			throw new IllegalArgumentException("导入内容不能为空");
 		}
-		log.info("考勤三方导入 type={} 条数={}，异步队列未接", type, data.size());
+		attendanceClockImportAsyncService.scheduleThirdPartyImport(type, data);
 	}
 
 	private void assertCanViewStatistics(Long viewerId, Integer statUid) {
@@ -485,7 +511,7 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 		m.put("out_hours", "0");
 		m.put("frame", briefFrame(row.getFrameId()));
 		m.put("group", row.getGroup());
-		m.put("holiday_data", List.of());
+		m.put("holiday_data", buildHolidayDataForUid(row.getUid(), monthYm));
 		return m;
 	}
 
@@ -957,6 +983,92 @@ public class AttendanceEntStatisticsServiceImpl implements AttendanceEntStatisti
 			return "0.0";
 		}
 		return v.setScale(1, RoundingMode.HALF_UP).toPlainString();
+	}
+
+	private static String fmtApplyHours(BigDecimal v) {
+		if (v == null) {
+			return "0";
+		}
+		return v.stripTrailingZeros().toPlainString();
+	}
+
+	private List<Map<String, Object>> listHolidayTypesMeta() {
+		List<ApproveHolidayType> types = approveHolidayTypeService.list(Wrappers.lambdaQuery(ApproveHolidayType.class)
+			.orderByAsc(ApproveHolidayType::getSort)
+			.orderByDesc(ApproveHolidayType::getId));
+		List<Map<String, Object>> out = new ArrayList<>();
+		for (ApproveHolidayType t : types) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("id", t.getId());
+			row.put("name", t.getName());
+			row.put("duration_type", t.getDurationType());
+			out.add(row);
+		}
+		return out;
+	}
+
+	private List<Map<String, Object>> buildHolidayDataForUid(Integer uid, String monthYm) {
+		if (uid == null || uid <= 0) {
+			return List.of();
+		}
+		LocalDateTime start = monthStart(monthYm);
+		LocalDateTime end = monthEnd(monthYm);
+		List<ApproveHolidayType> types = approveHolidayTypeService.list(Wrappers.lambdaQuery(ApproveHolidayType.class)
+			.orderByAsc(ApproveHolidayType::getSort)
+			.orderByDesc(ApproveHolidayType::getId));
+		List<AttendanceApplyRecord> leaves = attendanceApplyRecordMapper.selectLeaveRecordsInMonth(uid, start, end);
+		Map<Long, BigDecimal> sumByType = new HashMap<>();
+		for (AttendanceApplyRecord r : leaves) {
+			Long hid = parseHolidayTypeId(r.getOthers());
+			if (hid == null) {
+				continue;
+			}
+			BigDecimal wh = r.getWorkHours() == null ? BigDecimal.ZERO : r.getWorkHours();
+			sumByType.merge(hid, wh, BigDecimal::add);
+		}
+		List<Map<String, Object>> out = new ArrayList<>();
+		for (ApproveHolidayType t : types) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("id", t.getId());
+			row.put("duration",
+					formatHolidayDuration(sumByType.getOrDefault(t.getId(), BigDecimal.ZERO), t.getDurationType()));
+			out.add(row);
+		}
+		return out;
+	}
+
+	private Long parseHolidayTypeId(String others) {
+		if (StrUtil.isBlank(others)) {
+			return null;
+		}
+		try {
+			JsonNode n = objectMapper.readTree(others);
+			JsonNode idNode = n.get("holiday_type_id");
+			if (idNode == null || idNode.isNull()) {
+				return null;
+			}
+			if (idNode.isIntegralNumber()) {
+				return idNode.longValue();
+			}
+			String s = idNode.asText();
+			if (StrUtil.isBlank(s)) {
+				return null;
+			}
+			return Long.parseLong(s.trim());
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+
+	private static String formatHolidayDuration(BigDecimal hours, Integer durationType) {
+		if (hours == null) {
+			return "0";
+		}
+		if (durationType != null && durationType == 0) {
+			return hours.stripTrailingZeros().toPlainString();
+		}
+		return hours.stripTrailingZeros().toPlainString();
 	}
 
 	private Map<String, Object> listData(List<?> list, long count) {

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.bubblecloud.biz.oa.crm.CrmScheduleLinkHelper;
+import com.bubblecloud.biz.oa.constant.CrmScheduleLinkHelper;
 import com.bubblecloud.biz.oa.mapper.ClientRemindMapper;
 import com.bubblecloud.biz.oa.mapper.ContractMapper;
 import com.bubblecloud.biz.oa.service.ClientRemindCrmService;

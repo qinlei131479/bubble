@@ -1,11 +1,10 @@
-package com.bubblecloud.biz.oa.crm;
+package com.bubblecloud.biz.oa.constant;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bubblecloud.biz.oa.constant.ScheduleConstants;
 import com.bubblecloud.oa.api.dto.ScheduleStoreDTO;
 import com.bubblecloud.oa.api.entity.ClientFollow;
 import com.bubblecloud.oa.api.entity.ClientRemind;

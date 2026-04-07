@@ -1,5 +1,7 @@
 package com.bubblecloud.biz.oa.service;
 
+import java.time.LocalDate;
+
 import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.common.mybatis.service.UpService;
 import com.bubblecloud.oa.api.dto.attendance.AttendanceArrangeBatchUpdateDTO;
@@ -24,5 +26,10 @@ public interface AttendanceArrangeService extends UpService<AttendanceArrange> {
 	void updateBatch(Integer groupId, Long uid, AttendanceArrangeBatchUpdateDTO body);
 
 	AttendanceArrangeInfoVO getInfo(Integer groupId, String name, String date);
+
+	/**
+	 * 是否休息（对齐 PHP {@code AttendanceArrangeService::dayIsRest}）。
+	 */
+	boolean dayIsRest(int uid, LocalDate date);
 
 }

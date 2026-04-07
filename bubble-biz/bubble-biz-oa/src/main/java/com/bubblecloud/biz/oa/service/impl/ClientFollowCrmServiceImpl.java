@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.bubblecloud.biz.oa.crm.CrmScheduleLinkHelper;
+import com.bubblecloud.biz.oa.constant.CrmScheduleLinkHelper;
 import com.bubblecloud.biz.oa.constant.OaConstants;
 import com.bubblecloud.biz.oa.mapper.ClientFollowMapper;
 import com.bubblecloud.biz.oa.mapper.CustomerMapper;

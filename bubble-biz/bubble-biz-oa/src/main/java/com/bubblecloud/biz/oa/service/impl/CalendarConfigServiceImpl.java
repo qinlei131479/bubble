@@ -114,6 +114,19 @@ public class CalendarConfigServiceImpl extends UpServiceImpl<CalendarConfigMappe
 	}
 
 	@Override
+	public boolean dayIsRest(LocalDate date) {
+		if (ObjectUtil.isNull(date)) {
+			return false;
+		}
+		CalendarConfig c = getOne(
+				Wrappers.lambdaQuery(CalendarConfig.class).eq(CalendarConfig::getDay, date.toString()));
+		if (ObjectUtil.isNotNull(c) && ObjectUtil.isNotNull(c.getIsRest())) {
+			return c.getIsRest() == 1;
+		}
+		return carbonWeekend(date);
+	}
+
+	@Override
 	public R update(CalendarConfig req) {
 		return super.update(req);
 	}
