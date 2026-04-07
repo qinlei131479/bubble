@@ -920,4 +920,40 @@ public class AttendanceGroupServiceImpl extends UpServiceImpl<AttendanceGroupMap
 		return (int) count(Wrappers.lambdaQuery(AttendanceGroup.class).in(AttendanceGroup::getId, ids));
 	}
 
+	@Override
+	public List<Integer> listNetworkMemberIds(Long adminId) {
+		if (adminId == null) {
+			return List.of();
+		}
+		int self = adminId.intValue();
+		LinkedHashSet<Integer> acc = new LinkedHashSet<>();
+		acc.add(self);
+		List<AttendanceGroup> groups = list();
+		for (AttendanceGroup g : groups) {
+			List<Integer> mem = getMemberIdsById(g.getId(), true);
+			if (mem.contains(self)) {
+				acc.addAll(mem);
+			}
+		}
+		return new ArrayList<>(acc);
+	}
+
+	@Override
+	public List<Integer> listWhitelistMemberIds() {
+		return new ArrayList<>(getWhiteListMemberIds());
+	}
+
+	@Override
+	public AttendanceGroup findFirstGroupForAdmin(Integer adminId) {
+		if (adminId == null || adminId <= 0) {
+			return null;
+		}
+		for (AttendanceGroup g : list()) {
+			if (getMemberIdsById(g.getId(), true).contains(adminId)) {
+				return g;
+			}
+		}
+		return null;
+	}
+
 }

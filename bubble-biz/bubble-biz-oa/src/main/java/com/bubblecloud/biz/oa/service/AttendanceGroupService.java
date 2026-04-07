@@ -73,4 +73,16 @@ public interface AttendanceGroupService extends UpService<AttendanceGroup> {
 
 	int countGroupsByIds(List<Integer> ids);
 
+	/**
+	 * 与当前管理员同处于任一考勤组（过滤后成员）的人员 id，含本人。
+	 */
+	List<Integer> listNetworkMemberIds(Long adminId);
+
+	List<Integer> listWhitelistMemberIds();
+
+	/**
+	 * 某成员所在的首个考勤组（用于补卡/异常规则），无则返回 null。
+	 */
+	AttendanceGroup findFirstGroupForAdmin(Integer adminId);
+
 }
