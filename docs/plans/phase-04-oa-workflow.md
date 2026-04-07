@@ -11,16 +11,20 @@
 
 前端考勤、审批、日程、日报、备忘录模块完整可用；工作流引擎可支撑审批流程。
 
+**完成情况对照**：下列清单为阶段四整体验收口；**截至 2026-04-07** 的里程碑结论与分模块说明见 **「第六节 阶段完成情况汇总」**。第三节接口表仍保留「逐接口」状态，与第六节一并阅读。
+
 ### 验收检查清单
 
-- [ ] 考勤：考勤组 CRUD、班次管理、排班、周期、打卡记录、统计报表全流程
-- [ ] 审批：审批配置 CRUD、审批申请全流程（提交→处理→撤销→催办→加签→转审→导出）
-- [ ] 假期类型管理、审批评价
-- [ ] 日程：日程类型 CRUD + 日程 CRUD + 评价 + 分页
-- [ ] 日报：日报 CRUD + 下级人员 + 回复 + 统计 + 导出
-- [ ] 备忘录：CRUD + 分组
-- [ ] 工作流：`bubble-biz-flow` 至少提供审批流转基础能力（可先 PHP 等价直实现）
-- [ ] 本阶段全部占位桩清零（AttendanceController 12处、ApproveApplyController 8处、DailyController 8处、ReportController、ScheduleController）
+- [~] **考勤**：考勤组 CRUD、班次管理、排班、周期、打卡记录、统计报表全流程 — **部分达成**：日历配置、考勤组、班次/排班/周期控制器与实体已落地；统计与打卡由 `AttendanceEntStatisticsController` + `AttendanceEntStatisticsServiceImpl` 承接（原独立占位 `AttendanceController` 已移除以免路由冲突）；日/月统计、打卡、异常、处理记录、导入（异步分块 + 白名单/免打卡分支写 `eb_attendance_clock_record`）已接库表；复杂班次比对与 PHP 全量对齐、三方导入行级映射仍待补
+- [~] **审批**：审批配置 CRUD、审批申请全流程（提交→处理→撤销→催办→加签→转审→导出） — **部分达成**：配置/列表/撤销等已有；**通过（status=1）** 时写入 `eb_attendance_apply_record`（对齐 PHP `createRecord` 解析 `eb_approve_content`）、`calcApplyRecordTime` 可对日重算；`verify` 仍偏状态位更新，表单/审批链/催办/加签/转审/导出等多接口仍占位
+- [x] **假期类型管理、审批评价** — **已达成**（`ApproveHolidayTypeController`、`ApproveReplyController` 与 API 实体齐备）
+- [ ] **日程**：日程类型 CRUD + 日程 CRUD + 评价 + 分页 — **未达成**（仍以第三节 3.1 为准）
+- [ ] **日报**：日报 CRUD + 下级人员 + 回复 + 统计 + 导出 — **未达成**（基础 CRUD/回复已有，统计与导出等占位见 3.12）
+- [x] **备忘录**：CRUD + 分组 — **已达成**
+- [ ] **工作流**：`bubble-biz-flow` 至少提供审批流转基础能力 — **未达成**（仍为启动类 + 内部桩；OA 侧为 `OaFlowBridgeService` 占位）
+- [ ] **本阶段全部占位桩清零** — **未达成**（`ApproveApplyController`、`DailyController`、`ScheduleController`、`ReportController` 等仍有多处占位；考勤统计路径已迁移至 `AttendanceEntStatisticsController`，不再以原 12 处占位表计数）
+
+> 图例：`[x]` 整体验收口；`[~]` 部分达成；`[ ]` 未达成。
 
 ---
 
@@ -123,69 +127,69 @@
 ### 3.4 AttendanceShiftController — 班次管理
 
 **PHP Prefix**: `ent/attendance/shift` | **Java**: `@RequestMapping("/ent/attendance/shift")`  
-**状态**: 需新增
+**状态**: ✅ 已实现（Java 控制器 + Service + `eb_attendance_shift` / 规则表）
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | GET | / | index | 班次列表 | ❌ 需新增 |
-| 2 | POST | / | store | 保存班次 | ❌ 需新增 |
-| 3 | PUT | /{id} | update | 修改班次 | ❌ 需新增 |
-| 4 | DELETE | /{id} | destroy | 删除 | ❌ 需新增 |
-| 5 | GET | /select | select | 下拉列表 | ❌ 需新增 |
-| 6 | GET | /{id} | detail | 班次详情 | ❌ 需新增 |
+| 1 | GET | / | index | 班次列表 | ✅ |
+| 2 | POST | / | store | 保存班次 | ✅ |
+| 3 | PUT | /{id} | update | 修改班次 | ✅ |
+| 4 | DELETE | /{id} | destroy | 删除 | ✅ |
+| 5 | GET | /select | select | 下拉列表 | ✅ |
+| 6 | GET | /{id} | detail | 班次详情 | ✅ |
 
 **实现要点**: 查 `eb_attendance_shift`，班次含上下班时间组、弹性时间、加班规则等 JSON 字段
 
 ### 3.5 AttendanceArrangeController — 排班管理
 
 **PHP Prefix**: `ent/attendance/arrange` | **Java**: `@RequestMapping("/ent/attendance/arrange")`  
-**状态**: 需新增
+**状态**: ✅ 已实现（核心列表/保存/批量/详情对齐 PHP 前缀）
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | GET | / | index | 排班列表 | ❌ 需新增 |
-| 2 | POST | / | store | 保存排班 | ❌ 需新增 |
-| 3 | PUT | /{id} | update | 修改排班 | ❌ 需新增 |
-| 4 | GET | /info/{group_id} | info | 排班详情 | ❌ 需新增 |
+| 1 | GET | / | index | 排班列表 | ✅ |
+| 2 | POST | / | store | 保存排班 | ✅ |
+| 3 | PUT | /{id} | update | 修改排班 | ✅ |
+| 4 | GET | /info/{group_id} | info | 排班详情 | ✅ |
 
 ### 3.6 RosterCycleController — 排班周期
 
 **PHP Prefix**: `ent/attendance/cycle` | **Java**: `@RequestMapping("/ent/attendance/cycle")`  
-**状态**: 需新增
+**状态**: ✅ 已实现
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | GET | / | index | 周期列表 | ❌ 需新增 |
-| 2 | POST | / | store | 保存周期 | ❌ 需新增 |
-| 3 | PUT | /{id} | update | 修改周期 | ❌ 需新增 |
-| 4 | DELETE | /{id} | destroy | 删除 | ❌ 需新增 |
-| 5 | GET | /{id} | detail | 周期详情 | ❌ 需新增 |
-| 6 | GET | /arrange/{id} | arrange | 周期排班列表 | ❌ 需新增 |
+| 1 | GET | / | index | 周期列表 | ✅ |
+| 2 | POST | / | store | 保存周期 | ✅ |
+| 3 | PUT | /{id} | update | 修改周期 | ✅ |
+| 4 | DELETE | /{id} | destroy | 删除 | ✅ |
+| 5 | GET | /{id} | detail | 周期详情 | ✅ |
+| 6 | GET | /arrange/{id} | arrange | 周期排班列表 | ✅ |
 
-### 3.7 AttendanceController — 考勤统计与打卡（占位清零重点）
+### 3.7 考勤统计与打卡（`/ent/attendance`）
 
 **PHP Prefix**: `ent/attendance` | **Java**: `@RequestMapping("/ent/attendance")`  
-**状态**: 全量占位，12 处需替换为真实逻辑
+**状态**: **已由 `AttendanceEntStatisticsController` 实现主要接口**（日/月统计、出勤/个人汇总、打卡与异常、处理记录、导入异步）；原独立占位 `AttendanceController` 已删除，避免与上列路由冲突。路径名与 PHP 对齐（如 `daily_statistics`、`clock_record`、`clock/import_record` 等）。
 
-| # | HTTP | Path | Java 方法 | 说明 | 状态 |
+| # | HTTP | Path（与 PHP 对齐） | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | GET | / | index | 打卡记录列表 | ⚠️ 占位空列表，需实现：查 `eb_attendance_clock` 分页 |
-| 2 | GET | /daily | daily | 每日统计 | ⚠️ 占位，需实现：按日聚合出勤/迟到/早退/缺勤/加班 |
-| 3 | GET | /monthly | monthly | 月度统计 | ⚠️ 占位，需实现：按月聚合 |
-| 4 | GET | /presence | presence | 出勤统计 | ⚠️ 占位，需实现：全员出勤率 |
-| 5 | GET | /personal | personal | 个人统计 | ⚠️ 占位，需实现：当前用户考勤汇总 |
-| 6 | GET | /clock | clock | 打卡记录 | ⚠️ 占位，需实现 |
-| 7 | GET | /clock/{id} | clockDetail | 打卡详情 | ⚠️ 占位，需实现 |
-| 8 | GET | /anomaly | anomaly | 异常记录列表 | ⚠️ 占位，需实现：筛选迟到/早退/缺卡 |
-| 9 | POST | /import_clock | importClock | 导入打卡 | ⚠️ 占位，需实现：Excel 解析 → 写 `eb_attendance_clock` |
-| 10 | POST | /import_third | importThird | 导入三方打卡 | ⚠️ 占位，需实现 |
-| 11 | POST | /handle | handle | 添加处理记录 | ⚠️ 占位，需实现：写 `eb_attendance_statistics` 处理记录 |
-| 12 | GET | /handle/{id} | handleRecord | 处理记录 | ⚠️ 占位，需实现 |
+| 1 | GET | /daily_statistics | dailyStatistics | 每日统计 | ✅ 已接库表与聚合 |
+| 2 | GET | /monthly_statistics | monthlyStatistics | 月度统计 | ✅ 含 `holiday_type` / `holiday_data`（假勤来自 `eb_attendance_apply_record`） |
+| 3 | GET | /attendance_statistics | attendanceStatistics | 出勤汇总 | ✅ 假勤时长等同源已汇总 |
+| 4 | GET | /individual_statistics | individualStatistics | 个人统计 | ✅ |
+| 5 | GET | /clock_record | clockRecord | 打卡记录分页 | ✅ `eb_attendance_clock_record` |
+| 6 | GET | /clock_record/{id} | clockRecordInfo | 打卡详情 | ✅ |
+| 7 | GET | /abnormal_date | abnormalDate | 异常日期 | ✅ |
+| 8 | GET | /abnormal_record/{id} | abnormalRecord | 异常记录列表 | ✅ |
+| 9 | POST | /clock/import_record | importRecord | Excel 导入打卡 | ✅ 异步分块 + 写打卡表（与 PHP 队列对齐） |
+| 10 | POST | /clock/import_third | importThird | 三方导入 | ⚠️ 异步占位，行级映射待补 |
+| 11 | PUT | /statistics/{id} | updateStatistics | 处理记录（补卡结果等） | ✅ 写 `eb_attendance_handle_record` |
+| 12 | GET | /statistics/{id} | statisticsRecords | 处理记录 | ✅ |
 
 **实现要点**:
-- 统计需联查 `eb_attendance_group` + `eb_attendance_shift` + `eb_attendance_clock` 计算迟到/早退/缺勤
-- PHP 的 `AttendanceStatisticsService` 含复杂的打卡时间与班次时间比对逻辑，需精确复刻
-- 导入走 `common-excel` 模块
+- 统计联查 `eb_attendance_group` + 班次 JSON + `eb_attendance_clock_record`；与 PHP 完全一致的迟到/早退算法仍分模块逐步补齐
+- 请假/外出等与审批核算依赖 `eb_attendance_apply_record`；审批通过写入与 `calcApplyRecordTime` 见 `AttendanceApplyRecordSyncService`
+- 前端导入可先由前端解析 Excel 为 JSON 再 POST（与 PHP 一致）；服务端异步分块对齐 `AttendanceImportJob`
 
 ### 3.8 ApproveConfigController — 审批配置
 
@@ -219,7 +223,7 @@
 ### 3.10 ApproveApplyController — 审批申请主流程（占位清零重点）
 
 **PHP Prefix**: `ent/approve/apply` | **Java**: `@RequestMapping("/ent/approve/apply")`  
-**状态**: 已有，8 处占位需消除
+**状态**: 已有；**已通过审批**时同步写入 `eb_attendance_apply_record`（`AttendanceApplyRecordSyncService`，对齐 PHP `AttendanceApplyRecordService::createRecord`）；`calcApplyRecordTime` 可对日重算；其余接口仍多占位
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
@@ -332,11 +336,13 @@
 | eb_attendance_group_member | AttendanceGroupMember | ✅ 已有 |
 | eb_attendance_group_shift | AttendanceGroupShift | ✅ 已有 |
 | eb_attendance_whitelist | AttendanceWhitelist | ✅ 已有 |
-| eb_attendance_shift | AttendanceShift | 需新增 |
-| eb_attendance_arrange | AttendanceArrange | 需新增 |
-| eb_attendance_clock | AttendanceClock | 需新增 |
-| eb_attendance_statistics | AttendanceStatistics | 需新增 |
-| eb_roster_cycle | RosterCycle | 需新增 |
+| eb_attendance_shift | AttendanceShift | ✅ 已新增 |
+| eb_attendance_arrange | AttendanceArrange | ✅ 已新增 |
+| eb_attendance_clock_record | AttendanceClockRecord | ✅ 已新增 |
+| eb_attendance_statistics | AttendanceStatistics | ✅ 已新增 |
+| eb_attendance_apply_record | AttendanceApplyRecord | ✅ 已新增（审批核算） |
+| eb_roster_cycle | RosterCycle | ✅ 已新增 |
+| eb_approve_content | ApproveContent | ✅ 已新增（审批申请内容解析） |
 | eb_approve_config | Approve | ✅ 已有 |
 | eb_approve_apply | ApproveApply | ✅ 已有 |
 | eb_approve_holiday_type | ApproveHolidayType | 需核验 |
@@ -358,9 +364,61 @@
 | 5 | 新增排班管理控制器 (4接口) | AttendanceArrangeController | P0 |
 | 6 | 新增排班周期控制器 (6接口) | RosterCycleController | P0 |
 | 7 | 核验考勤组详情/白名单等 (6接口) | AttendanceGroupController | P0 |
-| 8 | 消除考勤统计全量占位 (12接口) | AttendanceController | P0 |
+| 8 | 消除考勤统计全量占位（现由 `AttendanceEntStatisticsController` 承接，见 3.7 / 第六节） | `AttendanceEntStatisticsController` | P0 |
 | 9 | 实现审批类型筛选 | ApproveConfigController | P1 |
 | 10 | 消除审批申请全量占位 (8接口) | ApproveApplyController | P0 |
 | 11 | 消除日报下级人员/统计占位 (8接口) | DailyController | P0 |
 | 12 | 消除工作汇报占位 | ReportController | P1 |
 | 13 | 对接 bubble-biz-flow 审批通知 | WorkflowInternalController | P2 |
+
+---
+
+## 六、阶段完成情况汇总（截至 2026-04-07）
+
+### 6.1 总体结论
+
+| 维度 | 结论 |
+|------|------|
+| **阶段目标** | 「OA 办公」主干能力已部分落地：**考勤（统计/打卡/导入/排班链路）**、**审批（配置 + 假期类型 + 申请通过写核算表）**、**备忘录** 等可联调；**日程 / 日报 / 工作汇报** 仍以占位与第三节清单为准；**bubble-biz-flow** 尚未承担真实流转。 |
+| **整体验收** | 第一节验收清单 **未全部勾选**；其中 `[~]` 表示可演示、可连库，但与 PHP 行为或「占位清零」仍有差距（见下表）。 |
+| **建议** | 优先清零 **ScheduleController**、**DailyController** 高优先级接口；审批侧补齐 **handle / store / form** 与流程节点；统计侧在 `AttendanceStatisticsApproveHookImpl` 中落地 PHP 级 `updateAbnormalShiftStatus` / 请假汇总。 |
+
+### 6.2 分模块对照
+
+| 模块 | 结论摘要 |
+|------|----------|
+| **考勤日历** | `CalendarConfigController` 可用；`CalendarConfigService.dayIsRest` 等已对齐 PHP 语义。 |
+| **考勤组** | CRUD 与主流程可用；详情/白名单等接口仍建议按第三节逐项核验。 |
+| **班次 / 排班 / 周期** | 控制器、实体、Mapper 已落地；与 PHP 边界条件需持续对齐。 |
+| **考勤统计与打卡** | 由 `AttendanceEntStatisticsController` 提供 `/ent/attendance` 下主要接口；假勤统计读 `eb_attendance_apply_record`；导入异步分块。 |
+| **审批配置** | `ApproveConfigController` 主流程可用；`/search/{types}` 仍占位。 |
+| **假期类型 / 审批评价** | 完整可用。 |
+| **审批申请** | 列表/详情/撤销可用；**通过** 时写 `eb_attendance_apply_record` 并可调 `calcApplyRecordTime`；**表单/审批链/催办/加签/转审/导出** 等仍占位。 |
+| **日程** | 未实现第三节 3.1 清单。 |
+| **日报 / 汇报** | 基础 CRUD/回复部分可用；统计、导出、下级等占位仍多。 |
+| **备忘录** | 完整可用。 |
+| **工作流** | `bubble-biz-flow` 仍为桩；OA 内 `OaFlowBridgeService` 占位。 |
+
+### 6.3 与第五节「待办」的对应关系（进度）
+
+| 序号 | 任务 | 进度（2026-04-07） |
+|------|------|----------------------|
+| 1～3 | 日程类型 / 日程 / 评价 | **未开始** |
+| 4～6 | 班次 / 排班 / 周期 | **已完成**（见第三节更新） |
+| 7 | 考勤组详情等核验 | **进行中**（建议联调核验） |
+| 8 | 考勤统计占位 | **已迁移至 `AttendanceEntStatisticsController`**，原表 12 路径已按新路径重写；三方导入等待续作 |
+| 9 | 审批类型筛选 | **未开始** |
+| 10 | 审批申请占位 | **部分完成**（通过写核算表 + `calcApplyRecordTime`）；其余接口仍占位 |
+| 11 | 日报占位 | **未开始** |
+| 12 | 工作汇报 | **未开始** |
+| 13 | flow 通知 | **未开始** |
+
+### 6.4 关键代码入口（便于评审）
+
+| 能力 | 说明 |
+|------|------|
+| 考勤统计与打卡 | `AttendanceEntStatisticsController`、`AttendanceEntStatisticsServiceImpl` |
+| 导入异步 | `AttendanceClockImportAsyncService`、`AttendanceClockImportChunkExecutor`、`AttendanceClockImportRowHandler` |
+| 审批通过 → 核算表 | `AttendanceApplyRecordSyncService#createFromPassedApply`、`ApproveApplyServiceImpl#verifyApply` |
+| 按日重算（对齐 PHP） | `AttendanceApplyRecordSyncService#calcApplyRecordTime` |
+| 统计与审批占位 hook | `AttendanceStatisticsApproveHook` / `AttendanceStatisticsApproveHookImpl` |
