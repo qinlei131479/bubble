@@ -23,4 +23,14 @@
 		ORDER BY t.sort ASC, t.id ASC
 	</select>
 
+	<update id="updateFinishBySpace">
+		UPDATE eb_assess_target
+		SET finish_info = #{finishInfo},
+			finish_ratio = #{finishRatio},
+			updated_at = NOW()
+		WHERE id = #{targetId}
+		  AND spaceid = #{spaceId}
+		  AND deleted_at IS NULL
+	</update>
+
 </mapper>

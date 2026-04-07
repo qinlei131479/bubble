@@ -13,4 +13,14 @@
 		WHERE entid = #{entid}
 	</select>
 
+	<select id="selectLevelByEntidAndScore" resultType="java.lang.Integer">
+		SELECT `level`
+		FROM eb_assess_score
+		WHERE entid = #{entid}
+		  AND #{score} &gt;= `min`
+		  AND #{score} &lt;= `max`
+		ORDER BY `level` ASC
+		LIMIT 1
+	</select>
+
 </mapper>
