@@ -13,18 +13,18 @@
 
 ### 验收检查清单
 
-- [ ] 标签 CRUD + 客户列表标签筛选
-- [ ] 客户提醒 CRUD + 日程联动（创建/删除提醒自动同步日程）
-- [ ] 客户跟进 CRUD + 附件关联（`relation_type=5`）
-- [ ] 客户文件上传/删除/重命名
-- [ ] 客户主流程：列表/详情/创建/修改/删除/流转/统计/导入
-- [ ] 联系人 CRUD
-- [ ] 客户记录列表
-- [ ] 合同主流程：列表/详情/创建/修改/删除/关注/异常/转移/导入
-- [ ] 合同附件 CRUD
-- [ ] 发票全流程：列表/审核/备注/作废/撤回/开票
-- [ ] 付款(Bill)：列表/累计金额/待开票/统计
-- [ ] 所有接口与 PHP 同路径、同参数、同响应结构
+- [x] 标签 CRUD + 客户列表标签筛选
+- [x] 客户提醒 CRUD + 日程联动（创建/删除提醒自动同步日程）
+- [x] 客户跟进 CRUD + 附件关联（`relation_type=5`）
+- [x] 客户文件上传/删除/重命名
+- [ ] 客户主流程：列表/详情/创建/修改/删除/流转/统计/**导入**（统计已对齐 PHP；**导入**仍待与 PHP `FormService`/业务员映射对齐）
+- [x] 联系人 CRUD
+- [x] 客户记录列表
+- [ ] 合同主流程：列表/详情/创建/修改/删除/关注/异常/转移/**导入**（**统计/导入**待对齐，异常/转移待核验）
+- [x] 合同附件 CRUD
+- [ ] 发票全流程：列表/审核/备注/作废/撤回/开票（**在线开票 URI / callback** 待对接或明确不支持）
+- [ ] 付款(Bill)：列表/累计金额/待开票/**合同&客户维度统计**（部分接口路径与 PHP 可能不一致，待对齐）
+- [ ] 所有接口与 PHP 同路径、同参数、同响应结构（客户统计类接口已按 PHP 路由对齐；其余模块持续核对中）
 
 ---
 
@@ -106,31 +106,34 @@
 ### 3.5 CrmCustomerController — 客户主流程
 
 **PHP Prefix**: `ent/client/customer` | **Java**: `@RequestMapping("/ent/client/customer")`  
-**状态**: 大部分已实现，部分统计/导入待对齐
+**状态**: ✅ 已实现并与 PHP 路由对齐；**列表统计**中「急需跟进」与 PHP 日程联表逻辑仍有差异；**导入**、**表单字段全量核验**仍待办
+
+> **说明**：下列 Path 以 **PHP / 当前 Java** 为准（旧文档中的 `/census`、`/performance` 等为笔误，勿与实现对照）。
 
 | # | HTTP | Path | Java 方法 | 说明 | 状态 |
 |---|------|------|----------|------|------|
-| 1 | POST | /list | index | 客户列表（POST 带 `customer_label` 筛选） | ✅ |
+| 1 | POST | /list | list | 客户列表（POST 带 `customer_label` 筛选） | ✅ |
 | 2 | GET | /info/{id} | info | 客户详情（含 `customer_label` ID 数组） | ✅ |
 | 3 | POST | / | store | 创建客户 | ✅ |
 | 4 | PUT | /{id} | update | 修改客户 | ✅ |
 | 5 | DELETE | /{id} | destroy | 删除客户 | ✅ |
-| 6 | POST | /census | census | 客户统计 | ⚠️ 需对齐 PHP 聚合逻辑 |
-| 7 | PUT | /loss/{id} | loss | 流失客户 | ✅ |
-| 8 | PUT | /return/{id} | returnCustomer | 退回公海 | ✅ |
-| 9 | PUT | /follow/{id} | follow | 关注/取消关注 | ✅ |
-| 10 | PUT | /cancel_loss/{id} | cancelLoss | 取消流失 | ✅ |
+| 6 | GET | /list_statistics | listStatistics | 客户列表统计（对应 PHP `list_statistics`） | ✅ 已对齐（`urgent_follow_up` 仍为近似规则） |
+| 7 | POST | /lost | lost | 流失客户（对应 PHP `lost`） | ✅ |
+| 8 | POST | /return | returnHigh | 退回公海（对应 PHP `return`） | ✅ |
+| 9 | POST | /subscribe/{id}/{status} | subscribe | 关注/取消关注 | ✅ |
+| 10 | POST | /cancel_lost/{id} | cancelLost | 取消流失（对应 PHP `cancel_lost`） | ✅ |
 | 11 | GET | /salesman | salesman | 业务员列表 | ✅ |
-| 12 | PUT | /receive/{id} | receive | 领取客户 | ✅ |
-| 13 | POST | /batch_labels | batchLabels | 批量设置标签 | ✅ |
-| 14 | PUT | /transfer/{id} | transfer | 转移客户 | ✅ |
-| 15 | POST | /performance | performance | 业绩统计 | ⚠️ 需对齐 |
-| 16 | POST | /contract_analysis | contractAnalysis | 合同分析 | ⚠️ 需对齐 |
-| 17 | POST | /rank | rank | 排行榜 | ⚠️ 需对齐 |
-| 18 | POST | /trend | trend | 趋势分析 | ⚠️ 需对齐 |
-| 19 | POST | /import | import | 导入客户 | ⚠️ 需对齐 |
-| 20 | GET | /create | create | 创建表单 | ⚠️ 需核验 |
-| 21 | GET | /{id}/edit | edit | 编辑表单 | ⚠️ 需核验 |
+| 12 | POST | /claim | claim | 领取客户（对应 PHP `claim`） | ✅ |
+| 13 | POST | /label | label | 批量设置标签 | ✅ |
+| 14 | POST | /shift | shift | 转移客户（对应 PHP `shift`） | ✅ |
+| 15 | POST | /statistics | statistics | 业绩统计（对应 PHP `statistics`） | ✅ 已对齐 PHP 聚合结构 |
+| 16 | POST | /contract_rank | contractRank | 合同类型分析（对应 PHP `contract_rank`） | ✅ 已对齐 |
+| 17 | POST | /ranking | ranking | 业务员排行榜（对应 PHP `ranking`） | ✅ 已对齐 |
+| 18 | POST | /trend_statistics | trendStatistics | 业绩趋势（对应 PHP `trend_statistics`） | ✅ 已对齐 |
+| 19 | POST | /import | importRows | 导入客户 | ⚠️ 待与 PHP `batchImport`/表单字段完全对齐 |
+| 20 | GET | /create | create | 创建表单 | ⚠️ 待与 PHP `FormService` 逐项核验 |
+| 21 | GET | /{id}/edit | edit | 编辑表单 | ⚠️ 待与 PHP `getEditInfo` 逐项核验 |
+| — | GET | /select | select | 客户下拉（PHP 另有 `select`） | ✅ |
 
 ### 3.6 CrmCustomerLiaisonController — 联系人
 
@@ -253,14 +256,16 @@
 
 ## 五、本阶段待办汇总
 
-| 序号 | 任务 | 控制器 | 优先级 |
-|------|------|--------|--------|
-| 1 | 对齐客户统计（census/performance/rank/trend） | CrmCustomerController | P1 |
-| 2 | 对齐客户导入功能 | CrmCustomerController | P1 |
-| 3 | 核验客户创建/编辑表单 | CrmCustomerController | P1 |
-| 4 | 对齐合同统计/导入 | CrmContractController | P1 |
-| 5 | 核验合同异常状态/转移 | CrmContractController | P1 |
-| 6 | 处理发票在线开票 URI（对接或明确不支持） | CrmClientInvoiceController | P2 |
-| 7 | 对齐 CRM 付款合同/客户统计 | CrmClientBillController | P1 |
-| 8 | 逐项对照联系人/记录字段与 PHP | CrmCustomerLiaisonController | P2 |
-| 9 | 核验 `getRenewCensus` 等复杂统计 | 多个控制器 | P2 |
+**状态图例**：**✅ 已完成** · **⏳ 待办**（含未开始/进行中）
+
+| 序号 | 任务 | 控制器 | 优先级 | 状态 |
+|------|------|--------|--------|------|
+| 1 | 对齐客户统计（`list_statistics` / `statistics` / `contract_rank` / `ranking` / `trend_statistics`） | CrmCustomerController | P1 | **✅ 已完成**（`list_statistics` 中 `urgent_follow_up` 与 PHP 日程联表仍有差异，见 §3.5） |
+| 2 | 对齐客户导入功能 | CrmCustomerController | P1 | **⏳ 待办** |
+| 3 | 核验客户创建/编辑表单 | CrmCustomerController | P1 | **⏳ 待办** |
+| 4 | 对齐合同统计/导入 | CrmContractController | P1 | **⏳ 待办** |
+| 5 | 核验合同异常状态/转移 | CrmContractController | P1 | **⏳ 待办** |
+| 6 | 处理发票在线开票 URI（对接或明确不支持） | CrmClientInvoiceController | P2 | **⏳ 待办** |
+| 7 | 对齐 CRM 付款合同/客户统计 | CrmClientBillController | P1 | **⏳ 待办** |
+| 8 | 逐项对照联系人/记录字段与 PHP | CrmCustomerLiaisonController | P2 | **⏳ 待办** |
+| 9 | 核验 `getRenewCensus` 等复杂统计 | 多个控制器 | P2 | **⏳ 待办** |
