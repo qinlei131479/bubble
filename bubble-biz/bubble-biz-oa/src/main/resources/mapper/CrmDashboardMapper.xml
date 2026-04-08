@@ -38,4 +38,148 @@
 		LIMIT 24
 	</select>
 
+	<sql id="billJoinContractWhere">
+		WHERE b.status = 1 AND b.entid = #{entid}
+		AND b.date &gt;= #{start} AND b.date &lt;= #{end}
+		<if test="uids != null and uids.size() &gt; 0">
+			AND CAST(b.uid AS UNSIGNED) IN
+			<foreach collection="uids" item="u" open="(" separator="," close=")">#{u}</foreach>
+		</if>
+		<if test="categories != null and categories.size() &gt; 0">
+			AND c.contract_category IN
+			<foreach collection="categories" item="cat" open="(" separator="," close=")">#{cat}</foreach>
+		</if>
+	</sql>
+
+	<sql id="billJoinContractFrom">
+		FROM eb_client_bill b
+		INNER JOIN eb_contract c ON b.cid = c.id AND c.deleted_at IS NULL
+		<include refid="billJoinContractWhere"/>
+	</sql>
+
+	<sql id="billJoinContractFromRank">
+		FROM eb_client_bill b
+		INNER JOIN eb_contract c ON b.cid = c.id AND c.deleted_at IS NULL
+		LEFT JOIN eb_admin a ON CAST(b.uid AS UNSIGNED) = a.id AND a.deleted_at IS NULL
+		<include refid="billJoinContractWhere"/>
+	</sql>
+
+	<select id="sumBillJoinContract" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(b.num), 0)
+		<include refid="billJoinContractFrom"/>
+		<if test="types != null and types.size() &gt; 0">
+			AND b.types IN
+			<foreach collection="types" item="tp" open="(" separator="," close=")">#{tp}</foreach>
+		</if>
+	</select>
+
+	<select id="countCustomerCreatedBetween" resultType="int">
+		SELECT COUNT(1) FROM eb_customer t
+		WHERE t.deleted_at IS NULL
+		AND t.created_at &gt;= #{start} AND t.created_at &lt;= #{end}
+		<if test="uids != null and uids.size() &gt; 0">
+			AND t.uid IN
+			<foreach collection="uids" item="u" open="(" separator="," close=")">#{u}</foreach>
+		</if>
+	</select>
+
+	<select id="countContractByStartDateBetween" resultType="int">
+		SELECT COUNT(1) FROM eb_contract t
+		WHERE t.deleted_at IS NULL
+		AND t.start_date IS NOT NULL
+		AND t.start_date &gt;= #{start} AND t.start_date &lt;= #{end}
+		<if test="uids != null and uids.size() &gt; 0">
+			AND t.uid IN
+			<foreach collection="uids" item="u" open="(" separator="," close=")">#{u}</foreach>
+		</if>
+		<if test="contractIds != null and contractIds.size() &gt; 0">
+			AND t.id IN
+			<foreach collection="contractIds" item="cid" open="(" separator="," close=")">#{cid}</foreach>
+		</if>
+	</select>
+
+	<select id="sumContractPriceByStartDateBetween" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(t.contract_price), 0) FROM eb_contract t
+		WHERE t.deleted_at IS NULL
+		AND t.start_date IS NOT NULL
+		AND t.start_date &gt;= #{start} AND t.start_date &lt;= #{end}
+		<if test="uids != null and uids.size() &gt; 0">
+			AND t.uid IN
+			<foreach collection="uids" item="u" open="(" separator="," close=")">#{u}</foreach>
+		</if>
+		<if test="contractIds != null and contractIds.size() &gt; 0">
+			AND t.id IN
+			<foreach collection="contractIds" item="cid" open="(" separator="," close=")">#{cid}</foreach>
+		</if>
+	</select>
+
+	<select id="sumContractSurplusUncollected" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(t.surplus), 0) FROM eb_contract t
+		WHERE t.deleted_at IS NULL
+		AND (t.signing_status IS NULL OR t.signing_status = '' OR CAST(t.signing_status AS UNSIGNED) &lt; 2)
+		<if test="uids != null and uids.size() &gt; 0">
+			AND t.uid IN
+			<foreach collection="uids" item="u" open="(" separator="," close=")">#{u}</foreach>
+		</if>
+		<if test="contractIds != null and contractIds.size() &gt; 0">
+			AND t.id IN
+			<foreach collection="contractIds" item="cid" open="(" separator="," close=")">#{cid}</foreach>
+		</if>
+	</select>
+
+	<select id="billTrendGrouped" resultType="com.bubblecloud.oa.api.vo.crm.NamedCountVO">
+		SELECT DATE_FORMAT(b.date, ${dateFormat}) AS name,
+			CAST(IFNULL(SUM(b.num), 0) * 100 AS SIGNED) AS cnt
+		<include refid="billJoinContractFrom"/>
+		<if test="types != null and types.size() &gt; 0">
+			AND b.types IN
+			<foreach collection="types" item="tp" open="(" separator="," close=")">#{tp}</foreach>
+		</if>
+		GROUP BY DATE_FORMAT(b.date, ${dateFormat})
+		ORDER BY name ASC
+	</select>
+
+	<select id="billRankByUid" resultType="com.bubblecloud.oa.api.vo.crm.CrmBillRankRowVO">
+		SELECT b.uid AS uid,
+			COALESCE(MAX(a.name), '') AS name,
+			CAST(IFNULL(SUM(CASE WHEN b.types IN (0, 1) THEN b.num ELSE 0 END), 0) AS DECIMAL(18,2)) AS price,
+			CAST(IFNULL(SUM(CASE WHEN b.types = 2 THEN b.num ELSE 0 END), 0) AS DECIMAL(18,2)) AS expend
+		<include refid="billJoinContractFromRank"/>
+		AND b.types IN (0, 1, 2)
+		GROUP BY b.uid
+		ORDER BY price DESC
+		LIMIT #{offset}, #{limit}
+	</select>
+
+	<select id="countBillRankGroups" resultType="int">
+		SELECT COUNT(1) FROM (
+			SELECT b.uid
+			<include refid="billJoinContractFrom"/>
+			AND b.types IN (0, 1, 2)
+			GROUP BY b.uid
+		) x
+	</select>
+
+	<select id="contractCategoryAgg" resultType="com.bubblecloud.oa.api.vo.crm.CrmContractCategoryAggVO">
+		SELECT c.contract_category AS contractCategory,
+			CAST(IFNULL(SUM(CASE WHEN b.types IN (0, 1) THEN b.num ELSE 0 END), 0) AS DECIMAL(18,2)) AS price,
+			CAST(COUNT(DISTINCT CASE WHEN b.types = 0 THEN c.id END) AS SIGNED) AS contractCount,
+			CAST(IFNULL(SUM(CASE WHEN b.types = 2 THEN b.num ELSE 0 END), 0) AS DECIMAL(18,2)) AS expend
+		<include refid="billJoinContractFrom"/>
+		AND b.types IN (0, 1, 2)
+		GROUP BY c.contract_category
+		HAVING CAST(IFNULL(SUM(CASE WHEN b.types IN (0, 1) THEN b.num ELSE 0 END), 0) AS DECIMAL(18,2)) &gt;= 0.01
+		ORDER BY price DESC
+		LIMIT 100
+	</select>
+
+	<select id="selectContractIdsByCategories" resultType="long">
+		SELECT t.id FROM eb_contract t
+		WHERE t.deleted_at IS NULL
+		<if test="categories != null and categories.size() &gt; 0">
+			AND t.contract_category IN
+			<foreach collection="categories" item="cat" open="(" separator="," close=")">#{cat}</foreach>
+		</if>
+	</select>
+
 </mapper>

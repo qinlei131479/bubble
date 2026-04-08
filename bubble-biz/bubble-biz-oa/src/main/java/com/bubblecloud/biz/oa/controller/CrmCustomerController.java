@@ -11,6 +11,7 @@ import com.bubblecloud.oa.api.vo.ListCountVO;
 import com.bubblecloud.oa.api.entity.Customer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -172,25 +173,26 @@ public class CrmCustomerController {
 	@PostMapping("/statistics")
 	@Operation(summary = "业绩统计")
 	public R<ObjectNode> statistics(@RequestBody JsonNode body) {
-		return R.phpOk(crmCustomerService.performanceStatistics(body));
+		return R.phpOk(crmCustomerService.performanceStatistics(body, requireAdminId()));
 	}
 
 	@PostMapping("/contract_rank")
 	@Operation(summary = "合同类型分析")
 	public R<ArrayNode> contractRank(@RequestBody JsonNode body) {
-		return R.phpOk(crmCustomerService.contractCategoryRank(body));
+		return R.phpOk(crmCustomerService.contractCategoryRank(body, requireAdminId()));
 	}
 
 	@PostMapping("/ranking")
 	@Operation(summary = "业务员排行")
-	public R<ArrayNode> ranking(@RequestBody JsonNode body) {
-		return R.phpOk(crmCustomerService.salesmanRanking(body));
+	public R<ObjectNode> ranking(@RequestBody JsonNode body) {
+		return R.phpOk(crmCustomerService.salesmanRanking(body, requireAdminId()));
 	}
 
 	@PostMapping("/trend_statistics")
 	@Operation(summary = "业绩趋势")
-	public R<ArrayNode> trendStatistics(@RequestBody(required = false) JsonNode body) {
-		return R.phpOk(crmCustomerService.trendStatistics());
+	public R<ObjectNode> trendStatistics(@RequestBody(required = false) JsonNode body) {
+		JsonNode b = body == null ? JsonNodeFactory.instance.objectNode() : body;
+		return R.phpOk(crmCustomerService.trendStatistics(b, requireAdminId()));
 	}
 
 	@PostMapping("/import")

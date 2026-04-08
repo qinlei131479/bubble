@@ -51,13 +51,13 @@ public interface CrmCustomerService extends UpService<Customer> {
 
 	void shift(List<Long> customerIds, int toUid, int invoice, int contract, Long adminId);
 
-	ObjectNode performanceStatistics(JsonNode body);
+	ObjectNode performanceStatistics(JsonNode body, Long adminId);
 
-	ArrayNode contractCategoryRank(JsonNode body);
+	ArrayNode contractCategoryRank(JsonNode body, Long adminId);
 
-	ArrayNode salesmanRanking(JsonNode body);
+	ObjectNode salesmanRanking(JsonNode body, Long adminId);
 
-	ArrayNode trendStatistics();
+	ObjectNode trendStatistics(JsonNode body, Long adminId);
 
 	void batchImport(JsonNode body, Long adminId);
 

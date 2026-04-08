@@ -33,7 +33,7 @@ public interface AttendanceClockConstants {
 
 	int OFFICE_ABNORMAL = 2;
 
-	String[] SHIFT_PREFIXES = {"one", "two", "three", "four"};
+	String[] SHIFT_PREFIXES = { "one", "two", "three", "four" };
 
 	List<Integer> ALL_LACK_CARD = List.of(LATE_LACK_CARD, EARLY_LACK_CARD, LACK_CARD);
 

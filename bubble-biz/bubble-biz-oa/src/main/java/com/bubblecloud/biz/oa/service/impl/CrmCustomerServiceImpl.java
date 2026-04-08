@@ -1,10 +1,18 @@
 package com.bubblecloud.biz.oa.service.impl;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -23,6 +31,7 @@ import com.bubblecloud.biz.oa.mapper.CustomerMapper;
 import com.bubblecloud.biz.oa.mapper.CustomerRecordMapper;
 import com.bubblecloud.biz.oa.service.CrmCustomerService;
 import com.bubblecloud.biz.oa.service.FormDataService;
+import com.bubblecloud.biz.oa.util.CrmRingRatioUtil;
 import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
 import com.bubblecloud.oa.api.entity.Admin;
 import com.bubblecloud.oa.api.entity.ClientBill;
@@ -34,6 +43,8 @@ import com.bubblecloud.oa.api.entity.Customer;
 import com.bubblecloud.oa.api.entity.CustomerLiaison;
 import com.bubblecloud.oa.api.entity.CustomerRecord;
 import com.bubblecloud.oa.api.vo.ListCountVO;
+import com.bubblecloud.oa.api.vo.crm.CrmBillRankRowVO;
+import com.bubblecloud.oa.api.vo.crm.CrmContractCategoryAggVO;
 import com.bubblecloud.oa.api.vo.crm.NamedCountVO;
 import com.bubblecloud.oa.api.vo.form.FormCateListItemVO;
 import com.bubblecloud.oa.api.vo.form.FormDataItemVO;
@@ -531,34 +542,208 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 	}
 
 	@Override
-	public ObjectNode performanceStatistics(JsonNode body) {
-		ObjectNode root = objectMapper.createObjectNode();
+	public ObjectNode performanceStatistics(JsonNode body, Long adminId) {
+		String time = body.path("time").asText("");
+		String[] sr = CrmRingRatioUtil.ringRatioTime(time);
+		LocalDateTime[] searchBounds = parseDateTimeRange(sr[0]);
+		LocalDateTime[] ratioBounds = parseDateTimeRange(sr[1]);
+		List<Integer> uids = parseUidList(body, adminId);
+		List<String> categories = encodeCategoryIds(body.get("category_id"));
+		List<Long> contractIds = resolveContractIdsForStats(categories);
+
+		int entid = 1;
+		int nc = crmDashboardMapper.countCustomerCreatedBetween(searchBounds[0], searchBounds[1], uids);
+		int ncR = crmDashboardMapper.countCustomerCreatedBetween(ratioBounds[0], ratioBounds[1], uids);
 		ObjectNode newCustomer = objectMapper.createObjectNode();
-		newCustomer.put("count",
-				baseMapper.selectCount(Wrappers.lambdaQuery(Customer.class).isNull(Customer::getDeletedAt)));
-		newCustomer.put("ratio", 0);
+		newCustomer.put("count", nc);
+		newCustomer.put("ratio", CrmRingRatioUtil.ringRatio(nc, ncR));
+
+		BigDecimal incomeS = nz(crmDashboardMapper.sumBillJoinContract(entid, searchBounds[0], searchBounds[1], uids,
+				Arrays.asList(0, 1), categories));
+		BigDecimal incomeR = nz(crmDashboardMapper.sumBillJoinContract(entid, ratioBounds[0], ratioBounds[1], uids,
+				Arrays.asList(0, 1), categories));
+		BigDecimal renewS = nz(crmDashboardMapper.sumBillJoinContract(entid, searchBounds[0], searchBounds[1], uids,
+				Collections.singletonList(1), categories));
+		BigDecimal renewR = nz(crmDashboardMapper.sumBillJoinContract(entid, ratioBounds[0], ratioBounds[1], uids,
+				Collections.singletonList(1), categories));
+
+		LocalDate sd = searchBounds[0].toLocalDate();
+		LocalDate ed = searchBounds[1].toLocalDate();
+		LocalDate rd0 = ratioBounds[0].toLocalDate();
+		LocalDate rd1 = ratioBounds[1].toLocalDate();
+
+		int cct = crmDashboardMapper.countContractByStartDateBetween(sd, ed, uids, contractIds);
+		int cctR = crmDashboardMapper.countContractByStartDateBetween(rd0, rd1, uids, contractIds);
+		BigDecimal cpS = nz(crmDashboardMapper.sumContractPriceByStartDateBetween(sd, ed, uids, contractIds));
+		BigDecimal cpR = nz(crmDashboardMapper.sumContractPriceByStartDateBetween(rd0, rd1, uids, contractIds));
+		BigDecimal unc = nz(crmDashboardMapper.sumContractSurplusUncollected(uids, contractIds));
+
+		ObjectNode root = objectMapper.createObjectNode();
 		root.set("new_customer", newCustomer);
-		root.set("bill", objectMapper.valueToTree(crmDashboardMapper.billIncomeByMonth()));
-		root.set("contract", objectMapper.valueToTree(crmDashboardMapper.contractCategoryRank()));
+		root.set("income", moneyPair(incomeS, incomeR));
+		root.set("renew", moneyPair(renewS, renewR));
+		root.set("frame_rank", objectMapper.createArrayNode());
+		ObjectNode newContract = objectMapper.createObjectNode();
+		newContract.put("count", cct);
+		newContract.put("ratio", CrmRingRatioUtil.ringRatio(cct, cctR));
+		root.set("new_contract", newContract);
+		root.set("new_contract_price", moneyPair(cpS, cpR));
+		ObjectNode uncNode = objectMapper.createObjectNode();
+		uncNode.put("price", format2(unc));
+		uncNode.put("ratio", 0);
+		root.set("uncollected_price", uncNode);
 		return root;
 	}
 
 	@Override
-	public ArrayNode contractCategoryRank(JsonNode body) {
-		List<NamedCountVO> rows = crmDashboardMapper.contractCategoryRank();
-		return objectMapper.valueToTree(rows);
+	public ArrayNode contractCategoryRank(JsonNode body, Long adminId) {
+		String time = body.path("time").asText("");
+		String[] sr = CrmRingRatioUtil.ringRatioTime(time);
+		LocalDateTime[] bounds = parseDateTimeRange(sr[0]);
+		List<Integer> uids = parseUidList(body, adminId);
+		List<String> categories = encodeCategoryIds(body.get("category_id"));
+		List<CrmContractCategoryAggVO> rows = crmDashboardMapper.contractCategoryAgg(1, bounds[0], bounds[1], uids,
+				categories);
+		ArrayNode arr = objectMapper.createArrayNode();
+		for (CrmContractCategoryAggVO row : rows) {
+			if (row == null || StrUtil.isBlank(row.getContractCategory())) {
+				continue;
+			}
+			ObjectNode o = objectMapper.createObjectNode();
+			o.put("category_name", row.getContractCategory());
+			o.put("category_id", firstCategoryIdToken(row.getContractCategory()));
+			o.put("price", format2(nz(row.getPrice())));
+			o.put("count", row.getContractCount() == null ? 0 : row.getContractCount().intValue());
+			o.put("expend", format2(nz(row.getExpend())));
+			arr.add(o);
+		}
+		return arr;
 	}
 
 	@Override
-	public ArrayNode salesmanRanking(JsonNode body) {
-		List<NamedCountVO> rows = crmDashboardMapper.customerCountBySalesman();
-		return objectMapper.valueToTree(rows);
+	public ObjectNode salesmanRanking(JsonNode body, Long adminId) {
+		String time = body.path("time").asText("");
+		String[] sr = CrmRingRatioUtil.ringRatioTime(time);
+		LocalDateTime[] bounds = parseDateTimeRange(sr[0]);
+		List<Integer> uids = parseUidList(body, adminId);
+		List<String> categories = encodeCategoryIds(body.get("category_id"));
+		int page = Math.max(1, body.path("page").asInt(1));
+		int limit = Math.max(1, body.path("limit").asInt(20));
+		int offset = (page - 1) * limit;
+		int entid = 1;
+		BigDecimal totalIncome = nz(crmDashboardMapper.sumBillJoinContract(entid, bounds[0], bounds[1], uids,
+				Arrays.asList(0, 1), categories));
+		int total = crmDashboardMapper.countBillRankGroups(entid, bounds[0], bounds[1], uids, categories);
+		List<CrmBillRankRowVO> rows = crmDashboardMapper.billRankByUid(entid, bounds[0], bounds[1], uids, categories,
+				offset, limit);
+		ArrayNode list = objectMapper.createArrayNode();
+		for (CrmBillRankRowVO row : rows) {
+			if (row == null) {
+				continue;
+			}
+			BigDecimal price = nz(row.getPrice());
+			BigDecimal expend = nz(row.getExpend());
+			ObjectNode o = objectMapper.createObjectNode();
+			o.put("name", StrUtil.nullToEmpty(row.getName()));
+			o.put("uid", StrUtil.nullToEmpty(row.getUid()));
+			o.put("avatar", "");
+			o.put("frame_name", "");
+			o.put("price", format2(price));
+			o.put("expend", format2(expend));
+			int ratio = 0;
+			if (totalIncome.compareTo(BigDecimal.ZERO) > 0) {
+				ratio = price.divide(totalIncome, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).intValue();
+			}
+			o.put("ratio", ratio);
+			o.put("net_amount", format2(price.subtract(expend)));
+			list.add(o);
+		}
+		ObjectNode out = objectMapper.createObjectNode();
+		out.set("list", list);
+		out.put("count", total);
+		out.put("page", page);
+		out.put("limit", limit);
+		return out;
 	}
 
 	@Override
-	public ArrayNode trendStatistics() {
-		List<NamedCountVO> rows = crmDashboardMapper.billIncomeByMonth();
-		return objectMapper.valueToTree(rows);
+	public ObjectNode trendStatistics(JsonNode body, Long adminId) {
+		String time = body.path("time").asText("");
+		String[] tp = time.split("-", 2);
+		if (tp.length != 2) {
+			throw new IllegalArgumentException("参数错误");
+		}
+		LocalDate start = LocalDate.parse(tp[0].trim(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+		LocalDate end = LocalDate.parse(tp[1].trim(), DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+		long dayCount = ChronoUnit.DAYS.between(start, end) + 1;
+		final String dateFormat;
+		final String stepUnit;
+		if (dayCount > 730) {
+			dateFormat = "%Y";
+			stepUnit = "year";
+		}
+		else if (dayCount <= 31) {
+			dateFormat = "%Y-%m-%d";
+			stepUnit = "day";
+		}
+		else {
+			dateFormat = "%Y-%m";
+			stepUnit = "month";
+		}
+		LocalDateTime rangeStart = start.atStartOfDay();
+		LocalDateTime rangeEnd = end.atTime(23, 59, 59);
+		List<Integer> uids = parseUidList(body, adminId);
+		List<String> categories = encodeCategoryIds(body.get("category_id"));
+		int entid = 1;
+		List<NamedCountVO> incomeRows = crmDashboardMapper.billTrendGrouped(entid, rangeStart, rangeEnd, uids,
+				Arrays.asList(0, 1), categories, dateFormat);
+		List<NamedCountVO> expendRows = crmDashboardMapper.billTrendGrouped(entid, rangeStart, rangeEnd, uids,
+				Collections.singletonList(2), categories, dateFormat);
+		Map<String, BigDecimal> incomeMap = trendRowMap(incomeRows);
+		Map<String, BigDecimal> expendMap = trendRowMap(expendRows);
+		List<String> xAxis = new ArrayList<>();
+		if ("day".equals(stepUnit)) {
+			LocalDate d = start;
+			while (!d.isAfter(end)) {
+				xAxis.add(d.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+				d = d.plusDays(1);
+			}
+		}
+		else if ("month".equals(stepUnit)) {
+			LocalDate d = start.withDayOfMonth(1);
+			LocalDate endMonth = end.withDayOfMonth(1);
+			while (!d.isAfter(endMonth)) {
+				xAxis.add(d.format(DateTimeFormatter.ofPattern("yyyy-MM")));
+				d = d.plusMonths(1);
+			}
+		}
+		else {
+			int y = start.getYear();
+			int yEnd = end.getYear();
+			while (y <= yEnd) {
+				xAxis.add(String.valueOf(y));
+				y++;
+			}
+		}
+		List<Double> incomeData = new ArrayList<>();
+		List<Double> expendData = new ArrayList<>();
+		for (String label : xAxis) {
+			incomeData.add(incomeMap.getOrDefault(label, BigDecimal.ZERO).doubleValue());
+			expendData.add(expendMap.getOrDefault(label, BigDecimal.ZERO).doubleValue());
+		}
+		ObjectNode series0 = objectMapper.createObjectNode();
+		series0.put("name", "流入");
+		series0.set("data", objectMapper.valueToTree(incomeData));
+		ObjectNode series1 = objectMapper.createObjectNode();
+		series1.put("name", "流出");
+		series1.set("data", objectMapper.valueToTree(expendData));
+		ArrayNode series = objectMapper.createArrayNode();
+		series.add(series0);
+		series.add(series1);
+		ObjectNode root = objectMapper.createObjectNode();
+		root.set("xAxis", objectMapper.valueToTree(xAxis));
+		root.set("series", series);
+		return root;
 	}
 
 	@Override
@@ -590,6 +775,99 @@ public class CrmCustomerServiceImpl extends UpServiceImpl<CustomerMapper, Custom
 				// 跳过无法解析的行，避免整批失败
 			}
 		}
+	}
+
+	private static LocalDateTime[] parseDateTimeRange(String range) {
+		String[] p = range.split("-", 2);
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+		return new LocalDateTime[] { LocalDateTime.parse(p[0].trim(), f), LocalDateTime.parse(p[1].trim(), f) };
+	}
+
+	private List<Integer> parseUidList(JsonNode body, Long adminId) {
+		JsonNode uidNode = body.get("uid");
+		if (uidNode == null || !uidNode.isArray() || uidNode.isEmpty()) {
+			return Collections.singletonList(adminId.intValue());
+		}
+		List<Integer> out = new ArrayList<>();
+		uidNode.forEach(n -> {
+			if (n.isInt() || n.isLong()) {
+				out.add(n.intValue());
+			}
+		});
+		return out.isEmpty() ? Collections.singletonList(adminId.intValue()) : out;
+	}
+
+	private List<String> encodeCategoryIds(JsonNode categoryIdNode) {
+		if (categoryIdNode == null || !categoryIdNode.isArray() || categoryIdNode.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<String> out = new ArrayList<>();
+		for (JsonNode row : categoryIdNode) {
+			if (!row.isArray()) {
+				continue;
+			}
+			try {
+				List<String> vals = new ArrayList<>();
+				row.forEach(n -> vals.add(String.valueOf(n.asInt())));
+				out.add(objectMapper.writeValueAsString(vals));
+			}
+			catch (Exception ignored) {
+			}
+		}
+		return out;
+	}
+
+	private List<Long> resolveContractIdsForStats(List<String> categories) {
+		if (categories == null || categories.isEmpty()) {
+			return null;
+		}
+		List<Long> ids = crmDashboardMapper.selectContractIdsByCategories(categories);
+		if (ids.isEmpty()) {
+			return Collections.singletonList(-1L);
+		}
+		return ids;
+	}
+
+	private ObjectNode moneyPair(BigDecimal a, BigDecimal b) {
+		ObjectNode o = objectMapper.createObjectNode();
+		o.put("price", format2(nz(a)));
+		o.put("ratio", CrmRingRatioUtil.ringRatio(a, b));
+		return o;
+	}
+
+	private static String format2(BigDecimal v) {
+		return nz(v).setScale(2, RoundingMode.HALF_UP).toPlainString();
+	}
+
+	private static BigDecimal nz(BigDecimal v) {
+		return v == null ? BigDecimal.ZERO : v;
+	}
+
+	private Map<String, BigDecimal> trendRowMap(List<NamedCountVO> rows) {
+		Map<String, BigDecimal> m = new HashMap<>();
+		if (rows == null) {
+			return m;
+		}
+		for (NamedCountVO n : rows) {
+			if (n == null || StrUtil.isBlank(n.getName())) {
+				continue;
+			}
+			long cents = n.getCnt() == null ? 0 : n.getCnt();
+			m.put(n.getName(), BigDecimal.valueOf(cents).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+		}
+		return m;
+	}
+
+	private String firstCategoryIdToken(String json) {
+		try {
+			JsonNode n = objectMapper.readTree(json);
+			if (n.isArray() && n.size() > 0) {
+				return n.get(0).asText();
+			}
+		}
+		catch (Exception ignored) {
+		}
+		return json;
 	}
 
 	private void insertRecord(Long eid, int type, int creatorUid, int uid, Integer returnNum, String reason) {

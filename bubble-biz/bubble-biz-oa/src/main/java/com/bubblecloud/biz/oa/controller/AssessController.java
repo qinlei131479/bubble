@@ -85,11 +85,11 @@ public class AssessController {
 		return R.phpOk(OaConstants.INSERT_SUCC);
 	}
 
-	@PostMapping("/target")
-	@Operation(summary = "创建绩效考核模板（与 create 同参，对齐 PHP 双路由）")
-	public R<String> createTarget(@RequestBody AssessSaveDTO dto) {
-		return create(dto);
-	}
+//	@PostMapping("/target")
+//	@Operation(summary = "创建绩效考核模板（与 create 同参，对齐 PHP 双路由）")
+//	public R<String> createTarget(@RequestBody AssessSaveDTO dto) {
+//		return create(dto);
+//	}
 
 	@PostMapping("/update/{id}")
 	@Operation(summary = "修改绩效考核")

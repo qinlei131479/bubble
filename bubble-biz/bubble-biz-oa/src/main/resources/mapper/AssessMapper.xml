@@ -6,7 +6,7 @@
 		SELECT a.*
 		FROM eb_assess a
 		<where>
-			AND a.`delete` IS NULL
+			AND a.`deleted_at` IS NULL
 			<if test="query.entid != null">
 				AND a.entid = #{query.entid}
 			</if>
