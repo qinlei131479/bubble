@@ -12,4 +12,82 @@
 		WHERE t.program_id = #{programId} AND t.deleted_at IS NULL AND t.status IN (0, 1)
 	</select>
 
+	<select id="selectFlatList" resultType="com.bubblecloud.oa.api.entity.ProgramTask">
+		SELECT t.*
+		FROM eb_program_task t
+		<where>
+			t.deleted_at IS NULL
+			<if test="query.programId != null">AND t.program_id = #{query.programId}</if>
+			<if test="query.scopeProgramIds != null and query.scopeProgramIds.size() &gt; 0">
+				AND t.program_id IN
+				<foreach collection="query.scopeProgramIds" item="sp" open="(" separator="," close=")">#{sp}</foreach>
+			</if>
+			<if test="query.versionId != null">AND t.version_id = #{query.versionId}</if>
+			<if test="query.status != null">AND t.status = #{query.status}</if>
+			<if test="query.priority != null">AND t.priority = #{query.priority}</if>
+			<if test="query.pid != null">AND t.pid = #{query.pid}</if>
+			<if test="query.uid != null and query.uid &gt; 0">AND t.uid = #{query.uid}</if>
+			<if test="query.nameLike != null and query.nameLike != ''">
+				AND t.name LIKE CONCAT('%', #{query.nameLike}, '%')
+			</if>
+			<if test="query.admins != null and query.admins.size() &gt; 0">
+				AND t.uid IN
+				<foreach collection="query.admins" item="a" open="(" separator="," close=")">#{a}</foreach>
+			</if>
+			<if test="query.members != null and query.members.size() &gt; 0">
+				AND t.id IN (
+					SELECT m.task_id FROM eb_program_task_member m
+					WHERE m.deleted_at IS NULL AND m.uid IN
+					<foreach collection="query.members" item="mu" open="(" separator="," close=")">#{mu}</foreach>
+				)
+			</if>
+			<if test="authScope">
+				<choose>
+					<when test="query.types != null and query.types == 0">
+						AND (
+							t.program_id IN (
+								SELECT p.id FROM eb_program p WHERE p.deleted_at IS NULL
+								AND (p.uid = #{query.adminUid} OR p.creator_uid = #{query.adminUid})
+							)
+							OR t.uid = #{query.adminUid}
+							OR t.creator_uid = #{query.adminUid}
+							OR t.id IN (
+								SELECT tm.task_id FROM eb_program_task_member tm
+								WHERE tm.deleted_at IS NULL AND tm.uid = #{query.adminUid}
+							)
+						)
+					</when>
+					<when test="query.types != null and query.types == 1">AND t.uid = #{query.adminUid}</when>
+					<when test="query.types != null and query.types == 2">
+						AND (
+							t.uid = #{query.adminUid}
+							<if test="participantTaskIds != null and participantTaskIds.size() &gt; 0">
+								OR t.id IN
+								<foreach collection="participantTaskIds" item="tid" open="(" separator="," close=")">#{tid}</foreach>
+							</if>
+						)
+					</when>
+					<when test="query.types != null and query.types == 3">AND t.creator_uid = #{query.adminUid}</when>
+					<otherwise>AND t.uid = #{query.adminUid}</otherwise>
+				</choose>
+			</if>
+		</where>
+		ORDER BY t.sort ASC, t.id ASC
+	</select>
+
+	<select id="selectMaxSort" resultType="java.lang.Integer">
+		SELECT IFNULL(MAX(t.sort), 0) FROM eb_program_task t
+		WHERE t.deleted_at IS NULL AND t.pid = #{pid} AND t.program_id = #{programId}
+	</select>
+
+	<select id="selectTaskIdsByMemberUid" resultType="java.lang.Long">
+		SELECT DISTINCT m.task_id FROM eb_program_task_member m
+		WHERE m.deleted_at IS NULL AND m.uid = #{uid}
+	</select>
+
+	<select id="selectByPathContains" resultType="com.bubblecloud.oa.api.entity.ProgramTask">
+		SELECT t.* FROM eb_program_task t
+		WHERE t.deleted_at IS NULL AND t.path LIKE CONCAT('%/', #{ancestorId}, '/%')
+	</select>
+
 </mapper>
