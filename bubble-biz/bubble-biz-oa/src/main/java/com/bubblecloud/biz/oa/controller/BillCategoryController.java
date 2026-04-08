@@ -8,8 +8,7 @@ import com.bubblecloud.oa.api.dto.finance.BillCategorySaveDTO;
 import com.bubblecloud.oa.api.entity.BillCategory;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +39,6 @@ public class BillCategoryController {
 
 	private final BillCategoryService billCategoryService;
 
-	private final ObjectMapper objectMapper;
-
 	@GetMapping({ "", "/page" })
 	@Operation(summary = "分类列表")
 	public R<SimplePageVO> page(@ParameterObject Pg pg, @ParameterObject BillCategory query) {
@@ -50,14 +47,9 @@ public class BillCategoryController {
 	}
 
 	@GetMapping("/create")
-	@Operation(summary = "创建表单（占位）")
-	public R<ObjectNode> create(@RequestParam(required = false) Long pid) {
-		ObjectNode n = objectMapper.createObjectNode();
-		n.putArray("rule");
-		if (ObjectUtil.isNotNull(pid)) {
-			n.put("pid", pid);
-		}
-		return R.phpOk(n);
+	@Operation(summary = "创建表单（elForm 对齐）")
+	public R<OaElFormVO> createForm(@RequestParam(defaultValue = "1") long entid) {
+		return R.phpOk(billCategoryService.buildCategoryCreateForm(entid));
 	}
 
 	@PostMapping
@@ -79,12 +71,9 @@ public class BillCategoryController {
 	}
 
 	@GetMapping("/{id}/edit")
-	@Operation(summary = "编辑表单（占位）")
-	public R<ObjectNode> edit(@PathVariable Long id) {
-		ObjectNode n = objectMapper.createObjectNode();
-		n.putArray("rule");
-		n.put("id", id);
-		return R.phpOk(n);
+	@Operation(summary = "编辑表单（elForm 对齐）")
+	public R<OaElFormVO> editForm(@PathVariable Long id, @RequestParam(defaultValue = "1") long entid) {
+		return R.phpOk(billCategoryService.buildCategoryEditForm(id, entid));
 	}
 
 	@PutMapping("/{id}")

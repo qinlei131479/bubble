@@ -8,6 +8,7 @@ import com.bubblecloud.common.mybatis.base.Pg;
 import com.bubblecloud.oa.api.dto.finance.EnterprisePaytypeSaveDTO;
 import com.bubblecloud.oa.api.entity.EnterprisePaytype;
 import com.bubblecloud.oa.api.vo.SimplePageVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,9 +45,9 @@ public class PayTypeController {
 	}
 
 	@GetMapping("/create")
-	@Operation(summary = "创建表单（占位）")
-	public R<EnterprisePaytype> create() {
-		return R.phpOk(new EnterprisePaytype());
+	@Operation(summary = "创建表单（elForm 对齐）")
+	public R<OaElFormVO> createForm() {
+		return R.phpOk(enterprisePaytypeService.buildCreateForm());
 	}
 
 	@PostMapping

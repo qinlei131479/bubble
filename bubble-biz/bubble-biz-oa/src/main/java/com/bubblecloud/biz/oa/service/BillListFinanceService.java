@@ -6,6 +6,8 @@ import com.bubblecloud.oa.api.dto.finance.BillListSaveDTO;
 import com.bubblecloud.oa.api.entity.BillList;
 import com.bubblecloud.oa.api.entity.ClientBillLog;
 import com.bubblecloud.oa.api.vo.finance.BillListFinancePageVO;
+import com.bubblecloud.oa.api.vo.finance.FinanceBillRankRowVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -19,9 +21,16 @@ public interface BillListFinanceService {
 
 	BillListFinancePageVO postList(JsonNode body);
 
-	ObjectNode emptyChartShell();
+	/**
+	 * 对齐 PHP {@code BillController::billTrend} + {@code BillService::getTrend}（all=true）
+	 */
+	ObjectNode chart(JsonNode body);
 
-	ObjectNode rankAnalysisStub();
+	/** 对齐 PHP {@code BillController::billChart} + {@code getTrend}（all=false） */
+	ObjectNode chartPart(JsonNode body);
+
+	/** 对齐 PHP {@code getRankAnalysis} */
+	List<FinanceBillRankRowVO> rankAnalysis(JsonNode body);
 
 	List<ClientBillLog> listLogs(Long entid, Long billListId);
 
@@ -32,5 +41,9 @@ public interface BillListFinanceService {
 	void updateBill(Long id, BillListSaveDTO dto, Long operatorUserId);
 
 	void deleteBill(Long id);
+
+	OaElFormVO buildBillCreateForm(long entid);
+
+	OaElFormVO buildBillEditForm(long id, long entid);
 
 }

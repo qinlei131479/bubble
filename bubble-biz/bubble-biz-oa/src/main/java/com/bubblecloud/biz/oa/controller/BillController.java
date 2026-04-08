@@ -9,8 +9,9 @@ import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.oa.api.dto.finance.BillListSaveDTO;
 import com.bubblecloud.oa.api.entity.ClientBillLog;
 import com.bubblecloud.oa.api.vo.finance.BillListFinancePageVO;
+import com.bubblecloud.oa.api.vo.finance.FinanceBillRankRowVO;
+import com.bubblecloud.oa.api.vo.form.OaElFormVO;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,8 +41,6 @@ public class BillController {
 
 	private final BillListFinanceService billListFinanceService;
 
-	private final ObjectMapper objectMapper;
-
 	@PostMapping("/list")
 	@Operation(summary = "财务流水列表")
 	public R<BillListFinancePageVO> postList(@RequestBody JsonNode body) {
@@ -54,15 +53,25 @@ public class BillController {
 	}
 
 	@PostMapping("/chart")
-	@Operation(summary = "财务流水统计图（占位壳，待对齐 PHP BillService::getTrend）")
+	@Operation(summary = "财务流水统计图（对齐 PHP BillService::getTrend all=true）")
 	public R<ObjectNode> chart(@RequestBody JsonNode body) {
-		return R.phpOk(billListFinanceService.emptyChartShell());
+		try {
+			return R.phpOk(billListFinanceService.chart(body));
+		}
+		catch (Exception e) {
+			return R.phpFailed(e.getMessage());
+		}
 	}
 
 	@PostMapping("/rank_analysis")
-	@Operation(summary = "占比分析（占位，待对齐 PHP getRankAnalysis）")
-	public R<ObjectNode> rankAnalysis(@RequestBody JsonNode body) {
-		return R.phpOk(billListFinanceService.rankAnalysisStub());
+	@Operation(summary = "占比分析（对齐 PHP getRankAnalysis）")
+	public R<List<FinanceBillRankRowVO>> rankAnalysis(@RequestBody JsonNode body) {
+		try {
+			return R.phpOk(billListFinanceService.rankAnalysis(body));
+		}
+		catch (Exception e) {
+			return R.phpFailed(e.getMessage());
+		}
 	}
 
 	@GetMapping("/record/{id}")
@@ -72,13 +81,18 @@ public class BillController {
 	}
 
 	@PostMapping("/chart_part")
-	@Operation(summary = "统计数据（占位壳）")
+	@Operation(summary = "财务流水统计数据（对齐 PHP chart_part / getTrend all=false）")
 	public R<ObjectNode> chartPart(@RequestBody JsonNode body) {
-		return R.phpOk(billListFinanceService.emptyChartShell());
+		try {
+			return R.phpOk(billListFinanceService.chartPart(body));
+		}
+		catch (Exception e) {
+			return R.phpFailed(e.getMessage());
+		}
 	}
 
 	@PostMapping("/import")
-	@Operation(summary = "导入资金记录（简化版）")
+	@Operation(summary = "导入资金记录")
 	public R<String> importBill(@RequestBody JsonNode body) {
 		try {
 			Long uid = OaSecurityUtil.currentUserId();
@@ -91,12 +105,9 @@ public class BillController {
 	}
 
 	@GetMapping("/create")
-	@Operation(summary = "创建表单（占位，待 elForm 对齐）")
-	public R<ObjectNode> createForm() {
-		ObjectNode n = objectMapper.createObjectNode();
-		n.putArray("rule");
-		n.put("action", "");
-		return R.phpOk(n);
+	@Operation(summary = "创建表单（elForm 对齐）")
+	public R<OaElFormVO> createForm(@RequestParam(defaultValue = "1") long entid) {
+		return R.phpOk(billListFinanceService.buildBillCreateForm(entid));
 	}
 
 	@PostMapping
@@ -113,12 +124,9 @@ public class BillController {
 	}
 
 	@GetMapping("/{id}/edit")
-	@Operation(summary = "编辑表单（占位）")
-	public R<ObjectNode> editForm(@PathVariable Long id) {
-		ObjectNode n = objectMapper.createObjectNode();
-		n.putArray("rule");
-		n.put("action", "/ent/bill/" + id);
-		return R.phpOk(n);
+	@Operation(summary = "编辑表单")
+	public R<OaElFormVO> editForm(@PathVariable Long id, @RequestParam(defaultValue = "1") long entid) {
+		return R.phpOk(billListFinanceService.buildBillEditForm(id, entid));
 	}
 
 	@PutMapping("/{id}")

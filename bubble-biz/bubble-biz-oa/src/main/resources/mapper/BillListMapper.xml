@@ -47,4 +47,42 @@
 		</where>
 	</select>
 
+	<sql id="rangeAndCate">
+		AND t.entid = #{entid}
+		AND t.types = #{types}
+		AND t.edit_time &gt;= #{start}
+		AND t.edit_time &lt;= #{end}
+		<if test="cateIds != null and cateIds.size() &gt; 0">
+			AND t.cate_id IN
+			<foreach collection="cateIds" item="cid" open="(" separator="," close=")">
+				#{cid}
+			</foreach>
+		</if>
+	</sql>
+
+	<select id="sumNumInRange" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(t.num), 0)
+		FROM eb_bill_list t
+		<where>
+			<include refid="rangeAndCate"/>
+		</where>
+	</select>
+
+	<select id="selectTrendAgg" resultType="com.bubblecloud.oa.api.vo.finance.BillTrendRowVO">
+		SELECT DATE_FORMAT(t.edit_time, #{pattern}) AS days, IFNULL(SUM(t.num), 0) AS num
+		FROM eb_bill_list t
+		<where>
+			<include refid="rangeAndCate"/>
+		</where>
+		GROUP BY days
+	</select>
+
+	<select id="sumNumSubtree" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(t.num), 0)
+		FROM eb_bill_list t
+		<where>
+			<include refid="rangeAndCate"/>
+		</where>
+	</select>
+
 </mapper>
