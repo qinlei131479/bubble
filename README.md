@@ -1,61 +1,42 @@
 ## 项目概述
 
-**Bubble-Cloud** 是一个面向下一代人机交互的智能体原生平台，将大语言模型、RAG 检索增强生成与自主智能体技术深度融合， 以“泡泡”为核心理念，构建轻量化、可组合、自进化的 AI 应用生态。
+**Bubble** 是一个面向下一代人机交互的**智能体原生平台/微服务工程**，融合 LLM、RAG 检索增强与自主智能体能力，以“泡泡”为核心理念，构建轻量化、可组合、自进化的 AI 应用生态。
 
-- 基于 Spring Cloud 、Spring Boot、 OAuth2 的 RBAC **企业快速开发平台**， 支持微服务架构
-- 提供对 Spring Authorization Server 生产级实践，支持多种安全授权模式
-- 提供对常见容器化方案支持 Kubernetes、Rancher2 、Kubesphere、EDAS、SAE 支持
+本仓库采用 **Monorepo** 目录组织，以便更好兼容 VibeCoding（让目录结构本身就能表达“是什么/在哪里/怎么跑”）。
 
-## 快速开始
+## 快速入口（可点击）
 
-分支说明
-- JDK17_master: java17 + springboot 3.5 + springcloud 2025
-- JDK8_master: java8 + springboot 2.7 + springcloud 2021
+- **后端（Java 微服务）**：[apps/bubble-cloud/README.md](apps/bubble-cloud/README.md)
+- **前端（Vue3）**：[apps/bubble-ui/README.md](apps/bubble-ui/README.md)
+- **Python 智能体服务（预留）**：[apps/python/README.md](apps/python/README.md)
+- **Docker 一键部署**：[docker/README.md](docker/README.md)
+- **知识库（VitePress）**：[docs/README.md](docs/README.md)
+- **开发规范（Cursor Rules）**：[`./.cursor/rules/`](.cursor/rules/)
+  - 总览：[.cursor/rules/project-overview.mdc](.cursor/rules/project-overview.mdc)
+  - 架构与端口：[.cursor/rules/module-architecture.mdc](.cursor/rules/module-architecture.mdc)
+  - Monorepo 接入规范：[.cursor/rules/monorepo-layout.mdc](.cursor/rules/monorepo-layout.mdc)
 
+## 目录结构（Monorepo 总览）
 
-### 核心依赖
-
-| 依赖                          | 版本     |
-|-----------------------------|--------|
-| Spring Boot                 | 3.5.12  |
-| Spring Cloud                | 2025   |
-| Spring Cloud Alibaba        | 2025   |
-| Spring Authorization Server | 1.5.2  |
-| Mybatis Plus                | 3.5.16 |
-| Vue                         | 3.5    |
-| Element Plus                | 2.8    |
-
-### 模块说明
-
-```lua
-Vue前端  -- https://github.com/qinlei131479/AgetBubbles.git
-
-Bubble-Cloud
-└── bubble-api -- 通用API模块
-     ├── bubble-api-backend -- 通用用户权限管理系统公共api模块
-     ├── bubble-api-flow -- 通用flow公共api模块
-     └── bubble-api-oa -- 通用oa公共api模块
-├── bubble-auth -- 授权服务提供[8766]
-└── bubble-biz -- 通用用户权限管理模块
-     ├── bubble-biz-backend -- 通用用户权限管理系统业务处理模块[8801]
-     ├── bubble-biz-flow -- 通用flow业务处理模块[8802]
-     └── bubble-biz-oa -- 通用OA业务处理模块[8803]
-└── bubble-common -- 系统公共模块
-     ├── bubble-common-bom -- 全局依赖管理控制
-     ├── bubble-common-core -- 公共工具类核心包
-     ├── bubble-common-datasource -- 动态数据源包
-     ├── bubble-common-log -- 日志服务
-     ├── bubble-common-oss -- 文件上传工具类
-     ├── bubble-common-mybatis -- mybatis 扩展封装
-     ├── bubble-common-seata -- 分布式事务
-     ├── bubble-common-websocket -- websocket 封装
-     ├── bubble-common-security -- 安全工具类
-     ├── bubble-common-swagger -- 接口文档
-     ├── bubble-common-feign -- feign 扩展封装
-     └── bubble-common-xss -- xss 安全封装
-├── bubble-gateway -- Spring Cloud Gateway网关[8666]
-└── bubble-visual
-     └── bubble-codegen -- 图形化代码生成 [8901]
-     ├── bubble-monitor -- 服务监控 [8902]
-     └── bubble-quartz -- 定时任务管理台 [8903]
 ```
+Bubble/
+├── apps/
+│   ├── bubble-cloud/          # Java 微服务后端（聚合工程）
+│   ├── bubble-ui/             # Vue3 前端应用
+│   └── python/                # 预留：智能体开发服务（Python，后续新增）
+├── docker/                    # 统一容器化：compose、nginx 配置等
+├── docs/                      # 文档知识库（将使用 VitePress）
+├── script/                    # 脚本与资产（部署脚本、数据库初始化等）
+└── .cursor/rules/             # 面向 VibeCoding 的开发规范与约束
+```
+
+## 文档与事实源（避免重复）
+
+- **端口与服务清单（单一事实源）**：[`docs/architecture/ports.md`](docs/architecture/ports.md)
+- **模块职责与边界**：[`docs/architecture/modules.md`](docs/architecture/modules.md)
+- **OA 迁移计划**：[`docs/plans/oa-migration-plan.md`](docs/plans/oa-migration-plan.md)
+
+## 分支说明
+
+- `JDK17_master`: Java 17 + Spring Boot 3.5 + Spring Cloud 2025
+- `JDK8_master`: Java 8 + Spring Boot 2.7 + Spring Cloud 2021

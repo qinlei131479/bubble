@@ -1,7 +1,8 @@
 services:
   bubble-ui:
     build:
-      context: ../apps/bubble-ui/docker
+      context: .
+      dockerfile: Dockerfile
     restart: always
     container_name: bubble-ui
     image: bubble-ui
