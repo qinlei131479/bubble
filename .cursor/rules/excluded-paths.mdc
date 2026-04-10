@@ -12,9 +12,9 @@ alwaysApply: true
 | 路径模式 | 原因 |
 |---------|------|
 | `**/target/` | Maven 编译产物，自动生成 |
-| `Bubble-UI/node_modules/` | npm 依赖包，体积大且自动安装 |
-| `Bubble-UI/docker/dist/` | 前端构建输出产物 |
-| `**/.git/` | Git 仓库元数据（含 Bubble-UI 独立 .git） |
+| `apps/**/node_modules/` | npm 依赖包，体积大且自动安装 |
+| `apps/**/dist/` | 前端构建输出产物 |
+| `**/.git/` | Git 仓库元数据 |
 | `**/.idea/` | IntelliJ IDEA 项目配置 |
 | `**/.vscode/` | VSCode 编辑器配置 |
 | `**/logs/` | 运行时日志文件 |
@@ -22,12 +22,14 @@ alwaysApply: true
 | `**/.DS_Store` | macOS 系统文件 |
 | `**/*.iml` | IntelliJ 模块文件 |
 | `**/*.iws` / `**/*.ipr` | IntelliJ 工作区/项目文件 |
+| `**/__pycache__/` | Python 编译缓存（预留 apps/python） |
+| `**/.venv/` | Python 虚拟环境（预留 apps/python） |
 
 ## 不应修改的生成文件
 
 - `**/git.properties` — git-commit-id 插件自动生成
-- `Bubble-UI/auto-imports.d.ts` — unplugin-auto-import 自动生成
-- `Bubble-UI/components.d.ts` — 组件自动导入声明
+- `apps/bubble-ui/auto-imports.d.ts` — unplugin-auto-import 自动生成
+- `apps/bubble-ui/components.d.ts` — 组件自动导入声明
 
 ## 注意事项
 

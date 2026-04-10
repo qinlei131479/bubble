@@ -1,6 +1,6 @@
 ---
 description: Vue 3 前端开发规范，涵盖 Bubble-UI 项目的编码约定、组件规范和 API 集成方式
-globs: "Bubble-UI/**/*.{vue,ts,tsx,js}"
+globs: "apps/bubble-ui/**/*.{vue,ts,tsx,js}"
 alwaysApply: false
 ---
 

@@ -37,6 +37,8 @@ target/
 *.tar
 *.tar.gz
 *.versionsBackup
+*.jar
+*.class
 
 ### vscode ###
 .vscode
@@ -53,6 +55,10 @@ target/
 *.java~
 *.properties~
 *.xml~
+*.bak
+*.swp
+*.swo
+.history/
 
 ### system ignore ###
 .DS_Store
@@ -60,3 +66,25 @@ Thumbs.db
 Servers
 .metadata
 .flattened-pom.xml
+
+### frontend (vite/vue) ###
+**/node_modules/
+**/dist/
+**/.vite/
+**/coverage/
+
+### python (reserved for apps/python) ###
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.venv/
+**/venv/
+**/*.egg-info/
+.python-version
+
+### docker local volumes / data ###
+docker/volume/
+docker/.data/
+docker/.cache/

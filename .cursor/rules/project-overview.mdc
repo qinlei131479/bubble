@@ -3,17 +3,18 @@ description: Bubble-Cloud 项目全景总览，提供项目定位、技术栈、
 alwaysApply: true
 ---
 
-# Bubble-Cloud 项目总览
+# Bubble 项目总览（Monorepo）
 
 ## 项目定位
 
-Bubble-Cloud 是面向下一代人机交互的**智能体原生微服务平台**，融合 LLM、RAG 检索增强与自主智能体技术。
+Bubble 是面向下一代人机交互的**智能体原生平台**，融合 LLM、RAG 检索增强与自主智能体技术。
 以"泡泡"为核心理念，构建轻量化、可组合、自进化的 AI 应用生态。
 
 - 基于 Spring Cloud 2025 + Spring Boot 3.5 + OAuth2 的 RBAC 企业快速开发平台
 - 前端基于 Vue 3.5 + Element Plus + Vite + TypeScript
-- 后端仓库: https://github.com/qinlei131479/Bubble-Cloud.git
-- 前端仓库: https://github.com/qinlei131479/AgetBubbles.git
+- 后端模块：`apps/bubble-cloud`
+- 前端模块：`apps/bubble-ui`
+- 预留智能体服务（Python）：`apps/python`
 
 ## 核心技术栈
 
@@ -53,8 +54,8 @@ Bubble-Cloud 是面向下一代人机交互的**智能体原生微服务平台**
 - **待关注**: bubble-common-bom 未包含 bubble-common-seata 版本管理；前端 .env 文件未入仓库
 - **迁移计划**: 详见 docs/plans/oa-migration-plan.md（共 11 阶段，PHP Laravel 9 → Java Spring Boot 3）
 
-## 部署方式
+## 部署方式（入口）
 
-1. **容器化**: docker-compose.yml 编排全部服务，统一网络 `spring_cloud_default`
+1. **容器化**: `docker/` 统一编排（compose + nginx 配置）
 2. **脚本部署**: docs/deploy/deploy.sh (JAR 进程管理 + 健康检查)
 3. 各可部署服务均有独立 Dockerfile（共 7 个）
