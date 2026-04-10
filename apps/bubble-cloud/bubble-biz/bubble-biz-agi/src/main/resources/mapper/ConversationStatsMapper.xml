@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.ConversationStatsMapper">
+
+  <resultMap id="conversationStatsMap" type="com.bubblecloud.agi.api.entity.ConversationStats">
+        <id property="id" column="id"/>
+        <result property="conversationId" column="conversation_id"/>
+        <result property="messageCount" column="message_count"/>
+        <result property="totalTokens" column="total_tokens"/>
+        <result property="usedModel" column="used_model"/>
+        <result property="userFeedback" column="user_feedback"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.ConversationStats">
+     SELECT t.*
+     FROM conversation_stats t
+  </select>
+	
+</mapper>

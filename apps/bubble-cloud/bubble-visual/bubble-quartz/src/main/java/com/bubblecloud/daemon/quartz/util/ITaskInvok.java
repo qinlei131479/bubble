@@ -1,0 +1,21 @@
+package com.bubblecloud.daemon.quartz.util;
+
+import com.bubblecloud.daemon.quartz.entity.SysJob;
+import com.bubblecloud.daemon.quartz.exception.TaskException;
+
+/**
+ * 定时任务反射实现接口
+ *
+ * @author qinlei
+ * @date 2025/05/31
+ */
+public interface ITaskInvok {
+
+	/**
+	 * 执行反射方法
+	 * @param sysJob 任务配置类
+	 * @throws TaskException 执行任务时可能抛出的异常
+	 */
+	void invokMethod(SysJob sysJob) throws TaskException;
+
+}
