@@ -1,5 +1,0 @@
-com.bubblecloud.common.core.config.JacksonConfiguration
-com.bubblecloud.common.core.config.RedisTemplateConfiguration
-com.bubblecloud.common.core.config.RestTemplateConfiguration
-com.bubblecloud.common.core.util.SpringContextHolder
-com.bubblecloud.common.core.config.WebMvcConfiguration
