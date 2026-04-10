@@ -1,0 +1,36 @@
+---
+description: Monorepo 目录结构与新增子项目接入清单（面向 VibeCoding 的“自解释”约束）
+alwaysApply: true
+---
+
+# Monorepo 目录结构与接入规范
+
+本仓库以 `apps/ + docker/ + docs/` 的方式组织，使项目结构对人和 AI 都更“自解释”（VibeCoding 友好）。
+
+## 目录职责（单一事实源）
+
+```
+apps/
+  bubble-cloud/   # Java 后端聚合工程（微服务）
+  bubble-ui/      # Vue3 前端应用
+  python/         # 预留：智能体开发服务（Python）
+docker/           # 统一容器化与编排（不放业务代码）
+docs/             # 知识库（VitePress）
+```
+
+## 新增 `apps/<name>` 子项目接入清单（强制）
+
+新增任何 `apps/<name>` 子项目时，必须至少包含：
+
+1. `apps/<name>/README.md`
+   - 说明“它是什么 / 怎么启动 / 依赖哪些服务 / 关键入口链接”
+2. 依赖管理文件
+   - Java：`pom.xml`
+   - Node：`package.json`
+   - Python：`pyproject.toml` 或 `requirements.txt`
+3. 最小可运行方式
+   - 本地开发命令（以及必要环境变量的示例文件，如 `.env.example`）
+4. 文档收录
+   - 在 `docs/architecture/modules.md` 添加模块职责与边界
+5. （可选）容器化支持
+   - 如需要纳入一键部署，在 `docker/` 中添加对应 compose 片段或镜像构建目录
