@@ -1,0 +1,3 @@
+com.bubblecloud.common.websocket.config.WebSocketAutoConfiguration
+com.bubblecloud.common.websocket.config.RedisMessageDistributorConfiguration
+com.bubblecloud.common.websocket.config.LocalMessageDistributorConfiguration

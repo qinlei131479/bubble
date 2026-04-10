@@ -1,0 +1,17 @@
+package com.bubblecloud.biz.oa.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.bubblecloud.common.mybatis.mapper.UpMapper;
+import com.bubblecloud.oa.api.entity.AssessReply;
+
+/**
+ * eb_assess_reply Mapper。
+ *
+ * @author qinlei
+ * @date 2026/4/7 12:00
+ */
+@Mapper
+public interface AssessReplyMapper extends UpMapper<AssessReply> {
+
+}

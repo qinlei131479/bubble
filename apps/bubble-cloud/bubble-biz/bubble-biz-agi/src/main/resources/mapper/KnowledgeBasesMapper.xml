@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bubblecloud.biz.agi.mapper.KnowledgeBasesMapper">
+
+  <resultMap id="knowledgeBasesMap" type="com.bubblecloud.agi.api.entity.KnowledgeBases">
+        <id property="id" column="id"/>
+        <result property="dbId" column="db_id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="kbType" column="kb_type"/>
+        <result property="embedInfo" column="embed_info"/>
+        <result property="llmInfo" column="llm_info"/>
+        <result property="queryParams" column="query_params"/>
+        <result property="additionalParams" column="additional_params"/>
+        <result property="shareConfig" column="share_config"/>
+        <result property="mindmap" column="mindmap"/>
+        <result property="sampleQuestions" column="sample_questions"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+  
+  <select id="findPg" resultType="com.bubblecloud.agi.api.entity.KnowledgeBases">
+     SELECT t.*
+     FROM knowledge_bases t
+  </select>
+	
+</mapper>

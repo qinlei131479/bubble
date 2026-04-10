@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.CustomerMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.Customer">
+		SELECT t.*
+		FROM eb_customer t
+		<where>
+			AND t.deleted_at IS NULL
+			<if test="query.queryTypes != null and query.queryTypes == 3">
+				AND t.uid = 0
+			</if>
+			<if test="query.queryTypes != null and query.queryTypes != 3">
+				<if test="query.queryUidList != null and query.queryUidList.size() &gt; 0">
+					AND t.uid IN
+					<foreach collection="query.queryUidList" item="u" open="(" separator="," close=")">#{u}</foreach>
+				</if>
+			</if>
+			<if test="query.customerName != null and query.customerName != ''">
+				AND t.customer_name LIKE CONCAT('%', #{query.customerName}, '%')
+			</if>
+			<if test="query.customerNo != null and query.customerNo != ''">
+				AND t.customer_no LIKE CONCAT('%', #{query.customerNo}, '%')
+			</if>
+			<if test="query.queryLabelIds != null and query.queryLabelIds.size() &gt; 0">
+				AND EXISTS (
+					SELECT 1 FROM eb_client_labels cl
+					WHERE cl.eid = t.id
+					AND cl.label_id IN
+					<foreach collection="query.queryLabelIds" item="lid" open="(" separator="," close=")">#{lid}</foreach>
+				)
+			</if>
+		</where>
+		ORDER BY t.id DESC
+	</select>
+
+</mapper>

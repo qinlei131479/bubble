@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.ProgramDynamicMapper">
+
+	<sql id="DynamicWhere">
+		<where>
+			<if test="types != null">AND d.types = #{types}</if>
+			<if test="uid != null and uid &gt; 0">AND d.uid = #{uid}</if>
+			<if test="relationId != null and relationId &gt; 0">AND d.relation_id = #{relationId}</if>
+			<if test="programId != null and programId &gt; 0">
+				AND d.relation_id IN (
+					SELECT pt.id FROM eb_program_task pt
+					WHERE pt.deleted_at IS NULL AND pt.program_id = #{programId}
+				)
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectDynamicPage" resultType="com.bubblecloud.oa.api.entity.ProgramDynamic">
+		SELECT d.* FROM eb_program_dynamic d
+		<include refid="DynamicWhere"/>
+		ORDER BY d.created_at DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="countDynamicPage" resultType="long">
+		SELECT COUNT(1) FROM eb_program_dynamic d
+		<include refid="DynamicWhere"/>
+	</select>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.EnterpriseLogMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.EnterpriseLog">
+		SELECT t.*
+		FROM eb_enterprise_log_1 t
+		<where>
+			AND t.entid = #{query.entid}
+			<if test="query.userName != null and query.userName != ''">
+				AND t.user_name LIKE CONCAT('%', #{query.userName}, '%')
+			</if>
+			<if test="query.path != null and query.path != ''">
+				AND t.path LIKE CONCAT('%', #{query.path}, '%')
+			</if>
+			<if test="query.eventName != null and query.eventName != ''">
+				AND t.event_name LIKE CONCAT('%', #{query.eventName}, '%')
+			</if>
+		</where>
+		ORDER BY t.id DESC
+	</select>
+
+</mapper>

@@ -1,0 +1,71 @@
+package com.bubblecloud.common.feign;
+
+import com.alibaba.cloud.sentinel.feign.SentinelFeignAutoConfiguration;
+import com.bubblecloud.common.feign.core.CustomFeignInnerRequestInterceptor;
+import com.bubblecloud.common.feign.core.CustomFeignLanguageInterceptor;
+import com.bubblecloud.common.feign.core.CustomFeignRequestCloseInterceptor;
+import com.bubblecloud.common.feign.sentinel.ext.CustomSentinelFeign;
+import feign.Feign;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.openfeign.CustomFeignClientsRegistrar;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Scope;
+
+/**
+ * Sentinel Feign 自动配置类
+ *
+ * @author lengleng
+ * @date 2025/05/31
+ */
+@Configuration(proxyBeanMethods = false)
+@Import(CustomFeignClientsRegistrar.class)
+@AutoConfigureBefore(SentinelFeignAutoConfiguration.class)
+public class CustomFeignAutoConfiguration {
+
+	/**
+	 * 创建Feign.Builder实例，支持Sentinel功能
+	 * @return Feign.Builder实例
+	 * @ConditionalOnMissingBean 当容器中不存在该类型bean时创建
+	 * @ConditionalOnProperty 当配置feign.sentinel.enabled为true时生效
+	 * @Scope 指定bean作用域为prototype
+	 */
+	@Bean
+	@Scope("prototype")
+	@ConditionalOnMissingBean
+	@ConditionalOnProperty(name = "feign.sentinel.enabled")
+	public Feign.Builder feignSentinelBuilder() {
+		return CustomSentinelFeign.builder();
+	}
+
+	/**
+	 * 创建并返回CustomFeignRequestCloseInterceptor实例
+	 * @return CustomFeignRequestCloseInterceptor实例
+	 */
+	@Bean
+	public CustomFeignRequestCloseInterceptor customFeignRequestCloseInterceptor() {
+		return new CustomFeignRequestCloseInterceptor();
+	}
+
+	/**
+	 * 创建并返回CustomFeignInnerRequestInterceptor实例
+	 * @return CustomFeignInnerRequestInterceptor 内部请求拦截器实例
+	 */
+	@Bean
+	public CustomFeignInnerRequestInterceptor customFeignInnerRequestInterceptor() {
+		return new CustomFeignInnerRequestInterceptor();
+	}
+
+	/**
+	 * add accept-language header
+	 * @return PigFeignLanguageInterceptor
+	 */
+	@Bean
+	public CustomFeignLanguageInterceptor pigFeignLanguageInterceptor() {
+		return new CustomFeignLanguageInterceptor();
+	}
+
+}

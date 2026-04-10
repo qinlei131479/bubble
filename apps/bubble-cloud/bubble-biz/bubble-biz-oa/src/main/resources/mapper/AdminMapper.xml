@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.AdminMapper">
+
+	<resultMap id="adminMap" type="com.bubblecloud.oa.api.entity.Admin">
+		<id property="id" column="id" />
+		<result property="uid" column="uid" />
+		<result property="account" column="account" />
+		<result property="password" column="password" />
+		<result property="avatar" column="avatar" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone" />
+		<result property="job" column="job" />
+		<result property="isAdmin" column="is_admin" />
+		<result property="roles" column="roles" />
+		<result property="uniOnline" column="uni_online" />
+		<result property="clientId" column="client_id" />
+		<result property="scanKey" column="scan_key" />
+		<result property="lastIp" column="last_ip" />
+		<result property="loginCount" column="login_count" />
+		<result property="status" column="status" />
+		<result property="isInit" column="is_init" />
+		<result property="language" column="language" />
+		<result property="mark" column="mark" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="deletedAt" column="deleted_at" />
+	</resultMap>
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.Admin">
+		SELECT t.*
+		FROM eb_admin t
+		WHERE t.deleted_at IS NULL
+	</select>
+
+	<select id="selectEntUserList" resultType="com.bubblecloud.oa.api.vo.enterprise.EnterpriseUserListItemVO">
+		SELECT a.id,
+		       a.name,
+		       a.avatar,
+		       a.phone,
+		       a.job,
+		       MAX(j.name) AS jobName,
+		       GROUP_CONCAT(DISTINCT f.name ORDER BY f.id SEPARATOR ',') AS frameNames
+		FROM eb_admin a
+		INNER JOIN eb_frame_assist fa ON fa.user_id = a.id
+			AND fa.entid = #{entid}
+			AND fa.deleted_at IS NULL
+		LEFT JOIN eb_frame f ON f.id = fa.frame_id
+			AND f.deleted_at IS NULL
+		LEFT JOIN eb_rank_job j ON j.id = a.job
+			AND j.entid = #{entid}
+		WHERE a.deleted_at IS NULL
+		<if test="status != null">
+			AND a.status = #{status}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name LIKE CONCAT('%', #{name}, '%')
+		</if>
+		GROUP BY a.id, a.name, a.avatar, a.phone, a.job
+		ORDER BY MAX(fa.is_admin) DESC, MAX(fa.is_mastart) DESC, a.id ASC
+	</select>
+
+	<sql id="companyCardFromWhere">
+		FROM eb_admin a
+		LEFT JOIN eb_admin_info i ON i.id = a.id
+		WHERE a.deleted_at IS NULL
+		AND EXISTS (SELECT 1 FROM eb_frame_assist fa0 WHERE fa0.user_id = a.id AND fa0.entid = #{q.entid} AND fa0.deleted_at IS NULL)
+		<if test="q.types != null and q.types.size() &gt; 0">
+			AND i.type IN
+			<foreach collection="q.types" item="t" open="(" separator="," close=")">#{t}</foreach>
+		</if>
+		<if test="q.singleType != null">
+			AND i.type = #{q.singleType}
+		</if>
+		<if test="q.workTimeRange and q.timeStart != null and q.timeStart != ''">
+			AND i.work_time &gt;= #{q.timeStart}
+		</if>
+		<if test="q.workTimeRange and q.timeEnd != null and q.timeEnd != ''">
+			AND i.work_time &lt;= CONCAT(#{q.timeEnd}, ' 23:59:59')
+		</if>
+		<if test="!q.workTimeRange and q.timeStart != null and q.timeStart != ''">
+			AND i.quit_time &gt;= #{q.timeStart}
+		</if>
+		<if test="!q.workTimeRange and q.timeEnd != null and q.timeEnd != ''">
+			AND i.quit_time &lt;= CONCAT(#{q.timeEnd}, ' 23:59:59')
+		</if>
+		<if test="q.education != null and q.education != ''">
+			AND i.education = #{q.education}
+		</if>
+		<if test="q.sex != null">
+			AND i.sex = #{q.sex}
+		</if>
+		<if test="q.isPart != null">
+			AND i.is_part = #{q.isPart}
+		</if>
+		<if test="q.status != null">
+			AND a.status = #{q.status}
+		</if>
+		<if test="q.search != null and q.search != ''">
+			AND (a.name LIKE CONCAT('%', #{q.search}, '%') OR a.phone LIKE CONCAT('%', #{q.search}, '%'))
+		</if>
+		<if test="q.frameId != null">
+			AND a.id IN (SELECT fa1.user_id FROM eb_frame_assist fa1 WHERE fa1.frame_id = #{q.frameId} AND fa1.entid = #{q.entid} AND fa1.deleted_at IS NULL)
+		</if>
+	</sql>
+
+	<select id="countCompanyCardList" resultType="long">
+		SELECT COUNT(1)
+		<include refid="companyCardFromWhere"/>
+	</select>
+
+	<select id="selectCompanyCardList" resultType="com.bubblecloud.oa.api.dto.company.CompanyCardListRow">
+		SELECT a.id,
+		       a.uid,
+		       a.name,
+		       a.phone,
+		       a.avatar,
+		       a.status,
+		       a.job,
+		       i.sex,
+		       i.education,
+		       i.is_part AS isPart,
+		       i.type,
+		       i.interview_position AS interviewPosition,
+		       i.work_time AS workTime,
+		       i.quit_time AS quitTime,
+		       i.formal_time AS formalTime,
+		       i.interview_date AS interviewDate,
+		       i.sort,
+		       i.created_at AS infoCreatedAt
+		<include refid="companyCardFromWhere"/>
+		<choose>
+			<when test="q.sortMode == 'quit'">
+				ORDER BY i.quit_time DESC, i.created_at DESC, a.id DESC
+			</when>
+			<otherwise>
+				ORDER BY (i.sort IS NULL), i.sort ASC, a.id ASC
+			</otherwise>
+		</choose>
+		<if test="q.limit &gt; 0">
+			LIMIT #{q.limit} OFFSET #{q.offset}
+		</if>
+	</select>
+
+	<sql id="jobAnalysisAdminFromWhere">
+		FROM eb_admin a
+		INNER JOIN eb_admin_info i ON i.id = a.id
+		INNER JOIN eb_frame_assist fa ON fa.user_id = a.id
+			AND fa.entid = #{p.entid}
+			AND fa.deleted_at IS NULL
+		WHERE a.deleted_at IS NULL
+		<if test="p.types != null and p.types.size() &gt; 0">
+			AND i.type IN
+			<foreach collection="p.types" item="t" open="(" separator="," close=")">#{t}</foreach>
+		</if>
+		<if test="p.name != null and p.name != ''">
+			AND (a.name LIKE CONCAT('%', #{p.name}, '%') OR a.phone LIKE CONCAT('%', #{p.name}, '%'))
+		</if>
+		<if test="p.jobId != null and p.jobId &gt; 0">
+			AND a.job = #{p.jobId}
+		</if>
+		<if test="p.filterByFrame">
+			AND (
+			<choose>
+				<when test="p.subtreeFrameIds != null and p.subtreeFrameIds.size() &gt; 0">
+					fa.frame_id IN
+					<foreach collection="p.subtreeFrameIds" item="fid" open="(" separator="," close=")">#{fid}</foreach>
+					OR fa.frame_id = #{p.frameId}
+				</when>
+				<otherwise>
+					fa.frame_id = #{p.frameId}
+				</otherwise>
+			</choose>
+			)
+		</if>
+		<if test="p.filterByScopeIds">
+			<choose>
+				<when test="p.scopeAdminIds != null and p.scopeAdminIds.size() &gt; 0">
+					AND a.id IN
+					<foreach collection="p.scopeAdminIds" item="aid" open="(" separator="," close=")">#{aid}</foreach>
+				</when>
+				<otherwise>
+					AND 1 = 0
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+
+	<select id="countJobAnalysisAdmins" resultType="long">
+		SELECT COUNT(1) FROM (
+			SELECT a.id
+			<include refid="jobAnalysisAdminFromWhere"/>
+			GROUP BY a.id
+		) x
+	</select>
+
+	<select id="selectJobAnalysisAdminIds" resultType="java.lang.Long">
+		SELECT a.id
+		<include refid="jobAnalysisAdminFromWhere"/>
+		GROUP BY a.id, a.is_admin
+		ORDER BY a.is_admin DESC, MAX(fa.is_admin) DESC, a.id ASC
+		LIMIT #{p.limit} OFFSET #{p.offset}
+	</select>
+
+</mapper>
