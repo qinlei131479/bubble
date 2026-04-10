@@ -121,7 +121,7 @@
 
     <profiles>
         <profile>
-            <id>cloud</id>
+            <id>cloud-codegen</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -150,9 +150,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>boot</id>
         </profile>
     </profiles>
 </project>

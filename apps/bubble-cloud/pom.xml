@@ -3,7 +3,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bubblecloud</groupId>
-	<artifactId>Bubble-Cloud</artifactId>
+	<artifactId>bubble-cloud</artifactId>
 	<name>${project.artifactId}</name>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
@@ -284,7 +284,7 @@
 
 	<profiles>
 		<profile>
-			<id>cloud</id>
+			<id>dev</id>
 			<properties>
 				<!-- 环境标识，需要与配置文件的名称相对应 -->
 				<profiles.active>dev</profiles.active>
@@ -296,6 +296,18 @@
 				<!-- 默认环境 -->
 				<activeByDefault>true</activeByDefault>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<!-- 自动激活，针对 lombok 注解增强-->
 		<profile>

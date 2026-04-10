@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.bubblecloud</groupId>
-        <artifactId>Bubble-Cloud</artifactId>
+        <artifactId>bubble-cloud</artifactId>
         <version>${revision}</version>
     </parent>
 
@@ -69,30 +69,5 @@
             <artifactId>hutool-crypto</artifactId>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>boot</id>
-        </profile>
-        <profile>
-            <id>cloud</id>
-            <activation>
-                <!-- 默认环境 -->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
