@@ -1,6 +1,0 @@
-com.bubblecloud.backend.api.feign.RemoteClientDetailsService
-com.bubblecloud.backend.api.feign.RemoteDictService
-com.bubblecloud.backend.api.feign.RemoteLogService
-com.bubblecloud.backend.api.feign.RemoteParamService
-com.bubblecloud.backend.api.feign.RemoteTokenService
-com.bubblecloud.backend.api.feign.RemoteUserService
