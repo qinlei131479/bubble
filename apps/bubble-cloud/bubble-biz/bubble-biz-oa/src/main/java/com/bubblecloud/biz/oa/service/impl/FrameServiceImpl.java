@@ -1,0 +1,431 @@
+package com.bubblecloud.biz.oa.service.impl;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import com.bubblecloud.common.core.util.R;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.bubblecloud.biz.oa.mapper.FrameAssistMapper;
+import com.bubblecloud.biz.oa.mapper.FrameMapper;
+import com.bubblecloud.biz.oa.service.FrameService;
+import com.bubblecloud.biz.oa.util.TreeUtil;
+import com.bubblecloud.common.mybatis.service.impl.UpServiceImpl;
+import com.bubblecloud.oa.api.dto.FrameSaveDTO;
+import com.bubblecloud.oa.api.dto.FrameUpdateDTO;
+import com.bubblecloud.oa.api.entity.Frame;
+import com.bubblecloud.oa.api.vo.frame.FrameAdminBriefVO;
+import com.bubblecloud.oa.api.vo.frame.FrameAssistUserRowVO;
+import com.bubblecloud.oa.api.vo.frame.FrameAuthTreeNodeVO;
+import com.bubblecloud.oa.api.vo.frame.FrameDepartmentTreeNodeVO;
+import com.bubblecloud.oa.api.vo.frame.FrameDetailVO;
+import com.bubblecloud.oa.api.vo.frame.FrameFormDataVO;
+import com.bubblecloud.oa.api.vo.frame.FrameScopeItemVO;
+import com.bubblecloud.oa.api.vo.frame.FrameSelectTreeNodeVO;
+import com.bubblecloud.oa.api.vo.frame.FrameUserTreeNodeVO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
+/**
+ * 组织架构部门业务实现。
+ *
+ * @author qinlei
+ * @date 2026/3/29 下午4:00
+ */
+@Service
+@RequiredArgsConstructor
+public class FrameServiceImpl extends UpServiceImpl<FrameMapper, Frame> implements FrameService {
+
+	private final FrameAssistMapper frameAssistMapper;
+
+	@Override
+	public List<FrameDepartmentTreeNodeVO> departmentTreeList(Integer isShow, Long entId) {
+		List<Frame> rows = baseMapper.selectList(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, entId)
+			.eq(Frame::getIsShow, isShow)
+			.isNull(Frame::getDeletedAt)
+			.orderByDesc(Frame::getLevel)
+			.orderByDesc(Frame::getSort)
+			.orderByAsc(Frame::getId));
+		List<FrameDepartmentTreeNodeVO> flat = new ArrayList<>(rows.size());
+		for (Frame f : rows) {
+			FrameDepartmentTreeNodeVO n = new FrameDepartmentTreeNodeVO();
+			n.setPid(f.getPid());
+			n.setPath(f.getPath());
+			n.setValue(f.getId());
+			n.setLabel(f.getName());
+			n.setUserCount(f.getUserCount());
+			n.setUserSingleCount(f.getUserSingleCount());
+			n.setIsCheck(false);
+			flat.add(n);
+		}
+		return TreeUtil.buildTree(flat, FrameDepartmentTreeNodeVO::getValue, FrameDepartmentTreeNodeVO::getPid,
+				FrameDepartmentTreeNodeVO::getChildren);
+	}
+
+	@Override
+	public List<FrameAuthTreeNodeVO> getTree(Long userId, Long entId, boolean withRole, boolean isScope) {
+		List<Frame> rows = baseMapper.selectList(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, entId)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.orderByAsc(Frame::getId));
+		List<FrameAuthTreeNodeVO> flat = new ArrayList<>();
+		for (Frame f : rows) {
+			flat.add(toAuthNode(f, withRole));
+		}
+		if (!isScope) {
+			return TreeUtil.buildTree(flat, FrameAuthTreeNodeVO::getId, FrameAuthTreeNodeVO::getPid,
+					FrameAuthTreeNodeVO::getChildren);
+		}
+		List<FrameAuthTreeNodeVO> merged = new ArrayList<>();
+		merged.add(roleAuthNode("self", "仅本人", "self"));
+		merged.addAll(flat);
+		return TreeUtil.buildTree(merged, FrameAuthTreeNodeVO::getId, FrameAuthTreeNodeVO::getPid,
+				FrameAuthTreeNodeVO::getChildren);
+	}
+
+	@Override
+	public List<FrameUserTreeNodeVO> getUserTree(Long userId, Long entId, boolean withRole, boolean leave) {
+		List<Frame> frames = baseMapper.selectList(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, entId)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.orderByDesc(Frame::getSort)
+			.orderByAsc(Frame::getId));
+		List<FrameAssistUserRowVO> userRows = frameAssistMapper.selectUsersByEnt(entId);
+		Map<Long, List<FrameAssistUserRowVO>> usersByFrame = userRows.stream()
+			.filter(r -> ObjectUtil.isNotNull(r.getFrameId()))
+			.collect(Collectors.groupingBy(FrameAssistUserRowVO::getFrameId));
+		List<FrameUserTreeNodeVO> flat = new ArrayList<>();
+		for (Frame f : frames) {
+			List<FrameAssistUserRowVO> users = usersByFrame.getOrDefault(f.getId(), List.of());
+			FrameUserTreeNodeVO node = new FrameUserTreeNodeVO();
+			node.setId(f.getId());
+			node.setPid(f.getPid());
+			node.setEntid(f.getEntid());
+			node.setUserCount(f.getUserCount());
+			node.setPath(f.getPath());
+			node.setValue(f.getId());
+			node.setLabel(f.getName());
+			node.setUserSingleCount(users.size());
+			node.setType(0);
+			node.setDisabled(false);
+			node.setIsCheck(false);
+			flat.add(node);
+			for (FrameAssistUserRowVO u : users) {
+				FrameUserTreeNodeVO um = new FrameUserTreeNodeVO();
+				um.setId(u.getId() + "-" + f.getId());
+				um.setPid(f.getId());
+				um.setValue(u.getId());
+				um.setLabel(u.getName());
+				um.setName(u.getName());
+				um.setAvatar(u.getAvatar());
+				um.setPhone(u.getPhone());
+				um.setJob(u.getJob());
+				um.setUid(u.getUid());
+				um.setType(1);
+				um.setDisabled(false);
+				flat.add(um);
+			}
+		}
+		return TreeUtil.buildTree(flat, FrameUserTreeNodeVO::getId, FrameUserTreeNodeVO::getPid,
+				FrameUserTreeNodeVO::getChildren);
+	}
+
+	@Override
+	public FrameFormDataVO getFormData(Long entId, Long frameId) {
+		FrameFormDataVO vo = new FrameFormDataVO();
+		if (frameId > 0) {
+			vo.setFrameInfo(departmentInfo(frameId, entId));
+		}
+		else {
+			vo.setFrameInfo(new FrameDetailVO());
+		}
+		vo.setTree(treeForSelect(entId, frameId));
+		return vo;
+	}
+
+	@Override
+	public void createDepartment(FrameSaveDTO dto) {
+		if (ObjectUtil.isNull(dto.getPath()) || dto.getPath().isEmpty()) {
+			throw new IllegalArgumentException("请选择上级部门");
+		}
+		List<Long> path = dto.getPath();
+		Long pid = path.get(path.size() - 1);
+		if (pid <= 0) {
+			throw new IllegalArgumentException("请选择上级部门");
+		}
+		Frame parent = baseMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getId, pid)
+			.eq(Frame::getEntid, dto.getEntid())
+			.isNull(Frame::getDeletedAt));
+		if (ObjectUtil.isNull(parent)) {
+			throw new IllegalArgumentException("上级部门不存在");
+		}
+		String name = ObjectUtil.isNull(dto.getName()) ? "" : dto.getName().trim();
+		if (StrUtil.isBlank(name)) {
+			throw new IllegalArgumentException("请填写部门名称");
+		}
+		long dup = baseMapper.selectCount(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, dto.getEntid())
+			.eq(Frame::getPid, pid)
+			.eq(Frame::getName, name)
+			.isNull(Frame::getDeletedAt));
+		if (dup > 0) {
+			throw new IllegalArgumentException("已存在相同部门，请勿重复创建");
+		}
+		int level = (ObjectUtil.isNull(parent.getLevel()) ? 0 : parent.getLevel()) + 1;
+		Frame f = new Frame();
+		f.setUserId(0L);
+		f.setEntid(dto.getEntid());
+		f.setPid(pid);
+		f.setRoleId(ObjectUtil.isNull(dto.getRoleId()) ? 0 : dto.getRoleId());
+		f.setName(name);
+		f.setIntroduce(ObjectUtil.isNull(dto.getIntroduce()) ? "" : dto.getIntroduce());
+		f.setSort(ObjectUtil.isNull(dto.getSort()) ? 0 : dto.getSort());
+		f.setUserCount(0);
+		f.setUserSingleCount(0);
+		f.setIsShow(1);
+		f.setLevel(level);
+		f.setPath("");
+		LocalDateTime now = LocalDateTime.now();
+		f.setCreatedAt(now);
+		f.setUpdatedAt(now);
+		baseMapper.insert(f);
+		arrangePaths(dto.getEntid());
+	}
+
+	@Override
+	public void updateDepartment(Long id, Long entId, FrameUpdateDTO dto) {
+		Frame existing = baseMapper.selectOne(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getId, id)
+			.eq(Frame::getEntid, entId)
+			.isNull(Frame::getDeletedAt));
+		if (ObjectUtil.isNull(existing)) {
+			throw new IllegalArgumentException("未找到相关部门信息");
+		}
+		if (ObjectUtil.isNull(existing.getPid()) || existing.getPid() == 0) {
+			throw new IllegalArgumentException("修改该部门需要修改企业名称！");
+		}
+		Long pid = existing.getPid();
+		if (ObjectUtil.isNotNull(dto.getPath()) && !dto.getPath().isEmpty()) {
+			pid = dto.getPath().get(dto.getPath().size() - 1);
+		}
+		if (pid <= 0) {
+			throw new IllegalArgumentException("请选择上级部门");
+		}
+		if (pid.equals(id)) {
+			throw new IllegalArgumentException("本部门和上级部门不能相同");
+		}
+		String name = ObjectUtil.isNull(dto.getName()) ? existing.getName() : dto.getName().trim();
+		long dup = getBaseMapper().selectCount(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, entId)
+			.eq(Frame::getPid, pid)
+			.eq(Frame::getName, name)
+			.ne(Frame::getId, id)
+			.isNull(Frame::getDeletedAt));
+		if (dup > 0) {
+			throw new IllegalArgumentException("已存在相同部门，请勿重复创建");
+		}
+		Frame parent = getBaseMapper().selectOne(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getId, (long) pid)
+			.eq(Frame::getEntid, entId)
+			.isNull(Frame::getDeletedAt));
+		if (ObjectUtil.isNull(parent)) {
+			throw new IllegalArgumentException("上级部门不存在");
+		}
+		int level = (ObjectUtil.isNull(parent.getLevel()) ? 0 : parent.getLevel()) + 1;
+		existing.setPid(pid);
+		existing.setName(name);
+		existing.setIntroduce(ObjectUtil.isNull(dto.getIntroduce()) ? existing.getIntroduce() : dto.getIntroduce());
+		existing.setSort(ObjectUtil.isNull(dto.getSort()) ? existing.getSort() : dto.getSort());
+		existing.setRoleId(ObjectUtil.isNull(dto.getRoleId()) ? existing.getRoleId() : dto.getRoleId());
+		existing.setLevel(level);
+		existing.setUpdatedAt(LocalDateTime.now());
+		getBaseMapper().updateById(existing);
+		arrangePaths(entId);
+	}
+
+	@Override
+	public FrameDetailVO departmentInfo(Long id, Long entId) {
+		Frame f = getBaseMapper().selectOne(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getId, id)
+			.eq(Frame::getEntid, entId)
+			.isNull(Frame::getDeletedAt));
+		if (ObjectUtil.isNull(f)) {
+			throw new IllegalArgumentException("未找到相关部门信息");
+		}
+		return toDetailVo(f);
+	}
+
+	@Override
+	public void deleteDepartment(Long id, Long entId) {
+		Frame f = getBaseMapper().selectOne(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getId, id)
+			.eq(Frame::getEntid, entId)
+			.isNull(Frame::getDeletedAt));
+		if (ObjectUtil.isNull(f)) {
+			throw new IllegalArgumentException("未找到相关部门信息");
+		}
+		if (getBaseMapper().countByPid(id, entId) > 0) {
+			throw new IllegalArgumentException("删除失败，存在下级部门");
+		}
+		getBaseMapper().deleteById(id);
+	}
+
+	@Override
+	public List<FrameAdminBriefVO> getFrameUsers(Integer frameId, Long entId) {
+		return frameAssistMapper.selectFrameUsers(frameId, entId);
+	}
+
+	@Override
+	public List<FrameScopeItemVO> scopeFrames(Long userId, Long entId) {
+		List<Frame> rows = getBaseMapper().selectList(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, entId)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.select(Frame::getId, Frame::getName));
+		List<FrameScopeItemVO> list = new ArrayList<>();
+		for (Frame f : rows) {
+			list.add(new FrameScopeItemVO(f.getId(), f.getName()));
+		}
+		return list;
+	}
+
+	private List<FrameSelectTreeNodeVO> treeForSelect(Long entId, Long excludeId) {
+		List<Frame> list = getBaseMapper().selectList(Wrappers.lambdaQuery(Frame.class)
+			.eq(Frame::getEntid, entId)
+			.eq(Frame::getIsShow, 1)
+			.isNull(Frame::getDeletedAt)
+			.orderByDesc(Frame::getSort)
+			.orderByAsc(Frame::getId));
+		List<Long> disabledIds = new ArrayList<>();
+		if (excludeId > 0) {
+			disabledIds.add(excludeId);
+			disabledIds.addAll(descendantIds(excludeId, entId));
+		}
+		List<FrameSelectTreeNodeVO> flat = new ArrayList<>();
+		for (Frame f : list) {
+			FrameSelectTreeNodeVO row = new FrameSelectTreeNodeVO();
+			row.setValue(f.getId());
+			row.setLabel(f.getName());
+			row.setPid(f.getPid());
+			if (excludeId > 0) {
+				row.setDisabled(disabledIds.contains(f.getId()));
+			}
+			flat.add(row);
+		}
+		return TreeUtil.buildTree(flat, FrameSelectTreeNodeVO::getValue, FrameSelectTreeNodeVO::getPid,
+				FrameSelectTreeNodeVO::getChildren);
+	}
+
+	private List<Long> descendantIds(Long id, Long entId) {
+		return getBaseMapper()
+			.selectList(Wrappers.lambdaQuery(Frame.class)
+				.eq(Frame::getEntid, entId)
+				.isNull(Frame::getDeletedAt)
+				.like(Frame::getPath, "/" + id + "/"))
+			.stream()
+			.map(Frame::getId)
+			.toList();
+	}
+
+	private void arrangePaths(Long entId) {
+		List<Frame> all = getBaseMapper()
+			.selectList(Wrappers.lambdaQuery(Frame.class).eq(Frame::getEntid, entId).isNull(Frame::getDeletedAt));
+		Map<Long, Frame> byId = all.stream().collect(Collectors.toMap(Frame::getId, x -> x, (a, b) -> a));
+		for (Frame f : all) {
+			String path = computePathString(f, byId);
+			if (!Objects.equals(path, f.getPath())) {
+				Frame u = new Frame();
+				u.setId(f.getId());
+				u.setPath(path);
+				u.setUpdatedAt(LocalDateTime.now());
+				getBaseMapper().updateById(u);
+			}
+		}
+	}
+
+	private static String computePathString(Frame f, Map<Long, Frame> byId) {
+		LinkedList<Long> chain = new LinkedList<>();
+		Frame cur = f;
+		while (ObjectUtil.isNotNull(cur)) {
+			chain.addFirst(cur.getId());
+			if (ObjectUtil.isNull(cur.getPid()) || cur.getPid() == 0) {
+				break;
+			}
+			cur = byId.get(cur.getPid().longValue());
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Long cid : chain) {
+			sb.append("/").append(cid);
+		}
+		return sb.isEmpty() ? "/" : sb + "/";
+	}
+
+	private static FrameAuthTreeNodeVO toAuthNode(Frame f, boolean withRole) {
+		FrameAuthTreeNodeVO n = new FrameAuthTreeNodeVO();
+		n.setId(f.getId());
+		n.setPid(f.getPid());
+		n.setEntid(f.getEntid());
+		n.setUserCount(f.getUserCount());
+		n.setPath(f.getPath());
+		n.setValue(f.getId());
+		n.setLabel(f.getName());
+		n.setName(f.getName());
+		n.setUserSingleCount(f.getUserSingleCount());
+		n.setDisabled(false);
+		return n;
+	}
+
+	private static FrameAuthTreeNodeVO roleAuthNode(String id, String label, String value) {
+		FrameAuthTreeNodeVO n = new FrameAuthTreeNodeVO();
+		n.setId(id);
+		n.setPid(0L);
+		n.setLabel(label);
+		n.setName(label);
+		n.setValue(value);
+		n.setDisabled(false);
+		return n;
+	}
+
+	private static FrameDetailVO toDetailVo(Frame f) {
+		FrameDetailVO vo = new FrameDetailVO();
+		vo.setId(f.getId());
+		vo.setUserId(f.getUserId());
+		vo.setEntid(f.getEntid());
+		vo.setPid(f.getPid());
+		vo.setRoleId(f.getRoleId());
+		vo.setName(f.getName());
+		vo.setPath(f.getPath());
+		vo.setIntroduce(f.getIntroduce());
+		vo.setSort(f.getSort());
+		vo.setUserCount(f.getUserCount());
+		vo.setUserSingleCount(f.getUserSingleCount());
+		vo.setIsShow(f.getIsShow());
+		vo.setLevel(f.getLevel());
+		return vo;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R create(Frame req) {
+		return super.create(req);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public R update(Frame req) {
+		return super.update(req);
+	}
+
+}

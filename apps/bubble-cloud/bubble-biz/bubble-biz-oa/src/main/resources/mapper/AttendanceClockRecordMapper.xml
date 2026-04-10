@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.AttendanceClockRecordMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.AttendanceClockRecord">
+		SELECT t.*
+		FROM eb_attendance_clock_record t
+		WHERE t.deleted_at IS NULL
+		ORDER BY t.id DESC
+	</select>
+
+	<sql id="searchWhere">
+		<where>
+			AND t.deleted_at IS NULL
+			<if test="q.uidSingle != null and q.uidSingle > 0">
+				AND t.uid = #{q.uidSingle}
+			</if>
+			<if test="q.uidIn != null and q.uidIn.size() > 0">
+				AND t.uid IN
+				<foreach collection="q.uidIn" item="id" open="(" separator="," close=")">#{id}</foreach>
+			</if>
+			<if test="q.frameId != null and q.frameId > 0">
+				AND t.frame_id = #{q.frameId}
+			</if>
+			<if test="q.groupId != null and q.groupId > 0">
+				AND t.group_id = #{q.groupId}
+			</if>
+			<if test="q.rangeStart != null and q.rangeEnd != null">
+				AND t.created_at &gt;= #{q.rangeStart} AND t.created_at &lt;= #{q.rangeEnd}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countSearch" resultType="long">
+		SELECT COUNT(1)
+		FROM eb_attendance_clock_record t
+		<include refid="searchWhere"/>
+	</select>
+
+	<select id="selectSearch" resultType="com.bubblecloud.oa.api.entity.AttendanceClockRecord">
+		SELECT t.*
+		FROM eb_attendance_clock_record t
+		<include refid="searchWhere"/>
+		ORDER BY t.id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+</mapper>

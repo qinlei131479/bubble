@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.RosterCycleMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.RosterCycle">
+		SELECT t.*
+		FROM eb_roster_cycle t
+		<where>
+			AND t.deleted_at IS NULL
+			<if test="query.queryGroupId != null and query.queryGroupId > 0">
+				AND t.group_id = #{query.queryGroupId}
+			</if>
+		</where>
+		ORDER BY t.id ASC
+	</select>
+
+	<delete id="physicalDeleteById">
+		DELETE FROM eb_roster_cycle WHERE id = #{id}
+	</delete>
+
+	<select id="findList" resultType="com.bubblecloud.oa.api.entity.RosterCycle">
+		SELECT t.*
+		FROM eb_roster_cycle t
+		<where>
+			AND t.deleted_at IS NULL
+			<if test="query.queryGroupId != null and query.queryGroupId > 0">
+				AND t.group_id = #{query.queryGroupId}
+			</if>
+		</where>
+		ORDER BY t.id ASC
+	</select>
+
+</mapper>

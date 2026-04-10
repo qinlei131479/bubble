@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.AssessReplyMapper">
+
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.AssessReply">
+		SELECT r.*
+		FROM eb_assess_reply r
+		<where>
+			<if test="query.assessId != null">
+				AND r.assessid = #{query.assessId}
+			</if>
+			<if test="query.entid != null">
+				AND r.entid = #{query.entid}
+			</if>
+		</where>
+		ORDER BY r.id ASC
+	</select>
+
+</mapper>

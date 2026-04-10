@@ -1,0 +1,27 @@
+package com.bubblecloud.oa.api.vo.workbench;
+
+import java.util.List;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Data;
+
+/**
+ * 工作台快捷入口分类。
+ *
+ * @author qinlei
+ * @date 2026/3/29 下午5:00
+ */
+@Data
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class WorkbenchQuickCateVO {
+
+	private Integer id;
+
+	private String cateName;
+
+	private String pic;
+
+	private List<WorkbenchQuickItemVO> fastEntry;
+
+}

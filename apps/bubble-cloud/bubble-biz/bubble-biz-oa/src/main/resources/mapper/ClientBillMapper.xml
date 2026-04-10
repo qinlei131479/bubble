@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bubblecloud.biz.oa.mapper.ClientBillMapper">
+	<select id="findPg" resultType="com.bubblecloud.oa.api.entity.ClientBill">
+		SELECT t.* FROM eb_client_bill t
+		<where>
+			<if test="query.eid != null">
+				AND t.eid = #{query.eid}
+			</if>
+			<if test="query.cid != null">
+				AND t.cid = #{query.cid}
+			</if>
+			<if test="query.invoiceId != null">
+				AND t.invoice_id = #{query.invoiceId}
+			</if>
+		</where>
+		ORDER BY t.id DESC
+	</select>
+
+	<!-- 对齐 PHP ClientBillDao::unInvoiceList -->
+	<select id="selectUnInvoicedPage" resultType="com.bubblecloud.oa.api.entity.ClientBill">
+		SELECT b.*, i.status AS invoice_join_status
+		FROM eb_client_bill b
+		LEFT JOIN eb_client_invoice i ON i.id = b.invoice_id
+		<where>
+			AND b.eid = #{eid}
+			AND b.status = 1
+			AND b.entid = #{entid}
+			AND b.types IN (0, 1)
+			<choose>
+				<when test="invoiceId == null or invoiceId == 0">
+					AND (b.invoice_id &lt; 1 OR i.status IN (-1, 2))
+				</when>
+				<otherwise>
+					AND b.invoice_id = #{invoiceId}
+					AND i.status IN (-1, 2)
+				</otherwise>
+			</choose>
+		</where>
+		ORDER BY b.date DESC, b.id DESC
+	</select>
+</mapper>
