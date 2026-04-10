@@ -1,10 +1,3 @@
-<p align="center">
- <img src="https://img.shields.io/badge/Bubble-Cloud-1.0.0-success.svg" alt="Build Status">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2025-blue.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.5-blue.svg" alt="Downloads">
- <img src="https://img.shields.io/badge/Vue-3.5-blue.svg" alt="Downloads">
-</p>
-
 ## 项目概述
 
 **Bubble-Cloud** 是一个面向下一代人机交互的智能体原生平台，将大语言模型、RAG 检索增强生成与自主智能体技术深度融合， 以“泡泡”为核心理念，构建轻量化、可组合、自进化的 AI 应用生态。
