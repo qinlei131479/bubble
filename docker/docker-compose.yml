@@ -1,7 +1,7 @@
 services:
   bubble-mysql:
     build:
-      context: script/db
+      context: ../script/db
     environment:
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: root
