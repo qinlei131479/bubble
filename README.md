@@ -17,7 +17,7 @@
 
 | 依赖                          | 版本     |
 |-----------------------------|--------|
-| Spring Boot                 | 3.5.9  |
+| Spring Boot                 | 3.5.12  |
 | Spring Cloud                | 2025   |
 | Spring Cloud Alibaba        | 2025   |
 | Spring Authorization Server | 1.5.2  |
