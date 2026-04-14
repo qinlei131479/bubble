@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev --port 5176",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "dev:host": "vitepress dev --host"
+  },
+  "dependencies": {
+    "markdown-it-task-checkbox": "^1.0.6",
+    "vitepress": "^1.6.4"
+  }
+}

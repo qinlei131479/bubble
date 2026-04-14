@@ -9,6 +9,11 @@
 **/__pycache__/
 **/*.egg-info/
 
+# VitePress 缓存与产物
+**/.vitepress/cache/
+**/package-lock.json
+
+
 # 环境与敏感文件
 .env
 .env.local

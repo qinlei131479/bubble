@@ -42,6 +42,11 @@ nbdist/
 **/.vite/
 **/coverage/
 
+### VitePress ###
+**/.vitepress/cache/
+**/.vitepress/dist/
+**/package-lock.json
+
 ### Python ###
 **/__pycache__/
 **/*.py[cod]
