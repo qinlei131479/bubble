@@ -1,36 +1,58 @@
-## Bubble-Cloud（后端聚合工程）
+## Bubble-Cloud（Java 微服务后端）
 
-本目录为 **Java 微服务后端（聚合工程）**，承载所有后端模块（API/业务服务/公共组件/可视化服务等）。
+Spring Cloud 2025 + Spring Boot 3.5 + MyBatis-Plus 聚合工程。
 
-如需查看仓库总览与目录导航，请回到根目录 `README.md`。
+### 模块概览
 
-## 模块说明
-
+```text
+bubble-cloud/
+├── bubble-gateway/          # Spring Cloud Gateway 网关 (:8666)
+├── bubble-auth/             # OAuth2 认证中心 (:8766)
+├── bubble-api/              # 公共 API（实体/DTO/Feign，jar 库）
+│   ├── bubble-api-backend
+│   ├── bubble-api-agi
+│   ├── bubble-api-oa
+│   └── bubble-api-flow
+├── bubble-biz/              # 业务服务（可独立部署）
+│   ├── bubble-biz-backend   # 用户权限 (:8801)
+│   ├── bubble-biz-agi       # AI 智能体 (:8805)
+│   ├── bubble-biz-oa        # OA 办公（迁移中）(:8803)
+│   └── bubble-biz-flow      # 工作流（占位）(:8802)
+├── bubble-common/           # 跨模块公共组件（security/feign/oss/...）
+└── bubble-visual/           # 可视化管理
+    ├── bubble-codegen       # 代码生成 (:8901)
+    ├── bubble-monitor       # Spring Boot Admin (:8902)
+    └── bubble-quartz        # 定时任务 (:8903)
 ```
-apps/bubble-cloud
-├── bubble-api/                 # 公共 API（实体、DTO/VO、Feign 等 jar）
-├── bubble-auth/                # 认证授权中心
-├── bubble-biz/                 # 业务服务（backend/oa/agi/flow…）
-├── bubble-common/              # 跨模块公共组件（security/feign/oss…）
-├── bubble-gateway/             # Spring Cloud Gateway 网关
-├── bubble-visual/              # 可视化管理（codegen/monitor/quartz…）
-└── pom.xml                     # Maven 聚合根
-```
 
-## 端口与模块依赖
+### 环境要求
 
-端口映射与模块依赖关系属于“单一事实源”，请以 `docs/architecture/ports.md`（将迁入 VitePress）为准；开发时也可参考 `.cursor/rules/module-architecture.mdc`。
+- **JDK**: 17+
+- **Maven**: 3.9+
+- **基础设施**: MySQL 8.0、Redis、Nacos
 
-## 本地开发（概览）
+### 本地开发
 
-> 这里仅保留入口说明，避免与根 README/部署文档重复；详细步骤建议统一沉淀到 `docs/getting-started/`。
+1. 启动基础设施（任选其一）：
+   - Docker 方式：`docker compose -f docker/docker-compose.yml up mysql redis register -d`
+   - 本地安装：自行启动 MySQL(3306)、Redis(6379)、Nacos(8848)
 
-- **JDK**：17+
-- **构建工具**：Maven（聚合 `pom.xml`）
-- **基础依赖**：MySQL、Redis、Nacos（可使用 `docker/README.md` 提供的方式启动）
+2. 导入数据库：
+   ```bash
+   mysql -u root -p < script/db/bubble.sql
+   mysql -u root -p < script/db/bubble_config.sql
+   ```
 
-## 相关文档入口
+3. Maven 构建：
+   ```bash
+   cd apps/bubble-cloud
+   mvn clean install -DskipTests
+   ```
+
+4. 按顺序启动服务：Nacos → Gateway → Auth → biz-backend → 其他
+
+### 关键约束
 
 - 开发规范：`.cursor/rules/backend-conventions.mdc`
-- 部署（Docker）：`docker/README.md`
+- 端口清单：`docs/architecture/ports.md`（单一事实源）
 - OA 迁移计划：`docs/plans/oa-migration-plan.md`
