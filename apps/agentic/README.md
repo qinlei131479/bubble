@@ -22,7 +22,7 @@ Python 侧的智能体运行时服务，负责：
 1. `pyproject.toml` + `src/` 入口
 2. `.env.example` 环境变量示例
 3. `Dockerfile`（纳入 `docker/docker-compose.yml`）
-4. 更新 `docs/architecture/modules.md`
+4. 更新 [`docs/architecture/modules.md`](../../docs/architecture/modules.md)
 
 ### 边界约定
 

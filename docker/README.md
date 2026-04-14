@@ -40,5 +40,5 @@ docker compose -f docker/docker-compose.yml up -d gateway ui
 ### 约定
 
 - `docker/` 仅承载 Dockerfile / compose / 配置，业务代码统一在 `apps/`
-- 端口与服务清单以 `docs/architecture/ports.md` 为单一事实源
+- 端口与服务清单以 [`docs/architecture/ports.md`](../docs/architecture/ports.md) 为单一事实源
 - 网络名统一为 `bubble-net`

@@ -19,6 +19,7 @@ export default defineConfig({
                 text: '版本',
                 items: [
                     {text: '变更日志', link: '/changelog/index'},
+                    {text: '参考手册', link: '/reference/env-variables'},
                     {text: 'OA 迁移计划', link: '/plans/oa-migration-plan'},
                 ],
             },
@@ -44,6 +45,12 @@ export default defineConfig({
                         {text: '端口与服务', link: '/architecture/ports'},
                         {text: '模块职责', link: '/architecture/modules'},
                         {text: '数据库设计', link: '/architecture/database'},
+                    ],
+                },
+                {
+                    text: '测试',
+                    items: [
+                        {text: '测试策略', link: '/architecture/strategy'},
                     ],
                 },
             ],

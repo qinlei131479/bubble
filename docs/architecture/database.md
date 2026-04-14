@@ -4,8 +4,8 @@
 
 | 库名 | 用途 | 初始化脚本 |
 |------|------|-----------|
-| pig | 业务主库 | `script/db/bubble.sql` |
-| pig_config | Nacos 配置中心持久化 | `script/db/bubble_config.sql` |
+| bubble | 业务主库 | `script/db/bubble.sql` |
+| bubble_config | Nacos 配置中心持久化 | `script/db/bubble_config.sql` |
 
 ## 业务库 (pig) 核心表
 
