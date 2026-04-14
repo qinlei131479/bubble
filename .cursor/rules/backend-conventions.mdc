@@ -1,7 +1,7 @@
 ---
 description: Java 后端规范：Spring Cloud 分层与注解、OA 迁移（含 UpService/UpMapper）、REST 与依赖；类 Javadoc、OA 实体与 Admin.java 对齐；Controller/ServiceImpl CRUD 书写模板
-globs: "**/*.java"
-alwaysApply: true
+globs: "apps/bubble-cloud/**/*.java"
+alwaysApply: false
 ---
 
 # 后端开发规范

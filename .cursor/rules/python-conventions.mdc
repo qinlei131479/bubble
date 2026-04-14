@@ -1,0 +1,40 @@
+---
+description: Python 智能体服务开发规范（apps/agentic）
+globs: "apps/agentic/**/*.py"
+alwaysApply: false
+---
+
+# Python 开发规范 (Bubble-Agentic)
+
+> 当前为预留框架，待项目实际启动时补充完善。
+
+## 技术选型（规划）
+
+- Python 3.11+
+- Web 框架：FastAPI
+- 依赖管理：uv + pyproject.toml
+- 代码风格：Ruff（替代 black + isort + flake8）
+- 类型检查：mypy（strict 模式）
+
+## 目录结构（规划）
+
+```text
+apps/agentic/
+├── src/
+│   ├── agent/          # 智能体核心逻辑
+│   ├── rag/            # RAG 检索管道
+│   ├── tools/          # 工具定义
+│   ├── api/            # FastAPI 路由
+│   └── config/         # 配置管理
+├── tests/
+├── pyproject.toml
+├── Dockerfile
+├── .env.example
+└── README.md
+```
+
+## 与 Java 侧的交互边界
+
+- 通过 HTTP API 调用 `bubble-gateway`，不直接依赖 Java 模块
+- 共享数据库表仅读取，写入通过 Java API
+- 异步任务通过 Redis Pub/Sub 或消息队列

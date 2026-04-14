@@ -1,0 +1,72 @@
+---
+description: Bubble 项目核心上下文，为 AI 协作提供最小必要信息
+alwaysApply: true
+---
+
+# Bubble 项目上下文
+
+## 这是什么
+
+Bubble 是智能体原生平台 Monorepo，包含：
+
+- `apps/bubble-cloud/` — Java 17 + Spring Boot 3.5 + Spring Cloud 2025 微服务后端
+- `apps/bubble-ui/` — Vue 3.5 + Element Plus + Vite + TypeScript 前端
+- `apps/agentic/` — Python 智能体服务（规划中）
+- `docker/` — 容器编排（不放业务代码）
+- `docs/` — VitePress 知识库
+- `script/` — 数据库初始化与部署脚本
+
+## 关键版本
+
+| 技术 | 版本 |
+|------|------|
+| JDK | 17+ |
+| Spring Boot | 3.5.9 |
+| Spring Cloud | 2025.0.1 |
+| Spring Cloud Alibaba | 2025.0.0.0 |
+| MyBatis Plus | 3.5.16 |
+| Vue | 3.5 |
+| Element Plus | 2.13 |
+| Vite | 5.4 |
+| MySQL | 8.0 |
+
+## 项目版本
+
+- groupId: `com.bubblecloud`
+- artifactId: `Bubble-Cloud`
+- version (revision): `3.9.2`
+- 分支: JDK17_master (主力), JDK8_master (兼容)
+
+## 单一事实源约定
+
+- **端口与服务清单** → `docs/architecture/ports.md`
+- **模块职责与边界** → `docs/architecture/modules.md`
+- **OA 迁移计划** → `docs/plans/oa-migration-plan.md`
+- **后端开发规范** → `.cursor/rules/backend-conventions.mdc`
+- **前端开发规范** → `.cursor/rules/frontend-conventions.mdc`
+
+## 模块间调用关系
+
+```text
+Browser → Nginx(:80) → bubble-gateway(:9999)
+                            ↓ 路由转发
+               ┌────────────┼────────────┐
+               ↓            ↓            ↓
+          bubble-auth   bubble-biz-*  bubble-visual-*
+               ↓ Feign      ↓ Feign
+          bubble-api-* (实体/DTO/RemoteService)
+```
+
+所有服务 → Nacos（注册中心 + 配置中心）
+
+## 当前开发重点
+
+- **OA 迁移（PHP → Java）**：`bubble-biz-oa`，10 阶段计划，详见 `docs/plans/`
+- **占位模块**：`bubble-biz-flow`（仅启动类）、`apps/agentic`（待实现）
+
+## AI 协作约定
+
+1. 修改代码前先阅读对应的 conventions rule
+2. 端口、模块等"事实类"信息引用 `docs/` 下的单一事实源，不要硬编码
+3. 不要修改自动生成文件（见 `.cursorignore`）
+4. 搜索代码时自动排除 `target/`、`node_modules/`、`dist/`
