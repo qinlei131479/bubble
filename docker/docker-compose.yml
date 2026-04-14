@@ -1,129 +1,183 @@
+# Bubble 全栈容器编排
+# 用法: docker compose up -d [服务名...]
+# 示例: docker compose up -d mysql redis register  (仅基础设施)
+#       docker compose up -d                        (全部服务)
+
 services:
-  bubble-mysql:
+
+  # ============ 基础设施 ============
+
+  mysql:
     build:
       context: ../script/db
-    environment:
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: root
-    restart: always
     container_name: bubble-mysql
     image: bubble-mysql
-    ports:
-      - 33306:3306
-    networks:
-      - spring_cloud_default
-
-  bubble-redis:
-    image: registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/redis
-    ports:
-      - 36379:6379
     restart: always
+    ports:
+      - "${MYSQL_PORT:-33306}:3306"
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root}"
+    networks:
+      - bubble-net
+
+  redis:
+    image: registry.cn-hangzhou.aliyuncs.com/dockerhub_mirror/redis
     container_name: bubble-redis
     hostname: bubble-redis
-    networks:
-      - spring_cloud_default
-
-  bubble-register:
-    build:
-      context: ./bubble-register
     restart: always
     ports:
-      - 8848:8848
-      - 9848:9848
-      - 8080:8080
-    environment:
-      MYSQL_HOST: bubble-mysql
-      REDIS_HOST: bubble-redis
+      - "${REDIS_PORT:-36379}:6379"
+    networks:
+      - bubble-net
+
+  register:
+    build:
+      context: ../apps/bubble-cloud/bubble-register
     container_name: bubble-register
     hostname: bubble-register
     image: bubble-register
-    networks:
-      - spring_cloud_default
-
-  bubble-gateway:
-    build:
-      context: ./bubble-gateway
     restart: always
     ports:
-      - 9999:9999
+      - "8848:8848"
+      - "9848:9848"
+      - "8080:8080"
+    environment:
+      MYSQL_HOST: bubble-mysql
+      REDIS_HOST: bubble-redis
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - bubble-net
+
+  # ============ 后端微服务 ============
+
+  gateway:
+    build:
+      context: ../apps/bubble-cloud/bubble-gateway
     container_name: bubble-gateway
     hostname: bubble-gateway
     image: bubble-gateway
+    restart: always
+    ports:
+      - "9999:9999"
     environment:
       REDIS_HOST: bubble-redis
       NACOS_HOST: bubble-register
+    depends_on:
+      - register
     networks:
-      - spring_cloud_default
+      - bubble-net
 
-  bubble-auth:
+  auth:
     build:
-      context: ./bubble-auth
-    restart: always
+      context: ../apps/bubble-cloud/bubble-auth
     container_name: bubble-auth
     hostname: bubble-auth
     image: bubble-auth
+    restart: always
     environment:
       REDIS_HOST: bubble-redis
       NACOS_HOST: bubble-register
+    depends_on:
+      - register
     networks:
-      - spring_cloud_default
+      - bubble-net
 
-  bubble-biz-backend:
+  biz-backend:
     build:
-      context: ./bubble-biz/bubble-biz-backend
-    restart: always
+      context: ../apps/bubble-cloud/bubble-biz/bubble-biz-backend
     container_name: bubble-biz-backend
     hostname: bubble-biz-backend
     image: bubble-biz-backend
+    restart: always
     environment:
       MYSQL_HOST: bubble-mysql
       REDIS_HOST: bubble-redis
       NACOS_HOST: bubble-register
+    depends_on:
+      - register
     networks:
-      - spring_cloud_default
+      - bubble-net
 
-  bubble-monitor:
+  monitor:
     build:
-      context: ./bubble-visual/bubble-monitor
-    restart: always
-    ports:
-      - 5001:5001
+      context: ../apps/bubble-cloud/bubble-visual/bubble-monitor
     container_name: bubble-monitor
     hostname: bubble-monitor
     image: bubble-monitor
+    restart: always
+    ports:
+      - "5001:5001"
     environment:
       NACOS_HOST: bubble-register
+    depends_on:
+      - register
     networks:
-      - spring_cloud_default
+      - bubble-net
 
-  bubble-codegen:
+  codegen:
     build:
-      context: ./bubble-visual/bubble-codegen
-    restart: always
+      context: ../apps/bubble-cloud/bubble-visual/bubble-codegen
     container_name: bubble-codegen
     hostname: bubble-codegen
     image: bubble-codegen
-    environment:
-      MYSQL_HOST: bubble-mysql
-      REDIS_HOST: bubble-redis
-      NACOS_HOST: bubble-register
-    networks:
-      - spring_cloud_default
-
-  bubble-quartz:
-    build:
-      context: ./bubble-visual/bubble-quartz
     restart: always
-    image: bubble-quartz
-    container_name: bubble-quartz
     environment:
       MYSQL_HOST: bubble-mysql
       REDIS_HOST: bubble-redis
       NACOS_HOST: bubble-register
+    depends_on:
+      - register
     networks:
-      - spring_cloud_default
+      - bubble-net
+
+  quartz:
+    build:
+      context: ../apps/bubble-cloud/bubble-visual/bubble-quartz
+    container_name: bubble-quartz
+    image: bubble-quartz
+    restart: always
+    environment:
+      MYSQL_HOST: bubble-mysql
+      REDIS_HOST: bubble-redis
+      NACOS_HOST: bubble-register
+    depends_on:
+      - register
+    networks:
+      - bubble-net
+
+  # ============ 前端 ============
+
+  ui:
+    build:
+      context: .
+      dockerfile: bubble-ui.Dockerfile
+    container_name: bubble-ui
+    image: bubble-ui
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - gateway
+    networks:
+      - bubble-net
+
+  # ============ 预留：Python 智能体 ============
+  # agentic:
+  #   build:
+  #     context: ../apps/agentic
+  #   container_name: bubble-agentic
+  #   restart: always
+  #   environment:
+  #     BUBBLE_API_URL: http://bubble-gateway:9999
+  #   depends_on:
+  #     - gateway
+  #   networks:
+  #     - bubble-net
 
 networks:
-  spring_cloud_default:
-    name:  spring_cloud_default
+  bubble-net:
+    name: bubble-net
     driver: bridge
