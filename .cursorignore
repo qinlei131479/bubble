@@ -1,44 +1,61 @@
-# .cursorindexingignore
-
-# 1. 永远要忽略的依赖和构建产物
+# 编译产物与依赖（最大噪音源）
+**/target/
 **/node_modules/
 **/dist/
 **/build/
-**/public/
 **/.out/
 **/.next/
 **/coverage/
 **/__pycache__/
-web/public/
-web/public/pdfjs-4.10.38-dist/
+**/*.egg-info/
 
-# 2. 环境变量和敏感信息文件（安全第一）
+# 环境与敏感文件
 .env
 .env.local
+.env.*.local
 *.pem
-config/secrets.*
 
-# 3. 大型数据文件和静态资源
+# 大型 / 二进制文件
 *.csv
 *.jsonl
 *.parquet
-data/
-models/
-**/public/images/
 *.mp4
+*.mp3
+*.wav
 *.jpg
+*.jpeg
 *.png
+*.gif
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
 
-# 4. 日志和临时文件
-*.log
-tmp/
-temp/
-*.tmp
-
-# 5. IDE 和系统文件
+# IDE 与系统
 **/.idea/
 **/.vscode/
-**/.venv/
 **/.DS_Store
 Thumbs.db
-**/docker/volume/
+
+# Python 虚拟环境
+**/.venv/
+**/venv/
+**/.tox/
+
+# Docker 挂载数据
+docker/volume/
+docker/.data/
+
+# 日志
+**/logs/
+*.log
+
+# 自动生成文件（不应手动编辑）
+**/git.properties
+apps/bubble-ui/auto-imports.d.ts
+apps/bubble-ui/components.d.ts
+.flattened-pom.xml
+
+# 数据库初始化 SQL（大文件，按需读取）
+script/db/*.sql

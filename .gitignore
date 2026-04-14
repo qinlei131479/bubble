@@ -1,90 +1,95 @@
-### gradle ###
+### Java / Maven ###
+**/target/
+*.war
+*.ear
+*.jar
+*.class
+*.zip
+*.tar
+*.tar.gz
+*.versionsBackup
+.flattened-pom.xml
+.mvn/wrapper/maven-wrapper.jar
+
+### Gradle ###
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
-.mvn/wrapper/maven-wrapper.jar
 
-### STS ###
+### IDE ###
+.idea/
+!.idea/icon.png
+*.iws
+*.iml
+*.ipr
+rebel.xml
 .settings/
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
 .springBeans
 bin/
-
-### IntelliJ IDEA ###
-!.idea/icon.png
-.idea
-*.iws
-*.iml
-*.ipr
-rebel.xml
-
-### NetBeans ###
+.vscode/
 nbproject/private/
-build/
 nbbuild/
 nbdist/
 .nb-gradle/
 
-### maven ###
-target/
-*.war
-*.ear
-*.zip
-*.tar
-*.tar.gz
-*.versionsBackup
-*.jar
-*.class
-
-### vscode ###
-.vscode
-
-### logs ###
-/logs/
-*.log
-
-### temp ignore ###
-*.cache
-*.diff
-*.patch
-*.tmp
-*.java~
-*.properties~
-*.xml~
-*.bak
-*.swp
-*.swo
-.history/
-
-### system ignore ###
-.DS_Store
-Thumbs.db
-Servers
-.metadata
-.flattened-pom.xml
-
-### frontend (vite/vue) ###
+### Frontend (Vue / Vite) ###
 **/node_modules/
 **/dist/
 **/.vite/
 **/coverage/
 
-### python (reserved for apps/python) ###
+### Python ###
 **/__pycache__/
 **/*.py[cod]
+**/*.pyo
 **/.pytest_cache/
 **/.mypy_cache/
 **/.ruff_cache/
 **/.venv/
 **/venv/
 **/*.egg-info/
+**/.tox/
 .python-version
+*.whl
+.pdm-python
+.pdm-build/
 
-### docker local volumes / data ###
+### Logs ###
+**/logs/
+*.log
+
+### Temp / Swap ###
+*.cache
+*.diff
+*.patch
+*.tmp
+*.bak
+*.swp
+*.swo
+*.java~
+*.properties~
+*.xml~
+.history/
+
+### OS ###
+.DS_Store
+Thumbs.db
+Servers
+.metadata
+
+### Docker local data ###
 docker/volume/
 docker/.data/
 docker/.cache/
+
+### Environment / Secrets ###
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.development
+!.env.production
