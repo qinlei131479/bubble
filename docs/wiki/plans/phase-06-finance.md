@@ -3,7 +3,7 @@
 > **优先级**: P2  
 > **前置依赖**: 阶段五（CRM 合同/客户关联）  
 > **预估工时**: 1-1.5 周  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)
 
 ---
 

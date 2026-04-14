@@ -3,7 +3,7 @@
 > **优先级**: P2（早于阶段八实施**主体**，与阶段九同档）  
 > **前置依赖**: 阶段一、二；阶段五（CRM 客户/合同/发票等）；阶段四（日程 — `OpenScheduleController`）。**低代码数据开放**（`OpenModuleController`）依赖阶段八，须与阶段八**分步交付**：其余开放接口不等待低代码。  
 > **预估工时**: 1.5-2 周（若含低代码开放收尾，与阶段八衔接后再计半周～1 周）  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)
 
 ---
 

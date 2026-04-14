@@ -3,7 +3,7 @@
 > **优先级**: P2  
 > **前置依赖**: 阶段一（用户/组织）  
 > **预估工时**: 2 周  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)
 
 ---
 

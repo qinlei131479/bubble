@@ -92,16 +92,16 @@
 
 | 阶段 | 名称 | 优先级 | PHP 控制器数 | 预估工时 | 前置依赖 | 子计划文件 |
 |------|------|--------|-------------|---------|---------|-----------|
-| 1 | 核心用户与组织管理 | P0 | 18 | 2-3 周 | 无 | [phase-01](./phase-01-user-org.md) |
-| 2 | 配置中心与系统管理 | P0 | 17 | 1.5-2 周 | 阶段 1 | [phase-02](./phase-02-system-config.md) |
-| 3 | HR/人事管理 | P1 | 15 | 2-3 周 | 阶段 1, 2 | [phase-03](./phase-03-hr.md) |
-| 4 | OA 办公与工作流 | P1 | 16 | 3-4 周 | 阶段 1, 2 | [phase-04](./phase-04-oa-workflow.md) |
-| 5 | CRM 客户管理 | P1 | 16 | 3-4 周 | 阶段 1, 2, 4(日程) | [phase-05](./phase-05-crm.md) |
-| 6 | 财务管理 | P2 | 3 | 1-1.5 周 | 阶段 5 | [phase-06](./phase-06-finance.md) |
-| 7 | 项目管理 | P2 | 6 | 2 周 | 阶段 1 | [phase-07](./phase-07-project.md) |
-| 8 | 低代码平台 | P3 | 6 | 3-4 周 | 阶段 2, 4(审批)；**建议置于阶段 9、10 主体之后** | [phase-08](./phase-08-lowcode.md) |
-| 9 | 辅助功能模块 | P2 | 16 | 2-3 周 | 阶段 1, 2 | [phase-09](./phase-09-auxiliary.md) |
-| 10 | 开放 API | P2 | 10 | 1.5-2 周 | 阶段 1, 2, 4(日程), 5；**低代码数据开放子集依赖阶段 8** | [phase-10](./phase-10-openapi.md) |
+| 1 | 核心用户与组织管理 | P0 | 18 | 2-3 周 | 无 | [phase-01](phase-01-user-org.md) |
+| 2 | 配置中心与系统管理 | P0 | 17 | 1.5-2 周 | 阶段 1 | [phase-02](phase-02-system-config.md) |
+| 3 | HR/人事管理 | P1 | 15 | 2-3 周 | 阶段 1, 2 | [phase-03](phase-03-hr.md) |
+| 4 | OA 办公与工作流 | P1 | 16 | 3-4 周 | 阶段 1, 2 | [phase-04](phase-04-oa-workflow.md) |
+| 5 | CRM 客户管理 | P1 | 16 | 3-4 周 | 阶段 1, 2, 4(日程) | [phase-05](phase-05-crm.md) |
+| 6 | 财务管理 | P2 | 3 | 1-1.5 周 | 阶段 5 | [phase-06](phase-06-finance.md) |
+| 7 | 项目管理 | P2 | 6 | 2 周 | 阶段 1 | [phase-07](phase-07-project.md) |
+| 8 | 低代码平台 | P3 | 6 | 3-4 周 | 阶段 2, 4(审批)；**建议置于阶段 9、10 主体之后** | [phase-08](phase-08-lowcode.md) |
+| 9 | 辅助功能模块 | P2 | 16 | 2-3 周 | 阶段 1, 2 | [phase-09](phase-09-auxiliary.md) |
+| 10 | 开放 API | P2 | 10 | 1.5-2 周 | 阶段 1, 2, 4(日程), 5；**低代码数据开放子集依赖阶段 8** | [phase-10](phase-10-openapi.md) |
 | **合计** | | | **~123** | **~22-30 周** | | |
 
 ---
@@ -174,7 +174,7 @@ flowchart TB
 
 ## 六、开发规范（强制）
 
-> 详见 [`.cursor/rules/backend-conventions.mdc`](../../.cursor/rules/backend-conventions.mdc)，此处摘录 OA 关键要点。
+> 详见 [`.cursor/rules/backend-conventions.mdc`](../../../.cursor/rules/backend-conventions.mdc)，此处摘录 OA 关键要点。
 
 ### 6.1 分层与命名
 
@@ -229,7 +229,7 @@ flowchart TB
 | 考勤算法逻辑复杂 | 打卡/加班/迟到计算错误 | 梳理 PHP Service 逻辑；编写单元测试覆盖边界 |
 | JWT 兼容过渡期问题 | 新旧系统 Token 不互通 | 保持 `OaPhpJwtTokenService` 桥接；灰度期两套并存 |
 | 数据库 `eb_` 表结构不匹配 | 实体映射出错 | 以 `mysql-schema.sql` 为基线建立数据字典 |
-| Chat 在 OA 实现、后续再与 AGI 归并 | 未来或有一次迁移/收口成本 | 阶段 9 约定：Chat 全量在 `bubble-biz-oa` 落地，不等待 AGI；归并时单独方案，见 [phase-09-auxiliary](./phase-09-auxiliary.md) §3.11 |
+| Chat 在 OA 实现、后续再与 AGI 归并 | 未来或有一次迁移/收口成本 | 阶段 9 约定：Chat 全量在 `bubble-biz-oa` 落地，不等待 AGI；归并时单独方案，见 [phase-09-auxiliary](phase-09-auxiliary.md) §3.11 |
 | 工作流引擎选型 | 审批流程不可用 | 先 PHP 等价直实现，再迁 Flowable/Camunda |
 
 ---

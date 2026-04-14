@@ -3,7 +3,7 @@
 > **优先级**: P0 — 权限、字典、附件被所有业务模块依赖  
 > **前置依赖**: 阶段一（登录/用户/组织架构）  
 > **预估工时**: 1.5-2 周  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)
 
 > **文档进度**（2026-04）：核心权限链、云存储 elForm、快捷入口与分类 elForm、附件分类创建 elForm、字典 `info`/`tree`、企业配置防火墙等接口已与代码对齐；附件在线编辑仍为明确不支持；消息远程 `sync`、升级远程能力仍为占位。
 

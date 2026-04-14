@@ -3,7 +3,7 @@
 > **优先级**: P2（早于阶段八实施，不等待低代码）  
 > **前置依赖**: 阶段一（用户/组织）、阶段二（权限/附件）  
 > **预估工时**: 2-3 周  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)
 
 ---
 

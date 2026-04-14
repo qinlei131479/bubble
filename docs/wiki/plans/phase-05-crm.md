@@ -3,7 +3,7 @@
 > **优先级**: P1  
 > **前置依赖**: 阶段一（用户/组织）、阶段二（字典/附件）、阶段四（日程 — 提醒联动）  
 > **预估工时**: 3-4 周  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)
 
 ---
 

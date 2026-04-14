@@ -3,7 +3,7 @@
 > **优先级**: P0 — 全系统基础，所有后续阶段依赖  
 > **前置依赖**: 无  
 > **预估工时**: 2-3 周（不含下文「暂不开发」范围时可酌情缩短）  
-> **主计划**: [oa-migration-plan.md](./oa-migration-plan.md)  
+> **主计划**: [oa-migration-plan.md](oa-migration-plan.md)  
 > **状态同步**（2026-04-07）：已与 `bubble-biz/bubble-biz-oa` 源码比对并更新接口表、「待办汇总」与下方**验收检查清单**勾选状态。
 
 ---
