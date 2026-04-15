@@ -19,6 +19,11 @@
 			<groupId>com.bubblecloud</groupId>
 			<artifactId>bubble-api-agi</artifactId>
 		</dependency>
+		<!-- hutool json（JSONUtil） -->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-json</artifactId>
+		</dependency>
 		<!--feign 调用-->
 		<dependency>
 			<groupId>com.bubblecloud</groupId>

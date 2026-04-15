@@ -3,11 +3,11 @@ package com.bubblecloud.biz.agi.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.agi.api.entity.Datasource;
 import com.bubblecloud.biz.agi.mapper.DatasourceMapper;
-import com.bubblecloud.common.core.util.HuToolUtil;
 import com.bubblecloud.common.core.util.R;
 import com.bubblecloud.biz.agi.service.EmbeddingService;
 import lombok.RequiredArgsConstructor;
@@ -112,7 +112,7 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 				terminology.setSpecificDs(req.getSpecificDs());
 				terminology.setDatasourceIds(req.getDatasourceIds());
 				terminology.setEnabledFlag(req.getEnabledFlag());
-				super.create(terminology);
+				super.insert(terminology);
 			});
 		}
 	}
@@ -127,7 +127,20 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 		if (StrUtil.isEmpty(datasourceIds)) {
 			return List.of();
 		}
-		return StrUtil.split(datasourceIds, StrUtil.C_COMMA).stream().map(Long::valueOf).toList();
+		String raw = StrUtil.trim(datasourceIds);
+		// 兼容入参：
+		// - "1"      -> ["1"]
+		// - "1,2"    -> ["1","2"]
+		// - ["1","2"] / [1,2] 保持原样
+		if (JSONUtil.isTypeJSONArray(raw)) {
+			return JSONUtil.toList(raw, Long.class);
+		}
+		List<Long> parts = StrUtil.split(raw, StrUtil.C_COMMA).stream()
+				.map(StrUtil::trim)
+				.filter(StrUtil::isNotBlank)
+				.map(Long::valueOf)
+				.toList();
+		return parts;
 	}
 
 	/**

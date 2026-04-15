@@ -6,6 +6,7 @@ import java.util.Set;
 import com.baomidou.mybatisplus.annotation.*;
 import com.bubblecloud.common.mybatis.base.Req;
 import com.bubblecloud.common.mybatis.handler.PgVectorTypeHandler;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,7 +54,8 @@ public class Terminology extends Req<Terminology> {
 	/**
 	 * 术语向量数据（pgvector VECTOR 类型，支持动态维度）
 	 */
-	@Schema(description = "术语向量数据（pgvector VECTOR 类型，支持动态维度）")
+	@Schema(description = "术语向量数据（pgvector VECTOR 类型，支持动态维度）", accessMode = Schema.AccessMode.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@TableField(jdbcType = JdbcType.OTHER, typeHandler = PgVectorTypeHandler.class)
 	private float[] embedding;
 	/**
