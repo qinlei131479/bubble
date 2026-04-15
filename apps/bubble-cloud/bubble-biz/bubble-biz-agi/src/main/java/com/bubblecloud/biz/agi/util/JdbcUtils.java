@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JDBC 连接工具类
@@ -24,82 +22,162 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JdbcUtils {
 
 	/**
-	 * 缓存驱动类
+	 * 数据源类型（code、驱动、URL 构建规则）
 	 */
-	private static final Map<String, String> DRIVER_MAP = new ConcurrentHashMap<>();
+	private enum DsType {
+		MYSQL("mysql", "com.mysql.cj.jdbc.Driver", true) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:mysql://{}:{}/{}?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "")
+				);
+			}
+		},
+		PG("pg", "org.postgresql.Driver", false) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:postgresql://{}:{}/{}",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "")
+				);
+			}
+		},
+		ORACLE("oracle", "oracle.jdbc.OracleDriver", false) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				String mode = dto.getMode();
+				if (StrUtil.equals("sid", mode)) {
+					return StrUtil.format(
+							"jdbc:oracle:thin:@{}:{}:{}",
+							dto.getHost(),
+							dto.getPort(),
+							StrUtil.blankToDefault(dto.getDsName(), "ORCL")
+					);
+				}
+				return StrUtil.format(
+						"jdbc:oracle:thin:@//{}:{}/{}",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDbSchema(), "ORCL")
+				);
+			}
+		},
+		SQL_SERVER("sqlServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver", false) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:sqlserver://{}:{};database={};characterEncoding=UTF-8",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "")
+				);
+			}
+		},
+		CK("ck", "com.clickhouse.jdbc.ClickHouseDriver", true) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:clickhouse://{}:{}/{}",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "default")
+				);
+			}
+		},
+		DM("dm", "dm.jdbc.driver.DmDriver", false) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:dm://{}:{}/{}",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "")
+				);
+			}
+		},
+		DORIS("doris", "com.mysql.cj.jdbc.Driver", true) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:mysql://{}:{}/{}",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "")
+				);
+			}
+		},
+		STARROCKS("starrocks", "com.mysql.cj.jdbc.Driver", true) {
+			@Override
+			String buildJdbcUrl(DatasourceTestDTO dto) {
+				return StrUtil.format(
+						"jdbc:mysql://{}:{}/{}",
+						dto.getHost(),
+						dto.getPort(),
+						StrUtil.blankToDefault(dto.getDsName(), "")
+				);
+			}
+		};
 
-	static {
-		DRIVER_MAP.put("mysql", "com.mysql.cj.jdbc.Driver");
-		DRIVER_MAP.put("pg", "org.postgresql.Driver");
-		DRIVER_MAP.put("oracle", "oracle.jdbc.OracleDriver");
-		DRIVER_MAP.put("sqlServer", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		DRIVER_MAP.put("ck", "com.clickhouse.jdbc.ClickHouseDriver");
-		DRIVER_MAP.put("dm", "dm.jdbc.driver.DmDriver");
+		private final String code;
+		private final String driverClass;
+		private final boolean schemaFromDbName;
+
+		DsType(String code, String driverClass, boolean schemaFromDbName) {
+			this.code = code;
+			this.driverClass = driverClass;
+			this.schemaFromDbName = schemaFromDbName;
+		}
+
+		abstract String buildJdbcUrl(DatasourceTestDTO dto);
+
+		String getCode() {
+			return code;
+		}
+
+		String getDriverClass() {
+			return driverClass;
+		}
+
+		boolean isSchemaFromDbName() {
+			return schemaFromDbName;
+		}
+
+		static DsType ofCode(String code) {
+			if (StrUtil.isBlank(code)) {
+				return null;
+			}
+			for (DsType type : DsType.values()) {
+				if (StrUtil.equals(type.code, code)) {
+					return type;
+				}
+			}
+			return null;
+		}
+	}
+
+	private static DsType resolveDsType(DatasourceTestDTO dto) {
+		return ObjectUtil.isNull(dto) ? null : DsType.ofCode(dto.getDsType());
 	}
 
 	/**
 	 * 获取 JDBC URL
 	 */
 	public static String buildJdbcUrl(DatasourceTestDTO dto) {
-		String dsType = dto.getDsType();
-		String host = dto.getHost();
-		Integer port = dto.getPort();
-		String dbName = dto.getDsName();
-		String dbSchema = dto.getDbSchema();
 		String extraJdbc = dto.getExtraJdbc();
-
-		if (StrUtil.isBlank(dsType) || StrUtil.isBlank(host) || ObjectUtil.isNull(port)
-				|| StrUtil.isBlank(dbName)) {
+		if (ObjectUtil.isNull(dto) || StrUtil.isBlank(dto.getDsType()) || StrUtil.isBlank(dto.getHost())
+				|| ObjectUtil.isNull(dto.getPort()) || StrUtil.isBlank(dto.getDsName())) {
 			return null;
 		}
-
-		StringBuilder url = new StringBuilder();
-
-		switch (dsType) {
-			case "mysql":
-				url.append("jdbc:mysql://").append(host).append(":").append(port)
-						.append("/").append(dbName != null ? dbName : "")
-						.append("?characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true");
-				break;
-			case "pg":
-				url.append("jdbc:postgresql://").append(host).append(":").append(port)
-						.append("/").append(dbName != null ? dbName : "");
-				break;
-			case "oracle":
-				String mode = dto.getMode();
-				if ("sid".equals(mode)) {
-					url.append("jdbc:oracle:thin:@").append(host).append(":").append(port)
-							.append(":").append(dbName != null ? dbName : "ORCL");
-				} else {
-					url.append("jdbc:oracle:thin:@//").append(host).append(":").append(port)
-							.append("/").append(dbSchema != null ? dbSchema : "ORCL");
-				}
-				break;
-			case "sqlServer":
-				url.append("jdbc:sqlserver://").append(host).append(":").append(port)
-						.append(";database=").append(dbName != null ? dbName : "")
-						.append(";characterEncoding=UTF-8");
-				break;
-			case "ck":
-				url.append("jdbc:clickhouse://").append(host).append(":").append(port)
-						.append("/").append(dbName != null ? dbName : "default");
-				break;
-			case "dm":
-				url.append("jdbc:dm://").append(host).append(":").append(port)
-						.append("/").append(dbName != null ? dbName : "");
-				break;
-			case "doris":
-				url.append("jdbc:mysql://").append(host).append(":").append(port)
-						.append("/").append(dbName != null ? dbName : "");
-				break;
-			case "starrocks":
-				url.append("jdbc:mysql://").append(host).append(":").append(port)
-						.append("/").append(dbName != null ? dbName : "");
-				break;
-			default:
-				return null;
+		DsType dsType = resolveDsType(dto);
+		if (ObjectUtil.isNull(dsType)) {
+			return null;
 		}
-
+		StringBuilder url = new StringBuilder(dsType.buildJdbcUrl(dto));
 		if (StrUtil.isNotBlank(extraJdbc)) {
 			if (url.toString().contains("?")) {
 				url.append("&").append(extraJdbc);
@@ -107,7 +185,6 @@ public class JdbcUtils {
 				url.append("?").append(extraJdbc);
 			}
 		}
-
 		return url.toString();
 	}
 
@@ -116,36 +193,25 @@ public class JdbcUtils {
 	 */
 	public static DatasourceTestResultVO testConnection(DatasourceTestDTO dto) {
 		DatasourceTestResultVO result = new DatasourceTestResultVO();
-
 		String jdbcUrl = buildJdbcUrl(dto);
-		if (jdbcUrl == null) {
+		if (ObjectUtil.isNull(jdbcUrl)) {
 			result.setConnected(false);
 			result.setErrorMessage("不支持的数据源类型: " + dto.getDsType());
 			return result;
 		}
-
-		String driverClass = DRIVER_MAP.get(dto.getDsType());
-		if (driverClass == null) {
+		DsType dsType = resolveDsType(dto);
+		if (ObjectUtil.isNull(dsType) || StrUtil.isBlank(dsType.getDriverClass())) {
 			result.setConnected(false);
 			result.setErrorMessage("未找到数据源类型对应的驱动: " + dto.getDsType());
 			return result;
 		}
 
+		String driverClass = dsType.getDriverClass();
 		Connection connection = null;
 		try {
 			// 加载驱动
 			Class.forName(driverClass);
-
-			// 设置超时
-			int timeout = dto.getTimeout() != null ? dto.getTimeout() : 30;
-
-			// 获取连接
-			connection = DriverManager.getConnection(
-					jdbcUrl,
-					dto.getUsername(),
-					dto.getPassword()
-			);
-
+			connection = DriverManager.getConnection(jdbcUrl, dto.getUsername(), dto.getPassword());
 			// 获取数据库信息
 			DatabaseMetaData metaData = connection.getMetaData();
 			result.setConnected(true);
@@ -166,7 +232,6 @@ public class JdbcUtils {
 		} finally {
 			closeQuietly(connection);
 		}
-
 		return result;
 	}
 
@@ -177,15 +242,16 @@ public class JdbcUtils {
 		List<String> tables = new ArrayList<>();
 
 		String jdbcUrl = buildJdbcUrl(dto);
-		if (jdbcUrl == null) {
+		if (ObjectUtil.isNull(jdbcUrl)) {
 			return tables;
 		}
 
-		String driverClass = DRIVER_MAP.get(dto.getDsType());
-		if (driverClass == null) {
+		DsType dsType = resolveDsType(dto);
+		if (ObjectUtil.isNull(dsType) || StrUtil.isBlank(dsType.getDriverClass())) {
 			return tables;
 		}
 
+		String driverClass = dsType.getDriverClass();
 		Connection connection = null;
 		ResultSet rs = null;
 
@@ -198,12 +264,7 @@ public class JdbcUtils {
 			);
 
 			DatabaseMetaData metaData = connection.getMetaData();
-			String schema = dto.getDbSchema();
-
-			// 根据数据库类型处理 schema
-			if ("mysql".equals(dto.getDsType()) || "ck".equals(dto.getDsType()) || "doris".equals(dto.getDsType()) || "starrocks".equals(dto.getDsType())) {
-				schema = dto.getDsName();
-			}
+			String schema = dsType.isSchemaFromDbName() ? dto.getDsName() : dto.getDbSchema();
 
 			rs = metaData.getTables(
 					schema,
@@ -235,15 +296,16 @@ public class JdbcUtils {
 		List<TableInfoVO> tableInfoList = new ArrayList<>();
 
 		String jdbcUrl = buildJdbcUrl(dto);
-		if (jdbcUrl == null) {
+		if (ObjectUtil.isNull(jdbcUrl)) {
 			return tableInfoList;
 		}
 
-		String driverClass = DRIVER_MAP.get(dto.getDsType());
-		if (driverClass == null) {
+		DsType dsType = resolveDsType(dto);
+		if (ObjectUtil.isNull(dsType) || StrUtil.isBlank(dsType.getDriverClass())) {
 			return tableInfoList;
 		}
 
+		String driverClass = dsType.getDriverClass();
 		Connection connection = null;
 		ResultSet rs = null;
 
@@ -256,12 +318,7 @@ public class JdbcUtils {
 			);
 
 			DatabaseMetaData metaData = connection.getMetaData();
-			String schema = dto.getDbSchema();
-
-			// 根据数据库类型处理 schema
-			if ("mysql".equals(dto.getDsType()) || "ck".equals(dto.getDsType()) || "doris".equals(dto.getDsType()) || "starrocks".equals(dto.getDsType())) {
-				schema = dto.getDsName();
-			}
+			String schema = dsType.isSchemaFromDbName() ? dto.getDsName() : dto.getDbSchema();
 
 			rs = metaData.getTables(
 					schema,
@@ -297,15 +354,16 @@ public class JdbcUtils {
 		List<DatasourceTableField> fields = new ArrayList<>();
 
 		String jdbcUrl = buildJdbcUrl(dto);
-		if (jdbcUrl == null) {
+		if (ObjectUtil.isNull(jdbcUrl)) {
 			return fields;
 		}
 
-		String driverClass = DRIVER_MAP.get(dto.getDsType());
-		if (driverClass == null) {
+		DsType dsType = resolveDsType(dto);
+		if (ObjectUtil.isNull(dsType) || StrUtil.isBlank(dsType.getDriverClass())) {
 			return fields;
 		}
 
+		String driverClass = dsType.getDriverClass();
 		Connection connection = null;
 		ResultSet rs = null;
 
@@ -318,12 +376,7 @@ public class JdbcUtils {
 			);
 
 			DatabaseMetaData metaData = connection.getMetaData();
-			String schema = dto.getDbSchema();
-
-			// 根据数据库类型处理 schema
-			if ("mysql".equals(dto.getDsType()) || "ck".equals(dto.getDsType()) || "doris".equals(dto.getDsType()) || "starrocks".equals(dto.getDsType())) {
-				schema = dto.getDsName();
-			}
+			String schema = dsType.isSchemaFromDbName() ? dto.getDsName() : dto.getDbSchema();
 
 			rs = metaData.getColumns(schema, null, tableName, "%");
 
