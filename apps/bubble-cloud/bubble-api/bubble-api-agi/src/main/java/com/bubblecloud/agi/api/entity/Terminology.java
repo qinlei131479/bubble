@@ -5,9 +5,11 @@ import java.util.Set;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.bubblecloud.common.mybatis.base.Req;
+import com.bubblecloud.common.mybatis.handler.PgVectorTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.ibatis.type.JdbcType;
 
 /**
  * 实体类：术语表
@@ -18,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "术语表")
-@TableName("terminology")
+@TableName(value = "terminology", autoResultMap = true)
 public class Terminology extends Req<Terminology> {
 
 	private static final long serialVersionUID = 1L;
@@ -52,7 +54,8 @@ public class Terminology extends Req<Terminology> {
 	 * 术语向量数据（pgvector VECTOR 类型，支持动态维度）
 	 */
 	@Schema(description = "术语向量数据（pgvector VECTOR 类型，支持动态维度）")
-	private String embedding;
+	@TableField(jdbcType = JdbcType.OTHER, typeHandler = PgVectorTypeHandler.class)
+	private float[] embedding;
 	/**
 	 * 数据源ID列表(JSON)
 	 */

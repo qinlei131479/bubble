@@ -6,10 +6,10 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bubblecloud.agi.api.entity.Datasource;
-import com.bubblecloud.agi.api.entity.SqlTrain;
-import com.bubblecloud.backend.api.entity.SysRole;
 import com.bubblecloud.biz.agi.mapper.DatasourceMapper;
+import com.bubblecloud.common.core.util.HuToolUtil;
 import com.bubblecloud.common.core.util.R;
+import com.bubblecloud.biz.agi.service.EmbeddingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Terminology> implements TerminologyService {
 
 	private final DatasourceMapper datasourceMapper;
+	private final EmbeddingService embeddingService;
 
 	@Override
 	public Page<Terminology> findPg(Page page, Terminology req) {
@@ -53,6 +54,11 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 		if (dsIds.size() != datasource.size()) {
 			return R.failed("设置数据源失败，部分数据源不存在");
 		}
+		try {
+			req.setEmbedding(embeddingService.embed(buildEmbedText(req)));
+		} catch (Exception e) {
+			return R.failed(e.getMessage());
+		}
 		R res = super.create(req);
 		updateWords(req, false);
 		return res;
@@ -65,6 +71,11 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 		List<Datasource> datasource = getDs(dsIds);
 		if (dsIds.size() != datasource.size()) {
 			return R.failed("设置数据源失败，部分数据源不存在");
+		}
+		try {
+			req.setEmbedding(embeddingService.embed(buildEmbedText(req)));
+		} catch (Exception e) {
+			return R.failed(e.getMessage());
 		}
 		R res = super.update(req);
 		updateWords(req, true);
@@ -129,5 +140,12 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 		return CollUtil.isNotEmpty(dsIds) ? datasourceMapper.selectByIds(dsIds) : List.of();
 	}
 
+	private static String buildEmbedText(Terminology req) {
+		if (CollUtil.isEmpty(req.getWords())) {
+			req.setWords(Set.of());
+		}
+		req.getWords().add(StrUtil.trim(req.getWord()));
+		return StrUtil.trim(StrUtil.join(" | ", req.getWords()));
+	}
 
 }

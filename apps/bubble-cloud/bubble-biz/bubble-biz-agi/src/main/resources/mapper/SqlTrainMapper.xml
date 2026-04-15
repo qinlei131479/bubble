@@ -8,7 +8,7 @@
         <result property="dsId" column="ds_id"/>
         <result property="question" column="question"/>
         <result property="description" column="description"/>
-        <result property="embedding" column="embedding"/>
+        <result property="embedding" column="embedding" jdbcType="OTHER" typeHandler="com.bubblecloud.common.mybatis.handler.PgVectorTypeHandler"/>
         <result property="enabledFlag" column="enabled_flag"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>

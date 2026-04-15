@@ -2,9 +2,11 @@ package com.bubblecloud.agi.api.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.bubblecloud.common.mybatis.base.Req;
+import com.bubblecloud.common.mybatis.handler.PgVectorTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.ibatis.type.JdbcType;
 import java.time.LocalDateTime;
 
 /**
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
  * @date 2026-02-12 18:37:03
  */
 @Data
-@TableName("sql_train")
+@TableName(value = "sql_train", autoResultMap = true)
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "SQL训练示例")
 public class SqlTrain extends Req<SqlTrain> {
@@ -49,7 +51,8 @@ public class SqlTrain extends Req<SqlTrain> {
 	* 向量数据
 	*/
     @Schema(description="向量数据")
-    private String embedding;
+	@TableField(jdbcType = JdbcType.OTHER, typeHandler = PgVectorTypeHandler.class)
+    private float[] embedding;
 
 	/**
 	* 是否启用，0否；1是

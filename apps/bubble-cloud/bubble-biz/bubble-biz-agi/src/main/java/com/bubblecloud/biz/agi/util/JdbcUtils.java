@@ -1,5 +1,7 @@
 package com.bubblecloud.biz.agi.util;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.bubblecloud.agi.api.dto.DatasourceTestDTO;
 import com.bubblecloud.agi.api.vo.DatasourceTestResultVO;
 import com.bubblecloud.agi.api.vo.TableInfoVO;
@@ -46,7 +48,8 @@ public class JdbcUtils {
 		String dbSchema = dto.getDbSchema();
 		String extraJdbc = dto.getExtraJdbc();
 
-		if (dsType == null || host == null || port == null) {
+		if (StrUtil.isBlank(dsType) || StrUtil.isBlank(host) || ObjectUtil.isNull(port)
+				|| StrUtil.isBlank(dbName)) {
 			return null;
 		}
 
@@ -97,7 +100,7 @@ public class JdbcUtils {
 				return null;
 		}
 
-		if (extraJdbc != null && !extraJdbc.isEmpty()) {
+		if (StrUtil.isNotBlank(extraJdbc)) {
 			if (url.toString().contains("?")) {
 				url.append("&").append(extraJdbc);
 			} else {

@@ -2,9 +2,11 @@ package com.bubblecloud.agi.api.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.bubblecloud.common.mybatis.base.Req;
+import com.bubblecloud.common.mybatis.handler.PgVectorTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.ibatis.type.JdbcType;
 import java.time.LocalDateTime;
 
 /**
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
  * @date 2026-02-13 16:47:36
  */
 @Data
-@TableName("datasource_table")
+@TableName(value = "datasource_table", autoResultMap = true)
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "数据源授权")
 public class DatasourceTable extends Req<DatasourceTable> {
@@ -61,7 +63,8 @@ public class DatasourceTable extends Req<DatasourceTable> {
 	* 表结构 embedding (JSON 数组字符串)
 	*/
     @Schema(description="表结构 embedding (JSON 数组字符串)")
-    private String embedding;
+	@TableField(jdbcType = JdbcType.OTHER, typeHandler = PgVectorTypeHandler.class)
+    private float[] embedding;
 
 	/**
 	* 创建时间

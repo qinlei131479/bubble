@@ -57,5 +57,11 @@
             <groupId>com.bubblecloud</groupId>
             <artifactId>bubble-common-core</artifactId>
         </dependency>
+        <!-- PostgreSQL JDBC（用于 pgvector / PGobject 等类型处理） -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

@@ -10,7 +10,7 @@
         <result property="tableName" column="table_name"/>
         <result property="tableComment" column="table_comment"/>
         <result property="customComment" column="custom_comment"/>
-        <result property="embedding" column="embedding"/>
+        <result property="embedding" column="embedding" jdbcType="OTHER" typeHandler="com.bubblecloud.common.mybatis.handler.PgVectorTypeHandler"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
   </resultMap>
