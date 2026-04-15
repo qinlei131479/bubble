@@ -54,5 +54,5 @@ bubble-cloud/
 ### 关键约束
 
 - 开发规范：`.cursor/rules/backend-conventions.mdc`
-- 端口清单：[`docs/architecture/ports.md`](../../docs/architecture/ports.md)（单一事实源）
-- OA 迁移计划：[`docs/plans/oa-migration-plan.md`](../../docs/plans/oa-migration-plan.md)
+- 端口清单：[`docs/wiki/architecture/ports.md`](../../docs/wiki/architecture/ports.md)（单一事实源）
+- OA 迁移计划：[`docs/wiki/plans/oa-migration-plan.md`](../../docs/wiki/plans/oa-migration-plan.md)
