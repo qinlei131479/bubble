@@ -61,7 +61,7 @@ services:
     image: bubble-gateway
     restart: always
     ports:
-      - "9999:9999"
+      - "8666:8666"
     environment:
       REDIS_HOST: bubble-redis
       NACOS_HOST: bubble-register

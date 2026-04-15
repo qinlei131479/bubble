@@ -18,7 +18,20 @@ bubble-cloud/
 │   ├── bubble-biz-agi       # AI 智能体 (:8805)
 │   ├── bubble-biz-oa        # OA 办公（迁移中）(:8803)
 │   └── bubble-biz-flow      # 工作流（占位）(:8802)
-├── bubble-common/           # 跨模块公共组件（security/feign/oss/...）
+├── bubble-common/           # 跨模块公共组件（各子模块为 jar，供业务引用）
+│   ├── bubble-common-bom         # Maven BOM，统一依赖版本
+│   ├── bubble-common-core        # 公共工具类与核心包
+│   ├── bubble-common-datasource  # 动态数据源切换
+│   ├── bubble-common-log         # 日志服务
+│   ├── bubble-common-mybatis     # MyBatis 封装
+│   ├── bubble-common-oss         # 对象存储（OSS）集成
+│   ├── bubble-common-seata       # Seata 分布式事务
+│   ├── bubble-common-security    # 安全工具类与相关能力
+│   ├── bubble-common-feign       # Feign + Sentinel 降级、熔断、限流
+│   ├── bubble-common-swagger     # OpenAPI / Swagger 接口文档
+│   ├── bubble-common-websocket   # WebSocket
+│   ├── bubble-common-xss         # XSS 安全过滤（基于 JSoup）
+│   └── bubble-common-excel       # Excel 导入导出
 └── bubble-visual/           # 可视化管理
     ├── bubble-codegen       # 代码生成 (:8901)
     ├── bubble-monitor       # Spring Boot Admin (:8902)
