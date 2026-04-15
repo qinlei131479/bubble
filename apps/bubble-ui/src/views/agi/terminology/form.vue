@@ -161,7 +161,15 @@ const onSubmit = async () => {
 
   try {
     loading.value = true;
-    form.id ? await putObj(form) : await addObj(form);
+    // 提交时对齐后端格式：单选值包装为 JSON 数组字符串，如 ["1"]
+    const payload: any = {...form}
+    if (payload.specificDs === '1') {
+      const raw = String(payload.datasourceIds ?? '').trim()
+      if (raw && !raw.startsWith('[')) {
+        payload.datasourceIds = JSON.stringify([raw])
+      }
+    }
+    payload.id ? await putObj(payload) : await addObj(payload);
     useMessage().success(form.id ? '修改成功' : '添加成功');
     visible.value = false;
     emit('refresh');
@@ -178,7 +186,30 @@ const getTerminologyData = (id: string) => {
   // 获取数据
   loading.value = true
   getObj({id: id}).then((res: any) => {
-    Object.assign(form, res.data[0])
+    const row = res.data?.[0] ?? {}
+    Object.assign(form, row)
+
+    // 编辑回显：后端 datasourceIds 可能是 JSON 数组字符串，如 "[\"2026...\"]"
+    // 当前表单是单选，所以取数组第一个值进行回显
+    const ds = row.datasourceIds
+    if (ds !== undefined && ds !== null) {
+      const raw = String(ds).trim()
+      let first = ''
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw)
+          if (Array.isArray(parsed)) {
+            first = parsed.length > 0 ? String(parsed[0]) : ''
+          } else {
+            first = raw
+          }
+        } catch {
+          // 兼容历史格式：1,2
+          first = raw.includes(',') ? raw.split(',')[0].trim() : raw
+        }
+      }
+      form.datasourceIds = first
+    }
   }).finally(() => {
     loading.value = false
   })
