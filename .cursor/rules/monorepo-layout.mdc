@@ -32,6 +32,6 @@ script/           # 脚本（数据库初始化、部署）
 3. 最小可运行方式
    - 本地开发命令（以及必要环境变量的示例文件，如 `.env.example`）
 4. 文档收录
-   - 在 `docs/architecture/modules.md` 添加模块职责与边界
+   - 在 `docs/wiki/architecture/modules.md` 添加模块职责与边界
 5. （可选）容器化支持
    - 如需要纳入一键部署，在 `docker/docker-compose.yml` 中添加对应 service 块

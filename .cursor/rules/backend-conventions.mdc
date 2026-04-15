@@ -96,7 +96,7 @@ bubble-visual-{feature}  → 可视化管理服务
 - **SQL**：自定义 SQL 写在 `bubble-biz-oa/.../mapper/XxxMapper.xml`；接口上**禁止** `@Select`/`@Update` 等（BaseMapper/lambda 无 XML 的 CRUD 除外）
 - **Service**：入参 `*DTO`，返回 `*VO` 或已有实体；禁止 `JdbcTemplate` 直查 OA 表
 - **对外兼容**：统一 `com.bubblecloud.common.core.util.R<T>`（`R.phpOk`/`R.phpFailed`）
-- **阶段**：见 `docs/plans/oa-migration-plan.md`；**禁止**新增 `SimplePageVO.empty` 类占位桩
+- **阶段**：见 `docs/wiki/plans/oa-migration-plan.md`；**禁止**新增 `SimplePageVO.empty` 类占位桩
 
 ---
 

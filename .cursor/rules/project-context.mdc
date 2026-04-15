@@ -39,9 +39,9 @@ Bubble 是智能体原生平台 Monorepo，包含：
 
 ## 单一事实源约定
 
-- **端口与服务清单** → `docs/architecture/ports.md`
-- **模块职责与边界** → `docs/architecture/modules.md`
-- **OA 迁移计划** → `docs/plans/oa-migration-plan.md`
+- **端口与服务清单** → `docs/wiki/architecture/ports.md`
+- **模块职责与边界** → `docs/wiki/architecture/modules.md`
+- **OA 迁移计划** → `docs/wiki/plans/oa-migration-plan.md`
 - **后端开发规范** → `.cursor/rules/backend-conventions.mdc`
 - **前端开发规范** → `.cursor/rules/frontend-conventions.mdc`
 
@@ -61,7 +61,7 @@ Browser → Nginx(:80) → bubble-gateway(:9999)
 
 ## 当前开发重点
 
-- **OA 迁移（PHP → Java）**：`bubble-biz-oa`，10 阶段计划，详见 `docs/plans/`
+- **OA 迁移（PHP → Java）**：`bubble-biz-oa`，10 阶段计划，详见 `docs/wiki/plans/`
 - **占位模块**：`bubble-biz-flow`（仅启动类）、`apps/agentic`（待实现）
 
 ## AI 协作约定
