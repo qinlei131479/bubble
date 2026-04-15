@@ -57,5 +57,5 @@ npm run dev
 ### 5. 访问
 
 - 前端：`http://localhost:${VITE_PORT}`
-- 网关：`http://localhost:9999`
+- 网关：`http://localhost:8666`
 - Nacos：`http://localhost:8848/nacos`

@@ -48,7 +48,7 @@ Bubble 是智能体原生平台 Monorepo，包含：
 ## 模块间调用关系
 
 ```text
-Browser → Nginx(:80) → bubble-gateway(:9999)
+Browser → Nginx(:80) → bubble-gateway(:8666)
                             ↓ 路由转发
                ┌────────────┼────────────┐
                ↓            ↓            ↓

@@ -28,9 +28,9 @@ npm run dev
 
 ### 与后端联调
 
-- 确保后端 Gateway 已启动（默认 `:9999`）
+- 确保后端 Gateway 已启动（默认 `:8666`）
 - `.env.development` 配置 `VITE_API_URL` 指向网关地址
-- Docker 部署时 Nginx 自动反代 `/api/*` → `bubble-gateway:9999`
+- Docker 部署时 Nginx 自动反代 `/api/*` → `bubble-gateway:8666`
 
 ### 关键环境变量
 

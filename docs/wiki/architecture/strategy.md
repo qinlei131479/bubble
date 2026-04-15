@@ -19,7 +19,7 @@
 2. 前端对应页面可正常操作（登录 → 导航 → CRUD → 关联功能）
 3. 该阶段范围内的所有占位桩已被真实逻辑替换
 
-详见 [OA 迁移计划](/plans/oa-migration-plan)。
+详见 [OA 迁移计划](/docs/wiki/plans/oa-migration-plan)。
 
 ## 后续规划
 

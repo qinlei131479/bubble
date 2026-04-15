@@ -171,7 +171,7 @@ services:
   #   container_name: bubble-agentic
   #   restart: always
   #   environment:
-  #     BUBBLE_API_URL: http://bubble-gateway:9999
+  #     BUBBLE_API_URL: http://bubble-gateway:8666
   #   depends_on:
   #     - gateway
   #   networks:

@@ -39,7 +39,7 @@ docker compose -f docker/docker-compose.yml up -d gateway ui
 
 - 构建文件：`docker/bubble-ui.Dockerfile`
 - 配置：`docker/nginx/default.conf`
-- `/api/*` 请求反代到 `bubble-gateway:9999`
+- `/api/*` 请求反代到 `bubble-gateway:8666`
 
 ## 注意事项
 
