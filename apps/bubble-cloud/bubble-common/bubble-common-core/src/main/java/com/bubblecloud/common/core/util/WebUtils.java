@@ -90,8 +90,10 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
 	 * @return {HttpServletRequest}
 	 */
 	public Optional<HttpServletRequest> getRequest() {
-		return Optional
-			.ofNullable(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+		return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+			.filter(ServletRequestAttributes.class::isInstance)
+			.map(ServletRequestAttributes.class::cast)
+			.map(ServletRequestAttributes::getRequest);
 	}
 
 	/**
@@ -99,7 +101,11 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
 	 * @return {HttpServletResponse}
 	 */
 	public HttpServletResponse getResponse() {
-		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+		return Optional.ofNullable(RequestContextHolder.getRequestAttributes())
+			.filter(ServletRequestAttributes.class::isInstance)
+			.map(ServletRequestAttributes.class::cast)
+			.map(ServletRequestAttributes::getResponse)
+			.orElse(null);
 	}
 
 	/**

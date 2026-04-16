@@ -59,7 +59,7 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 		} catch (Exception e) {
 			return R.failed(e.getMessage());
 		}
-		R res = super.create(req);
+		R res = super.insert(req);
 		updateWords(req, false);
 		return res;
 	}
