@@ -35,14 +35,14 @@
         <el-col :span="24" class="mb20">
           <el-form-item label="指定数据源" prop="specificDs">
             <el-radio-group v-model="form.specificDs">
-              <el-radio :key="index" :value="item.value" border v-for="(item, index) in yes_no_type">
+              <el-radio :key="index" :value="Number(item.value)" border v-for="(item, index) in yes_no_type">
                 {{ item.label }}
               </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
 
-        <el-col :span="24" class="mb20" v-if="form.specificDs ==='1'">
+        <el-col :span="24" class="mb20" v-if="form.specificDs ===1">
           <el-form-item label="数据源" prop="datasourceIds">
             <el-select v-model="form.datasourceIds" clearable placeholder="请选择数据源">
               <el-option :key="item.id" :label="item.name" :value="item.id"
@@ -54,7 +54,7 @@
         <el-col :span="24" class="mb20">
           <el-form-item label="是否启用" prop="enabledFlag">
             <el-radio-group v-model="form.enabledFlag">
-              <el-radio :key="index" :value="item.value" border v-for="(item, index) in yes_no_type">
+              <el-radio :key="index" :value="Number(item.value)" border v-for="(item, index) in yes_no_type">
                 {{ item.label }}
               </el-radio>
             </el-radio-group>
@@ -98,15 +98,15 @@ const form = reactive({
   word: '',
   words: [] as string[],
   description: '',
-  specificDs: '0',
+  specificDs: 0,
   embedding: '',
   datasourceIds: '',
-  enabledFlag: '1',
+  enabledFlag: 1,
 });
 
 // 定义校验规则
 const dataRules = ref({
-  word: [{required: true, message: '名称为空', trigger: 'blur'}],
+  word: [{required: true, message: '名称不为空', trigger: 'blur'}],
   specificDs: [{required: true, message: '指定数据源不能为空', trigger: 'blur'}],
   enabledFlag: [{required: true, message: '是否启用不能为空', trigger: 'blur'}, {
     validator: rule.number,

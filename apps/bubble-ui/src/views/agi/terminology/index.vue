@@ -42,7 +42,7 @@
         <el-table-column prop="description" label="术语描述" show-overflow-tooltip/>
         <el-table-column prop="datasourceIds" label="生效数据源" width="150">
           <template #default="scope">
-            <span v-if="scope.row.specificDs==='1'">{{scope.row.datasourceNames}}</span>
+            <span v-if="scope.row.specificDs===1">{{scope.row.datasourceNames}}</span>
             <span v-else>全部数据源</span>
           </template>
         </el-table-column>

@@ -50,7 +50,7 @@ public class Terminology extends Req<Terminology> {
 	 * 是否指定数据源，0否；1是
 	 */
 	@Schema(description = "是否指定数据源，0否；1是")
-	private String specificDs;
+	private Integer specificDs;
 	/**
 	 * 术语向量数据（pgvector VECTOR 类型，支持动态维度）
 	 */
@@ -67,7 +67,7 @@ public class Terminology extends Req<Terminology> {
 	 * 是否启用，0否；1是
 	 */
 	@Schema(description = "是否启用，0否；1是")
-	private String enabledFlag;
+	private Integer enabledFlag;
 	/**
 	 * 创建时间
 	 */

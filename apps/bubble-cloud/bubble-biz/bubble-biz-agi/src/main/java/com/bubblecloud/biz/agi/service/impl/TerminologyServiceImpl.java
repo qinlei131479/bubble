@@ -19,6 +19,7 @@ import com.bubblecloud.biz.agi.mapper.TerminologyMapper;
 import com.bubblecloud.biz.agi.service.TerminologyService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -59,6 +60,7 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 		} catch (Exception e) {
 			return R.failed(e.getMessage());
 		}
+		req.setParentId(0L);
 		R res = super.insert(req);
 		updateWords(req, false);
 		return res;
@@ -154,11 +156,14 @@ public class TerminologyServiceImpl extends UpServiceImpl<TerminologyMapper, Ter
 	}
 
 	private static String buildEmbedText(Terminology req) {
-		if (CollUtil.isEmpty(req.getWords())) {
-			req.setWords(Set.of());
+		Set<String> allWords = new HashSet<>();
+		if (CollUtil.isNotEmpty(req.getWords())) {
+			allWords.addAll(req.getWords());
 		}
-		req.getWords().add(StrUtil.trim(req.getWord()));
-		return StrUtil.trim(StrUtil.join(" | ", req.getWords()));
+		if (StrUtil.isNotBlank(req.getWord())) {
+			allWords.add(StrUtil.trim(req.getWord()));
+		}
+		return StrUtil.trim(StrUtil.join(" | ", allWords));
 	}
 
 }
