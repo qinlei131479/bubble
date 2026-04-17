@@ -1,6 +1,7 @@
 package com.bubblecloud.agi.api.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.bubblecloud.agi.api.enums.SupplierModelTypeEnum;
 import com.bubblecloud.common.mybatis.base.Req;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -53,9 +54,9 @@ public class SupplierModel extends Req<SupplierModel> {
 	private String baseModel;
 
 	/**
-	 * 模型类型: 1:聊天, 2:推理, 3:向量，4：排序，5：图片，6：视觉
+	 * 模型类型，取值与 {@link SupplierModelTypeEnum#getCode()} 一致
 	 */
-	@Schema(description = "模型类型: 1:聊天, 2:推理, 3:向量，4：排序，5：图片，6：视觉")
+	@Schema(description = "模型类型: 1:聊天, 2:推理, 3:向量，4：排序，5：图片，6：视觉，7：解析OCR，8：视觉OCR，9：音频")
 	@NotBlank(message = "模型类型不能为空", groups = {CreateUpdate.class})
 	private String modelType;
 

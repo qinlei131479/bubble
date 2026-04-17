@@ -1,5 +1,6 @@
 package com.bubblecloud.biz.agi.service.impl;
 
+import com.bubblecloud.agi.api.enums.SupplierModelTypeEnum;
 import com.bubblecloud.agi.api.entity.Supplier;
 import com.bubblecloud.biz.agi.mapper.SupplierMapper;
 import com.bubblecloud.common.core.constant.enums.FlagEnum;
@@ -25,14 +26,12 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SupplierModelServiceImpl extends UpServiceImpl<SupplierModelMapper, SupplierModel> implements SupplierModelService {
 
-	private static final String MODEL_TYPE_VECTOR = "3";
-
 	private final SupplierMapper supplierMapper;
 
 	@Override
 	public SupplierModel getDefaultVectorEmbeddingModel() {
 		SupplierModel model = this.getOne(Wrappers.<SupplierModel>lambdaQuery()
-				.eq(SupplierModel::getModelType, MODEL_TYPE_VECTOR)
+				.eq(SupplierModel::getModelType, SupplierModelTypeEnum.VECTOR.getCode())
 				.eq(SupplierModel::getDefaultFlag, FlagEnum.YES.getCode())
 				.last("limit 1"));
 		if (Objects.isNull(model)) {
