@@ -15,7 +15,7 @@ const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded';
  * @param data
  */
 export const login = (data: any) => {
-    const basicAuth = 'Basic ' + window.btoa(import.meta.env.VITE_OAUTH2_PASSWORD_CLIENT);
+    const basicAuth = defaultPasswordBasicAuth();
     Session.set('basicAuth', basicAuth);
     let encPassword = data.password;
     // 密码加密
@@ -37,7 +37,7 @@ export const login = (data: any) => {
 export const loginByMobile = (mobile: any, code: any) => {
     const grant_type = 'mobile';
     const scope = 'server';
-    const basicAuth = 'Basic ' + window.btoa(import.meta.env.VITE_OAUTH2_MOBILE_CLIENT);
+    const basicAuth = defaultPasswordBasicAuth();
     Session.set('basicAuth', basicAuth);
 
     return request({
@@ -55,7 +55,7 @@ export const loginByMobile = (mobile: any, code: any) => {
 export const loginBySocial = (state: string, code: string) => {
     const grant_type = 'mobile';
     const scope = 'server';
-    const basicAuth = 'Basic ' + window.btoa(import.meta.env.VITE_OAUTH2_SOCIAL_CLIENT);
+    const basicAuth = defaultPasswordBasicAuth();
     Session.set('basicAuth', basicAuth);
 
     return request({
@@ -77,11 +77,15 @@ export const sendMobileCode = (mobile: any) => {
     });
 };
 
+/** 密码模式 OAuth2 客户端 Basic（用于 basicAuth 缺失时的回退，如新标签页旧会话尚未写入 Cookie） */
+const defaultPasswordBasicAuth = () =>
+    'Basic ' + window.btoa(import.meta.env.VITE_OAUTH2_PASSWORD_CLIENT);
+
 export const refreshTokenApi = (refresh_token: string) => {
     const grant_type = 'refresh_token';
     const scope = 'server';
-    // 获取当前选中的 basic 认证信息
-    const basicAuth = Session.get('basicAuth');
+    // 与 token 一致持久化在 Cookie；若仍为空则回退为密码客户端（跨标签页 / 升级前会话）
+    const basicAuth = Session.get('basicAuth') || defaultPasswordBasicAuth();
 
     return request({
         url: '/auth/oauth2/token',
@@ -100,7 +104,7 @@ export const refreshTokenApi = (refresh_token: string) => {
  * @param refreshLock
  */
 export const checkToken = (refreshTime: number, refreshLock: boolean) => {
-    const basicAuth = Session.get('basicAuth');
+    const basicAuth = Session.get('basicAuth') || defaultPasswordBasicAuth();
     request({
         url: '/auth/token/check_token',
         headers: {
